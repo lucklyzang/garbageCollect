@@ -1,16 +1,16 @@
 <template>
   <div class="word-cup">
     <HeaderTop title="流程页">
-      <i class="mint-toast-icon mintui mintui-back" slot="left" @click="backTo"></i> 
-      <i class="mint-toast-icon mintui mintui-more" slot="right"></i>
+      <van-icon name="arrow-left" slot="left" @click="backTo"></van-icon> 
+        <van-icon name="manager-o" slot="left" @click="backTo"></van-icon> 
     </HeaderTop>
     <div class="content">
       <div class="content-header">
-        <el-steps :active="currentActive" process-status="wait" finish-status="finish" align-center>
-          <el-step title="医护人员扫码"></el-step>
-          <el-step title="称重"></el-step>
-          <el-step title="扫码入库"></el-step>
-        </el-steps>
+        <van-steps :active="currentActive">
+          <van-step>医护人员扫码</van-step>
+          <van-step>称重</van-step>
+          <van-step>扫码入库</van-step>
+        </van-steps>
       </div>
       <div class="content-middle">
         <keep-alive>
@@ -18,7 +18,7 @@
         </keep-alive>
       </div>
       <div class="content-footer">
-        <el-button type="primary" @click="nextStep">完成</el-button>
+        <van-button type="info" @click="nextStep">完成</van-button>
       </div>
     </div>
   </div>
@@ -39,8 +39,7 @@
     },
     data() {
       return {
-        currentActive: 1,
-        viewActive: 0,
+        currentActive: 0,
         currentComponent: 'MedicalSweepCode',
         viewData: ['MedicalSweepCode','WeighRubbish','StockSweep']
       }
@@ -49,7 +48,7 @@
     },
     computed:{
       currentView(){
-        return this.viewData[this.viewActive];
+        return this.viewData[this.currentActive];
       }
     },
     methods:{
@@ -58,9 +57,8 @@
         this.$router.go(-1)
       },
       nextStep() {
-        if (this.currentActive > this.viewData.length - 1) {return};
+        if (this.currentActive > this.viewData.length - 2) {return};
         this.currentActive++;
-        this.viewActive = this.currentActive - 1;
       }
     }
   }
@@ -71,13 +69,13 @@
   .word-cup
     .content
       init-height()
-    /deep/ .mintui-back
+    /deep/ .van-icon-arrow-left
       position absolute
       top 12px
       left 4px
       font-size 24px
       color #fff
-    /deep/ .mintui-more
+    /deep/ .van-icon-manager-o
       position absolute
       top 12px
       right 4px

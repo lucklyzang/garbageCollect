@@ -2,7 +2,7 @@
   <div class="content-wrapper">
     <div class="content-img">
       <p>医护人员扫码</p>
-      <img src="../common/images/sweep-code.gif" alt="">
+      <p class="img-cover"></p>
     </div>
   </div>
 </template>
@@ -28,11 +28,14 @@ export default {
   .content-wrapper {
     margin-top: 100px;
     .content-img {
-      width: 100%;
+      width: 80%;
+      height: 300px;
+      margin: 0 auto;
       text-align: center;
-      img {
-        width: 70%;
-        height: auto
+      .img-cover {
+        width: 100%;
+        height: 100%;
+        background: url(../common/images/sweep-code.gif)  no-repeat center center/cover
       }
     }
   }

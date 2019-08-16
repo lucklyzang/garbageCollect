@@ -1,14 +1,14 @@
 <template>
   <div id="LoginBox">
-    <p class="logo">Login</p>
-    <p class="form-group">
-      <mt-field label="用户名" placeholder="请输入用户名" v-model="username"></mt-field>
-      <mt-field label="密码" placeholder="请输入密码" type="password" v-model="password"></mt-field>
-    </p>
-    <p class="btn-group">
-      <mt-button type="primary" @click.native="login">登录</mt-button>
-      <mt-button type="primary">扫码登录</mt-button>
-    </p>
+    <p class="logo">智慧卫监</p>
+    <van-cell-group>
+      <van-field label="用户名" placeholder="请输入用户名" type="text" v-model="username"></van-field>
+      <van-field label="密码" placeholder="请输入密码" type="password" v-model="password"></van-field>
+   </van-cell-group>
+    <van-cell-group>
+      <van-button  @click.native="login">登录</van-button>
+      <van-button >扫码登录</van-button>
+    </van-cell-group>
   </div>
 </template>
 
@@ -49,21 +49,47 @@ export default {
       font-size: 28px;
       color:#fff
     }
-    .form-group {
-      margin-top: 120px;
-      /deep/ .mint-field {
-        margin-top: 10px
+    .van-hairline--top-bottom::after {
+      display: none
+    }
+    .van-cell-group {
+      width: 90%;
+      margin: 0 auto;
+      margin-top: 30px;
+      font-size: 14px;
+      background: none;
+      /deep/ .van-field {
+        margin-top: 10px;
+        background: #eaeaea;
+        color: #7e8c8d;
+        border-radius: 30px;
+        .van-cell_title {
+          font-size: 12px;
+          .van-cell_value {
+            input {
+              background: #eaeaea;
+            }
+          }
+        }
+      }
+      /deep/ .van-cell {
+        min-height: 35px
       }
     }
-    .btn-group {
-      margin-top: 10px;
-      /deep/ .mint-button {
+    .van-cell-group {
+      width: 90%;
+      margin: 0 auto;
+      margin-top: 40px;
+      /deep/ .van-button {
         width: 100%;
-        height: 46px;
-        background: #ffff;
-        color: black;
+        background: #ed834e;
+        color: #fff;
         border-radius: 0;
-        margin-top: 10px
+        margin-top: 10px;
+        font-size: 12px;
+        border-radius: 30px;
+        min-height: 35px;
+        border: none
       }
     }
   }
