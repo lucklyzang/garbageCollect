@@ -2,6 +2,12 @@ import Vue from 'vue'
 import Router from 'vue-router'
 const Home = () => import('../pages/Home')
 const Login = () => import('../pages/Login')
+const MedicalCollect = () => import('../pages/MedicalSweepCode')
+const MedicalInStorage = () => import('../pages/MedicalInStorage')
+const MedicalOutStorage = () => import('../pages/MedicalOutStorage')
+const JudgeCurrentDepantment = () => import('../pages/judge/JudgeCurrentDepantment')
+const JudgeCurrentCollectFinish = () => import('../pages/judge/JudgeCurrentCollectFinish')
+const JudgeOtherDepantment = () => import('../pages/judge/JudgeOtherDepantment')
 Vue.use(Router)
 
 let baseRoute  = [
@@ -14,7 +20,37 @@ let baseRoute  = [
     path: '/home',
     name: 'home',
     component: Home,
-  }
+  },
+  {
+    path: '/medicalCollect',
+    name: 'medicalCollect',
+    component: MedicalCollect,
+  },
+  {
+    path: '/medicalInStorage',
+    name: 'medicalInStorage',
+    component: MedicalInStorage,
+  },
+  {
+    path: '/medicalOutStorage',
+    name: 'medicalOutStorage',
+    component: MedicalOutStorage,
+  },
+  {
+    path: '/judgeCurrentDepantment',
+    name: 'judgeCurrentDepantment',
+    component: JudgeCurrentDepantment,
+  },
+  {
+    path: '/judgeCurrentCollectFinish',
+    name: 'judgeCurrentCollectFinish',
+    component: JudgeCurrentCollectFinish,
+  },
+  {
+    path: '/judgeOtherDepantment',
+    name: 'judgeOtherDepantment',
+    component: JudgeOtherDepantment,
+  },
 ];
 let router = new Router({
   routes: baseRoute

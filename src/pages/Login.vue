@@ -7,8 +7,8 @@
    </van-cell-group>
     <van-cell-group>
       <van-button  @click.native="login">登录</van-button>
-      <van-button >扫码登录</van-button>
     </van-cell-group>
+    <p class="bottom-title">共众智能@Copyright 2017-2018</p>
   </div>
 </template>
 
@@ -42,12 +42,14 @@ export default {
     position: fixed;
     width: 100%;
     height: 100%;
-    background: linear-gradient(#9cd6fa,#229ae6);
+    background: #fff;
     .logo {
       text-align: center;
-      margin-top: 80px;
+      width: 100%;
+      height: 200px;
+      line-height: 200px;
       font-size: 28px;
-      color:#fff
+      color:#aad5ba
     }
     .van-hairline--top-bottom::after {
       display: none
@@ -60,37 +62,54 @@ export default {
       background: none;
       /deep/ .van-field {
         margin-top: 10px;
-        background: #eaeaea;
-        color: #7e8c8d;
-        border-radius: 30px;
+        color: #6d6d6d;
         .van-cell_title {
           font-size: 12px;
-          .van-cell_value {
+        }
+        // .van-cell_value {
+        //   .van-field__body {
             input {
-              background: #eaeaea;
-            }
-          }
+              margin-top: -4px;
+              font-size: 12px
+          //   }
+          // }
         }
       }
       /deep/ .van-cell {
-        min-height: 35px
+        border-bottom: 1px solid #dddcdc;
+        height: 35px;
+        vertical-align: middle;
+        padding-left: 0;
+        .van-field__label {
+          font-size: 12px;
+          margin-top: -4px;
+          color: #5b5b5b
+        }
       }
     }
     .van-cell-group {
       width: 90%;
       margin: 0 auto;
-      margin-top: 40px;
       /deep/ .van-button {
         width: 100%;
-        background: #ed834e;
+        margin-top: 35px;
+        background: #1dc5a4;
         color: #fff;
         border-radius: 0;
-        margin-top: 10px;
         font-size: 12px;
         border-radius: 30px;
-        min-height: 35px;
-        border: none
+        height: 35px;
+        border: none;
+        line-height: 35px;
       }
+    }
+    .bottom-title {
+      width: 100%;
+      position: absolute;
+      bottom: 20px;
+      text-align: center;
+      font-size: 12px;
+      color: #adadad
     }
   }
 </style>

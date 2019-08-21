@@ -1,8 +1,9 @@
 import request from '@/utils/request'
-export function login(data) {
+export function judgeCode(data) {
   return request({
-    url: '/user/login',
+    url: '',
     method: 'post',
     data
   })
+
 }

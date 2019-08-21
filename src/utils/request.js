@@ -3,7 +3,7 @@ import { MessageBox,} from 'element-ui'
 import store from '@/store'
 
 const service = axios.create({
-  baseURL: process.env.VUE_APP_BASE_API,
+  // baseURL: process.env.env.BASE_URL,
   timeout: 5000 // request timeout
 })
 
