@@ -1,7 +1,7 @@
 import request from '@/utils/request'
-export function login(data) {
+export function logIn(data) {
   return request({
-    url: '/user/login',
+    url: 'worker/login',
     method: 'post',
     data
   })

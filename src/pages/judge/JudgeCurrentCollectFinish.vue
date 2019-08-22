@@ -21,8 +21,9 @@ export default {
     showDialog () {
       this.$dialog.confirm({
         title: '',
-        message: '此次收集已完成'
+        message: '此次收集已完成?'
       }).then(() => {
+        this.$router.replace({path: 'judgeOtherDepantment'})
       }).catch(() => {
         this.$router.replace({path: 'judgeCurrentDepantment'})
       });

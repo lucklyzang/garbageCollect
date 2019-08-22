@@ -13,6 +13,9 @@
 </template>
 
 <script>
+import {logIn} from '../api/login.js'
+import { mapGetters } from 'vuex'
+import { mapMutations } from 'vuex'
 export default {
   data () {
     return {
@@ -30,9 +33,24 @@ export default {
   mounted () {},
 
   methods: {
+    ...mapMutations([
+      'storeUserInfo'
+    ]),
     // 账号密码登录方法
     login () {
-      this.$router.push({path:'/home'})
+      let loginMessage = {
+        workerNumber: this.username,
+        password: this.password
+      };
+      logIn(loginMessage).then((res)=>{
+        if (res && res.data.code == 200) {
+          this.$router.push({path:'/home'});
+          this.storeUserInfo(res.data.data);
+        }
+      })
+      .catch((err) => {
+        console.log(err)
+      })
     }
   } 
 }

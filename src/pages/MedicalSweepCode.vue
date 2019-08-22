@@ -24,13 +24,15 @@
             <p>depName:{{astOfficeCodeMsg.depName}}</p>
           </div>
           <div v-show="staffCodeShow" class="staff-code">
-            <p>workerNumber: {{staffCodeMsg.workerNumber}}</p>
-            <p>proId:{{staffCodeMsg.proId}}</p>
-            <p>depId:{{staffCodeMsg.depId}}</p>
-            <p>id:{{staffCodeMsg.id}}</p>
-            <p>proName:{{staffCodeMsg.proName}}</p>
-            <p>workerName:{{staffCodeMsg.workerName}}</p>
-            <p>depName:{{staffCodeMsg.depName}}</p>
+            <p>{{applicationCollectTime}}</p>
+            <p>{{startCollectTime}}</p>
+            <p>workerNumber: {{judgeFlowValue ? yihuCode[0].workerNumber : staffCodeMsg.workerNumber}}</p>
+            <p>proId:{{judgeFlowValue ? yihuCode[0].proId : staffCodeMsg.proId}}</p>
+            <p>depId:{{judgeFlowValue ? yihuCode[0].depId : staffCodeMsg.depId}}</p>
+            <p>id:{{judgeFlowValue ?  yihuCode[0].id : staffCodeMsg.id}}</p>
+            <p>proName:{{judgeFlowValue ? yihuCode[0].proName : staffCodeMsg.proName}}</p>
+            <p>workerName:{{judgeFlowValue ? yihuCode[0].workerName : staffCodeMsg.workerName}}</p>
+            <p>depName:{{judgeFlowValue ?  yihuCode[0].depName : staffCodeMsg.depName}}</p>
           </div>
           <div v-show="bagCodeShow" class="bag-code">
             <p>wasteName: {{rubbishCodeMsg.wasteName}}</p>
@@ -57,7 +59,7 @@
 <script>
 import HeaderTop from '../components/HeaderTop'
 import FooterBottom from '../components/FooterBottom'
-import {judgeCode} from '../api/rubbishCollect.js'
+import {judgeStagingPoint} from '../api/rubbishCollect.js'
 import { mapGetters } from 'vuex'
 import { mapMutations } from 'vuex'
 export default {
@@ -82,13 +84,19 @@ export default {
   computed: {
      ...mapGetters([
       'navTopTitle',
-      'keshiCode'
+      'keshiCode',
+      'yihuCode',
+      'judgeFlowValue',
+      'applicationCollectTime',
+      'startCollectTime'
     ])
   },
 
   mounted () {
     // 向后台请求回收批次
     this.collectBatch();
+    // 判断流程从哪步开始
+    this.judgeFlowPosition();
     // 二维码回调方法绑定到window下面,提供给外部调用
     let me = this;
     window['scanQRcodeCallback'] = (code) => {
@@ -108,12 +116,24 @@ export default {
       'storageKeshiCode',
       'storageYihuCode',
       'storageLajiCode',
-      'storageLanyaCz'
+      'storageLanyaCz',
+      'changeStartCollectTime',
+      'changeApplicationCollectTime'
     ]),
     // 返回上一页
     backTo () {
       this.$router.go(-1);
       this.changeTitleTxt({tit:'医废监测'})
+    },
+    // 判断流程从哪步开始
+    judgeFlowPosition () {
+      if (this.judgeFlowValue == 2) {
+        this.currentActive = 1;
+        this.staffCodeShow = true;
+      };
+      if (this.judgeFlowValue == 0) {
+        this.currentActive = 0;
+      }
     },
     // 扫描二维码方法
     sweepAstoffice () {
@@ -124,10 +144,20 @@ export default {
       // 扫码的科室信息存入store
       if (this.currentActive == 0) {
         // 二维码是否扫描正确判断
-        judgeCode();
-        this.storageKeshiCode(code);
-        this.astOfficeShow = true;
-        this.astOfficeCodeMsg = code;
+       judgeStagingPoint(code.type,code.number).then((res) => {
+         if (res && res.data.code == 200) {
+          this.storageKeshiCode(code);
+          this.changeStartCollectTime(this.formatTime());
+          this.astOfficeShow = true;
+          this.astOfficeCodeMsg = code;
+         } else {
+          this.sweepAstoffice()
+         }
+       })
+       .catch((err) => {
+         this.sweepAstoffice();
+         console.log(err);
+       })
       };
       // 扫码的医护人员信息存入store
       if (this.currentActive == 1) {
@@ -165,14 +195,13 @@ export default {
     sureCurrentCodeMsg () {
       this.currentActive++;
       if (this.currentActive > 4) {return};
-      if (this.currentActive == 3) {
+      if (this.currentActive == 4) {
+        this.$router.push({path:'judgeCurrentDepantment'})
+      } else if (this.currentActive == 3) {
         this.weightRubbish()
       } else {
         this.startTask();
       };
-      if (this.currentActive == 4) {
-        this.$router.push({path:'judgeCurrentDepantment'})
-      }
     },
     // 收集确认
     collectSure () {
@@ -186,6 +215,10 @@ export default {
     startTask () {
       // 扫描科室暂存点二维码
       this.sweepAstoffice();
+    },
+    // 时间格式方法
+    formatTime () {
+      return this.$moment(new Date().getTime()).format('YYYY-MM-DD HH:mm:ss')
     }
   }
 }
@@ -233,7 +266,7 @@ export default {
           .van-steps__items {
             .van-hairline {
               .van-step__title {
-                width: 60px;
+                width: 70px;
                 text-align: center;
               }
             }

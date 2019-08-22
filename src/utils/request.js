@@ -3,8 +3,8 @@ import { MessageBox,} from 'element-ui'
 import store from '@/store'
 
 const service = axios.create({
-  // baseURL: process.env.env.BASE_URL,
-  timeout: 5000 // request timeout
+  baseURL: 'http://192.168.8.100:8080',
+  // timeout: 5000 // request timeout
 })
 
 // request interceptor
@@ -26,6 +26,7 @@ service.interceptors.request.use(
 
 service.interceptors.response.use(
   response => {
+    return response
   },
   error => {
     console.log('err' + error)

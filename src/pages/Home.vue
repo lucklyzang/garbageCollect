@@ -6,6 +6,7 @@
     </HeaderTop>
     <div class="content">
       <div class="content-header">
+        {{userInfo}}
       </div>
       <div class="content-middle">
         <div class="content-list" v-for="item in itemList" @click="routerSkip(item.name, item.itemText)">
@@ -20,6 +21,7 @@
 <script>
   import HeaderTop from '../components/HeaderTop'
   import FooterBottom from '../components/FooterBottom'
+  import {getBatchNumber} from '../api/rubbishCollect.js'
   import NoData from '../components/NoData'
   import { mapGetters } from 'vuex'
   import { mapMutations } from 'vuex'
@@ -45,11 +47,14 @@
     computed:{
       ...mapGetters([
         'navTopTitle',
+        'userInfo'
       ])
     },
     methods:{
       ...mapMutations([
-        'changeTitleTxt', 
+        'changeTitleTxt',
+        'changeApplicationCollectTime',
+        'createBatchNumber'
       ]),
       // 返回上一页
       backTo () {
@@ -57,8 +62,24 @@
       },
       //路由跳转
       routerSkip (name, text) {
+        if (text === '医废收集') {
+          this.changeApplicationCollectTime(this.formatTime());
+          // 创建回收批次
+          getBatchNumber(this.userInfo.id).then((res) => {
+            if (res && res.data.code == 200) {
+              // 批次号存入store
+              this.createBatchNumber(res.data.data.batchNumber)
+            }
+          }).catch((err) => {
+            console.log(err)
+          })
+        }
         this.$router.push({name:name});
         this.changeTitleTxt({tit:text})
+      },
+       // 时间格式方法
+      formatTime () {
+        return this.$moment(new Date().getTime()).format('YYYY-MM-DD HH:mm:ss')
       }
     }
   }

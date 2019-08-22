@@ -15,7 +15,7 @@ module.exports = {
         // target: 'http://192.168.0.121:8088/ajax/AppGateway.ashx', // 代理目标的基础路径
         changeOrigin: true, // 支持跨域
         pathRewrite: {// 重写路径: 去掉路径中开头的'/api'
-          '^/apiPath': '/'
+          '^/apiPath': 'http://192.168.8.100:8080/'
         }
       }
     },

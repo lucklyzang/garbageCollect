@@ -3,6 +3,7 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
 export default {
   data () {
     return {
@@ -18,12 +19,16 @@ export default {
   },
 
   methods: {
+    ...mapMutations([
+      'changeFlowState', 
+    ]),
     showDialog () {
       this.$dialog.confirm({
         title: '',
-        message: '是否科室继续收集'
+        message: '是否当前科室继续收集?'
       }).then(() => {
-        this.$router.replace({path: 'medicalCollect'})
+        this.$router.replace({path: 'medicalCollect'});
+        this.changeFlowState(2)
       }).catch(() => {
         this.$router.push({path:'judgeCurrentCollectFinish'})   
       });
