@@ -161,7 +161,7 @@ export default {
     // 完成收集任务
     finishCollect () {
     },
-    // 确认扫码无误进入下个流程
+    // 确认扫码无误进入下个流
     sureCurrentCodeMsg () {
       this.currentActive++;
       if (this.currentActive > 4) {return};
