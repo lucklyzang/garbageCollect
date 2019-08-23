@@ -20,12 +20,18 @@
               <p class="list-sign">条码标识: {{item.sign}}</p>
               <p class="list-times">回收趟次: {{item.times}}</p>
               <p class="list-code">小车编码: {{item.code}}</p>
+              <p class="list-code">时间: {{item.collectTime}}</p>
             </div>
             <div class="list-item-bottom">
               移交人员: <span>{{item.peopleName}}</span>
             </div>
           </div>
         </div>
+      </div>
+      <div class="stage-point">{{stagingMsg}}</div>
+      <div class="btn-group">
+        <van-button type="info" @click="medicalInStoragr" size="small">医废入库</van-button>
+        <van-button type="info" @click="sureInStorage" size="small">确定</van-button>
       </div>
     </div>
     <FooterBottom></FooterBottom>
@@ -45,10 +51,10 @@ export default {
   data () {
     return {
       topTitle: '医废收集',
+      stagingMsg: '',
       classList: [
-        {type: '血液透析/感染性', weight: '3.04', sign: '0912121212',times: '12121212121212', code: '1212121', peopleName: '王克荛'},
-        {type: '血液透析/感染性', weight: '3.04', sign: '0912121212',times: '12121212121212', code: '1212121', peopleName: '王克荛'},
-        {type: '血液透析/感染性', weight: '3.04', sign: '0912121212',times: '12121212121212', code: '1212121', peopleName: '王克荛'}
+        {type: '血液透析/感染性', weight: '3.04', collectTime: '2019-8-23 16:38:47', sign: '0912121212',times: '12121212121212', code: '1212121', peopleName: '王克荛'},
+        {type: '血液透析/感染性', weight: '3.04', collectTime: '2019-8-23 16:38:47', sign: '0912121212',times: '12121212121212', code: '1212121', peopleName: '王克荛'}
       ]
     };
   },
@@ -58,17 +64,36 @@ export default {
     ])
   },
 
-  mounted() {},
-
+  mounted() {
+    // 二维码回调方法绑定到window下面,提供给外部调用
+    let me = this;
+    window['scanQRcodeCallback'] = (code) => {
+      me.scanQRcodeCallback(code);
+    }
+  },
   methods: {
     ...mapMutations([
       'changeTitleTxt', 
     ]),
+    // 扫描二维码方法
+    sweepAstoffice () {
+      window.android.scanQRcode()
+    },
     // 返回上一页
     backTo () {
       this.$router.go(-1);
       this.changeTitleTxt({tit:'医废监测'})
     },
+    // 扫码后的回调
+    scanQRcodeCallback (code) {
+      this.stagingMsg = code
+    },
+    //扫描医废入库暂存点二维码
+    medicalInStoragr () {
+      this.sweepAstoffice()
+    },
+    //确定入库
+    sureInStorage () {}
   }
 }
 
@@ -115,6 +140,8 @@ export default {
         }
       }
       .content-middle-list {
+        height: 300px;
+        overflow: auto;
         .content-middle-list-item {
           padding: 14px;
           height: 140px;
@@ -165,6 +192,19 @@ export default {
               }
             }
           }
+        }
+      }
+      .stage-point {
+        margin-top: 10px;
+        height: 140px;
+        border: 1px solid #85f0f0
+      }
+      .btn-group {
+        margin-top: 10px;
+        text-align: center;
+        button {
+          background: #38bdd0;
+          border: 1px solid #e7e9ec;
         }
       }
     }

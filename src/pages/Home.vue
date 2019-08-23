@@ -6,7 +6,7 @@
     </HeaderTop>
     <div class="content">
       <div class="content-header">
-        {{userInfo}}
+        <img :src="bannerUrl" alt="">
       </div>
       <div class="content-middle">
         <div class="content-list" v-for="item in itemList" @click="routerSkip(item.name, item.itemText)">
@@ -33,6 +33,7 @@
   import medicalOut from '@/common/images/home/medical-out.png'
   import testStatistics from '@/common/images/home/test-statistics.png'
   import videoSurveillance from '@/common/images/home/video-surveillance.png'
+  import homeBanner from '@/common/images/home/home-banner.png'
   export default {
     components:{
       HeaderTop,
@@ -47,7 +48,8 @@
           { itemText: '医废出库', imgUrl: medicalOut, name: 'medicalOutStorage'},{ itemText: '报表统计', imgUrl: statement},
           { itemText: '异常预警', imgUrl: abnormalWarning},{ itemText: '收集历史', imgUrl: collectHistory},
           { itemText: '检测统计', imgUrl: testStatistics },{ itemText: '视频监控', imgUrl: videoSurveillance},
-        ]
+        ],
+        bannerUrl: homeBanner
       }
     },
     mounted(){
@@ -119,6 +121,9 @@
       width 100%
       height 200px
       border-bottom 1px solid #dbd3d3
+      img 
+        width 100%
+        height 100%
     .content-middle
       width 100%
       display flex

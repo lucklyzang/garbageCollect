@@ -1,6 +1,6 @@
 <template>
   <header class="header">
-    <slot name="left" class="left"></slot>
+    <!-- <slot name="left" class="left"></slot> -->
     <span class="header_title">
       <span class="header_title_text ellipsis">{{title}}</span>
     </span>

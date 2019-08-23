@@ -5,55 +5,26 @@
       <van-icon name="manager-o" slot="right" @click.native="backTo"></van-icon> 
     </HeaderTop>
     <div class="content-middle">
-      <p class="select-wrapper">
-        <van-field-select-picker
-          label="监测区域"
-          placeholder="请选择"
-          v-model="monitorArea"
-          :columns="[1, 2, 3]"
-        />
-        <van-field-select-picker
-          label="监测点"
-          placeholder="请选择"
-          v-model="monitorDot"
-          :columns="[1, 2, 3]"
-        />
-        <van-field-select-picker
-          label="车牌号码"
-          placeholder="请选择"
-          v-model="licenseNumber"
-          :columns="['1', '2', '3']"
-        />
-        <van-field-select-picker
-          label="出库人员"
-          placeholder="请选择"
-          v-model="outboundPerson"
-          :columns="[1, 2, 3]"
-        />
-        <van-field-select-picker
-          label="物品重量"
-          placeholder="请选择"
-          v-model="itemWeight"
-          :columns="[1, 2, 3]"
-        />
-        <van-field-select-picker
-          label="交接单位"
-          placeholder="请选择"
-          v-model="transferUnits"
-          :columns="[1, 2, 3]"
-        />
-        <van-field-select-picker
-          label="交接人员"
-          placeholder="请选择"
-          v-model="transferStaff"
-          :columns="[1, 2, 3]"
-        />
-      </p>
-      <p class="increaseBtn">
-        <van-cell-group>
-          <van-button  @click.native="increase">新增</van-button>
-        </van-cell-group>
-      </p>
+      <div class="changeBtn">
+        <van-checkbox v-model="checked">全选</van-checkbox>
+      </div>
+      <div class="content-middle-list">
+        <div class="content-middle-list-item" v-for="item in classList">
+          <div class="change-btn-position">
+            <van-checkbox v-model="checked"></van-checkbox>
+          </div>
+          <div class="list-item">
+            <p class="list-item-left">回收趟次: {{item.times}}</p>
+            <div class="list-strip">
+              <p class="list-times">收集人员: {{item.times}}</p>
+              <p class="list-code">时间: {{item.collectTime}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="btn-group">
+        <van-button type="info" @click="sureInStorage" size="small">确定</van-button>
+      </div>
     </div>
     <FooterBottom></FooterBottom>
   </div>
@@ -62,24 +33,22 @@
 <script>
 import HeaderTop from '../components/HeaderTop'
 import FooterBottom from '../components/FooterBottom'
-import VanFieldSelectPicker from '../components/VanFieldSelectPicker'
 import { mapGetters } from 'vuex'
 import { mapMutations } from 'vuex'
 export default {
-  components:{
+   components:{
     HeaderTop,
-    FooterBottom,
-    VanFieldSelectPicker
+    FooterBottom
   },
   data () {
     return {
-      monitorArea: '',
-      monitorDot: '',
-      licenseNumber: '',
-      outboundPerson: '',
-      itemWeight: '',
-      transferUnits: '',
-      transferStaff: ''
+      topTitle: '医废收集',
+      stagingMsg: '',
+      checked: true,
+      classList: [
+        {type: '血液透析/感染性', weight: '3.04', collectTime: '2019-8-23 16:38:47', sign: '0912121212',times: '12121212121212', code: '1212121', peopleName: '王克荛'},
+        {type: '血液透析/感染性', weight: '3.04', collectTime: '2019-8-23 16:38:47', sign: '0912121212',times: '12121212121212', code: '1212121', peopleName: '王克荛'}
+      ]
     };
   },
   computed: {
@@ -88,8 +57,8 @@ export default {
     ])
   },
 
-  mounted () {},
-
+  mounted() {
+  },
   methods: {
     ...mapMutations([
       'changeTitleTxt', 
@@ -99,9 +68,10 @@ export default {
       this.$router.go(-1);
       this.changeTitleTxt({tit:'医废监测'})
     },
-    // 新增入库
-    increase () {
-
+    //确定入库
+    sureInStorage () {
+      this.$router.push({path:'medicalInStorageIncrease'});
+      this.changeTitleTxt({tit: '医废入库新增'});
     }
   }
 }
@@ -109,7 +79,8 @@ export default {
 </script>
 <style lang='less' scoped>
   .content-wrapper {
-     /deep/ .van-icon-arrow-left {
+    margin-top: 100px;
+    /deep/ .van-icon-arrow-left {
       position: absolute;
       top: 44px;
       left: 4px;
@@ -131,45 +102,78 @@ export default {
       height: 100%;
       margin-top: 80px;
       background: #fff;
-      .select-wrapper {
-        width: 92%;
-        margin: 0 auto;
-        padding-top: 10px;
-        /deep/ .van-cell {
-          border-bottom: 1px solid #dcdcdc;
-          .van-cell__title {
-            font-size: 12px
-          }
-          .van-cell__value {
-            font-size: 12px;
-            input {
-              text-align: right
+      .changeBtn {
+        height: 40px;
+        background: #fbfbfb;
+        line-height: 40px;
+        padding-left: 10px;
+        /deep/ .van-icon {
+          background: #38bdd0;
+          border-color: #38bdd0
+        }
+      }
+      .content-middle-list {
+        height: 420px;
+        overflow: auto;
+        .content-middle-list-item {
+          position: relative;
+          box-sizing: border-box;
+          padding: 10px 80px;
+          height: 100px;
+          border-bottom: 1px solid #e8e4e4;
+          .change-btn-position {
+            position: absolute;
+            top: 30px;
+            left: 10px;
+            /deep/ .van-icon {
+              background: #38bdd0;
+              border-color: #38bdd0
             }
           }
-          .van-icon {
-            font-size: 12px
+          .list-item {
+            position: relative;
+            height: 100%;
+            .list-item-left {
+              position: absolute;
+              top: 0;
+              left: 0;
+              color: black;
+              font-size: 14px;
+              font-weight: bold;
+            }
+            .list-strip {
+              position: absolute;
+              top: 20px;
+              left: 0;
+              color: #707070;
+              font-size: 12px;
+              margin-top: 12px;
+              p {
+                margin-top: 12px;
+                &:first-child {
+                  margin-top: 0
+                }
+              }
+            }
+            .list-item-bottom {
+              position: absolute;
+              bottom: 2px;
+              right: 0;
+              color: #bdbdbd;
+              font-size: 12px;
+              span {
+                color: #5d5d5d
+              }
+            }
           }
         }
       }
-      .increaseBtn {
-        width: 92%;
-        margin: 0 auto;
-        padding-top: 10px;
-          .van-cell-group {
-            width: 100%;
-            margin: 0 auto;
-            /deep/ .van-button {
-            width: 100%;
-            margin-top: 35px;
-            background: #38bdd0;
-            color: #fff;
-            border-radius: 0;
-            font-size: 12px;
-            border-radius: 30px;
-            height: 35px;
-            border: none;
-            line-height: 35px;
-          }
+      .btn-group {
+        margin-top: 20px;
+        text-align: center;
+        button {
+          background: #38bdd0;
+          border: 1px solid #e7e9ec;
         }
       }
     }

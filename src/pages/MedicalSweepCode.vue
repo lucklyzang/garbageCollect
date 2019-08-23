@@ -46,7 +46,7 @@
         <div class="content-footer">
           <van-button type="info" @click="startTask" size="small">医废收集</van-button>
           <van-button type="info" @click="sureCurrentCodeMsg" size="small">确定</van-button>
-          <van-button type="info" @click="finishCollect" v-show="showPrintButton" size="small">打印单据</van-button>
+          <van-button type="info" @click="finishCollect" v-show="showPrintBtn" size="small">打印单据</van-button>
           <van-button type="info" @click="collectSure" v-show="showOtherButton" size="small">其它科室收集</van-button>
         </div>
       </div>
@@ -68,6 +68,7 @@ export default {
   data () {
     return {
       currentActive: 0,
+      totalWeigh: 0,
       astOfficeShow: false,
       staffCodeShow: false,
       bagCodeShow: false,
@@ -85,12 +86,14 @@ export default {
       'keshiCode',
       'yihuCode',
       'lajiCode',
+      'lanyaCz',
       'judgeFlowValue',
       'applicationCollectTime',
       'startCollectTime',
       'batchNumber',
       'showPrintBtn',
-      'showOtherBtn'
+      'showOtherBtn',
+      'userInfo'
     ]),
     showPrintButton () {
       return this.showPrintBtn
@@ -205,18 +208,27 @@ export default {
     },
     // 称重后的回调
     getWeightCallback(str) {
+      this.totalWeigh+=Number(str);
       this.bagCodeShow = false;
       this.bluetoothWeighShow = true;
-      this.weightMsg = str;
-      this.storageLanyaCz(str)
+      this.weightMsg = this.totalWeigh;
+      this.storageLanyaCz(this.totalWeigh)
     },
 
     //打印凭单
     finishCollect () {
       // num,dep,category,weight,collector,handover
-      // 科室，时间，垃圾类型，垃圾重量，收集人，交接人
-      this.printProof(this.keshiCode[0].depName,this.startCollectTime,this.lajiCode[0].wasteName,
-      this.lanyaCz[0],this.userInfo.workerName,this.yihuCode[0].workerName)
+      // this.lajiCode[0].wasteName,
+      // //编号, 科室, 垃圾类型，垃圾重量，收集人，交接人
+      if (this.lajiCode.length == 1) {
+        this.printProof(this.lajiCode[0].barCode,this.keshiCode[0].depName,this.lajiCode[0].wasteName,
+         this.lanyaCz[0],this.userInfo.workerName,this.yihuCode[0].workerName);
+      } else if (this.lajiCode.length > 1) {
+        for (let i = 0, len = this.lajiCode.length; i<len; i++) {
+          this.printProof(this.lajiCode[i].barCode,this.keshiCode[0].depName,this.lajiCode[i].wasteName,
+          this.lanyaCz[i],this.userInfo.workerName,this.yihuCode[0].workerName);
+        }
+      }
     },
     // 确认扫码无误进入下个流
     sureCurrentCodeMsg () {

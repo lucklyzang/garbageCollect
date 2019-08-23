@@ -1,6 +1,6 @@
 <template>
   <div class="footer">
-      <div class="foot-item" v-for="item in itemFooter">
+      <div class="foot-item" v-for="item in itemFooter" @click="itemClick(item.itemText)">
         <img :src="item.imgUrl" alt="">
         <p>{{item.itemText}}</p>
       </div>
@@ -12,6 +12,8 @@ import indexIcon from '@/common/images/home/index-icon.png'
 import communityIcon from '@/common/images/home/community-icon.png'
 import messageIcon from '@/common/images/home/message-icon.png'
 import myIcon from '@/common/images/home/my-icon.png'
+import { mapGetters } from 'vuex'
+import { mapMutations } from 'vuex'
 export default {
   data () {
     return {
@@ -28,7 +30,17 @@ export default {
 
   mounted() {},
 
-  methods: {}
+  methods: {
+    ...mapMutations([
+      'changeTitleTxt'
+    ]),
+    itemClick(text) {
+      if (text == '首页') {
+        this.$router.push({path: 'home'});
+        this.changeTitleTxt({tit:'医废监测'})
+      }
+    }
+  }
 }
 
 </script>

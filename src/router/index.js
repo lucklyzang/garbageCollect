@@ -8,6 +8,7 @@ const MedicalOutStorage = () => import('../pages/MedicalOutStorage')
 const JudgeCurrentDepantment = () => import('../pages/judge/JudgeCurrentDepantment')
 const JudgeCurrentCollectFinish = () => import('../pages/judge/JudgeCurrentCollectFinish')
 const JudgeOtherDepantment = () => import('../pages/judge/JudgeOtherDepantment')
+const MedicalInStorageIncrease = () => import('../pages/MedicalInStorageIncrease')
 Vue.use(Router)
 
 let baseRoute  = [
@@ -50,6 +51,11 @@ let baseRoute  = [
     path: '/judgeOtherDepantment',
     name: 'judgeOtherDepantment',
     component: JudgeOtherDepantment,
+  },
+  {
+    path: '/medicalInStorageIncrease',
+    name: 'medicalInStorageIncrease',
+    component: MedicalInStorageIncrease,
   },
 ];
 let router = new Router({

@@ -43,7 +43,6 @@ export default {
         password: this.password
       };
       logIn(loginMessage).then((res)=>{
-        console.log(res);
         if (res && res.data.code == 200) {
           this.$router.push({path:'/home'});
           this.storeUserInfo(res.data.data);
