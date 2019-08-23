@@ -1,19 +1,23 @@
 <template>
   <div class="footer">
       <div class="foot-item" v-for="item in itemFooter">
-        <img src="" alt="">
+        <img :src="item.imgUrl" alt="">
         <p>{{item.itemText}}</p>
       </div>
     </div>
 </template>
 
 <script>
+import indexIcon from '@/common/images/home/index-icon.png'
+import communityIcon from '@/common/images/home/community-icon.png'
+import messageIcon from '@/common/images/home/message-icon.png'
+import myIcon from '@/common/images/home/my-icon.png'
 export default {
   data () {
     return {
       itemFooter: [
-          { itemText: '首页', imgUrl: ''},{ itemText: '消息', imgUrl: ''},
-          { itemText: '社区', imgUrl: ''},{ itemText: '我的', imgUrl: ''},
+          { itemText: '首页', imgUrl: indexIcon},{ itemText: '消息', imgUrl: messageIcon},
+          { itemText: '社区', imgUrl: communityIcon},{ itemText: '我的', imgUrl: myIcon},
         ]
     };
   },

@@ -9,6 +9,10 @@ export default {
     startCollectTime: null,
     // 批次号
     batchNumber: null,
+    // 是否显示打印按钮
+    showPrintBtn: false,
+    // 是否展示其它科室收集按钮
+    showOtherBtn: false,
     // 科室信息汇总
     garColMsg: [
       {
@@ -24,10 +28,13 @@ export default {
     keshiCode: state => state.garColMsg[0].keshiCode,
     yihuCode: state => state.garColMsg[0].yihuCode,
     lajiCode: state => state.garColMsg[0].lajiCode,
+    lanyaCz: state => state.garColMsg[0].lanyaCz,
     judgeFlowValue: state => state.judgeFlowPosition,
     applicationCollectTime: state => state.applicationCollectTime,
     startCollectTime: state => state.startCollectTime,
-    batchNumber: state => state.batchNumber
+    batchNumber: state => state.batchNumber,
+    showPrintBtn: state => state.showPrintBtn,
+    showOtherBtn: state => state.showOtherBtn,
   },
   mutations:{
     changeTitleTxt (state,payLoad) {
@@ -65,6 +72,22 @@ export default {
       // 创建批次号
       createBatchNumber (state,payLoad) {
         state.batchNumber = payLoad
+      },
+      //当前科室数据提交并打印后清空store
+      clearTrashStore (state) {
+        state.startCollectTime = null;
+        state.garColMsg[0].keshiCode = null;
+        state.garColMsg[0].yihuCode = null;
+        state.garColMsg[0].lajiCode = null;
+        state.garColMsg[0].lanyaCz = null;
+      },
+      //更改打印按钮状态
+      changePrintBtn (state,payLoad) {
+        state.showPrintBtn = payLoad
+      },
+      //更改其它科室收集按钮状态
+      changeOtherBtn (state,payLoad) {
+        state.showOtherBtn = payLoad
       }
   },
   actions:{}

@@ -21,18 +21,22 @@ export default {
   methods: {
     ...mapMutations([
       'changeTitleTxt',
-      'changeFlowState' 
+      'changeFlowState',
+      'clearTrashStore' 
     ]),
     showDialog () {
       this.$dialog.confirm({
-        title: '',
         message: '是否其它科室收集?'
       }).then(() => {
         this.$router.replace({path: 'medicalCollect'});
-        this.changeFlowState(0)
+        this.changeFlowState(0);
+        // 清空上个科室存储的数据
+        this.clearTrashStore()
       }).catch(() => {
         this.$router.replace({path:'medicalInStorage'});
-        this.changeTitleTxt({tit: '医废入库'})   
+        this.changeTitleTxt({tit: '医废入库'});
+        // 清空上个科室存储的数据
+        this.clearTrashStore()   
       });
     }
   }

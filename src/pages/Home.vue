@@ -10,7 +10,7 @@
       </div>
       <div class="content-middle">
         <div class="content-list" v-for="item in itemList" @click="routerSkip(item.name, item.itemText)">
-          <img src="" alt="">
+          <img :src="item.imgUrl" alt="">
           <p>{{item.itemText}}</p>
         </div>
       </div>
@@ -25,6 +25,14 @@
   import NoData from '../components/NoData'
   import { mapGetters } from 'vuex'
   import { mapMutations } from 'vuex'
+  import collectWaste from '@/common/images/home/collect-waste.png'
+  import abnormalWarning from '@/common/images/home/abnormal-warning.png'
+  import collectHistory from '@/common/images/home/collect-history.png'
+  import statement from '@/common/images/home/statement.png'
+  import medicalIn from '@/common/images/home/medical-in.png'
+  import medicalOut from '@/common/images/home/medical-out.png'
+  import testStatistics from '@/common/images/home/test-statistics.png'
+  import videoSurveillance from '@/common/images/home/video-surveillance.png'
   export default {
     components:{
       HeaderTop,
@@ -35,10 +43,10 @@
       return {
         currentActive: 0,
         itemList: [
-          { itemText: '医废收集', imgUrl: '', name: 'medicalCollect'},{ itemText: '医废入库', imgUrl: '', name: 'medicalInStorage'},
-          { itemText: '医废出库', imgUrl: '', name: 'medicalOutStorage'},{ itemText: '报表统计', imgUrl: ''},
-          { itemText: '异常预警', imgUrl: ''},{ itemText: '收集历史', imgUrl: ''},
-          { itemText: '检测统计', imgUrl: ''},{ itemText: '视频监控', imgUrl: ''},
+          { itemText: '医废收集', imgUrl: collectWaste, name: 'medicalCollect'},{ itemText: '医废入库', imgUrl: medicalIn, name: 'medicalInStorage'},
+          { itemText: '医废出库', imgUrl: medicalOut, name: 'medicalOutStorage'},{ itemText: '报表统计', imgUrl: statement},
+          { itemText: '异常预警', imgUrl: abnormalWarning},{ itemText: '收集历史', imgUrl: collectHistory},
+          { itemText: '检测统计', imgUrl: testStatistics },{ itemText: '视频监控', imgUrl: videoSurveillance},
         ]
       }
     },
@@ -124,8 +132,7 @@
         align-items: center
         justify-content: center
         img
-          width 50px
-          height 50px
+          width 30px
         p 
           margin-top 6px
           font-size 14px

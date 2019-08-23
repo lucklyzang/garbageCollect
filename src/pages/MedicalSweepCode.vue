@@ -24,8 +24,6 @@
             <p>depName:{{astOfficeCodeMsg.depName}}</p>
           </div>
           <div v-show="staffCodeShow" class="staff-code">
-            <p>{{applicationCollectTime}}</p>
-            <p>{{startCollectTime}}</p>
             <p>workerNumber: {{judgeFlowValue ? yihuCode[0].workerNumber : staffCodeMsg.workerNumber}}</p>
             <p>proId:{{judgeFlowValue ? yihuCode[0].proId : staffCodeMsg.proId}}</p>
             <p>depId:{{judgeFlowValue ? yihuCode[0].depId : staffCodeMsg.depId}}</p>
@@ -46,10 +44,10 @@
           <div v-show="newSummary" class="new-summary"></div>
         </div>
         <div class="content-footer">
-          <van-button type="info" @click="startTask">医废收集</van-button>
-          <van-button type="info" @click="sureCurrentCodeMsg">确定</van-button>
-          <van-button type="info" @click="finishCollect">完成收集</van-button>
-          <van-button type="info" @click="collectSure">收集确认</van-button>
+          <van-button type="info" @click="startTask" size="small">医废收集</van-button>
+          <van-button type="info" @click="sureCurrentCodeMsg" size="small">确定</van-button>
+          <van-button type="info" @click="finishCollect" v-show="showPrintButton" size="small">打印单据</van-button>
+          <van-button type="info" @click="collectSure" v-show="showOtherButton" size="small">其它科室收集</van-button>
         </div>
       </div>
       <FooterBottom></FooterBottom>
@@ -59,7 +57,7 @@
 <script>
 import HeaderTop from '../components/HeaderTop'
 import FooterBottom from '../components/FooterBottom'
-import {judgeStagingPoint} from '../api/rubbishCollect.js'
+import {judgeStagingPoint,judgeMedicalPerson} from '../api/rubbishCollect.js'
 import { mapGetters } from 'vuex'
 import { mapMutations } from 'vuex'
 export default {
@@ -86,15 +84,23 @@ export default {
       'navTopTitle',
       'keshiCode',
       'yihuCode',
+      'lajiCode',
       'judgeFlowValue',
       'applicationCollectTime',
-      'startCollectTime'
-    ])
+      'startCollectTime',
+      'batchNumber',
+      'showPrintBtn',
+      'showOtherBtn'
+    ]),
+    showPrintButton () {
+      return this.showPrintBtn
+    },
+    showOtherButton () {
+      return this.showOtherBtn
+    }
   },
 
   mounted () {
-    // 向后台请求回收批次
-    this.collectBatch();
     // 判断流程从哪步开始
     this.judgeFlowPosition();
     // 二维码回调方法绑定到window下面,提供给外部调用
@@ -104,9 +110,6 @@ export default {
     },
     window['getWeightCallback'] = (code) => {
       me.getWeightCallback(code);
-    },
-    window['scanQRcodeCallback'] = (code) => {
-      me.scanQRcodeCallback(code);
     }
   },
 
@@ -120,6 +123,14 @@ export default {
       'changeStartCollectTime',
       'changeApplicationCollectTime'
     ]),
+    // 重新扫码弹窗
+    againSweepCode () {
+       this.$dialog.alert({
+        message: '流程与扫描数据不匹配,请重试'
+      }).then(() => {
+        this.sweepAstoffice()
+      });
+    },
     // 返回上一页
     backTo () {
       this.$router.go(-1);
@@ -139,6 +150,10 @@ export default {
     sweepAstoffice () {
       window.android.scanQRcode()
     },
+    // 打印方法
+    printProof (num,dep,category,weight,collector,handover) {
+      window.android.printInfo(num,dep,category,weight,collector,handover)
+    },
     // 扫码后的回调
     scanQRcodeCallback(code) {
       // 扫码的科室信息存入store
@@ -151,25 +166,33 @@ export default {
           this.astOfficeShow = true;
           this.astOfficeCodeMsg = code;
          } else {
-          this.sweepAstoffice()
+          this.againSweepCode()
          }
        })
        .catch((err) => {
-         this.sweepAstoffice();
+         this.againSweepCode();
          console.log(err);
        })
       };
       // 扫码的医护人员信息存入store
       if (this.currentActive == 1) {
-        judgeCode();
-        this.storageYihuCode(code);
-        this.staffCodeShow = true;
-        this.astOfficeShow = false;
-        this.staffCodeMsg = code
+       judgeMedicalPerson(code.workerNumber,this.batchNumber).then((res) => {
+          if (res && res.data.code == 200) {
+            this.storageYihuCode(code);
+            this.staffCodeShow = true;
+            this.astOfficeShow = false;
+            this.staffCodeMsg = code
+          } else {
+          this.againSweepCode()
+         }
+       })
+       .catch((err) => {
+        this.againSweepCode();
+         console.log(err)
+       })
       };
       // 扫码的垃圾袋信息存入store
       if (this.currentActive == 2) {
-        judgeCode();
         this.storageLajiCode(code)
         this.bagCodeShow = true;
         this.staffCodeShow = false;
@@ -180,7 +203,7 @@ export default {
     weightRubbish () {
       window.android.getWeight()
     },
-     // 称重后的回调
+    // 称重后的回调
     getWeightCallback(str) {
       this.bagCodeShow = false;
       this.bluetoothWeighShow = true;
@@ -188,8 +211,12 @@ export default {
       this.storageLanyaCz(str)
     },
 
-    // 完成收集任务
+    //打印凭单
     finishCollect () {
+      // num,dep,category,weight,collector,handover
+      // 科室，时间，垃圾类型，垃圾重量，收集人，交接人
+      this.printProof(this.keshiCode[0].depName,this.startCollectTime,this.lajiCode[0].wasteName,
+      this.lanyaCz[0],this.userInfo.workerName,this.yihuCode[0].workerName)
     },
     // 确认扫码无误进入下个流
     sureCurrentCodeMsg () {
@@ -205,12 +232,8 @@ export default {
     },
     // 收集确认
     collectSure () {
-      // 打印凭条
-      // this.$router.push({path:'judgeCurrentDepantment'})
-      // window.android.printInfo()
+      this.$router.push({path:'judgeOtherDepantment'})
     },
-    // 请求回收趟次方法
-    collectBatch () {},
     // 开始医废收集任务
     startTask () {
       // 扫描科室暂存点二维码
