@@ -20,7 +20,11 @@ export default {
 
   methods: {
     ...mapMutations([
-      'changeFlowState', 
+      'changeFlowState',
+      'changeCollectBtn',
+      'changeSureBtn',
+      'changePrintBtn',
+      'changeOtherBtn'
     ]),
     showDialog () {
       this.$dialog.confirm({
@@ -28,7 +32,11 @@ export default {
         message: '是否当前科室继续收集?'
       }).then(() => {
         this.$router.replace({path: 'medicalCollect'});
-        this.changeFlowState(2)
+        this.changeFlowState(2);
+        this.changeCollectBtn(false);
+        this.changeSureBtn(true);
+        this.changePrintBtn(false);
+        this.changeOtherBtn(false)
       }).catch(() => {
         this.$router.push({path:'judgeCurrentCollectFinish'})   
       });

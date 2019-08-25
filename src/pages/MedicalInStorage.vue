@@ -6,32 +6,40 @@
     </HeaderTop>
     <div class="content-middle">
       <p class="content-middle-top">
-        <span class="text-left">甘肃省人民医院</span>
+        <span class="text-left">{{hospitalName}}</span>
         <span class="text-right">2019-08-01---2019-08-16</span>
       </p>
       <div class="content-middle-list">
         <div class="content-middle-list-item" v-for="item in classList">
           <div class="list-item">
-            <p class="list-item-left">{{item.type}}</p>
+            <p class="list-item-left">{{item.wasteName}}</p>
             <p class="list-item-right">
               重量: <span>{{item.weight}}kg</span>
             </p>
             <div class="list-strip">
-              <p class="list-sign">条码标识: {{item.sign}}</p>
-              <p class="list-times">回收趟次: {{item.times}}</p>
-              <p class="list-code">小车编码: {{item.code}}</p>
-              <p class="list-code">时间: {{item.collectTime}}</p>
+              <p>科室: {{item.depName}}</p>
+              <p class="list-sign">条码标识: {{item.collectNumber}}</p>
+              <p class="list-times">回收趟次: {{item.batchNumber}}</p>
+              <p class="list-code">时间: {{item.createTime}}</p>
             </div>
             <div class="list-item-bottom">
-              移交人员: <span>{{item.peopleName}}</span>
+              移交人员: <span>{{item.careName}}</span>
             </div>
           </div>
         </div>
       </div>
-      <div class="stage-point">{{stagingMsg}}</div>
+      <div class="stage-point">
+        <p>{{stagingMsg.number}}</p>
+        <p>{{stagingMsg.proId}}</p>
+        <p>{{stagingMsg.name}}</p>
+        <p>{{stagingMsg.id}}</p>
+        <p>{{stagingMsg.proName}}</p>
+        <p>{{stagingMsg.type}}</p>
+        <p>{{stagingMsg.depName}}</p>
+      </div>
       <div class="btn-group">
-        <van-button type="info" @click="medicalInStoragr" size="small">医废入库</van-button>
-        <van-button type="info" @click="sureInStorage" size="small">确定</van-button>
+        <van-button type="info" v-show="inStoageBtn" @click="medicalInStoragr" size="small">医废入库</van-button>
+        <van-button type="info" v-show="sureBtnShow" @click="sureInStorage" size="small">确定</van-button>
       </div>
     </div>
     <FooterBottom></FooterBottom>
@@ -43,6 +51,7 @@ import HeaderTop from '../components/HeaderTop'
 import FooterBottom from '../components/FooterBottom'
 import { mapGetters } from 'vuex'
 import { mapMutations } from 'vuex'
+import {queryBatch,judgeSummaryPoint,inStorageAdd} from '../api/rubbishCollect.js'
 export default {
    components:{
     HeaderTop,
@@ -52,24 +61,39 @@ export default {
     return {
       topTitle: '医废收集',
       stagingMsg: '',
-      classList: [
-        {type: '血液透析/感染性', weight: '3.04', collectTime: '2019-8-23 16:38:47', sign: '0912121212',times: '12121212121212', code: '1212121', peopleName: '王克荛'},
-        {type: '血液透析/感染性', weight: '3.04', collectTime: '2019-8-23 16:38:47', sign: '0912121212',times: '12121212121212', code: '1212121', peopleName: '王克荛'}
-      ]
+      classList: [],
+      hospitalName: '',
+      sureBtnShow: false,
+      inStoageBtn: true,
+      storeId: 0, 
+      storeNumber:'',
+      batchNumberLocal:'',
+      inWorkerName:'',
+      proId: '',  
+      proName:  ''  
     };
   },
   computed: {
     ...mapGetters([
       'navTopTitle',
+      'batchNumber'
     ])
   },
 
   mounted() {
+    if (!this.batchNumber) {
+        this.$dialog.alert({
+            message: '批次号不能为空'
+          }).then(() => {
+          });
+      } else {
+        this.queryAllBatch()
+      };
     // 二维码回调方法绑定到window下面,提供给外部调用
     let me = this;
     window['scanQRcodeCallback'] = (code) => {
       me.scanQRcodeCallback(code);
-    }
+    };
   },
   methods: {
     ...mapMutations([
@@ -86,14 +110,100 @@ export default {
     },
     // 扫码后的回调
     scanQRcodeCallback (code) {
-      this.stagingMsg = code
+      judgeSummaryPoint(code.type,code.number).then((res) => {
+        if (res && res.data.code == 200) {
+          this.sureBtnShow = true;
+          this.inStoageBtn = false;
+          this.stagingMsg = code;
+          this.storeId = code.id;
+          this.storeNumber = code.number;
+          this.storeNumber = code.number;
+          this.proId = code.proId;
+          this.proName = code.proName;
+        } else {
+          this.$dialog.alert({
+            message: '流程与扫描数据不匹配,请重试'
+            }).then(() => {
+            this.medicalInStoragr()
+          });
+        }
+      })
+      .catch((err)=>{
+        this.$dialog.alert({
+          message: '流程与扫描数据不匹配,请重试'
+          }).then(() => {
+          this.medicalInStoragr()
+        });
+        console.log(err)
+      })
     },
     //扫描医废入库暂存点二维码
     medicalInStoragr () {
       this.sweepAstoffice()
     },
+    // 查询收集的垃圾批次信息00012019081900022019082200
+    queryAllBatch () {
+      queryBatch({batchNumber:this.batchNumber,state: 0}).then((res)=>{
+        if (res && res.data.code == 200) {
+          if (res.data.data.length > 0) {
+            let dataList = res.data.data;
+            this.hospitalName = dataList[0].proName;
+            this.batchNumberLocal = dataList[0].batchNumber;
+            this.inWorkerName = dataList[0].workerName
+            for (let item of dataList) {
+              this.classList.push({
+                collectNumber: item.collectNumber,
+                wasteName: item.wasteName,
+                weight: item.weight,
+                batchNumber: item.batchNumber,
+                createTime: item.createTime,
+                careName: item.careName,
+                depName: item.depName
+              })
+            }
+          } else {
+             this.$dialog.alert({
+              message: '当前没有待入库的信息'
+            }).then(() => {
+            });
+          }
+        }
+      })
+      .catch((err)=> {
+        console.log(err)
+      })
+    },
     //确定入库
-    sureInStorage () {}
+    sureInStorage () {
+      let inStorageMsg = {
+        storeId: this.storeId, 
+        storeNumber: this.storeNumber,
+        batchNumber: this.batchNumberLocal,
+        inWorkerName: this.inWorkerName,
+        proId: this.proId,  
+        proName: this.proName  
+      };
+      inStorageAdd(inStorageMsg).then((res) => {
+        if (res) {
+          if (res.data.code == 200) {
+            this.$dialog.alert({
+              message: '医废入库成功'
+            }).then(() => {
+              // this.sweepAstoffice()
+            });
+          } else {
+            this.$dialog.alert({
+              message: '医废入库失败'
+            }).then(() => {
+              // this.sweepAstoffice()
+            });
+          }
+        }
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+    }
   }
 }
 
@@ -140,11 +250,11 @@ export default {
         }
       }
       .content-middle-list {
-        height: 300px;
+        height: 360px;
         overflow: auto;
         .content-middle-list-item {
           padding: 14px;
-          height: 140px;
+          height: 110px;
           border-bottom: 1px solid #e8e4e4;
           .list-item {
             position: relative;
@@ -183,7 +293,7 @@ export default {
             }
             .list-item-bottom {
               position: absolute;
-              bottom: 2px;
+              bottom: 0;
               right: 0;
               color: #bdbdbd;
               font-size: 12px;
@@ -196,11 +306,11 @@ export default {
       }
       .stage-point {
         margin-top: 10px;
-        height: 140px;
-        border: 1px solid #85f0f0
+        height: 90px;
+        border: 1px solid #e6e6e6
       }
       .btn-group {
-        margin-top: 10px;
+        margin-top: 8px;
         text-align: center;
         button {
           background: #38bdd0;

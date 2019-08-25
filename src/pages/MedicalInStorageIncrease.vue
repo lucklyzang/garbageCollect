@@ -6,52 +6,46 @@
     </HeaderTop>
     <div class="content-middle">
       <p class="select-wrapper">
-        <van-field-select-picker
+        <van-field
           label="监测区域"
-          placeholder="请选择"
+          placeholder="请输入"
           v-model="monitorArea"
-          :columns="[1, 2, 3]"
         />
-        <van-field-select-picker
+        <van-field
           label="监测点"
-          placeholder="请选择"
+          placeholder="请输入"
           v-model="monitorDot"
-          :columns="[1, 2, 3]"
         />
-        <van-field-select-picker
+        <van-field
           label="车牌号码"
-          placeholder="请选择"
-          v-model="licenseNumber"
-          :columns="['1', '2', '3']"
+          placeholder="请输入"
+          v-model="cardNumber"
         />
-        <van-field-select-picker
+        <van-field
           label="出库人员"
-          placeholder="请选择"
+          placeholder="请输入"
           v-model="outboundPerson"
-          :columns="[1, 2, 3]"
         />
-        <van-field-select-picker
+        <van-field
           label="物品重量"
-          placeholder="请选择"
-          v-model="itemWeight"
-          :columns="[1, 2, 3]"
+          readonly
+          placeholder="请输入"
+          v-model="calculate"
         />
-        <van-field-select-picker
+        <van-field
           label="交接单位"
-          placeholder="请选择"
-          v-model="transferUnits"
-          :columns="[1, 2, 3]"
+          placeholder="请输入"
+          v-model="company"
         />
-        <van-field-select-picker
+        <van-field
           label="交接人员"
-          placeholder="请选择"
-          v-model="transferStaff"
-          :columns="[1, 2, 3]"
+          placeholder="请输入"
+          v-model="companyName"
         />
       </p>
       <p class="increaseBtn">
         <van-cell-group>
-          <van-button  @click.native="increase">新增</van-button>
+          <van-button  @click="increase">新增</van-button>
         </van-cell-group>
       </p>
     </div>
@@ -63,6 +57,7 @@
 import HeaderTop from '../components/HeaderTop'
 import FooterBottom from '../components/FooterBottom'
 import VanFieldSelectPicker from '../components/VanFieldSelectPicker'
+import {operateOutStorage} from '../api/rubbishCollect.js'
 import { mapGetters } from 'vuex'
 import { mapMutations } from 'vuex'
 export default {
@@ -75,33 +70,79 @@ export default {
     return {
       monitorArea: '',
       monitorDot: '',
-      licenseNumber: '',
+      cardNumber: '',
       outboundPerson: '',
-      itemWeight: '',
-      transferUnits: '',
-      transferStaff: ''
+      itemWeight: this.totalWeight,
+      company: '',
+      companyName: ''
     };
   },
   computed: {
     ...mapGetters([
       'navTopTitle',
-    ])
+      'totalWeight',
+      'batchs'
+    ]),
+    calculate () {
+      return Math.round(this.totalWeight * 100) / 100
+    }
   },
 
   mounted () {},
 
   methods: {
     ...mapMutations([
-      'changeTitleTxt', 
+      'changeTitleTxt',
+      'initTotalWeight',
+      'initBatchs'
     ]),
     // 返回上一页
     backTo () {
       this.$router.go(-1);
       this.changeTitleTxt({tit:'医废监测'})
     },
-    // 新增入库
+    // 新增出库
     increase () {
-
+      let outStorageMsg = {
+        cardNumber: this.cardNumber ,//车牌号
+        company: this.company, //收集公司
+        companyId: '',       //交接人员编号
+        companyName: this.companyName, //交接人姓名
+        outTime: this.formatTime(), //出库时间  格式 yyyy-MM-dd HH:mm:ss
+        outTotalWeight: this.calculate,  //出库重量
+        batchs: this.batchs, //出库的批次
+      };
+      operateOutStorage(outStorageMsg).then((res) => {
+        if (res) {
+          if (res.data.code == 200) {
+            this.initTotalWeight();
+            this.initBatchs();
+            this.$dialog.alert({
+              message: '医废出库成功'
+            }).then(() => {
+              // this.sweepAstoffice()
+            });
+          } else {
+            this.$dialog.alert({
+              message: '医废出库失败'
+            }).then(() => {
+              // this.sweepAstoffice()
+            });
+          }
+        }
+      })
+      .catch((err) => {
+        this.$dialog.alert({
+          message: '医废出库失败'
+        }).then(() => {
+          // this.sweepAstoffice()
+        });
+        console.log(err)
+      })
+    },
+    // 时间格式方法
+    formatTime () {
+      return this.$moment(new Date().getTime()).format('YYYY-MM-DD HH:mm:ss')
     }
   }
 }

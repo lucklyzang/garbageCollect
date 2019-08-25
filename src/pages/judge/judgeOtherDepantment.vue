@@ -22,14 +22,22 @@ export default {
     ...mapMutations([
       'changeTitleTxt',
       'changeFlowState',
-      'clearTrashStore' 
+      'clearTrashStore',
+      'changePrintBtn',
+      'changeOtherBtn',
+      'changeCollectBtn',
+      'changeSureBtn'
     ]),
     showDialog () {
       this.$dialog.confirm({
         message: '是否其它科室收集?'
       }).then(() => {
-        this.$router.replace({path: 'medicalCollect'});
         this.changeFlowState(0);
+        this.$router.replace({path: 'medicalCollect'});
+        this.changeCollectBtn(true);
+        this.changeSureBtn(false);
+        this.changePrintBtn(false);
+        this.changeOtherBtn(false)
         // 清空上个科室存储的数据
         this.clearTrashStore()
       }).catch(() => {

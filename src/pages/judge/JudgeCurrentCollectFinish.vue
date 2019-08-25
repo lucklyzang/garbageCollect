@@ -36,13 +36,28 @@ export default {
   methods: {
     ...mapMutations([
       'changePrintBtn',
-      'changeOtherBtn'
+      'changeOtherBtn',
+      'changeCollectBtn',
+      'changeSureBtn',
+      'changeFlowState'
     ]),
     showDialog () {
       this.$dialog.confirm({
         title: `${this.lajiCode.length}`,
         message: '此次收集已完成?'
       }).then(() => {
+        if (this.lajiCode.length == 0) {
+          this.$dialog.alert({
+              message: '当前没有收集到任何医废数据,请重新扫描'
+            }).then(() => {
+              this.$router.replace({path: 'medicalCollect'});
+              this.changeFlowState(2);
+              this.changeCollectBtn(false);
+              this.changeSureBtn(true);
+              this.changePrintBtn(false);
+              this.changeOtherBtn(false)
+            })
+        };
         if (this.lajiCode.length == 1) {
           this.postTrashOne()
         } else if (this.lajiCode.length > 1) {
@@ -76,9 +91,23 @@ export default {
       // 本次科室收集垃圾提交到服务端
       trashCollectOne(trashData).then((res) => {
         if (res) {
-          this.$router.replace({path: 'medicalCollect'});
-          this.changePrintBtn(true);
-          this.changeOtherBtn(true)
+          if (res.data.code == 200) {
+             this.$dialog.alert({
+                message: '收集数据提交成功'
+                }).then(() => {
+                  this.$router.replace({path: 'medicalCollect'});
+                  this.changePrintBtn(true);
+                  this.changeOtherBtn(true)
+              });
+          } else {
+            this.$dialog.alert({
+              message: '收集数据提交失败,请重新扫描'
+                }).then(() => {
+              this.$router.replace({path: 'medicalCollect'});
+              this.changeCollectBtn(true);
+              this.changeSureBtn(false);
+            })
+          }
         }
       })
       .catch((err) => {
@@ -114,9 +143,23 @@ export default {
       // 本次科室收集垃圾提交到服务端
       trashCollectMore(listObi).then((res) => {
         if (res) {
-          this.$router.replace({path: 'medicalCollect'});
-          this.changePrintBtn(true);
-          this.changeOtherBtn(true)
+           if (res.data.code == 200) {
+             this.$dialog.alert({
+                message: '收集数据提交成功'
+                }).then(() => {
+                  this.$router.replace({path: 'medicalCollect'});
+                  this.changePrintBtn(true);
+                  this.changeOtherBtn(true)
+              });
+          } else {
+            this.$dialog.alert({
+              message: '收集数据提交失败,请重新扫描'
+                }).then(() => {
+                this.$router.replace({path: 'medicalCollect'});
+                this.changeCollectBtn(true);
+                this.changeSureBtn(false);
+            })
+          }
         }
       })
       .catch((err) => {

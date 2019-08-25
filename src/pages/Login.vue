@@ -1,6 +1,8 @@
 <template>
   <div id="LoginBox">
-    <p class="logo">智慧卫监</p>
+    <p class="logo">
+      <img :src="loginBanner" alt="">
+    </p>
     <van-cell-group>
       <van-field label="用户名" placeholder="请输入用户名" type="text" v-model="username"></van-field>
       <van-field label="密码" placeholder="请输入密码" type="password" v-model="password"></van-field>
@@ -16,11 +18,13 @@
 import {logIn} from '../api/login.js'
 import { mapGetters } from 'vuex'
 import { mapMutations } from 'vuex'
+import loginBg from '@/components/images/login-bg.png'
 export default {
   data () {
     return {
       username:'',
-      password: ''
+      password: '',
+      loginBanner: loginBg
     };
   },
   watch: {
@@ -43,9 +47,16 @@ export default {
         password: this.password
       };
       logIn(loginMessage).then((res)=>{
-        if (res && res.data.code == 200) {
-          this.$router.push({path:'/home'});
-          this.storeUserInfo(res.data.data);
+        if (res) {
+          if (res.data.code == 200) {
+            this.$router.push({path:'/home'});
+            this.storeUserInfo(res.data.data);
+          } else {
+             this.$dialog.alert({
+              message: `${res.data.msg}`
+            }).then(() => {
+            });
+          }
         }
       })
       .catch((err) => {
@@ -64,10 +75,15 @@ export default {
     .logo {
       text-align: center;
       width: 100%;
-      height: 200px;
+      margin-bottom: 40px;
+      height: 220px;
       line-height: 200px;
       font-size: 28px;
-      color:#aad5ba
+      color:#aad5ba;
+      img {
+        width: 100%;
+        height: 100%
+      }
     }
     .van-hairline--top-bottom::after {
       display: none

@@ -5,19 +5,34 @@
       <van-icon name="manager-o" slot="right" @click.native="backTo"></van-icon> 
     </HeaderTop>
     <div class="content-middle">
+      <div class="content-middle-top">
+        <van-field v-model="startTime" placeholder="开始日期" readonly="readonly" @click="startTimePop = true"/>
+        <van-popup v-model="startTimePop" label="离开时间" position="bottom" :overlay="true"> 
+          <van-datetime-picker  v-model="currentDateStart"  type="datetime"  
+          @cancel="startTimePop = false"  @confirm="startTimePop = false"  @change="startTimeChange"/>
+        </van-popup>
+        <van-field v-model="endTime" placeholder="结束日期" readonly="readonly" @click="endTimePop = true"/>
+        <van-popup v-model="endTimePop" label="离开时间" position="bottom" :overlay="true"> 
+          <van-datetime-picker  v-model="currentDateEnd"  type="datetime"  
+          @cancel="endTimePop = false"  @confirm="endTimePop = false"  @change="endTimeChange"/>
+        </van-popup>
+        <p class="middle-top-search">
+          <van-button type="info" size="small" @click="queryNotInStorage">搜索</van-button>
+        </p>
+      </div>
       <div class="changeBtn">
-        <van-checkbox v-model="checked">全选</van-checkbox>
+        <van-checkbox v-model="checkedAll" @click="toggleCheckedAll">全选</van-checkbox>
       </div>
       <div class="content-middle-list">
         <div class="content-middle-list-item" v-for="item in classList">
           <div class="change-btn-position">
-            <van-checkbox v-model="checked"></van-checkbox>
+            <van-checkbox v-model="item.check"  @change="oneChecked(item.check)"></van-checkbox>
           </div>
           <div class="list-item">
-            <p class="list-item-left">回收趟次: {{item.times}}</p>
+            <p class="list-item-left">回收趟次: {{item.batchNumber}}</p>
             <div class="list-strip">
-              <p class="list-times">收集人员: {{item.times}}</p>
-              <p class="list-code">时间: {{item.collectTime}}</p>
+              <p class="list-times">收集人员: {{item.inWorkerName}}</p>
+              <p class="list-code">时间: {{item.inTime}}</p>
             </div>
           </div>
         </div>
@@ -35,6 +50,7 @@ import HeaderTop from '../components/HeaderTop'
 import FooterBottom from '../components/FooterBottom'
 import { mapGetters } from 'vuex'
 import { mapMutations } from 'vuex'
+import {queryOutStorage} from '../api/rubbishCollect.js'
 export default {
    components:{
     HeaderTop,
@@ -42,18 +58,24 @@ export default {
   },
   data () {
     return {
+      endTimePop: false,
+      startTimePop: false,
+      currentDateStart: '',
+      currentDateEnd: '',
+      startTime: '',
+      endTime: '',
       topTitle: '医废收集',
       stagingMsg: '',
-      checked: true,
-      classList: [
-        {type: '血液透析/感染性', weight: '3.04', collectTime: '2019-8-23 16:38:47', sign: '0912121212',times: '12121212121212', code: '1212121', peopleName: '王克荛'},
-        {type: '血液透析/感染性', weight: '3.04', collectTime: '2019-8-23 16:38:47', sign: '0912121212',times: '12121212121212', code: '1212121', peopleName: '王克荛'}
-      ]
+      checkedAll: false,
+      classList: [],
+      totalWeight: 0,
+      batchsArray: []
     };
   },
   computed: {
     ...mapGetters([
       'navTopTitle',
+      'userInfo'
     ])
   },
 
@@ -61,8 +83,21 @@ export default {
   },
   methods: {
     ...mapMutations([
-      'changeTitleTxt', 
+      'changeTitleTxt',
+      'changeTotalWeight',
+      'changeBatchs',
+      'initTotalWeight',
+      'initBatchs'
+
     ]),
+    startTimeChange(e) { 
+      let startTimeArr = e.getValues();//["2019", "03", "22", "17", "28"] 
+      this.startTime = `${startTimeArr[0]}-${startTimeArr[1]}-${startTimeArr[2]}`
+    },
+    endTimeChange(e) {
+      let endTimeArr = e.getValues();//["2019", "03", "22", "17", "28"] 
+      this.endTime = `${endTimeArr[0]}-${endTimeArr[1]}-${endTimeArr[2]}`
+    },
     // 返回上一页
     backTo () {
       this.$router.go(-1);
@@ -70,8 +105,82 @@ export default {
     },
     //确定入库
     sureInStorage () {
+      this.initTotalWeight();
+      this.initBatchs();
+      let outStorageArray = this.classList.filter((item)=>{
+        return item.check == true
+      });
+      for (let item of outStorageArray) {
+        this.totalWeight += item.trashHeight;
+        this.batchsArray.push(item.batchNumber)
+      };
+      this.changeTotalWeight(this.totalWeight);
+      this.changeBatchs(this.batchsArray);
       this.$router.push({path:'medicalInStorageIncrease'});
       this.changeTitleTxt({tit: '医废入库新增'});
+    },
+    // 全选操作
+    toggleCheckedAll(){
+       if(this.checkedAll){
+          this.classList.forEach((item)=>{
+            item.check = false  
+          })
+          this.checkedAll = false
+       }else{
+          this.classList.forEach((item)=>{
+            item.check = true  
+          })
+          this.checkedAll = true
+       }
+     },
+    // 单选操作
+     oneChecked(cart){
+       if(!cart){
+        this.checkedAll = false
+       }
+       let isExitCheckedNo = this.classList.every(item=>{
+          return item.check == true     
+       });
+       if(isExitCheckedNo){
+          this.checkedAll = true    
+       }else{
+          this.checkedAll = false
+       }
+    },
+    // 查询未出库批次
+    queryNotInStorage () {
+      let batchInfo = {
+        proId: this.userInfo.proId,  
+        startDate: this.startTime,
+        endDate:  this.endTime, 
+        state: '', 
+      };
+      queryOutStorage(batchInfo).then((res) => {
+        if (res) {
+          if (res.data.code == 200) {
+            if (res.data.data.length > 0) {
+              let outStorage = res.data.data;
+              for (let item of outStorage) {
+                this.classList.push({
+                  batchNumber: item.batchNumber,
+                  inWorkerName: item.inWorkerName,
+                  inTime: item.inTime,
+                  trashHeight: item.inTotalWeight,
+                  check: false
+                })
+              }
+            } else {
+               this.$dialog.alert({
+                  message: '当前没有待出库的批次'
+                }).then(() => {
+              });
+            }
+          }
+        }
+      })
+      .catch((err)=>{
+        console.log(err)
+      })
     }
   }
 }
@@ -102,6 +211,18 @@ export default {
       height: 100%;
       margin-top: 80px;
       background: #fff;
+      .content-middle-top {
+        position: relative;
+        .middle-top-search {
+          position: absolute;
+          top: 30px;
+          right: 10px;
+          button {
+            background: #38bdd0;
+            border: 1px solid #e7e9ec;
+          }
+        }
+      }
       .changeBtn {
         height: 40px;
         background: #fbfbfb;
@@ -113,12 +234,12 @@ export default {
         }
       }
       .content-middle-list {
-        height: 420px;
+        height: 340px;
         overflow: auto;
         .content-middle-list-item {
           position: relative;
           box-sizing: border-box;
-          padding: 10px 80px;
+          padding: 10px 10px;
           height: 100px;
           border-bottom: 1px solid #e8e4e4;
           .change-btn-position {
@@ -133,6 +254,7 @@ export default {
           .list-item {
             position: relative;
             height: 100%;
+            margin-left: 30px;
             .list-item-left {
               position: absolute;
               top: 0;
@@ -169,7 +291,7 @@ export default {
         }
       }
       .btn-group {
-        margin-top: 20px;
+        margin-top: 16px;
         text-align: center;
         button {
           background: #38bdd0;

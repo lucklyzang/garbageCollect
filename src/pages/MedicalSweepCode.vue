@@ -6,7 +6,8 @@
       </HeaderTop>
       <div class="content">
         <div class="content-header">
-          <van-steps :active="currentActive">
+          <van-steps :active="currentActive" active-icon="success"
+            active-color="#38bdd0">
             <van-step>扫描科室二维码</van-step>
             <van-step>扫描医护人员工作条码</van-step>
             <van-step>扫描垃圾袋条码</van-step>
@@ -44,8 +45,8 @@
           <div v-show="newSummary" class="new-summary"></div>
         </div>
         <div class="content-footer">
-          <van-button type="info" @click="startTask" size="small">医废收集</van-button>
-          <van-button type="info" @click="sureCurrentCodeMsg" size="small">确定</van-button>
+          <van-button type="info" @click="startTask" v-show="showCollectButton" size="small">医废收集</van-button>
+          <van-button type="info" @click="sureCurrentCodeMsg" v-show="showSureButton" size="small">确定</van-button>
           <van-button type="info" @click="finishCollect" v-show="showPrintBtn" size="small">打印单据</van-button>
           <van-button type="info" @click="collectSure" v-show="showOtherButton" size="small">其它科室收集</van-button>
         </div>
@@ -93,8 +94,16 @@ export default {
       'batchNumber',
       'showPrintBtn',
       'showOtherBtn',
-      'userInfo'
+      'userInfo',
+      'showCollectBtn',
+      'showSureBtn'
     ]),
+    showCollectButton () {
+      return this.showCollectBtn
+    },
+    showSureButton () {
+      return this.showSureBtn
+    },
     showPrintButton () {
       return this.showPrintBtn
     },
@@ -124,7 +133,9 @@ export default {
       'storageLajiCode',
       'storageLanyaCz',
       'changeStartCollectTime',
-      'changeApplicationCollectTime'
+      'changeApplicationCollectTime',
+      'changeCollectBtn',
+      'changeSureBtn'
     ]),
     // 重新扫码弹窗
     againSweepCode () {
@@ -164,6 +175,8 @@ export default {
         // 二维码是否扫描正确判断
        judgeStagingPoint(code.type,code.number).then((res) => {
          if (res && res.data.code == 200) {
+          this.changeCollectBtn(false);
+          this.changeSureBtn(true);
           this.storageKeshiCode(code);
           this.changeStartCollectTime(this.formatTime());
           this.astOfficeShow = true;
@@ -191,7 +204,7 @@ export default {
        })
        .catch((err) => {
         this.againSweepCode();
-         console.log(err)
+        console.log(err)
        })
       };
       // 扫码的垃圾袋信息存入store
@@ -286,9 +299,14 @@ export default {
       .content-middle {
         height: 370px;
         width: 100%;
-        border: 1px solid #d0efbb;
         div {
-          height: 200px
+          height: 200px;
+          p {
+            line-height: 30px;
+            padding-left: 14px;
+            font-size: 14px;
+            color: #8e9090;
+          }
         }
         .new-summary {
           height: 100%;

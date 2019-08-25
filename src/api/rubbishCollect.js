@@ -36,3 +36,42 @@ export function trashCollectMore(data) {
     data
   })
 };
+// 根据批次查询
+export function queryBatch(data) {
+  return request({
+    url: 'collect/queryAll',
+    method: 'get',
+    params: data
+  })
+};
+// 汇总点校验
+export function judgeSummaryPoint(type,number) {
+  return request({
+    url: `point/verifyFinal/${type}/${number}`,
+    method: 'get'
+  })
+};
+//入库接口
+export function inStorageAdd(data) {
+  return request({
+    url: 'store/add',
+    method: 'post',
+    data
+  })
+};
+//查询未出库批次
+export function queryOutStorage(data) {
+  return request({
+    url: 'store/queryout',
+    method: 'get',
+    params: data
+  })
+};
+//出库操作
+export function operateOutStorage(data) {
+  return request({
+    url: 'store/outstore',
+    method: 'put',
+    data
+  })
+};
