@@ -45,7 +45,7 @@
       </p>
       <p class="increaseBtn">
         <van-cell-group>
-          <van-button  @click="increase">新增</van-button>
+          <van-button  @click="increase" size="normal">新增</van-button>
         </van-cell-group>
       </p>
     </div>

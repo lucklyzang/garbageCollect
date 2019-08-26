@@ -30,14 +30,14 @@ export default {
       this.$dialog.confirm({
         message: '是否当前科室继续收集?'
       }).then(() => {
-        this.$router.replace({path: 'medicalCollect'});
+        this.$router.push({path: 'medicalCollect'});
         this.changeFlowState(2);
         this.changeCollectBtn(false);
         this.changeSureBtn(true);
         this.changePrintBtn(false);
         this.changeOtherBtn(false)
       }).catch(() => {
-        this.$router.push({path:'judgeCurrentCollectFinish'})   
+        this.$router.replace({path:'judgeCurrentCollectFinish'})   
       });
     }
   }

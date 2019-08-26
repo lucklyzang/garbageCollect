@@ -33,7 +33,7 @@ export default {
         message: '是否其它科室收集?'
       }).then(() => {
         this.changeFlowState(0);
-        this.$router.replace({path: 'medicalCollect'});
+        this.$router.push({path: 'medicalCollect'});
         this.changeCollectBtn(true);
         this.changeSureBtn(false);
         this.changePrintBtn(false);
@@ -41,7 +41,7 @@ export default {
         // 清空上个科室存储的数据
         this.clearTrashStore()
       }).catch(() => {
-        this.$router.replace({path:'medicalInStorage'});
+        this.$router.push({path:'medicalInStorage'});
         this.changeTitleTxt({tit: '医废入库'});
         // 清空上个科室存储的数据
         this.clearTrashStore()   

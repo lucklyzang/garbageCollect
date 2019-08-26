@@ -38,7 +38,7 @@
         </div>
       </div>
       <div class="btn-group">
-        <van-button type="info" @click="sureInStorage" size="small">确定</van-button>
+        <van-button type="info" @click="sureInStorage" size="normal">确定出库</van-button>
       </div>
     </div>
     <FooterBottom></FooterBottom>
@@ -226,10 +226,14 @@ export default {
       background: #fff;
       .content-middle-top {
         position: relative;
+        /deep/ .van-cell {
+          width: 40%;
+          display: inline-block
+        }
         .middle-top-search {
           position: absolute;
-          top: 30px;
-          right: 10px;
+          top: 7px;
+          right: 6px;
           button {
             background: @color-theme;
             border-color: @color-theme
@@ -247,7 +251,7 @@ export default {
         }
       }
       .content-middle-list {
-        height: 340px;
+        height: 385px;
         overflow: auto;
         .content-middle-list-item {
           position: relative;
@@ -304,7 +308,7 @@ export default {
         }
       }
       .btn-group {
-        margin-top: 16px;
+        margin-top: 8px;
         text-align: center;
         button {
           background: @color-theme;

@@ -1,11 +1,11 @@
 import axios from 'axios'
 import { MessageBox,} from 'element-ui'
 import store from '@/store'
-
+// http://192.168.8.100:8080
 const service = axios.create({
   baseURL: 'http://192.168.8.100:8080',
   // timeout: 5000 // request timeout
-})
+});
 
 // request interceptor
 service.interceptors.request.use(

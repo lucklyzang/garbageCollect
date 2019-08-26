@@ -16,39 +16,39 @@
         </div>
         <div class="content-middle">
           <div v-show="astOfficeShow" class="ast-office">
-            <p>number: {{astOfficeCodeMsg.number}}</p>
-            <p>proId:{{astOfficeCodeMsg.proId}}</p>
-            <p>name:{{astOfficeCodeMsg.name}}</p>
-            <p>id:{{astOfficeCodeMsg.id}}</p>
-            <p>proName:{{astOfficeCodeMsg.proName}}</p>
-            <p>type:{{astOfficeCodeMsg.type}}</p>
-            <p>depName:{{astOfficeCodeMsg.depName}}</p>
+            <!-- <p>number: {{astOfficeCodeMsg.number}}</p>
+            <p>proId:{{astOfficeCodeMsg.proId}}</p> -->
+            <p>科室: {{astOfficeCodeMsg.name}}</p>
+            <!-- <p>id:{{astOfficeCodeMsg.id}}</p> -->
+            <p>医院: {{astOfficeCodeMsg.proName}}</p>
+            <!-- <p>type:{{astOfficeCodeMsg.type}}</p> -->
+            <p>房间: {{astOfficeCodeMsg.depName}}</p>
           </div>
           <div v-show="staffCodeShow" class="staff-code">
-            <p>workerNumber: {{judgeFlowValue ? yihuCode[0].workerNumber : staffCodeMsg.workerNumber}}</p>
+            <!-- <p>workerNumber: {{judgeFlowValue ? yihuCode[0].workerNumber : staffCodeMsg.workerNumber}}</p>
             <p>proId:{{judgeFlowValue ? yihuCode[0].proId : staffCodeMsg.proId}}</p>
             <p>depId:{{judgeFlowValue ? yihuCode[0].depId : staffCodeMsg.depId}}</p>
-            <p>id:{{judgeFlowValue ?  yihuCode[0].id : staffCodeMsg.id}}</p>
-            <p>proName:{{judgeFlowValue ? yihuCode[0].proName : staffCodeMsg.proName}}</p>
-            <p>workerName:{{judgeFlowValue ? yihuCode[0].workerName : staffCodeMsg.workerName}}</p>
-            <p>depName:{{judgeFlowValue ?  yihuCode[0].depName : staffCodeMsg.depName}}</p>
+            <p>id:{{judgeFlowValue ?  yihuCode[0].id : staffCodeMsg.id}}</p> -->
+            <p>医院: {{judgeFlowValue == 2 ? yihuCode[0].proName : staffCodeMsg.proName}}</p>
+            <p>姓名: {{judgeFlowValue == 2 ? yihuCode[0].workerName : staffCodeMsg.workerName}}</p>
+            <p>房间: {{judgeFlowValue == 2 ? yihuCode[0].depName : staffCodeMsg.depName}}</p>
           </div>
           <div v-show="bagCodeShow" class="bag-code">
-            <p>wasteName: {{rubbishCodeMsg.wasteName}}</p>
-            <p>proId:{{rubbishCodeMsg.proId}}</p>
-            <p>depId:{{rubbishCodeMsg.depId}}</p>
-            <p>proName:{{rubbishCodeMsg.proName}}</p>
-            <p>depName:{{rubbishCodeMsg.depName}}</p>
-            <p>barCode:{{rubbishCodeMsg.barCode}}</p>
+            <p>医废类型: {{rubbishCodeMsg.wasteName}}</p>
+            <!-- <p>proId:{{rubbishCodeMsg.proId}}</p>
+            <p>depId:{{rubbishCodeMsg.depId}}</p> -->
+            <p>医院: {{rubbishCodeMsg.proName}}</p>
+            <p>房间: {{rubbishCodeMsg.depName}}</p>
+            <!-- <p>barCode:{{rubbishCodeMsg.barCode}}</p> -->
           </div>
           <div v-show="bluetoothWeighShow" class="bluetooth-weigh">{{weightMsg}}</div>
           <div v-show="newSummary" class="new-summary"></div>
         </div>
         <div class="content-footer">
-          <van-button type="info" @click="startTask" v-show="showCollectButton" size="small">医废收集</van-button>
-          <van-button type="info" @click="sureCurrentCodeMsg" v-show="showSureButton" size="small">确定</van-button>
-          <van-button type="info" @click="finishCollect" v-show="showPrintBtn" size="small">打印单据</van-button>
-          <van-button type="info" @click="collectSure" v-show="showOtherButton" size="small">其它科室收集</van-button>
+          <van-button type="info" @click="startTask" v-show="showCollectButton" size="normal">医废收集</van-button>
+          <van-button type="info" @click="sureCurrentCodeMsg" v-show="showSureButton" size="normal">确定</van-button>
+          <van-button type="info" @click="finishCollect" v-show="showPrintBtn" size="normal">打印单据</van-button>
+          <van-button type="info" @click="collectSure" v-show="showOtherButton" size="normal">其它科室收集</van-button>
         </div>
       </div>
       <FooterBottom></FooterBottom>

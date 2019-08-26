@@ -7,7 +7,7 @@
     <div class="content-middle">
       <p class="content-middle-top">
         <span class="text-left">{{hospitalName}}</span>
-        <span class="text-right">2019-08-01---2019-08-16</span>
+        <span class="text-right"></span>
       </p>
       <div class="content-middle-list">
         <div class="content-middle-list-item" v-for="item in classList">
@@ -29,17 +29,19 @@
         </div>
       </div>
       <div class="stage-point">
-        <p>{{stagingMsg.number}}</p>
-        <p>{{stagingMsg.proId}}</p>
-        <p>{{stagingMsg.name}}</p>
-        <p>{{stagingMsg.id}}</p>
-        <p>{{stagingMsg.proName}}</p>
-        <p>{{stagingMsg.type}}</p>
-        <p>{{stagingMsg.depName}}</p>
+        <div v-show="stageMsg">
+          <!-- <p>{{stagingMsg.number}}</p> -->
+          <!-- <p>{{stagingMsg.proId}}</p> -->
+          <p>名称: {{stagingMsg.name}}</p>
+          <!-- <p>{{stagingMsg.id}}</p> -->
+          <p>医院: {{stagingMsg.proName}}</p>
+          <!-- <p>{{stagingMsg.type}}</p> -->
+          <p>房间号: {{stagingMsg.depName}}</p>
+        </div>
       </div>
       <div class="btn-group">
-        <van-button type="info" v-show="inStoageBtn" @click="medicalInStoragr" size="small">医废入库</van-button>
-        <van-button type="info" v-show="sureBtnShow" @click="sureInStorage" size="small">确定</van-button>
+        <van-button type="info" v-show="inStoageBtn" @click="medicalInStoragr" size="normal">医废入库</van-button>
+        <van-button type="info" v-show="sureBtnShow" @click="sureInStorage" size="normal">确定</van-button>
       </div>
     </div>
     <FooterBottom></FooterBottom>
@@ -65,6 +67,7 @@ export default {
       hospitalName: '',
       sureBtnShow: false,
       inStoageBtn: true,
+      stageMsg: false,
       storeId: 0, 
       storeNumber:'',
       batchNumberLocal:'',
@@ -112,6 +115,7 @@ export default {
     scanQRcodeCallback (code) {
       judgeSummaryPoint(code.type,code.number).then((res) => {
         if (res && res.data.code == 200) {
+          this.stageMsg = true;
           this.sureBtnShow = true;
           this.inStoageBtn = false;
           this.stagingMsg = code;
@@ -316,16 +320,24 @@ export default {
         }
       }
       .stage-point {
-        margin-top: 10px;
-        height: 90px;
-        border: 1px solid #e6e6e6
+        margin-top: 4px;
+        height: 80px;
+        div {
+          height: 100%;
+          p {
+            line-height: 20px;
+            padding-left: 14px;
+            font-size: 14px;
+            color: #8e9090;
+          }
+        }
       }
       .btn-group {
-        margin-top: 8px;
+        margin-top: 6px;
         text-align: center;
         button {
           background: @color-theme;
-          border: 1px solid #e7e9ec;
+          border-color: @color-theme
         }
       }
     }
