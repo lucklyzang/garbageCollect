@@ -9,6 +9,8 @@ const JudgeCurrentDepantment = () => import('../pages/judge/JudgeCurrentDepantme
 const JudgeCurrentCollectFinish = () => import('../pages/judge/JudgeCurrentCollectFinish')
 const JudgeOtherDepantment = () => import('../pages/judge/JudgeOtherDepantment')
 const MedicalInStorageIncrease = () => import('../pages/MedicalInStorageIncrease')
+const AbnormalWarning = () => import('../pages/AbnormalWarning')
+const CollectHistory = () => import('../pages/AbnormalWarning')
 Vue.use(Router)
 
 let baseRoute  = [
@@ -56,6 +58,16 @@ let baseRoute  = [
     path: '/medicalInStorageIncrease',
     name: 'medicalInStorageIncrease',
     component: MedicalInStorageIncrease,
+  },
+  {
+    path: '/abnormalWarning',
+    name: 'abnormalWarning',
+    component: AbnormalWarning,
+  },
+  {
+    path: '/collectHistory',
+    name: 'collectHistory',
+    component: CollectHistory,
   },
 ];
 let router = new Router({

@@ -44,7 +44,6 @@ export default {
     ]),
     showDialog () {
       this.$dialog.confirm({
-        title: `${this.lajiCode.length}`,
         message: '此次收集已完成?'
       }).then(() => {
         if (this.lajiCode.length == 0) {

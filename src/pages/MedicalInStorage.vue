@@ -139,6 +139,11 @@ export default {
     },
     //扫描医废入库暂存点二维码
     medicalInStoragr () {
+      this.$dialog.alert({
+        message: '入库批次不能为空'
+      }).then(() => {
+      });
+      return;
       this.sweepAstoffice()
     },
     // 查询收集的垃圾批次信息00012019081900022019082200
@@ -175,6 +180,13 @@ export default {
     },
     //确定入库
     sureInStorage () {
+      if (!this.batchNumber) {
+         this.$dialog.alert({
+          message: '入库批次不能为空'
+        }).then(() => {
+        });
+        return;
+      };
       let inStorageMsg = {
         storeId: this.storeId, 
         storeNumber: this.storeNumber,
@@ -207,6 +219,7 @@ export default {
 
 </script>
 <style lang='less' scoped>
+ @import "../common/stylus/variable.less";
   .content-wrapper {
     margin-top: 100px;
     /deep/ .van-icon-arrow-left {
@@ -311,7 +324,7 @@ export default {
         margin-top: 8px;
         text-align: center;
         button {
-          background: #38bdd0;
+          background: @color-theme;
           border: 1px solid #e7e9ec;
         }
       }

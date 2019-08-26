@@ -28,7 +28,6 @@ export default {
     ]),
     showDialog () {
       this.$dialog.confirm({
-        title: '',
         message: '是否当前科室继续收集?'
       }).then(() => {
         this.$router.replace({path: 'medicalCollect'});

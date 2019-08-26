@@ -2,7 +2,7 @@
   <div class="word-cup">
     <HeaderTop :title="navTopTitle">
       <van-icon name="arrow-left" slot="left" @click="backTo"></van-icon> 
-      <van-icon name="manager-o" slot="right" @click.native="backTo"></van-icon> 
+      <van-icon name="manager-o" slot="right" @click=""></van-icon> 
     </HeaderTop>
     <div class="content">
       <div class="content-header">
@@ -46,7 +46,7 @@
         itemList: [
           { itemText: '医废收集', imgUrl: collectWaste, name: 'medicalCollect'},{ itemText: '医废入库', imgUrl: medicalIn, name: 'medicalInStorage'},
           { itemText: '医废出库', imgUrl: medicalOut, name: 'medicalOutStorage'},{ itemText: '报表统计', imgUrl: statement},
-          { itemText: '异常预警', imgUrl: abnormalWarning},{ itemText: '收集历史', imgUrl: collectHistory},
+          { itemText: '异常预警', imgUrl: abnormalWarning, name: 'abnormalWarning'},{ itemText: '收集历史', imgUrl: collectHistory, name: 'collectHistory'},
           { itemText: '检测统计', imgUrl: testStatistics },{ itemText: '视频监控', imgUrl: videoSurveillance},
         ],
         bannerUrl: homeBanner

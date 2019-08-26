@@ -149,6 +149,7 @@ export default {
 
 </script>
 <style lang='less' scoped>
+@import "../common/stylus/variable.less";
   .content-wrapper {
      /deep/ .van-icon-arrow-left {
       position: absolute;
@@ -202,7 +203,7 @@ export default {
             /deep/ .van-button {
             width: 100%;
             margin-top: 35px;
-            background: #38bdd0;
+            background: @color-theme;
             color: #fff;
             border-radius: 0;
             font-size: 12px;

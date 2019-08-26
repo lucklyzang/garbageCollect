@@ -111,6 +111,13 @@ export default {
       let outStorageArray = this.classList.filter((item)=>{
         return item.check == true
       });
+      if (outStorageArray.length == 0) {
+        this.$dialog.alert({
+          message: '请选择要出库的批次'
+        }).then(() => {
+        });
+        return;
+      };
       for (let item of outStorageArray) {
         this.totalWeight += item.trashHeight;
         this.batchsArray.push(item.batchNumber)
@@ -192,6 +199,7 @@ export default {
 
 </script>
 <style lang='less' scoped>
+@import "../common/stylus/variable.less";
   .content-wrapper {
     margin-top: 100px;
     /deep/ .van-icon-arrow-left {
@@ -223,8 +231,8 @@ export default {
           top: 30px;
           right: 10px;
           button {
-            background: #38bdd0;
-            border: 1px solid #e7e9ec;
+            background: @color-theme;
+            border-color: @color-theme
           }
         }
       }
@@ -234,8 +242,8 @@ export default {
         line-height: 40px;
         padding-left: 10px;
         /deep/ .van-icon {
-          background: #38bdd0;
-          border-color: #38bdd0
+          background: @color-theme;
+          border-color: @color-theme
         }
       }
       .content-middle-list {
@@ -252,8 +260,8 @@ export default {
             top: 30px;
             left: 10px;
             /deep/ .van-icon {
-              background: #38bdd0;
-              border-color: #38bdd0
+              background: @color-theme;
+              border-color: @color-theme
             }
           }
           .list-item {
@@ -299,8 +307,8 @@ export default {
         margin-top: 16px;
         text-align: center;
         button {
-          background: #38bdd0;
-          border: 1px solid #e7e9ec;
+          background: @color-theme;
+          border-color: @color-theme
         }
       }
     }
