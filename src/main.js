@@ -10,7 +10,7 @@ Vue.filter('dateformat', function(dataStr, pattern = 'YYYY-MM-DD HH:mm:ss') {
 });
 Vue.prototype.$moment = moment
 //初始化样式
-import './common/stylus/index.styl'
+import './common/stylus/index.less'
 //移动端适配
 import 'lib-flexible/flexible.js'
 import App from './App'

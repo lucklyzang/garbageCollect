@@ -17,7 +17,7 @@
           @cancel="endTimePop = false"  @confirm="endTimePop = false"  @change="endTimeChange"/>
         </van-popup>
         <p class="middle-top-search">
-          <van-button type="info" size="small" @click="queryNotInStorage">搜索</van-button>
+          <van-button type="info" size="small" @click="queryNotInStorage(startTime,endTime)">搜索</van-button>
         </p>
       </div>
       <div class="changeBtn">
@@ -80,6 +80,7 @@ export default {
   },
 
   mounted() {
+    this.queryNotInStorage();
   },
   methods: {
     ...mapMutations([
@@ -148,11 +149,11 @@ export default {
        }
     },
     // 查询未出库批次
-    queryNotInStorage () {
+    queryNotInStorage (startTime = this.formatTime(), endTime = this.formatTime()) {
       let batchInfo = {
         proId: this.userInfo.proId,  
-        startDate: this.startTime,
-        endDate:  this.endTime, 
+        startDate: startTime,
+        endDate:  endTime, 
         state: '', 
       };
       queryOutStorage(batchInfo).then((res) => {
@@ -181,6 +182,10 @@ export default {
       .catch((err)=>{
         console.log(err)
       })
+    },
+     // 时间格式方法
+    formatTime () {
+      return this.$moment(new Date().getTime()).format('YYYY-MM-DD')
     }
   }
 }

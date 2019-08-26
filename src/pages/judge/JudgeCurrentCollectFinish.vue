@@ -39,7 +39,8 @@ export default {
       'changeOtherBtn',
       'changeCollectBtn',
       'changeSureBtn',
-      'changeFlowState'
+      'changeFlowState',
+      'clearTrashStore'
     ]),
     showDialog () {
       this.$dialog.confirm({
@@ -83,7 +84,7 @@ export default {
         "workerId":  this.userInfo.id,  //收集人员ID
         "workerName": this.userInfo.workerName,  //收集人员名称
         "careId":  this.yihuCode[0].id, //护士ID
-        "wasteId": this.lajiCode[0].proId, //垃圾类型id
+        "wasteId": this.lajiCode[0].id, //垃圾类型id
         "wasteName" : this.lajiCode[0].wasteName,
         "careName":  this.yihuCode[0].workerName, //护士名称
         "weight":  this.lanyaCz[0]  //医废重量
@@ -104,6 +105,8 @@ export default {
               message: '收集数据提交失败,请重新扫描'
                 }).then(() => {
               this.$router.replace({path: 'medicalCollect'});
+                // 清空存储的数据
+                this.clearTrashStore()
               this.changeCollectBtn(true);
               this.changeSureBtn(false);
             })
@@ -133,7 +136,7 @@ export default {
           "workerId":  this.userInfo.id,  //收集人员ID
           "workerName": this.userInfo.workerName,  //收集人员名称
           "careId":  this.yihuCode[0].id, //护士ID
-          "wasteId": this.lajiCode[i].proId, //垃圾类型id
+          "wasteId": this.lajiCode[i].id, //垃圾类型id
           "wasteName" : this.lajiCode[i].wasteName,
           "careName":  this.yihuCode[0].workerName, //护士名称
           "weight":  this.lanyaCz[i]  //医废重量
@@ -156,6 +159,8 @@ export default {
               message: '收集数据提交失败,请重新扫描'
                 }).then(() => {
                 this.$router.replace({path: 'medicalCollect'});
+                // 清空存储的数据
+                this.clearTrashStore()
                 this.changeCollectBtn(true);
                 this.changeSureBtn(false);
             })

@@ -189,13 +189,11 @@ export default {
             this.$dialog.alert({
               message: '医废入库成功'
             }).then(() => {
-              // this.sweepAstoffice()
             });
           } else {
             this.$dialog.alert({
               message: '医废入库失败'
             }).then(() => {
-              // this.sweepAstoffice()
             });
           }
         }

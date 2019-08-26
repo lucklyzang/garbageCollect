@@ -16,28 +16,30 @@
   }
 </script>
 
-<style lang="stylus" rel="stylesheet/stylus">
-  @import "../common/stylus/mixin.styl"
-  @import "../common/stylus/variable.styl"
-  .header
-    background-color $color-theme
-    position fixed
-    z-index 100
-    left 0
-    top 0
-    width 100%
-    height $header-title-height
-    .header_title
-      position absolute
-      top 65%
-      left 50%
-      transform translate(-50%, -50%)
-      width 50%
-      color #fff
-      text-align center
-      .header_title_text
-        font-size 18px
-        color #fff
-        display block
-
+<style lang='less' scoped>
+  @import "../common/stylus/mixin.less";
+  @import "../common/stylus/variable.less";
+  .header {
+    background-color: @color-theme;
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: @header-title-height;
+    .header_title {
+      position: absolute;
+      top: 65%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 50%;
+      color: #fff;
+      text-align: center;
+      .header_title_text {
+        font-size: 18px;
+        color: #fff;
+        display: block
+      }
+    }
+  }
 </style>

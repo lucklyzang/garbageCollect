@@ -84,7 +84,7 @@
             console.log(err)
           })
         }
-        this.$router.push({name:name});
+        this.$router.push({path:name});
         this.changeTitleTxt({tit:text})
       },
        // 时间格式方法
@@ -94,52 +94,62 @@
     }
   }
 </script>
-<style lang="stylus" rel="stylesheet/stylus" scoped>
-  @import "../common/stylus/variable.styl"
-  @import "../common/stylus/mixin.styl"
-  .word-cup
-    .content
-      init-height()
-    /deep/ .van-icon-arrow-left
-      position absolute
-      top 44px
-      left 4px
-      font-size 20px
-      color #fff
-    /deep/ .van-icon-manager-o
-      position absolute
-      top 44px
-      right 6px
-      font-size 18px
-      color #fff
-  .content
-    position fixed
-    width 100%
-    height 100%
-    background #fff
-    .content-header
-      width 100%
-      height 200px
-      border-bottom 1px solid #dbd3d3
-      img 
-        width 100%
-        height 100%
-    .content-middle
-      width 100%
-      display flex
-      flex-direction row
-      flex-wrap wrap
-      .content-list
-        flex-direction column
-        width 25%
-        height 100px
-        display: flex
-        align-items: center
-        justify-content: center
-        img
-          width 30px
-        p 
-          margin-top 6px
-          font-size 14px
-          color #515151
+<style lang='less' scoped>
+  @import "../common/stylus/variable.less";
+  @import "../common/stylus/mixin.less";
+  .word-cup {
+    /deep/ .van-icon-arrow-left {
+      position: absolute;
+      top: 44px;
+      left: 4px;
+      font-size: 20px;
+      color: #fff
+    }
+    /deep/ .van-icon-manager-o {
+      position: absolute;
+      top: 44px;
+      right: 6px;
+      font-size: 18px;
+      color: #fff
+    }
+  }
+  .content {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    .content-header {
+      width: 100%;
+      height: 200px;
+      border-bottom: 1px solid #dbd3d3;
+      margin-top: 80px;
+      img {
+        width: 100%;
+        height: 100%
+      }
+    }
+    .content-middle {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      .content-list {
+        flex-direction: column;
+        width: 25%;
+        height: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        img {
+          width: 30px
+        }
+        p {
+          margin-top: 6px;
+          font-size: 14px;
+          color: #515151;
+        }
+      }
+    }
+  }   
+  
 </style>

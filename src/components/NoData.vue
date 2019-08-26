@@ -11,15 +11,18 @@
     }
 </script>
 
-<style lang="stylus" rel="stylesheet/stylus" scoped>
-  .noDataWrap
-    width 100%
+<style lang='less' scoped>
+  .noDataWrap {
+    width: 100%;
     text-align: center;
     margin-top: 30px;
     background #F4F4F4
-    .noDataImg
-      width 80px
-      height 80px
-    .noDataInfo
-      color #999
+    .noDataImg {
+      width: 80px;
+      height: 80px;
+    }
+    .noDataInfo {
+      color: #999
+    }
+  }
 </style>
