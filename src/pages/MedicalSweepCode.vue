@@ -15,37 +15,48 @@
           </van-steps>
         </div>
         <div class="content-middle">
-          <div v-show="astOfficeShow" class="ast-office">
-            <!-- <p>number: {{astOfficeCodeMsg.number}}</p>
-            <p>proId:{{astOfficeCodeMsg.proId}}</p> -->
-            <p>科室: {{astOfficeCodeMsg.name}}</p>
-            <!-- <p>id:{{astOfficeCodeMsg.id}}</p> -->
-            <p>医院: {{astOfficeCodeMsg.proName}}</p>
-            <!-- <p>type:{{astOfficeCodeMsg.type}}</p> -->
-            <p>房间: {{astOfficeCodeMsg.depName}}</p>
-          </div>
-          <div v-show="staffCodeShow" class="staff-code">
-            <!-- <p>workerNumber: {{judgeFlowValue ? yihuCode[0].workerNumber : staffCodeMsg.workerNumber}}</p>
-            <p>proId:{{judgeFlowValue ? yihuCode[0].proId : staffCodeMsg.proId}}</p>
-            <p>depId:{{judgeFlowValue ? yihuCode[0].depId : staffCodeMsg.depId}}</p>
-            <p>id:{{judgeFlowValue ?  yihuCode[0].id : staffCodeMsg.id}}</p> -->
-            <p>医院: {{judgeFlowValue == 2 ? yihuCode[0].proName : staffCodeMsg.proName}}</p>
-            <p>姓名: {{judgeFlowValue == 2 ? yihuCode[0].workerName : staffCodeMsg.workerName}}</p>
-            <p>房间: {{judgeFlowValue == 2 ? yihuCode[0].depName : staffCodeMsg.depName}}</p>
-          </div>
-          <div v-show="bagCodeShow" class="bag-code">
-            <p>医废类型: {{rubbishCodeMsg.wasteName}}</p>
-            <!-- <p>proId:{{rubbishCodeMsg.proId}}</p>
-            <p>depId:{{rubbishCodeMsg.depId}}</p> -->
-            <p>医院: {{rubbishCodeMsg.proName}}</p>
-            <p>房间: {{rubbishCodeMsg.depName}}</p>
-            <!-- <p>barCode:{{rubbishCodeMsg.barCode}}</p> -->
-          </div>
-          <div v-show="bluetoothWeighShow" class="bluetooth-weigh">{{weightMsg}}</div>
+          <van-panel v-show="astOfficeShow" title="科室信息" desc="" status="">
+            <div class="ast-office">
+                <!-- <p>number: {{astOfficeCodeMsg.number}}</p>
+                <p>proId:{{astOfficeCodeMsg.proId}}</p> -->
+                <p>科室: {{astOfficeCodeMsg.name}}</p>
+                <!-- <p>id:{{astOfficeCodeMsg.id}}</p> -->
+                <p>医院: {{astOfficeCodeMsg.proName}}</p>
+                <!-- <p>type:{{astOfficeCodeMsg.type}}</p> -->
+                <p>房间: {{astOfficeCodeMsg.depName}}</p>
+            </div>
+          </van-panel>
+          <van-panel v-show="staffCodeShow" title="医护人员信息" desc="" status="">
+            <div class="staff-code">
+              <!-- <p>workerNumber: {{judgeFlowValue ? yihuCode[0].workerNumber : staffCodeMsg.workerNumber}}</p>
+              <p>proId:{{judgeFlowValue ? yihuCode[0].proId : staffCodeMsg.proId}}</p>
+              <p>depId:{{judgeFlowValue ? yihuCode[0].depId : staffCodeMsg.depId}}</p>
+              <p>id:{{judgeFlowValue ?  yihuCode[0].id : staffCodeMsg.id}}</p> -->
+              <p>医院: {{judgeFlowValue == 2 ? yihuCode[0].proName : staffCodeMsg.proName}}</p>
+              <p>姓名: {{judgeFlowValue == 2 ? yihuCode[0].workerName : staffCodeMsg.workerName}}</p>
+              <p>房间: {{judgeFlowValue == 2 ? yihuCode[0].depName : staffCodeMsg.depName}}</p>
+            </div>
+           </van-panel>
+          <van-panel v-show="bagCodeShow" title="医废信息" desc="" status="">
+            <div class="bag-code">
+              <p>医废类型: {{rubbishCodeMsg.wasteName}}</p>
+              <!-- <p>proId:{{rubbishCodeMsg.proId}}</p>
+              <p>depId:{{rubbishCodeMsg.depId}}</p> -->
+              <p>医院: {{rubbishCodeMsg.proName}}</p>
+              <p>房间: {{rubbishCodeMsg.depName}}</p>
+              <!-- <p>barCode:{{rubbishCodeMsg.barCode}}</p> -->
+            </div>
+          </van-panel>
+          <van-panel v-show="bluetoothWeighShow" title="医废重量" desc="" status="">
+            <div class="bluetooth-weigh">
+              <p>重量: {{weightMsg}}</p>
+            </div>
+          </van-panel>
           <div v-show="newSummary" class="new-summary"></div>
         </div>
         <div class="content-footer">
           <van-button type="info" @click="startTask" v-show="showCollectButton" size="normal">医废收集</van-button>
+          <van-button type="info" @click="backOut" v-show="showBackoutButton" size="normal">撤销</van-button>
           <van-button type="info" @click="sureCurrentCodeMsg" v-show="showSureButton" size="normal">确定</van-button>
           <van-button type="info" @click="finishCollect" v-show="showPrintBtn" size="normal">打印单据</van-button>
           <van-button type="info" @click="collectSure" v-show="showOtherButton" size="normal">其它科室收集</van-button>
@@ -69,7 +80,6 @@ export default {
   data () {
     return {
       currentActive: 0,
-      totalWeigh: 0,
       astOfficeShow: false,
       staffCodeShow: false,
       bagCodeShow: false,
@@ -78,7 +88,8 @@ export default {
       astOfficeCodeMsg: '',
       staffCodeMsg: '',
       rubbishCodeMsg: '',
-      weightMsg: ''
+      weightMsg: '',
+      currentTotalWeigh: 0
     };
   },
   computed: {
@@ -96,7 +107,9 @@ export default {
       'showOtherBtn',
       'userInfo',
       'showCollectBtn',
-      'showSureBtn'
+      'showSureBtn',
+      'showBackoutBtn',
+      'clearCurrentLajicode'
     ]),
     showCollectButton () {
       return this.showCollectBtn
@@ -109,6 +122,9 @@ export default {
     },
     showOtherButton () {
       return this.showOtherBtn
+    },
+    showBackoutButton () {
+      return this.showBackoutBtn
     }
   },
 
@@ -135,7 +151,15 @@ export default {
       'changeStartCollectTime',
       'changeApplicationCollectTime',
       'changeCollectBtn',
-      'changeSureBtn'
+      'changeSureBtn',
+      'changeBackoutBtn',
+      'initStorageLajiCode',
+      'initStorageLanyaCz',
+      'clearTrashStore',
+      'changeTotalWeight',
+      'changeStorageLajiCode',
+      'changeStorageLanyaCz',
+      'changeCurrentLajicodeState'
     ]),
     // 重新扫码弹窗
     againSweepCode () {
@@ -159,6 +183,33 @@ export default {
       if (this.judgeFlowValue == 0) {
         this.currentActive = 0;
       }
+    },
+    // 撤销操作
+    backOut () {
+      this.$dialog.confirm({
+        message: '确定撤销该次医废收集?'
+      }).then(() => {
+        if (this.lajiCode.length == 0) {
+          this.$router.replace({path:'judgeOtherDepantment'});
+          // 清空撤销前存储的数据
+          this.clearTrashStore()   
+        } else if (this.lajiCode.length > 0) {
+          if (this.clearCurrentLajicode) {
+          // 保留之前存储的信息,删除此次存储的信息
+            let lajiCodeMsg = this.lajiCode;
+            let lanyaCzMsg = this.lanyaCz;
+            lajiCodeMsg.splice(this.lajiCode.length-1,1);
+            lanyaCzMsg.splice(this.lajiCode.length-1,1);
+            this.initStorageLajiCode();
+            this.initStorageLanyaCz();
+            this.changeStorageLajiCode(lajiCodeMsg);
+            this.changeStorageLanyaCz(lanyaCzMsg);
+          };
+          this.$router.replace({path: 'judgeCurrentCollectFinish'});
+          this.changeCurrentLajicodeState(false)
+        }
+      }).catch(() => {
+      });
     },
     // 扫描二维码方法
     sweepAstoffice () {
@@ -209,10 +260,30 @@ export default {
       };
       // 扫码的垃圾袋信息存入store
       if (this.currentActive == 2) {
-        this.storageLajiCode(code)
-        this.bagCodeShow = true;
-        this.staffCodeShow = false;
-        this.rubbishCodeMsg = code
+        if (code && Object.keys(code).length > 0) {
+          if (code.wasteName && code.proName && code.depName) {
+            this.currentTotalWeigh = 0;
+            this.storageLajiCode(code);
+            this.bagCodeShow = true;
+            this.staffCodeShow = false;
+            this.rubbishCodeMsg = code;
+            this.changeCurrentLajicodeState(true)
+          } else {
+            this.$dialog.alert({
+            message: '当前扫描没有收集到任何医废信息,请重新扫描'
+            }).then(() => {
+              this.currentActive = 1;
+              this.sweepAstoffice();
+            })
+          }
+        } else {
+          this.$dialog.alert({
+            message: '当前扫描没有收集到任何医废信息,请重新扫描'
+          }).then(() => {
+            this.currentActive = 1;
+            this.sweepAstoffice();
+          })
+        }
       };
     },
     // 称重方法
@@ -221,11 +292,11 @@ export default {
     },
     // 称重后的回调
     getWeightCallback(str) {
-      this.totalWeigh+=Number(str);
+      this.currentTotalWeigh+=Number(str);
       this.bagCodeShow = false;
       this.bluetoothWeighShow = true;
-      this.weightMsg = this.totalWeigh;
-      this.storageLanyaCz(this.totalWeigh)
+      this.weightMsg = str;
+      this.storageLanyaCz(this.currentTotalWeigh)
     },
 
     //打印凭单
@@ -301,12 +372,12 @@ export default {
         height: 370px;
         width: 100%;
         div {
-          height: 200px;
+          // height: 200px;
           p {
             line-height: 30px;
             padding-left: 14px;
-            font-size: 14px;
-            color: #8e9090;
+            font-size: 12px;
+            color: @color-theme;
           }
         }
         .new-summary {

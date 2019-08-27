@@ -10,7 +10,6 @@
     <van-cell-group>
       <van-button  @click.native="login">登录</van-button>
     </van-cell-group>
-    <p class="bottom-title">共众智能@Copyright 2017-2018</p>
   </div>
 </template>
 
@@ -97,6 +96,9 @@ export default {
       /deep/ .van-field {
         margin-top: 10px;
         color: #6d6d6d;
+        &:not(:last-child):after {
+          display: none
+        }
         .van-cell_title {
           font-size: 12px;
         }

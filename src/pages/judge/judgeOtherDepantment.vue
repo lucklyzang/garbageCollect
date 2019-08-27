@@ -26,7 +26,9 @@ export default {
       'changePrintBtn',
       'changeOtherBtn',
       'changeCollectBtn',
-      'changeSureBtn'
+      'changeSureBtn',
+      'changeCurrentLajicodeState',
+      'changeBackoutBtn'
     ]),
     showDialog () {
       this.$dialog.confirm({
@@ -37,14 +39,18 @@ export default {
         this.changeCollectBtn(true);
         this.changeSureBtn(false);
         this.changePrintBtn(false);
-        this.changeOtherBtn(false)
+        this.changeOtherBtn(false);
         // 清空上个科室存储的数据
-        this.clearTrashStore()
+        this.clearTrashStore();
+        this.changeCurrentLajicodeState(false);
+        this.changeBackoutBtn(true)
       }).catch(() => {
         this.$router.push({path:'medicalInStorage'});
         this.changeTitleTxt({tit: '医废入库'});
         // 清空上个科室存储的数据
-        this.clearTrashStore()   
+        this.clearTrashStore();
+        this.changeCurrentLajicodeState(false);
+        this.changeBackoutBtn(true)   
       });
     }
   }

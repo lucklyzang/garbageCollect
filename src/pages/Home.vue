@@ -121,7 +121,6 @@
     .content-header {
       width: 100%;
       height: 200px;
-      border-bottom: 1px solid #dbd3d3;
       margin-top: 80px;
       img {
         width: 100%;

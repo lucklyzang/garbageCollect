@@ -40,7 +40,10 @@ export default {
       'changeCollectBtn',
       'changeSureBtn',
       'changeFlowState',
-      'clearTrashStore'
+      'clearTrashStore',
+      'changeBackoutBtn',
+      'changeTotalWeight',
+      'changeCurrentLajicodeState'
     ]),
     showDialog () {
       this.$dialog.confirm({
@@ -50,6 +53,7 @@ export default {
           this.$dialog.alert({
               message: '当前没有收集到任何医废数据,请重新扫描'
             }).then(() => {
+              this.changeBackoutBtn(true);
               this.$router.push({path: 'medicalCollect'});
               this.changeFlowState(2);
               this.changeCollectBtn(false);
@@ -59,12 +63,21 @@ export default {
             })
         };
         if (this.lajiCode.length == 1) {
-          this.postTrashOne()
+          //  this.$dialog.alert({
+          //     message: `收集单条数测试${this.lajiCode.length}`
+          //     }).then(() => {
+                this.postTrashOne()
+            // });
         } else if (this.lajiCode.length > 1) {
-          this.postTrashMore()
+          // this.$dialog.alert({
+          //     message: `收集多条数测试${this.lajiCode.length}`
+          //     }).then(() => {
+                this.postTrashMore()
+            // });
         }
       }).catch(() => {
-        this.$router.replace({path: 'judgeCurrentDepantment'})
+        this.$router.replace({path: 'judgeCurrentDepantment'});
+        this.changeCurrentLajicodeState(false)
       });
     },
 
@@ -95,6 +108,7 @@ export default {
              this.$dialog.alert({
                 message: '收集数据提交成功'
                 }).then(() => {
+                  this.changeBackoutBtn(false);
                   this.$router.push({path: 'medicalCollect'});
                   this.changeSureBtn(false);
                   this.changePrintBtn(true);
@@ -104,6 +118,7 @@ export default {
             this.$dialog.alert({
               message: `提交服务端数据${res.data.code}`
               }).then(() => {
+              this.changeBackoutBtn(true);
               this.changeFlowState(0);
               this.$router.push({path: 'medicalCollect'});
               // 清空存储的数据
@@ -119,6 +134,7 @@ export default {
          this.$dialog.alert({
           message: `${err}`
             }).then(() => {
+            this.changeBackoutBtn(true);
             this.changeFlowState(0);
             this.$router.push({path: 'medicalCollect'});
             // 清空存储的数据
@@ -161,6 +177,7 @@ export default {
              this.$dialog.alert({
                 message: '收集数据提交成功'
                 }).then(() => {
+                  this.changeBackoutBtn(false);
                   this.$router.push({path: 'medicalCollect'});
                   this.changeSureBtn(false);
                   this.changePrintBtn(true);
@@ -170,6 +187,7 @@ export default {
             this.$dialog.alert({
               message: `提交服务端数据${res.data.code}`
                 }).then(() => {
+                this.changeBackoutBtn(true);
                 this.changeFlowState(0);
                 this.$router.push({path: 'medicalCollect'});
                 // 清空存储的数据
@@ -185,6 +203,7 @@ export default {
          this.$dialog.alert({
           message: `${err}`
             }).then(() => {
+            this.changeBackoutBtn(true);
             this.changeFlowState(0);
             this.$router.push({path: 'medicalCollect'});
             // 清空存储的数据

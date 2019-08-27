@@ -28,16 +28,19 @@
           </div>
         </div>
       </div>
+      <!-- stageMsg -->
       <div class="stage-point">
-        <div v-show="stageMsg">
-          <!-- <p>{{stagingMsg.number}}</p> -->
-          <!-- <p>{{stagingMsg.proId}}</p> -->
-          <p>名称: {{stagingMsg.name}}</p>
-          <!-- <p>{{stagingMsg.id}}</p> -->
-          <p>医院: {{stagingMsg.proName}}</p>
-          <!-- <p>{{stagingMsg.type}}</p> -->
-          <p>房间号: {{stagingMsg.depName}}</p>
-        </div>
+        <van-panel v-show="true" title="暂存点信息" desc="" status="">
+          <div>
+            <!-- <p>{{stagingMsg.number}}</p> -->
+            <!-- <p>{{stagingMsg.proId}}</p> -->
+            <p>名称: {{stagingMsg.name}}</p>
+            <!-- <p>{{stagingMsg.id}}</p> -->
+            <p>医院: {{stagingMsg.proName}}</p>
+            <!-- <p>{{stagingMsg.type}}</p> -->
+            <p>房间号: {{stagingMsg.depName}}</p>
+          </div>
+        </van-panel>
       </div>
       <div class="btn-group">
         <van-button type="info" v-show="inStoageBtn" @click="medicalInStoragr" size="normal">医废入库</van-button>
@@ -265,7 +268,7 @@ export default {
         }
       }
       .content-middle-list {
-        height: 360px;
+        height: 330px;
         overflow: auto;
         .content-middle-list-item {
           padding: 14px;
@@ -321,19 +324,17 @@ export default {
       }
       .stage-point {
         margin-top: 4px;
-        height: 80px;
         div {
-          height: 100%;
           p {
             line-height: 20px;
             padding-left: 14px;
-            font-size: 14px;
-            color: #8e9090;
+            font-size: 12px;
+            color: @color-theme;
           }
         }
       }
       .btn-group {
-        margin-top: 6px;
+        margin-top: 8px;
         text-align: center;
         button {
           background: @color-theme;

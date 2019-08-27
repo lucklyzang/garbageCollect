@@ -24,7 +24,8 @@ export default {
       'changeCollectBtn',
       'changeSureBtn',
       'changePrintBtn',
-      'changeOtherBtn'
+      'changeOtherBtn',
+      'changeCurrentLajicodeState'
     ]),
     showDialog () {
       this.$dialog.confirm({
@@ -35,8 +36,10 @@ export default {
         this.changeCollectBtn(false);
         this.changeSureBtn(true);
         this.changePrintBtn(false);
-        this.changeOtherBtn(false)
+        this.changeOtherBtn(false);
+        this.changeCurrentLajicodeState(false)
       }).catch(() => {
+        this.changeCurrentLajicodeState(false);
         this.$router.replace({path:'judgeCurrentCollectFinish'})   
       });
     }

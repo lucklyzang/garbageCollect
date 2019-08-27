@@ -9,6 +9,8 @@ export default {
     startCollectTime: null,
     // 批次号
     batchNumber: null,
+    // 撤销时判断是否清除当前收集的垃圾信息与重量
+    clearCurrentLajicode: false,
     // 是否显示打印按钮
     showPrintBtn: false,
     // 是否展示其它科室收集按钮
@@ -17,6 +19,8 @@ export default {
     showCollectBtn: true,
     // 是否展示确定按钮
     showSureBtn: false,
+    // 是否显示撤销按钮
+    showBackoutBtn: true,
     totalWeight: 0,
     outStorageTime: null,
     // 批次号列表
@@ -48,6 +52,8 @@ export default {
     batchs: state => state.batchs,
     showCollectBtn: state => state.showCollectBtn,
     showSureBtn: state => state.showSureBtn,
+    showBackoutBtn: state => state.showBackoutBtn,
+    clearCurrentLajicode: state => state.clearCurrentLajicode,
   },
   mutations:{
     changeTitleTxt (state,payLoad) {
@@ -62,13 +68,29 @@ export default {
       storageYihuCode (state,payLoad) {
         state.garColMsg[0].yihuCode.push(payLoad)
       },
-       //存储垃圾袋信息信息
-       storageLajiCode (state,payLoad) {
+      //存储垃圾袋信息信息
+      storageLajiCode (state,payLoad) {
         state.garColMsg[0].lajiCode.push(payLoad)
-      }, 
+      },
+      //更改垃圾袋信息信息
+      changeStorageLajiCode (state,payLoad) {
+        state.garColMsg[0].lajiCode = payLoad
+      },  
       // 存储蓝牙称重信息
       storageLanyaCz (state,payLoad) {
         state.garColMsg[0].lanyaCz.push(payLoad)
+      },
+      //更改蓝牙称重信息
+      changeStorageLanyaCz (state,payLoad) {
+        state.garColMsg[0].lanyaCz = payLoad
+      },
+      //清除存储垃圾袋信息
+       initStorageLajiCode (state) {
+        state.garColMsg[0].lajiCode = []
+      }, 
+      //清除存储蓝牙称重信息
+      initStorageLanyaCz (state) {
+        state.garColMsg[0].lanyaCz = []
       },
       // 医废收集流程位置修改 
       changeFlowState (state,payLoad) {
@@ -110,6 +132,10 @@ export default {
       changeSureBtn (state,payLoad) {
         state.showSureBtn = payLoad
       },
+      //更改撤销按钮状态
+      changeBackoutBtn (state,payLoad) {
+        state.showBackoutBtn = payLoad
+      },
       // 更改重量状态
       changeTotalWeight (state,payLoad) {
         state.totalWeight = payLoad
@@ -133,6 +159,10 @@ export default {
       //重置出库批次
       initBatchs (state) {
         state.batchs = null
+      },
+      // 改变是否清除当前垃圾收集状态
+      changeCurrentLajicodeState (state,payLoad) {
+        state.clearCurrentLajicode = payLoad
       }
   },
   actions:{}
