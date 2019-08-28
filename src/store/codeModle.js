@@ -5,6 +5,8 @@ export default {
     judgeFlowPosition: null,
     // 申请医废收集时间
     applicationCollectTime: null,
+    // 是否点击过撤销按钮
+    clickBackoutBtn: false,
     // 到达收集医废时间
     startCollectTime: null,
     // 批次号
@@ -54,6 +56,7 @@ export default {
     showSureBtn: state => state.showSureBtn,
     showBackoutBtn: state => state.showBackoutBtn,
     clearCurrentLajicode: state => state.clearCurrentLajicode,
+    clickBackoutBtn: state => state.clickBackoutBtn
   },
   mutations:{
     changeTitleTxt (state,payLoad) {
@@ -163,6 +166,10 @@ export default {
       // 改变是否清除当前垃圾收集状态
       changeCurrentLajicodeState (state,payLoad) {
         state.clearCurrentLajicode = payLoad
+      },
+      // 改变是否点击撤销按钮状态
+      changeClickBackoutBtn (state,payLoad) {
+        state.clickBackoutBtn = payLoad
       }
   },
   actions:{}

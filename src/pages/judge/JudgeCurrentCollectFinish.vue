@@ -25,7 +25,8 @@ export default {
       'applicationCollectTime',
       'startCollectTime',
       'batchNumber',
-      'userInfo'
+      'userInfo',
+      'clickBackoutBtn'
     ])
   },
 
@@ -43,14 +44,22 @@ export default {
       'clearTrashStore',
       'changeBackoutBtn',
       'changeTotalWeight',
-      'changeCurrentLajicodeState'
+      'changeCurrentLajicodeState',
+      'changeClickBackoutBtn',
+      'changeTitleTxt'
     ]),
     showDialog () {
       this.$dialog.confirm({
         message: '此次收集已完成?'
       }).then(() => {
         if (this.lajiCode.length == 0) {
-          this.$dialog.alert({
+          if (clickBackoutBtn) {
+            this.$router.push({path:'medicalInStorage'});
+            this.changeTitleTxt({tit: '医废入库'});
+            this.changeCollectBtn(true);
+            this.changeSureBtn(false);
+          } else {
+            this.$dialog.alert({
               message: '当前没有收集到任何医废数据,请重新扫描'
             }).then(() => {
               this.changeBackoutBtn(true);
@@ -61,6 +70,7 @@ export default {
               this.changePrintBtn(false);
               this.changeOtherBtn(false)
             })
+          }
         };
         if (this.lajiCode.length == 1) {
           //  this.$dialog.alert({
@@ -74,10 +84,12 @@ export default {
           //     }).then(() => {
                 this.postTrashMore()
             // });
-        }
+        };
+        this.changeClickBackoutBtn(false);
       }).catch(() => {
         this.$router.replace({path: 'judgeCurrentDepantment'});
-        this.changeCurrentLajicodeState(false)
+        this.changeCurrentLajicodeState(false);
+        this.changeClickBackoutBtn(false);
       });
     },
 

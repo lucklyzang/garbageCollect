@@ -25,7 +25,8 @@ export default {
       'changeSureBtn',
       'changePrintBtn',
       'changeOtherBtn',
-      'changeCurrentLajicodeState'
+      'changeCurrentLajicodeState',
+      'changeClickBackoutBtn'
     ]),
     showDialog () {
       this.$dialog.confirm({
@@ -37,10 +38,12 @@ export default {
         this.changeSureBtn(true);
         this.changePrintBtn(false);
         this.changeOtherBtn(false);
-        this.changeCurrentLajicodeState(false)
+        this.changeCurrentLajicodeState(false);
+        this.changeClickBackoutBtn(false);
       }).catch(() => {
         this.changeCurrentLajicodeState(false);
-        this.$router.replace({path:'judgeCurrentCollectFinish'})   
+        this.$router.replace({path:'judgeCurrentCollectFinish'});
+        this.changeClickBackoutBtn(false);   
       });
     }
   }

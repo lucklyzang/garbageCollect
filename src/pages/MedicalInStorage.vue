@@ -30,7 +30,7 @@
       </div>
       <!-- stageMsg -->
       <div class="stage-point">
-        <van-panel v-show="true" title="暂存点信息" desc="" status="">
+        <van-panel v-show="stageMsg" title="暂存点信息" desc="" status="">
           <div>
             <!-- <p>{{stagingMsg.number}}</p> -->
             <!-- <p>{{stagingMsg.proId}}</p> -->
@@ -82,19 +82,21 @@ export default {
   computed: {
     ...mapGetters([
       'navTopTitle',
-      'batchNumber'
+      'batchNumber',
+      'userInfo'
     ])
   },
 
   mounted() {
-    if (!this.batchNumber) {
-        this.$dialog.alert({
-            message: '批次号不能为空'
-          }).then(() => {
-          });
-      } else {
-        this.queryAllBatch()
-      };
+    this.queryAllBatch()
+    // if (!this.batchNumber && !this.userInfo.batchNumber) {
+    //     this.$dialog.alert({
+    //         message: '批次号不能为空'
+    //       }).then(() => {
+    //       });
+    //   } else {
+    //     this.queryAllBatch()
+    //   };
     // 二维码回调方法绑定到window下面,提供给外部调用
     let me = this;
     window['scanQRcodeCallback'] = (code) => {
@@ -116,46 +118,63 @@ export default {
     },
     // 扫码后的回调
     scanQRcodeCallback (code) {
-      judgeSummaryPoint(code.type,code.number).then((res) => {
-        if (res && res.data.code == 200) {
-          this.stageMsg = true;
-          this.sureBtnShow = true;
-          this.inStoageBtn = false;
-          this.stagingMsg = code;
-          this.storeId = code.id;
-          this.storeNumber = code.number;
-          this.storeNumber = code.number;
-          this.proId = code.proId;
-          this.proName = code.proName;
+      if (code && Object.keys(code).length > 0) {
+        if (code.name && code.proName && code.depName && code.type && code.proId && code.number) {
+          judgeSummaryPoint(code.type,code.number).then((res) => {
+            if (res && res.data.code == 200) {
+              this.stageMsg = true;
+              this.sureBtnShow = true;
+              this.inStoageBtn = false;
+              this.stagingMsg = code;
+              this.storeId = code.id;
+              this.storeNumber = code.number;
+              this.proId = code.proId;
+              this.proName = code.proName;
+            } else {
+              this.$dialog.alert({
+                message: '流程与扫描数据不匹配,请重试'
+                }).then(() => {
+                this.medicalInStoragr()
+              });
+            }
+          })
+          .catch((err)=>{
+            this.$dialog.alert({
+              message: '流程与扫描数据不匹配,请重试'
+              }).then(() => {
+              this.medicalInStoragr()
+            });
+            console.log(err)
+          })
         } else {
           this.$dialog.alert({
-            message: '流程与扫描数据不匹配,请重试'
-            }).then(() => {
-            this.medicalInStoragr()
-          });
-        }
-      })
-      .catch((err)=>{
-        this.$dialog.alert({
-          message: '流程与扫描数据不匹配,请重试'
+            message: '当前扫描没有收集到任何暂存点信息,请重新扫描'
           }).then(() => {
-          this.medicalInStoragr()
-        });
-        console.log(err)
-      })
+            this.medicalInStoragr();
+          })
+        }
+      } else {
+        this.$dialog.alert({
+          message: '当前扫描没有收集到任何暂存点信息,请重新扫描'
+        }).then(() => {
+          this.medicalInStoragr();
+        })
+      }
     },
     //扫描医废入库暂存点二维码
     medicalInStoragr () {
-      this.$dialog.alert({
-        message: '入库批次不能为空'
-      }).then(() => {
-      });
-      return;
+      if (!this.batchNumber && !this.userInfo.batchNumber) {
+        this.$dialog.alert({
+          message: '批次号不能为空'
+        }).then(() => {
+        });
+        return
+      };
       this.sweepAstoffice()
     },
     // 查询收集的垃圾批次信息00012019081900022019082200
     queryAllBatch () {
-      queryBatch({batchNumber:this.batchNumber,state: 0}).then((res)=>{
+      queryBatch({batchNumber:this.batchNumber ? this.batchNumber : this.userInfo.batchNumber ,state: 0}).then((res)=>{
         if (res && res.data.code == 200) {
           if (res.data.data.length > 0) {
             let dataList = res.data.data;
@@ -187,20 +206,13 @@ export default {
     },
     //确定入库
     sureInStorage () {
-      if (!this.batchNumber) {
-         this.$dialog.alert({
-          message: '入库批次不能为空'
-        }).then(() => {
-        });
-        return;
-      };
       let inStorageMsg = {
         storeId: this.storeId, 
         storeNumber: this.storeNumber,
         batchNumber: this.batchNumberLocal,
         inWorkerName: this.inWorkerName,
         proId: this.proId,  
-        proName: this.proName  
+        proName: this.proName
       };
       inStorageAdd(inStorageMsg).then((res) => {
         if (res) {
@@ -323,6 +335,7 @@ export default {
         }
       }
       .stage-point {
+        height: 100px;
         margin-top: 4px;
         div {
           p {
@@ -334,7 +347,7 @@ export default {
         }
       }
       .btn-group {
-        margin-top: 8px;
+        margin-top: 16px;
         text-align: center;
         button {
           background: @color-theme;

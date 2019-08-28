@@ -28,7 +28,8 @@ export default {
       'changeCollectBtn',
       'changeSureBtn',
       'changeCurrentLajicodeState',
-      'changeBackoutBtn'
+      'changeBackoutBtn',
+      'changeClickBackoutBtn'
     ]),
     showDialog () {
       this.$dialog.confirm({
@@ -40,6 +41,7 @@ export default {
         this.changeSureBtn(false);
         this.changePrintBtn(false);
         this.changeOtherBtn(false);
+        this.changeClickBackoutBtn(false);
         // 清空上个科室存储的数据
         this.clearTrashStore();
         this.changeCurrentLajicodeState(false);
@@ -49,6 +51,7 @@ export default {
         this.changeTitleTxt({tit: '医废入库'});
         // 清空上个科室存储的数据
         this.clearTrashStore();
+        this.changeClickBackoutBtn(false);
         this.changeCurrentLajicodeState(false);
         this.changeBackoutBtn(true)   
       });

@@ -159,7 +159,8 @@ export default {
       'changeTotalWeight',
       'changeStorageLajiCode',
       'changeStorageLanyaCz',
-      'changeCurrentLajicodeState'
+      'changeCurrentLajicodeState',
+      'changeClickBackoutBtn'
     ]),
     // 重新扫码弹窗
     againSweepCode () {
@@ -189,6 +190,7 @@ export default {
       this.$dialog.confirm({
         message: '确定撤销该次医废收集?'
       }).then(() => {
+        this.changeClickBackoutBtn(true);
         if (this.lajiCode.length == 0) {
           this.$router.replace({path:'judgeOtherDepantment'});
           // 清空撤销前存储的数据
@@ -209,6 +211,7 @@ export default {
           this.changeCurrentLajicodeState(false)
         }
       }).catch(() => {
+        this.changeClickBackoutBtn(false);
       });
     },
     // 扫描二维码方法
@@ -224,42 +227,79 @@ export default {
       // 扫码的科室信息存入store
       if (this.currentActive == 0) {
         // 二维码是否扫描正确判断
-       judgeStagingPoint(code.type,code.number).then((res) => {
-         if (res && res.data.code == 200) {
-          this.changeCollectBtn(false);
-          this.changeSureBtn(true);
-          this.storageKeshiCode(code);
-          this.changeStartCollectTime(this.formatTime());
-          this.astOfficeShow = true;
-          this.astOfficeCodeMsg = code;
-         } else {
-          this.againSweepCode()
-         }
-       })
-       .catch((err) => {
-         this.againSweepCode();
-         console.log(err);
-       })
+        if (code && Object.keys(code).length > 0) {
+          if (code.name && code.proName && code.depName) {
+            judgeStagingPoint(code.type,code.number).then((res) => {
+              if (res && res.data.code == 200) {
+                this.changeCollectBtn(false);
+                this.changeSureBtn(true);
+                this.storageKeshiCode(code);
+                this.changeStartCollectTime(this.formatTime());
+                this.astOfficeShow = true;
+                this.astOfficeCodeMsg = code;
+              } else {
+                this.againSweepCode()
+              }
+            })
+            .catch((err) => {
+              this.againSweepCode();
+              console.log(err);
+            })
+          } else {
+            this.$dialog.alert({
+              message: '当前扫描没有收集到任何科室信息,请重新扫描'
+            }).then(() => {
+              this.currentActive = 0;
+              this.sweepAstoffice();
+            })
+          }
+        } else {
+          this.$dialog.alert({
+            message: '当前扫描没有收集到任何科室信息,请重新扫描'
+          }).then(() => {
+            this.currentActive = 0;
+            this.sweepAstoffice();
+          })
+        }
       };
       // 扫码的医护人员信息存入store
       if (this.currentActive == 1) {
-       judgeMedicalPerson(code.workerNumber,this.batchNumber).then((res) => {
-          if (res && res.data.code == 200) {
-            this.storageYihuCode(code);
-            this.staffCodeShow = true;
-            this.astOfficeShow = false;
-            this.staffCodeMsg = code
+        if (code && Object.keys(code).length > 0) {
+          if (code.workerName && code.proName && code.depName) {
+            judgeMedicalPerson(code.workerNumber,this.batchNumber).then((res) => {
+                if (res && res.data.code == 200) {
+                  this.storageYihuCode(code);
+                  this.staffCodeShow = true;
+                  this.astOfficeShow = false;
+                  this.staffCodeMsg = code
+                } else {
+                this.againSweepCode()
+              }
+            })
+            .catch((err) => {
+              this.againSweepCode();
+              console.log(err)
+            })
           } else {
-          this.againSweepCode()
-         }
-       })
-       .catch((err) => {
-        this.againSweepCode();
-        console.log(err)
-       })
+            this.$dialog.alert({
+              message: '当前扫描没有收集到任何医护人员信息,请重新扫描'
+            }).then(() => {
+              this.currentActive = 0;
+              this.sweepAstoffice();
+            })
+          }
+        } else {
+          this.$dialog.alert({
+            message: '当前扫描没有收集到任何医护人员信息,请重新扫描'
+          }).then(() => {
+            this.currentActive = 0;
+            this.sweepAstoffice();
+          })
+        }
       };
       // 扫码的垃圾袋信息存入store
       if (this.currentActive == 2) {
+        // 扫码回调中没有信息提示重新扫描
         if (code && Object.keys(code).length > 0) {
           if (code.wasteName && code.proName && code.depName) {
             this.currentTotalWeigh = 0;
@@ -292,11 +332,13 @@ export default {
     },
     // 称重后的回调
     getWeightCallback(str) {
-      this.currentTotalWeigh+=Number(str);
-      this.bagCodeShow = false;
-      this.bluetoothWeighShow = true;
-      this.weightMsg = str;
-      this.storageLanyaCz(this.currentTotalWeigh)
+      if (str) {
+        this.currentTotalWeigh+=Number(str);
+        this.bagCodeShow = false;
+        this.bluetoothWeighShow = true;
+        this.weightMsg = str;
+        this.storageLanyaCz(this.currentTotalWeigh)
+      }
     },
 
     //打印凭单
@@ -314,7 +356,7 @@ export default {
         }
       }
     },
-    // 确认扫码无误进入下个流
+    // 确认扫码无误进入下个流程
     sureCurrentCodeMsg () {
       this.currentActive++;
       if (this.currentActive > 4) {return};
