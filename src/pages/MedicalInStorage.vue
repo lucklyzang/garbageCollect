@@ -56,6 +56,7 @@ import HeaderTop from '../components/HeaderTop'
 import FooterBottom from '../components/FooterBottom'
 import { mapGetters } from 'vuex'
 import { mapMutations } from 'vuex'
+import { pushHistory } from '@/common/js/utils'
 import {queryBatch,judgeSummaryPoint,inStorageAdd} from '../api/rubbishCollect.js'
 export default {
    components:{
@@ -88,7 +89,12 @@ export default {
   },
 
   mounted() {
-    this.queryAllBatch()
+    pushHistory();
+    window.onpopstate = () => {
+      this.$router.push({path: 'home'});  //输入要返回的上一级路由地址
+      this.changeTitleTxt({tit: '医废监测'})
+    }
+    this.queryAllBatch();
     // if (!this.batchNumber && !this.userInfo.batchNumber) {
     //     this.$dialog.alert({
     //         message: '批次号不能为空'

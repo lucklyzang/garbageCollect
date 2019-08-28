@@ -1,6 +1,6 @@
 <template>
   <div class="footer">
-      <div class="foot-item" v-for="item in itemFooter" @click="itemClick(item.itemText)">
+      <div class="foot-item" v-for="item in itemFooter" @click="itemClick(item.itemText, item.name)">
         <img :src="item.imgUrl" alt="">
         <p>{{item.itemText}}</p>
       </div>
@@ -18,8 +18,8 @@ export default {
   data () {
     return {
       itemFooter: [
-          { itemText: '首页', imgUrl: indexIcon},{ itemText: '消息', imgUrl: messageIcon},
-          { itemText: '社区', imgUrl: communityIcon},{ itemText: '我的', imgUrl: myIcon},
+          { itemText: '首页', imgUrl: indexIcon, name: 'home'},{ itemText: '消息', imgUrl: messageIcon, name: ''},
+          { itemText: '社区', imgUrl: communityIcon, name: ''},{ itemText: '我的', imgUrl: myIcon, name: 'MyInfo'},
         ]
     };
   },
@@ -34,10 +34,15 @@ export default {
     ...mapMutations([
       'changeTitleTxt'
     ]),
-    itemClick(text) {
-      if (text == '首页') {
-        this.$router.push({path: 'home'});
-        this.changeTitleTxt({tit:'医废监测'})
+    itemClick(text, name) {
+      if (name) {
+        if (text === '首页') {
+          this.changeTitleTxt({tit: '医废监测'});
+          this.$router.push({path: name});
+        } else {
+          this.$router.push({path: name});
+          this.changeTitleTxt({tit: text})
+        }
       }
     }
   }

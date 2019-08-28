@@ -46,7 +46,10 @@ export default {
       'changeTotalWeight',
       'changeCurrentLajicodeState',
       'changeClickBackoutBtn',
-      'changeTitleTxt'
+      'changeTitleTxt',
+      'changebluetoothWeighShow',
+      'changeCurrentActive',
+      'changeBagCodeShow'
     ]),
     showDialog () {
       this.$dialog.confirm({
@@ -65,6 +68,7 @@ export default {
               this.changeBackoutBtn(true);
               this.$router.push({path: 'medicalCollect'});
               this.changeFlowState(2);
+              this.changeCurrentActive(0);
               this.changeCollectBtn(false);
               this.changeSureBtn(true);
               this.changePrintBtn(false);
@@ -124,7 +128,8 @@ export default {
                   this.$router.push({path: 'medicalCollect'});
                   this.changeSureBtn(false);
                   this.changePrintBtn(true);
-                  this.changeOtherBtn(true)
+                  this.changeOtherBtn(true);
+                  this.changebluetoothWeighShow(false)
               });
           } else {
             this.$dialog.alert({
@@ -132,11 +137,14 @@ export default {
               }).then(() => {
               this.changeBackoutBtn(true);
               this.changeFlowState(0);
+              this.changeCurrentActive(0);
               this.$router.push({path: 'medicalCollect'});
               // 清空存储的数据
               this.clearTrashStore();
               this.changeCollectBtn(true);
               this.changeSureBtn(false);
+              this.changebluetoothWeighShow(false);
+              this.changeBagCodeShow(false)
             })
           }
         }
@@ -148,6 +156,7 @@ export default {
             }).then(() => {
             this.changeBackoutBtn(true);
             this.changeFlowState(0);
+            this.changeCurrentActive(0);
             this.$router.push({path: 'medicalCollect'});
             // 清空存储的数据
             this.clearTrashStore();
@@ -193,7 +202,8 @@ export default {
                   this.$router.push({path: 'medicalCollect'});
                   this.changeSureBtn(false);
                   this.changePrintBtn(true);
-                  this.changeOtherBtn(true)
+                  this.changeOtherBtn(true);
+                  this.changebluetoothWeighShow(false)
               });
           } else {
             this.$dialog.alert({
@@ -201,11 +211,14 @@ export default {
                 }).then(() => {
                 this.changeBackoutBtn(true);
                 this.changeFlowState(0);
+                this.changeCurrentActive(0);
                 this.$router.push({path: 'medicalCollect'});
                 // 清空存储的数据
                 this.clearTrashStore();
                 this.changeCollectBtn(true);
                 this.changeSureBtn(false);
+                this.changebluetoothWeighShow(false);
+                this.changeBagCodeShow(false)
             })
           }
         }
@@ -217,6 +230,7 @@ export default {
             }).then(() => {
             this.changeBackoutBtn(true);
             this.changeFlowState(0);
+            this.changeCurrentActive(0);
             this.$router.push({path: 'medicalCollect'});
             // 清空存储的数据
             this.clearTrashStore();

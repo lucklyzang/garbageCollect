@@ -1,6 +1,8 @@
 export default {
   state:{
     navTitle: '医废监测',
+    // 流程扫描节点
+    currentActive: 0,
     // 流程开始判断
     judgeFlowPosition: null,
     // 申请医废收集时间
@@ -23,6 +25,14 @@ export default {
     showSureBtn: false,
     // 是否显示撤销按钮
     showBackoutBtn: true,
+    // 是否展示扫码科室信息框
+    astOfficeShow: false,
+    // 是否展示扫码医护信息框
+    staffCodeShow: false,
+    // 是否展示扫码医废袋信息框
+    bagCodeShow: false,
+    // 是否展示扫码垃圾重量信息框
+    bluetoothWeighShow: false,
     totalWeight: 0,
     outStorageTime: null,
     // 批次号列表
@@ -39,6 +49,7 @@ export default {
   },
   getters:{
     navTopTitle: state => state.navTitle,
+    currentActive: state => state.currentActive,
     keshiCode: state => state.garColMsg[0].keshiCode,
     yihuCode: state => state.garColMsg[0].yihuCode,
     lajiCode: state => state.garColMsg[0].lajiCode,
@@ -56,11 +67,19 @@ export default {
     showSureBtn: state => state.showSureBtn,
     showBackoutBtn: state => state.showBackoutBtn,
     clearCurrentLajicode: state => state.clearCurrentLajicode,
-    clickBackoutBtn: state => state.clickBackoutBtn
+    clickBackoutBtn: state => state.clickBackoutBtn,
+    astOfficeShow: state => state.astOfficeShow,
+    staffCodeShow: state => state.staffCodeShow,
+    bagCodeShow: state => state.bagCodeShow,
+    bluetoothWeighShow: state => state.bluetoothWeighShow,
   },
   mutations:{
     changeTitleTxt (state,payLoad) {
       state.navTitle = payLoad.tit
+    },
+    // 改变流程节点状态
+    changeCurrentActive (state, payLoad) {
+      state.currentActive = payLoad
     },
     // 存储扫码信息
       // 存储科室暂存点信息
@@ -170,7 +189,23 @@ export default {
       // 改变是否点击撤销按钮状态
       changeClickBackoutBtn (state,payLoad) {
         state.clickBackoutBtn = payLoad
-      }
+      },
+      // 更改显示扫码科室信息框显示状态
+      changeAstOfficeShow (state,payLoad) {
+        state.astOfficeShow = payLoad
+      },
+      // 更改显示医护人员信息框显示状态
+      changeStaffCodeShow (state,payLoad) {
+        state.staffCodeShow = payLoad
+      },
+      // 更改显示扫码垃圾袋框显示状态
+      changeBagCodeShow (state,payLoad) {
+        state.bagCodeShow = payLoad
+      },
+      // 更改显示扫码垃圾重量显示状态
+      changebluetoothWeighShow (state,payLoad) {
+        state.bluetoothWeighShow = payLoad
+      },
   },
   actions:{}
 }

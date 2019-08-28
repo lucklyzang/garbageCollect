@@ -58,6 +58,7 @@ import HeaderTop from '../components/HeaderTop'
 import FooterBottom from '../components/FooterBottom'
 import VanFieldSelectPicker from '../components/VanFieldSelectPicker'
 import {operateOutStorage} from '../api/rubbishCollect.js'
+import { pushHistory } from '@/common/js/utils'
 import { mapGetters } from 'vuex'
 import { mapMutations } from 'vuex'
 export default {
@@ -88,7 +89,13 @@ export default {
     }
   },
 
-  mounted () {},
+  mounted () {
+    pushHistory();
+    window.onpopstate = () => {
+      this.$router.push({path: 'medicalOutStorage'});  //输入要返回的上一级路由地址
+      this.changeTitleTxt({tit: '医废出库'})
+    }
+  },
 
   methods: {
     ...mapMutations([

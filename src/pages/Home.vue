@@ -34,6 +34,7 @@
   import testStatistics from '@/common/images/home/test-statistics.png'
   import videoSurveillance from '@/common/images/home/video-surveillance.png'
   import homeBanner from '@/common/images/home/home-banner.png'
+  import { pushHistory } from '@/common/js/utils'
   export default {
     components:{
       HeaderTop,
@@ -53,6 +54,10 @@
       }
     },
     mounted(){
+      pushHistory();
+      window.onpopstate = () => {
+        this.$router.push({name: 'login'});  //输入要返回的上一级路由地址
+      }
     },
     computed:{
       ...mapGetters([
@@ -72,20 +77,22 @@
       },
       //路由跳转
       routerSkip (name, text) {
-        if (text === '医废收集') {
-          this.changeApplicationCollectTime(this.formatTime());
-          // 创建回收批次
-          getBatchNumber(this.userInfo.id).then((res) => {
-            if (res && res.data.code == 200) {
-              // 批次号存入store
-              this.createBatchNumber(res.data.data.batchNumber)
-            }
-          }).catch((err) => {
-            console.log(err)
-          })
+        if (name) {
+          if (text === '医废收集') {
+            this.changeApplicationCollectTime(this.formatTime());
+            // 创建回收批次
+            getBatchNumber(this.userInfo.id).then((res) => {
+              if (res && res.data.code == 200) {
+                // 批次号存入store
+                this.createBatchNumber(res.data.data.batchNumber)
+              }
+            }).catch((err) => {
+              console.log(err)
+            })
+          };
+          this.$router.push({path:name});
+          this.changeTitleTxt({tit:text})
         }
-        this.$router.push({path:name});
-        this.changeTitleTxt({tit:text})
       },
        // 时间格式方法
       formatTime () {

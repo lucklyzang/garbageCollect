@@ -30,3 +30,14 @@ export const removeStore = name => {
   if (!name) return;
   window.localStorage.removeItem(name);
 }
+
+/** 
+ * 存储当前历史记录点,实现控制手机物理返回键的按钮事件
+ */
+export const pushHistory = () => {
+  let state = {
+    title: '',
+    url: ''
+  }
+  window.history.pushState(state, state.title, state.url)
+}

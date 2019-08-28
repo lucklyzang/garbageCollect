@@ -6,7 +6,7 @@
       </HeaderTop>
       <div class="content">
         <div class="content-header">
-          <van-steps :active="currentActive" active-icon="success"
+          <van-steps :active="showCurrentActive" active-icon="success"
             active-color="#38bdd0">
             <van-step>扫描科室二维码</van-step>
             <van-step>扫描医护人员工作条码</van-step>
@@ -15,41 +15,41 @@
           </van-steps>
         </div>
         <div class="content-middle">
-          <van-panel v-show="astOfficeShow" title="科室信息" desc="" status="">
+          <van-panel v-show="showAstOfficeShow" title="科室信息" desc="" status="">
             <div class="ast-office">
-                <!-- <p>number: {{astOfficeCodeMsg.number}}</p>
-                <p>proId:{{astOfficeCodeMsg.proId}}</p> -->
-                <p>科室: {{astOfficeCodeMsg.name}}</p>
-                <!-- <p>id:{{astOfficeCodeMsg.id}}</p> -->
-                <p>医院: {{astOfficeCodeMsg.proName}}</p>
-                <!-- <p>type:{{astOfficeCodeMsg.type}}</p> -->
-                <p>房间: {{astOfficeCodeMsg.depName}}</p>
+                <!-- <p>number: {{extraKeshiMsg.number}}</p>
+                <p>proId:{{extraKeshiMsg.proId}}</p> -->
+                <p>科室: {{extraKeshiMsg ? extraKeshiMsg.name : ''}}</p>
+                <!-- <p>id:{{extraKeshiMsg.id}}</p> -->
+                <p>医院: {{extraKeshiMsg ? extraKeshiMsg.proName : ''}}</p>
+                <!-- <p>type:{{extraKeshiMsg.type}}</p> -->
+                <p>房间: {{extraKeshiMsg ? extraKeshiMsg.depName : ''}}</p>
             </div>
           </van-panel>
-          <van-panel v-show="staffCodeShow" title="医护人员信息" desc="" status="">
+          <van-panel v-show="showStaffCodeShow" title="医护人员信息" desc="" status="">
             <div class="staff-code">
-              <!-- <p>workerNumber: {{judgeFlowValue ? yihuCode[0].workerNumber : staffCodeMsg.workerNumber}}</p>
-              <p>proId:{{judgeFlowValue ? yihuCode[0].proId : staffCodeMsg.proId}}</p>
-              <p>depId:{{judgeFlowValue ? yihuCode[0].depId : staffCodeMsg.depId}}</p>
-              <p>id:{{judgeFlowValue ?  yihuCode[0].id : staffCodeMsg.id}}</p> -->
-              <p>医院: {{judgeFlowValue == 2 ? yihuCode[0].proName : staffCodeMsg.proName}}</p>
-              <p>姓名: {{judgeFlowValue == 2 ? yihuCode[0].workerName : staffCodeMsg.workerName}}</p>
-              <p>房间: {{judgeFlowValue == 2 ? yihuCode[0].depName : staffCodeMsg.depName}}</p>
+              <!-- <p>workerNumber: {{judgeFlowValue ? yihuCode[0].workerNumber : extraYihuMsg.workerNumber}}</p>
+              <p>proId:{{judgeFlowValue ? yihuCode[0].proId : extraYihuMsg.proId}}</p>
+              <p>depId:{{judgeFlowValue ? yihuCode[0].depId : extraYihuMsg.depId}}</p>
+              <p>id:{{judgeFlowValue ?  yihuCode[0].id : extraYihuMsg.id}}</p> -->
+              <p>医院: {{judgeFlowValue == 2 ? yihuCode[0].proName : extraYihuMsg ? extraYihuMsg.proName : ''}}</p>
+              <p>姓名: {{judgeFlowValue == 2 ? yihuCode[0].workerName : extraYihuMsg ? extraYihuMsg.workerName : ''}}</p>
+              <p>房间: {{judgeFlowValue == 2 ? yihuCode[0].depName : extraYihuMsg ? extraYihuMsg.depName : ''}}</p>
             </div>
            </van-panel>
-          <van-panel v-show="bagCodeShow" title="医废信息" desc="" status="">
+          <van-panel v-show="showBagCodeShow" title="医废信息" desc="" status="">
             <div class="bag-code">
-              <p>医废类型: {{rubbishCodeMsg.wasteName}}</p>
-              <!-- <p>proId:{{rubbishCodeMsg.proId}}</p>
-              <p>depId:{{rubbishCodeMsg.depId}}</p> -->
-              <p>医院: {{rubbishCodeMsg.proName}}</p>
-              <p>房间: {{rubbishCodeMsg.depName}}</p>
-              <!-- <p>barCode:{{rubbishCodeMsg.barCode}}</p> -->
+              <p>医废类型: {{extraLajiMsg ? extraLajiMsg.wasteName : ''}}</p>
+              <!-- <p>proId:{{extraLajiMsg.proId}}</p>
+              <p>depId:{{extraLajiMsg.depId}}</p> -->
+              <p>医院: {{extraLajiMsg ? extraLajiMsg.proName : ''}}</p>
+              <p>房间: {{extraLajiMsg ? extraLajiMsg.depName : ''}}</p>
+              <!-- <p>barCode:{{extraLajiMsg.barCode}}</p> -->
             </div>
           </van-panel>
-          <van-panel v-show="bluetoothWeighShow" title="医废重量" desc="" status="">
+          <van-panel v-show="showBluetoothWeighShow" title="医废重量" desc="" status="">
             <div class="bluetooth-weigh">
-              <p>重量: {{weightMsg}}</p>
+              <p>重量: {{extraLyczMsg}}</p>
             </div>
           </van-panel>
           <div v-show="newSummary" class="new-summary"></div>
@@ -70,6 +70,7 @@
 import HeaderTop from '../components/HeaderTop'
 import FooterBottom from '../components/FooterBottom'
 import {judgeStagingPoint,judgeMedicalPerson} from '../api/rubbishCollect.js'
+import { pushHistory } from '@/common/js/utils'
 import { mapGetters } from 'vuex'
 import { mapMutations } from 'vuex'
 export default {
@@ -79,16 +80,11 @@ export default {
     },
   data () {
     return {
-      currentActive: 0,
-      astOfficeShow: false,
-      staffCodeShow: false,
-      bagCodeShow: false,
-      bluetoothWeighShow: false,
+      // astOfficeShow: false,
+      // staffCodeShow: false,
+      // bagCodeShow: false,
+      // bluetoothWeighShow: false,
       newSummary: false,
-      astOfficeCodeMsg: '',
-      staffCodeMsg: '',
-      rubbishCodeMsg: '',
-      weightMsg: '',
       currentTotalWeigh: 0
     };
   },
@@ -109,8 +105,20 @@ export default {
       'showCollectBtn',
       'showSureBtn',
       'showBackoutBtn',
-      'clearCurrentLajicode'
+      'clearCurrentLajicode',
+      'astOfficeShow',
+      'staffCodeShow',
+      'bagCodeShow',
+      'bluetoothWeighShow',
+      'extraKeshiMsg',
+      'extraYihuMsg',
+      'extraLajiMsg',
+      'extraLyczMsg',
+      'currentActive'
     ]),
+    showCurrentActive () {
+      return this.currentActive
+    },
     showCollectButton () {
       return this.showCollectBtn
     },
@@ -125,12 +133,30 @@ export default {
     },
     showBackoutButton () {
       return this.showBackoutBtn
-    }
+    },
+    showAstOfficeShow () {
+      return this.astOfficeShow
+    },
+    showStaffCodeShow () {
+      return this.staffCodeShow
+    },
+    showBagCodeShow () {
+      return this.bagCodeShow
+    },
+    showBluetoothWeighShow () {
+      return this.bluetoothWeighShow
+    },
   },
 
   mounted () {
+    pushHistory();
+    // 监听历史记录点, 添加返回事件监听
+    window.onpopstate = () => {
+      // this.currentActive = 0
+      // this.$router.push(...)  //输入要返回的上一级路由地址
+    }
     // 判断流程从哪步开始
-    this.judgeFlowPosition();
+    // this.judgeFlowPosition();
     // 二维码回调方法绑定到window下面,提供给外部调用
     let me = this;
     window['scanQRcodeCallback'] = (code) => {
@@ -138,7 +164,8 @@ export default {
     },
     window['getWeightCallback'] = (code) => {
       me.getWeightCallback(code);
-    }
+    };
+    this.showSweepCodeBox();
   },
 
   methods: {
@@ -160,29 +187,28 @@ export default {
       'changeStorageLajiCode',
       'changeStorageLanyaCz',
       'changeCurrentLajicodeState',
-      'changeClickBackoutBtn'
+      'changeClickBackoutBtn',
+      'changeStaffCodeShow',
+      'changeCurrentActive'
     ]),
-    // 重新扫码弹窗
-    againSweepCode () {
-       this.$dialog.alert({
-        message: '流程与扫描数据不匹配,请重试'
-      }).then(() => {
-        this.sweepAstoffice()
-      });
-    },
     // 返回上一页
     backTo () {
       this.$router.go(-1);
       this.changeTitleTxt({tit:'医废监测'})
     },
+    startTask () {
+      this.$router.push({path: 'commonSweepCode'})
+    },
     // 判断流程从哪步开始
     judgeFlowPosition () {
       if (this.judgeFlowValue == 2) {
-        this.currentActive = 1;
-        this.staffCodeShow = true;
+        // this.currentActive = 1;
+        this.changeCurrentActive(1);
+        this.changeStaffCodeShow(true)
       };
       if (this.judgeFlowValue == 0) {
-        this.currentActive = 0;
+        // this.currentActive = 0;
+        this.changeCurrentActive(0);
       }
     },
     // 撤销操作
@@ -214,131 +240,15 @@ export default {
         this.changeClickBackoutBtn(false);
       });
     },
-    // 扫描二维码方法
-    sweepAstoffice () {
-      window.android.scanQRcode()
-    },
+
     // 打印方法
     printProof (num,dep,category,weight,collector,handover) {
       window.android.printInfo(num,dep,category,weight,collector,handover)
     },
-    // 扫码后的回调
-    scanQRcodeCallback(code) {
-      // 扫码的科室信息存入store
-      if (this.currentActive == 0) {
-        // 二维码是否扫描正确判断
-        if (code && Object.keys(code).length > 0) {
-          if (code.name && code.proName && code.depName) {
-            judgeStagingPoint(code.type,code.number).then((res) => {
-              if (res && res.data.code == 200) {
-                this.changeCollectBtn(false);
-                this.changeSureBtn(true);
-                this.storageKeshiCode(code);
-                this.changeStartCollectTime(this.formatTime());
-                this.astOfficeShow = true;
-                this.astOfficeCodeMsg = code;
-              } else {
-                this.againSweepCode()
-              }
-            })
-            .catch((err) => {
-              this.againSweepCode();
-              console.log(err);
-            })
-          } else {
-            this.$dialog.alert({
-              message: '当前扫描没有收集到任何科室信息,请重新扫描'
-            }).then(() => {
-              this.currentActive = 0;
-              this.sweepAstoffice();
-            })
-          }
-        } else {
-          this.$dialog.alert({
-            message: '当前扫描没有收集到任何科室信息,请重新扫描'
-          }).then(() => {
-            this.currentActive = 0;
-            this.sweepAstoffice();
-          })
-        }
-      };
-      // 扫码的医护人员信息存入store
-      if (this.currentActive == 1) {
-        if (code && Object.keys(code).length > 0) {
-          if (code.workerName && code.proName && code.depName) {
-            judgeMedicalPerson(code.workerNumber,this.batchNumber).then((res) => {
-                if (res && res.data.code == 200) {
-                  this.storageYihuCode(code);
-                  this.staffCodeShow = true;
-                  this.astOfficeShow = false;
-                  this.staffCodeMsg = code
-                } else {
-                this.againSweepCode()
-              }
-            })
-            .catch((err) => {
-              this.againSweepCode();
-              console.log(err)
-            })
-          } else {
-            this.$dialog.alert({
-              message: '当前扫描没有收集到任何医护人员信息,请重新扫描'
-            }).then(() => {
-              this.currentActive = 0;
-              this.sweepAstoffice();
-            })
-          }
-        } else {
-          this.$dialog.alert({
-            message: '当前扫描没有收集到任何医护人员信息,请重新扫描'
-          }).then(() => {
-            this.currentActive = 0;
-            this.sweepAstoffice();
-          })
-        }
-      };
-      // 扫码的垃圾袋信息存入store
-      if (this.currentActive == 2) {
-        // 扫码回调中没有信息提示重新扫描
-        if (code && Object.keys(code).length > 0) {
-          if (code.wasteName && code.proName && code.depName) {
-            this.currentTotalWeigh = 0;
-            this.storageLajiCode(code);
-            this.bagCodeShow = true;
-            this.staffCodeShow = false;
-            this.rubbishCodeMsg = code;
-            this.changeCurrentLajicodeState(true)
-          } else {
-            this.$dialog.alert({
-            message: '当前扫描没有收集到任何医废信息,请重新扫描'
-            }).then(() => {
-              this.currentActive = 1;
-              this.sweepAstoffice();
-            })
-          }
-        } else {
-          this.$dialog.alert({
-            message: '当前扫描没有收集到任何医废信息,请重新扫描'
-          }).then(() => {
-            this.currentActive = 1;
-            this.sweepAstoffice();
-          })
-        }
-      };
-    },
+   
     // 称重方法
     weightRubbish () {
-      window.android.getWeight()
-    },
-    // 称重后的回调
-    getWeightCallback(str) {
-      if (str) {
-        this.currentTotalWeigh+=Number(str);
-        this.bagCodeShow = false;
-        this.bluetoothWeighShow = true;
-        this.weightMsg = str;
-        this.storageLanyaCz(this.currentTotalWeigh)
-      }
+      this.$router.push({path: 'commonSweepCode'});
     },
 
     //打印凭单
@@ -358,25 +268,29 @@ export default {
     },
     // 确认扫码无误进入下个流程
     sureCurrentCodeMsg () {
-      this.currentActive++;
-      if (this.currentActive > 4) {return};
-      if (this.currentActive == 4) {
+      // this.currentActive++;
+      let middleCurrentActive = this.showCurrentActive;
+      middleCurrentActive++;
+      this.changeCurrentActive(middleCurrentActive);
+      if (this.showCurrentActive > 4) {return};
+      if (this.showCurrentActive == 4) {
         this.$router.push({path:'judgeCurrentDepantment'})
-      } else if (this.currentActive == 3) {
+      } else if (this.showCurrentActive == 3) {
         this.weightRubbish()
       } else {
-        this.startTask();
+        this.$router.push({path: 'commonSweepCode'});
       };
     },
     // 收集确认
     collectSure () {
       this.$router.push({path:'judgeOtherDepantment'})
     },
-    // 开始医废收集任务
-    startTask () {
-      // 扫描科室暂存点二维码
-      this.sweepAstoffice();
+
+    // 扫码信息展示框
+    showSweepCodeBox () {
+
     },
+
     // 时间格式方法
     formatTime () {
       return this.$moment(new Date().getTime()).format('YYYY-MM-DD HH:mm:ss')

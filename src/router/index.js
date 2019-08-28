@@ -11,6 +11,8 @@ const JudgeOtherDepantment = () => import('../pages/judge/JudgeOtherDepantment')
 const MedicalInStorageIncrease = () => import('../pages/MedicalInStorageIncrease')
 const AbnormalWarning = () => import('../pages/AbnormalWarning')
 const CollectHistory = () => import('../pages/AbnormalWarning')
+const MyInfo = () => import('../pages/MyInfo')
+const CommonSweepCode = () => import('../pages/CommonSweepCode')
 Vue.use(Router)
 
 let baseRoute  = [
@@ -23,6 +25,11 @@ let baseRoute  = [
     path: '/home',
     name: 'home',
     component: Home,
+  },
+  {
+    path: '/commonSweepCode',
+    name: 'commonSweepCode',
+    component: CommonSweepCode,
   },
   {
     path: '/medicalCollect',
@@ -68,6 +75,11 @@ let baseRoute  = [
     path: '/collectHistory',
     name: 'collectHistory',
     component: CollectHistory,
+  },
+  {
+    path: '/myInfo',
+    name: 'myInfo',
+    component: MyInfo,
   },
 ];
 let router = new Router({

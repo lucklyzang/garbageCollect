@@ -51,6 +51,7 @@ import FooterBottom from '../components/FooterBottom'
 import { mapGetters } from 'vuex'
 import { mapMutations } from 'vuex'
 import {queryOutStorage} from '../api/rubbishCollect.js'
+import { pushHistory } from '@/common/js/utils'
 export default {
    components:{
     HeaderTop,
@@ -80,6 +81,11 @@ export default {
   },
 
   mounted() {
+    pushHistory();
+    window.onpopstate = () => {
+      this.$router.push({path: 'home'});  //输入要返回的上一级路由地址
+      this.changeTitleTxt({tit: '医废监测'})
+    }
     this.queryNotInStorage();
   },
   methods: {

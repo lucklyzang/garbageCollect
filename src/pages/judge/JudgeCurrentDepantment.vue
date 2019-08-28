@@ -26,7 +26,10 @@ export default {
       'changePrintBtn',
       'changeOtherBtn',
       'changeCurrentLajicodeState',
-      'changeClickBackoutBtn'
+      'changeClickBackoutBtn',
+      'changeCurrentActive',
+      'changebluetoothWeighShow',
+      'changeStaffCodeShow'
     ]),
     showDialog () {
       this.$dialog.confirm({
@@ -34,16 +37,20 @@ export default {
       }).then(() => {
         this.$router.push({path: 'medicalCollect'});
         this.changeFlowState(2);
+        this.changeCurrentActive(1);
         this.changeCollectBtn(false);
         this.changeSureBtn(true);
         this.changePrintBtn(false);
         this.changeOtherBtn(false);
         this.changeCurrentLajicodeState(false);
         this.changeClickBackoutBtn(false);
+        this.changebluetoothWeighShow(false);
+        this.changeStaffCodeShow(true)
       }).catch(() => {
         this.changeCurrentLajicodeState(false);
         this.$router.replace({path:'judgeCurrentCollectFinish'});
-        this.changeClickBackoutBtn(false);   
+        this.changeClickBackoutBtn(false);
+        this.changebluetoothWeighShow(false)   
       });
     }
   }
