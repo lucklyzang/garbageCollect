@@ -30,7 +30,11 @@ export default {
       'changeCurrentLajicodeState',
       'changeBackoutBtn',
       'changeClickBackoutBtn',
-      'changeCurrentActive'
+      'changeCurrentActive',
+      'changeBagCodeShow',
+      'changeAstOfficeShow',
+      'changeStaffCodeShow',
+      'changebluetoothWeighShow'
     ]),
     showDialog () {
       this.$dialog.confirm({
@@ -56,7 +60,14 @@ export default {
         this.changeCurrentActive(0);
         this.changeClickBackoutBtn(false);
         this.changeCurrentLajicodeState(false);
-        this.changeBackoutBtn(true)   
+        this.changeBagCodeShow(false);
+        this.changeAstOfficeShow(false);
+        this.changeStaffCodeShow(false);
+        this.changebluetoothWeighShow(false);
+        this.changeCollectBtn(true);
+        this.changeSureBtn(false);
+        this.changeBackoutBtn(true);
+        this.changeOtherBtn(false); 
       });
     }
   }

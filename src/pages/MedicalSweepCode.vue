@@ -2,7 +2,7 @@
     <div class="content-wrapper">
       <HeaderTop :title="navTopTitle">
         <van-icon name="arrow-left" slot="left" @click="backTo"></van-icon> 
-        <van-icon name="manager-o" slot="right" @click.native="backTo"></van-icon> 
+        <van-icon name="manager-o" slot="right" @click="skipMyInfo"></van-icon> 
       </HeaderTop>
       <div class="content">
         <div class="content-header">
@@ -62,7 +62,7 @@
           <van-button type="info" @click="collectSure" v-show="showOtherButton" size="normal">其它科室收集</van-button>
         </div>
       </div>
-      <FooterBottom></FooterBottom>
+      <!-- <FooterBottom></FooterBottom> -->
     </div>
 </template>
 
@@ -189,12 +189,19 @@ export default {
       'changeCurrentLajicodeState',
       'changeClickBackoutBtn',
       'changeStaffCodeShow',
-      'changeCurrentActive'
+      'changeCurrentActive',
+      'changePrintBtn',
+      'changeOtherBtn'
     ]),
     // 返回上一页
     backTo () {
-      this.$router.go(-1);
+      this.$router.push({path: 'home'});
       this.changeTitleTxt({tit:'医废监测'})
+    },
+    // 跳转到我的页面
+    skipMyInfo () {
+      this.$router.push({path: 'myInfo'});
+      this.changeTitleTxt({tit:'我的'})
     },
     startTask () {
       this.$router.push({path: 'commonSweepCode'})
@@ -223,11 +230,15 @@ export default {
           this.clearTrashStore()   
         } else if (this.lajiCode.length > 0) {
           if (this.clearCurrentLajicode) {
-          // 保留之前存储的信息,删除此次存储的信息
             let lajiCodeMsg = this.lajiCode;
             let lanyaCzMsg = this.lanyaCz;
-            lajiCodeMsg.splice(this.lajiCode.length-1,1);
-            lanyaCzMsg.splice(this.lajiCode.length-1,1);
+            if (this.lajiCode.length == this.lanyaCz.length) {
+              //保留之前存储的信息,删除此次存储的信息
+              lajiCodeMsg.splice(this.lajiCode.length-1,1);
+              lanyaCzMsg.splice(this.lanyaCz.length-1,1);
+            } else {
+              lajiCodeMsg.splice(this.lajiCode.length-1,1);
+            };
             this.initStorageLajiCode();
             this.initStorageLanyaCz();
             this.changeStorageLajiCode(lajiCodeMsg);
@@ -264,11 +275,13 @@ export default {
           this.printProof(this.lajiCode[i].barCode,this.keshiCode[0].depName,this.lajiCode[i].wasteName,
           this.lanyaCz[i],this.userInfo.workerName,this.yihuCode[0].workerName);
         }
-      }
+      };
+      this.changePrintBtn(false);
+      this.changeOtherBtn(true);
+      this.changeBackoutBtn(false);
     },
     // 确认扫码无误进入下个流程
     sureCurrentCodeMsg () {
-      // this.currentActive++;
       let middleCurrentActive = this.showCurrentActive;
       middleCurrentActive++;
       this.changeCurrentActive(middleCurrentActive);

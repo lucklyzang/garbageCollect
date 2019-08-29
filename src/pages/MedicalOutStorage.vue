@@ -2,7 +2,7 @@
   <div class="content-wrapper">
     <HeaderTop :title="navTopTitle">
       <van-icon name="arrow-left" slot="left" @click="backTo"></van-icon> 
-      <van-icon name="manager-o" slot="right" @click.native="backTo"></van-icon> 
+      <van-icon name="manager-o" slot="right" @click="skipMyInfo"></van-icon> 
     </HeaderTop>
     <div class="content-middle">
       <div class="content-middle-top">
@@ -41,7 +41,7 @@
         <van-button type="info" @click="sureInStorage" size="normal">确定出库</van-button>
       </div>
     </div>
-    <FooterBottom></FooterBottom>
+    <!-- <FooterBottom></FooterBottom> -->
   </div>
 </template>
 
@@ -109,6 +109,11 @@ export default {
     backTo () {
       this.$router.go(-1);
       this.changeTitleTxt({tit:'医废监测'})
+    },
+    // 跳转到我的页面
+    skipMyInfo () {
+      this.$router.push({path: 'myInfo'});
+      this.changeTitleTxt({tit:'我的'})
     },
     //确定入库
     sureInStorage () {
@@ -187,6 +192,7 @@ export default {
                this.$dialog.alert({
                   message: '当前没有待出库的批次'
                 }).then(() => {
+                  this.$router.push({path: 'home'})
               });
             }
           }

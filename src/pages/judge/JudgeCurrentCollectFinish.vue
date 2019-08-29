@@ -49,18 +49,26 @@ export default {
       'changeTitleTxt',
       'changebluetoothWeighShow',
       'changeCurrentActive',
-      'changeBagCodeShow'
+      'changeBagCodeShow',
+      'changeAstOfficeShow',
+      'changeStaffCodeShow',
+      'changebluetoothWeighShow',
     ]),
     showDialog () {
       this.$dialog.confirm({
         message: '此次收集已完成?'
       }).then(() => {
         if (this.lajiCode.length == 0) {
-          if (clickBackoutBtn) {
+          if (this.clickBackoutBtn) {
             this.$router.push({path:'medicalInStorage'});
             this.changeTitleTxt({tit: '医废入库'});
             this.changeCollectBtn(true);
             this.changeSureBtn(false);
+            this.changeBagCodeShow(false);
+            this.changeAstOfficeShow(false);
+            this.changeStaffCodeShow(false);
+            this.changebluetoothWeighShow(false);
+            this.changeCurrentActive(0);
           } else {
             this.$dialog.alert({
               message: '当前没有收集到任何医废数据,请重新扫描'
@@ -68,27 +76,38 @@ export default {
               this.changeBackoutBtn(true);
               this.$router.push({path: 'medicalCollect'});
               this.changeFlowState(2);
-              this.changeCurrentActive(0);
+              this.changeCurrentActive(1);
               this.changeCollectBtn(false);
               this.changeSureBtn(true);
               this.changePrintBtn(false);
               this.changeOtherBtn(false)
             })
-          }
+          };
         };
         if (this.lajiCode.length == 1) {
-          //  this.$dialog.alert({
-          //     message: `收集单条数测试${this.lajiCode.length}`
-          //     }).then(() => {
-                this.postTrashOne()
-            // });
+           this.$dialog.alert({
+             message: `收集单条数测试${this.lanyaCz.length}`
+              }).then(() => {
+                this.postTrashOne();
+                this.changeCurrentActive(0);
+                this.changeBagCodeShow(false);
+                this.changeAstOfficeShow(false);
+                this.changeStaffCodeShow(false);
+                this.changebluetoothWeighShow(false);
+             });
         } else if (this.lajiCode.length > 1) {
-          // this.$dialog.alert({
-          //     message: `收集多条数测试${this.lajiCode.length}`
-          //     }).then(() => {
-                this.postTrashMore()
-            // });
+           this.$dialog.alert({
+               message: `收集多条数测试${this.lanyaCz.length}`
+               }).then(() => {
+                this.postTrashMore();
+                this.changeCurrentActive(0);
+                this.changeBagCodeShow(false);
+                this.changeAstOfficeShow(false);
+                this.changeStaffCodeShow(false);
+                this.changebluetoothWeighShow(false);
+             });
         };
+        this.changeCurrentLajicodeState(false);
         this.changeClickBackoutBtn(false);
       }).catch(() => {
         this.$router.replace({path: 'judgeCurrentDepantment'});
@@ -129,6 +148,7 @@ export default {
                   this.changeSureBtn(false);
                   this.changePrintBtn(true);
                   this.changeOtherBtn(true);
+                  this.changeCurrentActive(0);
                   this.changebluetoothWeighShow(false)
               });
           } else {
@@ -202,6 +222,7 @@ export default {
                   this.$router.push({path: 'medicalCollect'});
                   this.changeSureBtn(false);
                   this.changePrintBtn(true);
+                  this.changeCurrentActive(0);
                   this.changeOtherBtn(true);
                   this.changebluetoothWeighShow(false)
               });

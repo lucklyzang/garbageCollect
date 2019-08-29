@@ -2,7 +2,7 @@
   <div class="word-cup">
     <HeaderTop :title="navTopTitle">
       <van-icon name="arrow-left" slot="left" @click="backTo"></van-icon> 
-      <van-icon name="manager-o" slot="right" @click=""></van-icon> 
+      <van-icon name="manager-o" slot="right" @click="skipMyInfo"></van-icon> 
     </HeaderTop>
     <div class="content">
       <div class="content-header">
@@ -15,7 +15,7 @@
         </div>
       </div>
     </div>
-    <FooterBottom></FooterBottom>
+    <!-- <FooterBottom></FooterBottom> -->
   </div>
 </template>
 <script>
@@ -74,6 +74,11 @@
       // 返回上一页
       backTo () {
         this.$router.go(-1)
+      },
+      // 跳转到我的页面
+      skipMyInfo () {
+        this.$router.push({path: 'myInfo'});
+        this.changeTitleTxt({tit:'我的'})
       },
       //路由跳转
       routerSkip (name, text) {

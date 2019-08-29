@@ -2,7 +2,7 @@
   <div class="content-wrapper">
     <HeaderTop :title="navTopTitle">
       <van-icon name="arrow-left" slot="left" @click="backTo"></van-icon> 
-      <van-icon name="manager-o" slot="right" @click.native="backTo"></van-icon> 
+      <!-- <van-icon name="manager-o" slot="right" @click.native="backTo"></van-icon>  -->
     </HeaderTop>
     <div class="content-middle">
     </div>

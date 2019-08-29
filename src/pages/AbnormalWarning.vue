@@ -2,10 +2,10 @@
   <div class="content-wrapper">
     <HeaderTop :title="navTopTitle">
       <van-icon name="arrow-left" slot="left" @click="backTo"></van-icon> 
-      <van-icon name="manager-o" slot="right" @click.native="backTo"></van-icon> 
+      <van-icon name="manager-o" slot="right" @click="skipMyInfo"></van-icon> 
     </HeaderTop>
     <div class="content-middle"></div>
-    <FooterBottom></FooterBottom>
+    <!-- <FooterBottom></FooterBottom> -->
   </div>
 </template>
 
@@ -48,6 +48,11 @@ export default {
       this.$router.go(-1);
       this.changeTitleTxt({tit:'医废监测'})
     },
+    // 跳转到我的页面
+    skipMyInfo () {
+      this.$router.push({path: 'myInfo'});
+      this.changeTitleTxt({tit:'我的'})
+    }
   }
 }
 

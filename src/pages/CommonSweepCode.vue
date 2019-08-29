@@ -59,16 +59,32 @@ export default {
   },
 
   mounted () {
+    pushHistory();
+    window.onpopstate = () => {
+      if (this.currentActive == 0) {
+        this.changeCurrentActive(0);
+        this.$router.push({path: 'medicalCollect'})
+      } else if (this.currentActive == 1) {
+        this.changeCurrentActive(0);
+        this.$router.push({path: 'medicalCollect'})
+      } else if (this.currentActive == 2) {
+        this.changeCurrentActive(1);
+        this.$router.push({path: 'medicalCollect'})
+      } else if (this.currentActive == 3) {
+        this.changeCurrentActive(2);
+        this.$router.push({path: 'medicalCollect'})
+      }
+    };
     if (this.currentActive == 3) {
       this.weightRubbish()
     } else {
       this.sweepAstoffice();
-    }
+    };
     // 二维码回调方法绑定到window下面,提供给外部调用
     let me = this;
     window['scanQRcodeCallback'] = (code) => {
       me.scanQRcodeCallback(code);
-    },
+    };
     window['getWeightCallback'] = (code) => {
       me.getWeightCallback(code);
     }
@@ -249,8 +265,6 @@ export default {
         this.currentTotalWeigh+=Number(str);
         this.changebluetoothWeighShow(true);
         this.changeBagCodeShow(false);
-        // this.bagCodeShow = false;
-        // this.bluetoothWeighShow = true;
         this.storageLanyaCz(this.currentTotalWeigh);
         this.changeExtraLyczMsg(this.currentTotalWeigh);
         this.$router.push({path: 'medicalCollect'});

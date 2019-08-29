@@ -2,7 +2,7 @@
   <div class="content-wrapper">
     <HeaderTop :title="navTopTitle">
       <van-icon name="arrow-left" slot="left" @click="backTo"></van-icon> 
-      <van-icon name="manager-o" slot="right" @click.native="backTo"></van-icon> 
+      <van-icon name="manager-o" slot="right" @click="skipMyInfo"></van-icon> 
     </HeaderTop>
     <div class="content-middle">
       <p class="select-wrapper">
@@ -49,7 +49,7 @@
         </van-cell-group>
       </p>
     </div>
-    <FooterBottom></FooterBottom>
+    <!-- <FooterBottom></FooterBottom> -->
   </div>
 </template>
 
@@ -101,12 +101,30 @@ export default {
     ...mapMutations([
       'changeTitleTxt',
       'initTotalWeight',
+      'initBatchs',
+      'changeTotalWeight',
       'initBatchs'
     ]),
+
+    initFormContent () {
+      this.monitorArea = '',
+      this.monitorDot = '',
+      this.cardNumber = '',
+      this.outboundPerson = '',
+      this.company = '',
+      this.companyName = '',
+      this.changeTotalWeight(0)
+    },
+
     // 返回上一页
     backTo () {
       this.$router.go(-1);
       this.changeTitleTxt({tit:'医废监测'})
+    },
+    // 跳转到我的页面
+    skipMyInfo () {
+      this.$router.push({path: 'myInfo'});
+      this.changeTitleTxt({tit:'我的'})
     },
     // 新增出库
     increase () {
@@ -127,13 +145,16 @@ export default {
             this.$dialog.alert({
               message: '医废出库成功'
             }).then(() => {
-              // this.sweepAstoffice()
+              this.$router.push({path: 'home'});
+              this.initFormContent()
             });
           } else {
             this.$dialog.alert({
               message: '医废出库失败'
             }).then(() => {
-              // this.sweepAstoffice()
+              this.initFormContent();
+              this.$router.push({path: 'medicalOutStorage'});
+              this.initBatchs()
             });
           }
         }
@@ -142,7 +163,9 @@ export default {
         this.$dialog.alert({
           message: '医废出库失败'
         }).then(() => {
-          // this.sweepAstoffice()
+          this.initFormContent();
+          this.$router.push({path: 'medicalOutStorage'});
+          this.initBatchs()
         });
         console.log(err)
       })
