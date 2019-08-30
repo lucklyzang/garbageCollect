@@ -55,11 +55,21 @@
           <div v-show="newSummary" class="new-summary"></div>
         </div>
         <div class="content-footer">
-          <van-button type="info" @click="startTask" v-show="showCollectButton" size="normal">医废收集</van-button>
-          <van-button type="info" @click="backOut" v-show="showBackoutButton" size="normal">撤销</van-button>
-          <van-button type="info" @click="sureCurrentCodeMsg" v-show="showSureButton" size="normal">确定</van-button>
-          <van-button type="info" @click="finishCollect" v-show="showPrintBtn" size="normal">打印单据</van-button>
-          <van-button type="info" @click="collectSure" v-show="showOtherButton" size="normal">其它科室收集</van-button>
+          <span class="showBackoutButton" v-show="showBackoutButton">
+            <van-button type="info" @click="backOut"  size="normal">撤销</van-button>
+          </span>
+          <span class="showCollectButton" v-show="showCollectButton">
+            <van-button type="info" @click="startTask" size="normal">医废收集</van-button>
+          </span>
+          <span class="showSureButton" v-show="showSureButton" >
+            <van-button type="info" @click="sureCurrentCodeMsg" size="normal">确定</van-button>
+          </span>
+          <span class="showPrintBtn"  v-show="showPrintBtn">
+            <van-button type="info" @click="finishCollect" size="normal">打印单据</van-button>
+          </span>
+          <span class="showOtherButton" v-show="showOtherButton">
+            <van-button type="info" @click="collectSure" size="normal">其它科室</van-button>
+          </span>
         </div>
       </div>
       <!-- <FooterBottom></FooterBottom> -->
@@ -80,10 +90,6 @@ export default {
     },
   data () {
     return {
-      // astOfficeShow: false,
-      // staffCodeShow: false,
-      // bagCodeShow: false,
-      // bluetoothWeighShow: false,
       newSummary: false,
       currentTotalWeigh: 0
     };
@@ -152,8 +158,8 @@ export default {
     pushHistory();
     // 监听历史记录点, 添加返回事件监听
     window.onpopstate = () => {
-      // this.currentActive = 0
-      // this.$router.push(...)  //输入要返回的上一级路由地址
+      this.$router.push({path: 'home'});  //输入要返回的上一级路由地址
+      this.changeTitleTxt({tit: '医废监测'})
     }
     // 判断流程从哪步开始
     // this.judgeFlowPosition();
@@ -164,8 +170,7 @@ export default {
     },
     window['getWeightCallback'] = (code) => {
       me.getWeightCallback(code);
-    };
-    this.showSweepCodeBox();
+    }
   },
 
   methods: {
@@ -209,12 +214,10 @@ export default {
     // 判断流程从哪步开始
     judgeFlowPosition () {
       if (this.judgeFlowValue == 2) {
-        // this.currentActive = 1;
         this.changeCurrentActive(1);
         this.changeStaffCodeShow(true)
       };
       if (this.judgeFlowValue == 0) {
-        // this.currentActive = 0;
         this.changeCurrentActive(0);
       }
     },
@@ -294,14 +297,10 @@ export default {
         this.$router.push({path: 'commonSweepCode'});
       };
     },
+
     // 收集确认
     collectSure () {
       this.$router.push({path:'judgeOtherDepantment'})
-    },
-
-    // 扫码信息展示框
-    showSweepCodeBox () {
-
     },
 
     // 时间格式方法
@@ -338,10 +337,22 @@ export default {
       margin-top: 80px;
       background: #fff;
       .content-middle {
-        height: 370px;
+        height: 400px;
         width: 100%;
-        div {
-          // height: 200px;
+        > div {
+          height: 100%;
+          /deep/ .van-cell__title {
+            span {
+              font-size: 18px
+            }
+          }
+          /deep/ .van-panel__content {
+            div {
+              p {
+                font-size: 16px
+              }
+            }
+          }
           p {
             line-height: 30px;
             padding-left: 14px;
@@ -360,19 +371,46 @@ export default {
           .van-steps__items {
             .van-hairline {
               .van-step__title {
-                width: 70px;
+                width: 75px;
                 text-align: center;
+                font-size: 14px;
+                margin-top: -10px
               }
             }
           }
         }
       }
       .content-footer {
-        margin-top: 10px;
+        margin-top: 20px;
         text-align: center;
-        button {
-          background: @color-theme;
-          border-color: @color-theme
+        padding: 0 21px;
+        span {
+          display: inline-block;
+          button {
+            background: @color-theme;
+            border-color: @color-theme;
+            padding: 0 60px;
+          }
+        }
+        .showBackoutButton {
+          button {
+            background: #eaeaea;
+            border: none;
+            color: #969799
+          }
+        }
+        .showPrintBtn {
+          button {
+            padding: 0 50px;
+            background: #eaeaea;
+            border: none;
+            color: #969799
+          }
+        }
+        .showOtherButton {
+          button {
+             padding: 0 50px;
+          }
         }
       }
     }

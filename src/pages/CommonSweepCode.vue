@@ -152,7 +152,6 @@ export default {
                 this.changeExtraKeshiMsg(code);
                 this.changeStartCollectTime(this.formatTime());
                 this.changeAstOfficeShow(true);
-                // this.astOfficeShow = true;
                 this.$router.push({path: 'medicalCollect'});
               } else {
                 this.againSweepCode()
@@ -166,7 +165,6 @@ export default {
             this.$dialog.alert({
               message: `当前扫描没有收集到任何科室信息,请重新扫描1${this.currentActive}`
             }).then(() => {
-              // this.currentActive = 0;
               this.changeCurrentActive(0);
               this.sweepAstoffice();
             })
@@ -175,7 +173,6 @@ export default {
           this.$dialog.alert({
             message: '当前扫描没有收集到任何科室信息,请重新扫描2'
           }).then(() => {
-            // this.currentActive = 0;
             this.changeCurrentActive(0);
             this.sweepAstoffice();
           })
@@ -206,7 +203,6 @@ export default {
             this.$dialog.alert({
               message: '当前扫描没有收集到任何医护人员信息,请重新扫描'
             }).then(() => {
-              // this.currentActive = 0;
               this.changeCurrentActive(1);
               this.sweepAstoffice();
             })
@@ -215,7 +211,6 @@ export default {
           this.$dialog.alert({
             message: '当前扫描没有收集到任何医护人员信息,请重新扫描'
           }).then(() => {
-            // this.currentActive = 0;
             this.changeCurrentActive(1);
             this.sweepAstoffice();
           })
@@ -231,15 +226,12 @@ export default {
             this.changeExtraLajiMsg(code);
             this.changeBagCodeShow(true);
             this.changeStaffCodeShow(false);
-            // this.bagCodeShow = true;
-            // this.staffCodeShow = false;
             this.changeCurrentLajicodeState(true);
             this.$router.push({path: 'medicalCollect'});
           } else {
             this.$dialog.alert({
             message: '当前扫描没有收集到任何医废信息,请重新扫描'
             }).then(() => {
-              // this.currentActive = 1;
               this.changeCurrentActive(2);
               this.sweepAstoffice();
             })
@@ -248,7 +240,6 @@ export default {
           this.$dialog.alert({
             message: '当前扫描没有收集到任何医废信息,请重新扫描'
           }).then(() => {
-            // this.currentActive = 1;
             this.changeCurrentActive(2);
             this.sweepAstoffice();
           })

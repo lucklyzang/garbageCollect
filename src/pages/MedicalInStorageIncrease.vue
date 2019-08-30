@@ -146,6 +146,7 @@ export default {
               message: '医废出库成功'
             }).then(() => {
               this.$router.push({path: 'home'});
+              this.changeTitleTxt({tit: '医废监测'})
               this.initFormContent()
             });
           } else {
@@ -154,6 +155,7 @@ export default {
             }).then(() => {
               this.initFormContent();
               this.$router.push({path: 'medicalOutStorage'});
+              this.changeTitleTxt({tit: '医废出库'})
               this.initBatchs()
             });
           }
@@ -165,6 +167,7 @@ export default {
         }).then(() => {
           this.initFormContent();
           this.$router.push({path: 'medicalOutStorage'});
+          this.changeTitleTxt({tit: '医废出库'})
           this.initBatchs()
         });
         console.log(err)
@@ -241,6 +244,7 @@ export default {
             height: 35px;
             border: none;
             line-height: 35px;
+            padding: 0 120px
           }
         }
       }

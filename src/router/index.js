@@ -10,7 +10,7 @@ const JudgeCurrentCollectFinish = () => import('../pages/judge/JudgeCurrentColle
 const JudgeOtherDepantment = () => import('../pages/judge/JudgeOtherDepantment')
 const MedicalInStorageIncrease = () => import('../pages/MedicalInStorageIncrease')
 const AbnormalWarning = () => import('../pages/AbnormalWarning')
-const CollectHistory = () => import('../pages/AbnormalWarning')
+const CollectHistory = () => import('../pages/CollectHistory')
 const MyInfo = () => import('../pages/MyInfo')
 const CommonSweepCode = () => import('../pages/CommonSweepCode')
 Vue.use(Router)

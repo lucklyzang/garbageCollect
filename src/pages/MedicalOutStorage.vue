@@ -17,7 +17,7 @@
           @cancel="endTimePop = false"  @confirm="endTimePop = false"  @change="endTimeChange"/>
         </van-popup>
         <p class="middle-top-search">
-          <van-button type="info" size="small" @click="queryNotInStorage(startTime,endTime)">搜索</van-button>
+          <van-button type="info" size="small" @click="searchOutStorage(startTime,endTime)">搜索</van-button>
         </p>
       </div>
       <div class="changeBtn">
@@ -38,7 +38,9 @@
         </div>
       </div>
       <div class="btn-group">
-        <van-button type="info" @click="sureInStorage" size="normal">确定出库</van-button>
+        <p>
+          <van-button type="info" @click="sureInStorage" size="normal">确定出库</van-button>
+        </p>
       </div>
     </div>
     <!-- <FooterBottom></FooterBottom> -->
@@ -110,6 +112,16 @@ export default {
       this.$router.go(-1);
       this.changeTitleTxt({tit:'医废监测'})
     },
+    searchOutStorage (startTime,endTime) {
+      if (this.startTime == '' || this.endTime == '') {
+        this.$dialog.alert({
+          message: '开始或结束日期不能为空'
+        }).then(() => {
+        });
+      } else {
+        this.queryNotInStorage(startTime,endTime)
+      }
+    },
     // 跳转到我的页面
     skipMyInfo () {
       this.$router.push({path: 'myInfo'});
@@ -168,6 +180,7 @@ export default {
     },
     // 查询未出库批次
     queryNotInStorage (startTime = this.formatTime(), endTime = this.formatTime()) {
+      this.classList = [];
       let batchInfo = {
         proId: this.userInfo.proId,  
         startDate: startTime,
@@ -192,7 +205,8 @@ export default {
                this.$dialog.alert({
                   message: '当前没有待出库的批次'
                 }).then(() => {
-                  this.$router.push({path: 'home'})
+                  this.$router.push({path: 'home'});
+                  this.changeTitleTxt({tit: '医废监测'})
               });
             }
           }
@@ -202,7 +216,7 @@ export default {
         console.log(err)
       })
     },
-     // 时间格式方法
+    // 时间格式方法
     formatTime () {
       return this.$moment(new Date().getTime()).format('YYYY-MM-DD')
     }
@@ -322,9 +336,12 @@ export default {
       .btn-group {
         margin-top: 8px;
         text-align: center;
-        button {
-          background: @color-theme;
-          border-color: @color-theme
+        p {
+          button {
+            background: @color-theme;
+            border-color: @color-theme;
+            padding: 0 120px;
+          }
         }
       }
     }

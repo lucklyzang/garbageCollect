@@ -43,8 +43,12 @@
         </van-panel>
       </div>
       <div class="btn-group">
-        <van-button type="info" v-show="inStoageBtn" @click="medicalInStoragr" size="normal">医废入库</van-button>
-        <van-button type="info" v-show="sureBtnShow" @click="sureInStorage" size="normal">确定</van-button>
+        <p v-show="inStoageBtn" class="inStoageBtn">
+          <van-button type="info" @click="medicalInStoragr" size="normal">医废入库</van-button>
+        </p>
+        <p v-show="sureBtnShow" class="sureBtnShow">
+          <van-button type="info" @click="sureInStorage" size="normal">确定</van-button>
+        </p>
       </div>
     </div>
     <!-- <FooterBottom></FooterBottom> -->
@@ -185,6 +189,7 @@ export default {
     },
     // 查询收集的垃圾批次信息00012019081900022019082200
     queryAllBatch () {
+      this.classList = [];
       queryBatch({batchNumber:this.batchNumber ? this.batchNumber : this.userInfo.batchNumber ,state: 0}).then((res)=>{
         if (res && res.data.code == 200) {
           if (res.data.data.length > 0) {
@@ -207,7 +212,8 @@ export default {
              this.$dialog.alert({
               message: '当前没有待入库的信息'
             }).then(() => {
-              this.$router.push({path: 'home'})
+              this.$router.push({path: 'home'});
+              this.changeTitleTxt({tit: '医废监测'})
             });
           }
         }
@@ -293,7 +299,7 @@ export default {
         }
       }
       .content-middle-list {
-        height: 330px;
+        height: 380px;
         overflow: auto;
         .content-middle-list-item {
           padding: 14px;
@@ -362,9 +368,20 @@ export default {
       .btn-group {
         margin-top: 16px;
         text-align: center;
-        button {
-          background: @color-theme;
-          border-color: @color-theme
+        padding: 0 21px;
+        .inStoageBtn {
+          button {
+            background: @color-theme;
+            border-color: @color-theme;
+            padding: 0 120px;
+          }
+        }
+        .sureBtnShow {
+          button {
+            background: @color-theme;
+            border-color: @color-theme;
+            padding: 0 140px;
+          }
         }
       }
     }

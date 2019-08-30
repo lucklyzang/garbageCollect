@@ -92,7 +92,10 @@
                 this.createBatchNumber(res.data.data.batchNumber)
               }
             }).catch((err) => {
-              console.log(err)
+              this.$dialog.alert({
+                message: `跳转错误${res.data.code}`
+              }).then(() => {
+            });
             })
           };
           this.$router.push({path:name});

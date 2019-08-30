@@ -75,3 +75,19 @@ export function operateOutStorage(data) {
     data
   })
 };
+//查询收集历史
+export function queryCollectHistory(data) {
+  return request({
+    url: 'store/hasOut',
+    method: 'get',
+    params: data
+  })
+};
+//查询预警
+export function queryWarning(data) {
+  return request({
+    url: 'warninfo/queryAll',
+    method: 'get',
+    params: data
+  })
+};
