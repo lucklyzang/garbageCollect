@@ -196,7 +196,7 @@ export default {
       'changeStaffCodeShow',
       'changeCurrentActive',
       'changePrintBtn',
-      'changeOtherBtn'
+      'changeOtherBtn',
     ]),
     // 返回上一页
     backTo () {
@@ -209,6 +209,7 @@ export default {
       this.changeTitleTxt({tit:'我的'})
     },
     startTask () {
+      this.changeCallPeriod(true);
       this.$router.push({path: 'commonSweepCode'})
     },
     // 判断流程从哪步开始
@@ -381,9 +382,11 @@ export default {
         }
       }
       .content-footer {
-        margin-top: 20px;
+        position: fixed;
+        bottom: 10px;
+        left: 0;
         text-align: center;
-        padding: 0 21px;
+        width: 100%;
         span {
           display: inline-block;
           button {

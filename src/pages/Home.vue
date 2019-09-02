@@ -84,19 +84,24 @@
       routerSkip (name, text) {
         if (name) {
           if (text === '医废收集') {
-            this.changeApplicationCollectTime(this.formatTime());
-            // 创建回收批次
-            getBatchNumber(this.userInfo.id).then((res) => {
-              if (res && res.data.code == 200) {
-                // 批次号存入store
-                this.createBatchNumber(res.data.data.batchNumber)
-              }
-            }).catch((err) => {
+            if (this.userInfo && this.userInfo.id) {
+              this.changeApplicationCollectTime(this.formatTime());
+              // 创建回收批次
+              getBatchNumber(this.userInfo.id).then((res) => {
+                if (res && res.data.code == 200) {
+                  // 批次号存入store
+                  this.createBatchNumber(res.data.data.batchNumber)
+                }
+              }).catch((err) => {
+                console.log(err)
+              })
+            } else {
               this.$dialog.alert({
-                message: `跳转错误${res.data.code}`
+                message: '用户ID不能为空,请重新登录'
               }).then(() => {
-            });
-            })
+                this.$router.push({name: 'login'})
+              });
+            }
           };
           this.$router.push({path:name});
           this.changeTitleTxt({tit:text})

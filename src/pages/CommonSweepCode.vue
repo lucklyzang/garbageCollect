@@ -39,7 +39,7 @@ export default {
       'showSureBtn',
       'showBackoutBtn',
       'clearCurrentLajicode',
-      'currentActive'
+      'currentActive',
     ]),
     showCollectButton () {
       return this.showCollectBtn
@@ -75,11 +75,28 @@ export default {
         this.$router.push({path: 'medicalCollect'})
       }
     };
-    if (this.currentActive == 3) {
+     if (this.currentActive == 3) {
       this.weightRubbish()
     } else {
       this.sweepAstoffice();
     };
+    // if (this.callPeriod) {
+    //   if (this.currentActive == 3) {
+    //     this.weightRubbish()
+    //   } else {
+    //     this.sweepAstoffice();
+    //   };
+    // } else {
+    //   if (this.currentActive == 0) {
+    //     this.commonDialog(0)
+    //   } else if (this.currentActive == 1) {
+    //     this.commonDialog(1)
+    //   } else if (this.currentActive == 2) {
+    //     this.commonDialog(2)
+    //   } else if (this.currentActive == 3) {
+    //     this.commonDialog(3)
+    //   };
+    // }
     // 二维码回调方法绑定到window下面,提供给外部调用
     let me = this;
     window['scanQRcodeCallback'] = (code) => {
@@ -118,7 +135,7 @@ export default {
       'changeExtraYihuMsg',
       'changeExtraLajiMsg',
       'changeExtraLyczMsg',
-      'changeCurrentActive'
+      'changeCurrentActive',
     ]),
     // 重新扫码弹窗
     againSweepCode () {
@@ -132,6 +149,43 @@ export default {
     backTo () {
       this.$router.go(-1);
       this.changeTitleTxt({tit:'医废监测'})
+    },
+    // 公共提示弹窗
+    commonDialog (num) {
+      switch(num) {  
+        case 0:
+          this.$dialog.alert({
+            message: '返回到流程页面?'
+          }).then(() => {
+            this.changeCurrentActive(0);
+            this.$router.push({path: 'medicalCollect'})
+          });
+          break;
+         case 1:
+          this.$dialog.alert({
+            message: '返回到流程页面?'
+          }).then(() => {
+            this.changeCurrentActive(0);
+            this.$router.push({path: 'medicalCollect'})
+          });
+          break;
+         case 2:
+          this.$dialog.alert({
+            message: '返回到流程页面?'
+          }).then(() => {
+            this.changeCurrentActive(1);
+            this.$router.push({path: 'medicalCollect'})
+          });
+          break;
+         case 3:
+          this.$dialog.alert({
+            message: '返回到流程页面?'
+          }).then(() => {
+            this.changeCurrentActive(2);
+            this.$router.push({path: 'medicalCollect'})
+          });
+          break;
+      }
     },
     // 扫描二维码方法
     sweepAstoffice () {
@@ -188,8 +242,6 @@ export default {
                   this.changeExtraYihuMsg(code);
                   this.changeStaffCodeShow(true);
                   this.changeAstOfficeShow(false);
-                  // this.staffCodeShow = true;
-                  // this.astOfficeShow = false;
                   this.$router.push({path: 'medicalCollect'});
                 } else {
                 this.againSweepCode()
@@ -256,8 +308,8 @@ export default {
         this.currentTotalWeigh+=Number(str);
         this.changebluetoothWeighShow(true);
         this.changeBagCodeShow(false);
-        this.storageLanyaCz(this.currentTotalWeigh);
-        this.changeExtraLyczMsg(this.currentTotalWeigh);
+        this.storageLanyaCz(Math.round(this.currentTotalWeigh * 100) / 100);
+        this.changeExtraLyczMsg(Math.round(this.currentTotalWeigh * 100) / 100);
         this.$router.push({path: 'medicalCollect'});
         this.changeCurrentActive(3);
       }

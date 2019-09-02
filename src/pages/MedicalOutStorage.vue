@@ -139,16 +139,16 @@ export default {
           message: '请选择要出库的批次'
         }).then(() => {
         });
-        return;
-      };
-      for (let item of outStorageArray) {
-        this.totalWeight += item.trashHeight;
-        this.batchsArray.push(item.batchNumber)
-      };
-      this.changeTotalWeight(this.totalWeight);
-      this.changeBatchs(this.batchsArray);
-      this.$router.push({path:'medicalInStorageIncrease'});
-      this.changeTitleTxt({tit: '医废入库新增'});
+      } else {
+        for (let item of outStorageArray) {
+          this.totalWeight += item.trashHeight;
+          this.batchsArray.push(item.batchNumber)
+        };
+        this.changeTotalWeight(this.totalWeight);
+        this.changeBatchs(this.batchsArray);
+        this.$router.push({path:'medicalInStorageIncrease'});
+        this.changeTitleTxt({tit: '医废入库新增'});
+      }
     },
     // 全选操作
     toggleCheckedAll(){
@@ -334,7 +334,10 @@ export default {
         }
       }
       .btn-group {
-        margin-top: 8px;
+        position: fixed;
+        left: 0;
+        bottom: 10px;
+        width: 100%;
         text-align: center;
         p {
           button {

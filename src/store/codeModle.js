@@ -45,7 +45,9 @@ export default {
         lajiCode: [],
         lanyaCz: [],
       }
-    ]
+    ],
+    // 进入公共扫码页区分调用方法
+    callPeriod: false,
   },
   getters:{
     navTopTitle: state => state.navTitle,
@@ -72,6 +74,7 @@ export default {
     staffCodeShow: state => state.staffCodeShow,
     bagCodeShow: state => state.bagCodeShow,
     bluetoothWeighShow: state => state.bluetoothWeighShow,
+    callPeriod: state => state.callPeriod
   },
   mutations:{
     changeTitleTxt (state,payLoad) {
@@ -206,6 +209,10 @@ export default {
       changebluetoothWeighShow (state,payLoad) {
         state.bluetoothWeighShow = payLoad
       },
+      // 更改公共扫码页调用方法的状态
+      changeCallPeriod (state,payLoad) {
+        state.callPeriod = payLoad
+      }
   },
   actions:{}
 }

@@ -366,9 +366,10 @@ export default {
         }
       }
       .btn-group {
-        margin-top: 16px;
+        width: 100%;
+        position: fixed;
+        bottom: 10px;
         text-align: center;
-        padding: 0 21px;
         .inStoageBtn {
           button {
             background: @color-theme;

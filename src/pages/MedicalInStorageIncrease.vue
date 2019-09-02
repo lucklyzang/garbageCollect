@@ -227,11 +227,12 @@ export default {
         }
       }
       .increaseBtn {
-        width: 92%;
-        margin: 0 auto;
-        padding-top: 10px;
+        width: 100%;
+        position: fixed;
+        bottom: 10px;
+        left: 0;
           .van-cell-group {
-            width: 100%;
+            width: 92%;
             margin: 0 auto;
             /deep/ .van-button {
             width: 100%;
