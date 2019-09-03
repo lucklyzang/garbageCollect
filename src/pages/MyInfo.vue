@@ -13,8 +13,7 @@
 <script>
 import HeaderTop from '../components/HeaderTop'
 import FooterBottom from '../components/FooterBottom'
-import { mapGetters } from 'vuex'
-import { mapMutations } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 import { pushHistory } from '@/common/js/utils'
 export default {
    components:{

@@ -4,8 +4,7 @@
 
 <script>
 import {trashCollectOne,trashCollectMore} from '../../api/rubbishCollect.js'
-import { mapGetters } from 'vuex'
-import { mapMutations } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 export default {
   data () {
     return {

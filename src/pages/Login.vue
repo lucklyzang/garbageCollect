@@ -15,8 +15,7 @@
 
 <script>
 import {logIn} from '../api/login.js'
-import { mapGetters } from 'vuex'
-import { mapMutations } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 import loginBg from '@/components/images/login-bg.png'
 export default {
   data () {

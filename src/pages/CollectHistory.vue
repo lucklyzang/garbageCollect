@@ -8,12 +8,12 @@
       <div class="content-middle-top">
         <van-field v-model="startTime" placeholder="开始日期" readonly="readonly" @click="startTimePop = true"/>
         <van-popup v-model="startTimePop" label="离开时间" position="bottom" :overlay="true"> 
-          <van-datetime-picker  v-model="currentDateStart"  type="datetime"  
+          <van-datetime-picker  v-model="currentDateStart"  type="date"  
           @cancel="startTimePop = false"  @confirm="startTimePop = false"  @change="startTimeChange"/>
         </van-popup>
         <van-field v-model="endTime" placeholder="结束日期" readonly="readonly" @click="endTimePop = true"/>
         <van-popup v-model="endTimePop" label="离开时间" position="bottom" :overlay="true"> 
-          <van-datetime-picker  v-model="currentDateEnd"  type="datetime"  
+          <van-datetime-picker  v-model="currentDateEnd"  type="date"  
           @cancel="endTimePop = false"  @confirm="endTimePop = false"  @change="endTimeChange"/>
         </van-popup>
         <p class="middle-top-search" v-show="false">
@@ -114,8 +114,7 @@
 <script>
 import HeaderTop from '../components/HeaderTop'
 import FooterBottom from '../components/FooterBottom'
-import { mapGetters } from 'vuex'
-import { mapMutations } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 import { pushHistory } from '@/common/js/utils'
 import {queryCollectHistory} from '../api/rubbishCollect.js'
 export default {
@@ -155,6 +154,7 @@ export default {
       this.$router.push({path: 'home'});  //输入要返回的上一级路由地址
       this.changeTitleTxt({tit: '医废监测'})
     };
+    this.initDate();
     this.queryMethods(this.getUserInfo, this.formatTime(), this.formatTime(), 0)
   },
 
@@ -179,6 +179,12 @@ export default {
     endTimeChange(e) {
       let endTimeArr = e.getValues();//["2019", "03", "22", "17", "28"] 
       this.endTime = `${endTimeArr[0]}-${endTimeArr[1]}-${endTimeArr[2]}`
+    },
+    // 初始化时间显示框
+    initDate () {
+      let currentDateList = this.formatTime().split('-');
+      this.startTime = `${currentDateList[0]}-${currentDateList[1]}-${currentDateList[2]}`;
+      this.endTime = `${currentDateList[0]}-${currentDateList[1]}-${currentDateList[2]}`
     },
     // 点击标签按钮事件
     onClickTab (name, title) {

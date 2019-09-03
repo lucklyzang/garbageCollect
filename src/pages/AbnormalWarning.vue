@@ -8,12 +8,12 @@
       <div class="content-middle-top">
         <van-field v-model="startTime" placeholder="开始日期" readonly="readonly" @click="startTimePop = true"/>
         <van-popup v-model="startTimePop" label="离开时间" position="bottom" :overlay="true"> 
-          <van-datetime-picker  v-model="currentDateStart"  type="datetime"  
+          <van-datetime-picker  v-model="currentDateStart"  type="date"  
           @cancel="startTimePop = false"  @confirm="startTimePop = false"  @change="startTimeChange"/>
         </van-popup>
         <van-field v-model="endTime" placeholder="结束日期" readonly="readonly" @click="endTimePop = true"/>
         <van-popup v-model="endTimePop" label="离开时间" position="bottom" :overlay="true"> 
-          <van-datetime-picker  v-model="currentDateEnd"  type="datetime"  
+          <van-datetime-picker  v-model="currentDateEnd"  type="date"  
           @cancel="endTimePop = false"  @confirm="endTimePop = false"  @change="endTimeChange"/>
         </van-popup>
         <p class="middle-top-search">
@@ -49,8 +49,7 @@
 <script>
 import HeaderTop from '../components/HeaderTop'
 import FooterBottom from '../components/FooterBottom'
-import { mapGetters } from 'vuex'
-import { mapMutations } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 import {queryWarning} from '../api/rubbishCollect.js'
 import { pushHistory } from '@/common/js/utils'
 export default {
@@ -83,7 +82,8 @@ export default {
     window.onpopstate = () => {
       this.$router.push({path: 'home'});  //输入要返回的上一级路由地址
       this.changeTitleTxt({tit: '医废监测'})
-    }
+    };
+    this.initDate();
     this.queryWarning();
   },
   methods: {
@@ -107,6 +107,12 @@ export default {
     skipMyInfo () {
       this.$router.push({path: 'myInfo'});
       this.changeTitleTxt({tit:'我的'})
+    },
+    // 初始化时间显示框
+    initDate () {
+      let currentDateList = this.formatTime().split('-');
+      this.startTime = `${currentDateList[0]}-${currentDateList[1]}-${currentDateList[2]}`;
+      this.endTime = `${currentDateList[0]}-${currentDateList[1]}-${currentDateList[2]}`
     },
     searchWarning (startTime,endTime) {
       if (this.startTime == '' || this.endTime == '') {

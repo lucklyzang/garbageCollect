@@ -12,8 +12,7 @@ import indexIcon from '@/common/images/home/index-icon.png'
 import communityIcon from '@/common/images/home/community-icon.png'
 import messageIcon from '@/common/images/home/message-icon.png'
 import myIcon from '@/common/images/home/my-icon.png'
-import { mapGetters } from 'vuex'
-import { mapMutations } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 export default {
   data () {
     return {

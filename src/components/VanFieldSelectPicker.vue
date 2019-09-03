@@ -3,7 +3,6 @@
     <van-field
       v-model="result"
       v-bind="$attrs"
-      readonly
       is-link
       @click="show = !show"
     />

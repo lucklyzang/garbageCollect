@@ -59,8 +59,7 @@ import FooterBottom from '../components/FooterBottom'
 import VanFieldSelectPicker from '../components/VanFieldSelectPicker'
 import {operateOutStorage} from '../api/rubbishCollect.js'
 import { pushHistory } from '@/common/js/utils'
-import { mapGetters } from 'vuex'
-import { mapMutations } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 export default {
   components:{
     HeaderTop,

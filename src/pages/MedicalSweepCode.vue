@@ -81,8 +81,7 @@ import HeaderTop from '../components/HeaderTop'
 import FooterBottom from '../components/FooterBottom'
 import {judgeStagingPoint,judgeMedicalPerson} from '../api/rubbishCollect.js'
 import { pushHistory } from '@/common/js/utils'
-import { mapGetters } from 'vuex'
-import { mapMutations } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 export default {
    components:{
       HeaderTop,
@@ -162,7 +161,9 @@ export default {
     // 监听历史记录点, 添加返回事件监听
     window.onpopstate = () => {
       this.$router.push({path: 'home'});  //输入要返回的上一级路由地址
-      this.changeTitleTxt({tit: '医废监测'})
+      this.changeTitleTxt({tit: '医废监测'});
+      //清除当前流程的扫码信息
+      this.initSweepCodeInfo()
     }
     // 判断流程从哪步开始
     this.judgeFlowPosition();
@@ -208,7 +209,8 @@ export default {
       'changeExtraLyczMsg',
       'changeCurrentActive',
       'changeCodeStep',
-      'changeIsPlus'
+      'changeIsPlus',
+      'changeFlowState'
     ]),
     // 返回上一页
     backTo () {
@@ -284,10 +286,26 @@ export default {
       window.android.printInfo(num,dep,category,weight,collector,handover)
     },
 
+    // 初始化扫码信息
+    initSweepCodeInfo () {
+      this.changeFlowState(0);
+      this.changeCollectBtn(true);
+      this.changeBackoutBtn(true);
+      this.changeSureBtn(false);
+      this.changePrintBtn(false);
+      this.changeOtherBtn(false);
+      this.changeBagCodeShow(false);
+      this.changeAstOfficeShow(false);
+      this.changeStaffCodeShow(false);
+      this.changebluetoothWeighShow(false);
+      this.clearTrashStore()
+    },
+
     // 扫描二维码方法
     sweepAstoffice () {
       window.android.scanQRcode()
     },
+
     // 扫码后的回调
     scanQRcodeCallback(code) {
       // 扫码的科室信息存入store
@@ -433,6 +451,7 @@ export default {
     // 确认扫码无误进入下个流程
     sureCurrentCodeMsg () {
       let middleCurrentActive = this.codeStep;
+      // 当前流程扫码成功后才进入下个流程
       if (this.isPlus) {
         middleCurrentActive++;
         this.changeCodeStep(middleCurrentActive);
