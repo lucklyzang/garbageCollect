@@ -27,9 +27,10 @@
     top: 0;
     width: 100%;
     height: @header-title-height;
+    line-heihght: @header-title-height;
     .header_title {
       position: absolute;
-      top: 65%;
+      top: 52%;
       left: 50%;
       transform: translate(-50%, -50%);
       width: 50%;

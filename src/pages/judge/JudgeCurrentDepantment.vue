@@ -37,7 +37,6 @@ export default {
       }).then(() => {
         this.$router.push({path: 'medicalCollect'});
         this.changeFlowState(2);
-        this.changeCurrentActive(1);
         this.changeCollectBtn(false);
         this.changeSureBtn(true);
         this.changePrintBtn(false);

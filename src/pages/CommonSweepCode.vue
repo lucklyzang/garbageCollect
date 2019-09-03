@@ -217,7 +217,7 @@ export default {
             })
           } else {
             this.$dialog.alert({
-              message: `当前扫描没有收集到任何科室信息,请重新扫描1${this.currentActive}`
+              message: `当前扫描没有收集到任何科室信息,请重新扫描1w${this.currentActive}`
             }).then(() => {
               this.changeCurrentActive(0);
               this.sweepAstoffice();

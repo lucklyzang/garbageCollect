@@ -3,8 +3,12 @@ export default {
     navTitle: '医废监测',
     // 流程扫描节点
     currentActive: 0,
+    // 流程扫描节点暂存
+    codeStep: -1,
     // 流程开始判断
     judgeFlowPosition: null,
+    // 判断是否进行下个流程
+    isPlus: false,
     // 申请医废收集时间
     applicationCollectTime: null,
     // 是否点击过撤销按钮
@@ -74,7 +78,9 @@ export default {
     staffCodeShow: state => state.staffCodeShow,
     bagCodeShow: state => state.bagCodeShow,
     bluetoothWeighShow: state => state.bluetoothWeighShow,
-    callPeriod: state => state.callPeriod
+    callPeriod: state => state.callPeriod,
+    codeStep: state => state.codeStep,
+    isPlus: state => state.isPlus
   },
   mutations:{
     changeTitleTxt (state,payLoad) {
@@ -212,6 +218,14 @@ export default {
       // 更改公共扫码页调用方法的状态
       changeCallPeriod (state,payLoad) {
         state.callPeriod = payLoad
+      },
+      // 流程扫描节点暂存状态更改
+      changeCodeStep (state,payLoad) {
+        state.codeStep = payLoad
+      },
+      // 改变是否进行下一步的状态
+      changeIsPlus (state,payLoad) {
+        state.isPlus = payLoad
       }
   },
   actions:{}

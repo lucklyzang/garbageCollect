@@ -47,12 +47,12 @@ export default {
       'changeCurrentLajicodeState',
       'changeClickBackoutBtn',
       'changeTitleTxt',
-      'changebluetoothWeighShow',
       'changeCurrentActive',
       'changeBagCodeShow',
       'changeAstOfficeShow',
       'changeStaffCodeShow',
       'changebluetoothWeighShow',
+      'changeCodeStep'
     ]),
     showDialog () {
       this.$dialog.confirm({
@@ -68,7 +68,9 @@ export default {
             this.changeAstOfficeShow(false);
             this.changeStaffCodeShow(false);
             this.changebluetoothWeighShow(false);
-            this.changeCurrentActive(0);
+            this.changeFlowState(0);
+            // 清空存储的数据
+            this.clearTrashStore();
           } else {
             this.$dialog.alert({
               message: '当前没有收集到任何医废数据,请重新扫描'
@@ -76,11 +78,10 @@ export default {
               this.changeBackoutBtn(true);
               this.$router.push({path: 'medicalCollect'});
               this.changeFlowState(2);
-              this.changeCurrentActive(1);
               this.changeCollectBtn(false);
               this.changeSureBtn(true);
               this.changePrintBtn(false);
-              this.changeOtherBtn(false)
+              this.changeOtherBtn(false);
             })
           };
         };
@@ -89,22 +90,12 @@ export default {
              message: `收集单条数测试${this.lanyaCz.length}`
               }).then(() => {
                 this.postTrashOne();
-                this.changeCurrentActive(0);
-                this.changeBagCodeShow(false);
-                this.changeAstOfficeShow(false);
-                this.changeStaffCodeShow(false);
-                this.changebluetoothWeighShow(false);
              });
         } else if (this.lajiCode.length > 1) {
            this.$dialog.alert({
                message: `收集多条数测试${this.lanyaCz.length}`
                }).then(() => {
                 this.postTrashMore();
-                this.changeCurrentActive(0);
-                this.changeBagCodeShow(false);
-                this.changeAstOfficeShow(false);
-                this.changeStaffCodeShow(false);
-                this.changebluetoothWeighShow(false);
              });
         };
         this.changeCurrentLajicodeState(false);
@@ -148,8 +139,11 @@ export default {
                   this.changeSureBtn(false);
                   this.changePrintBtn(true);
                   this.changeOtherBtn(true);
-                  this.changeCurrentActive(0);
-                  this.changebluetoothWeighShow(false)
+                  this.changeFlowState(0);
+                  this.changebluetoothWeighShow(false);
+                  this.changeBagCodeShow(false);
+                  this.changeAstOfficeShow(false);
+                  this.changeStaffCodeShow(false);
               });
           } else {
             this.$dialog.alert({
@@ -157,14 +151,16 @@ export default {
               }).then(() => {
               this.changeBackoutBtn(true);
               this.changeFlowState(0);
-              this.changeCurrentActive(0);
+              // this.changeCurrentActive(0);
               this.$router.push({path: 'medicalCollect'});
               // 清空存储的数据
               this.clearTrashStore();
               this.changeCollectBtn(true);
               this.changeSureBtn(false);
               this.changebluetoothWeighShow(false);
-              this.changeBagCodeShow(false)
+              this.changeBagCodeShow(false);
+              this.changeAstOfficeShow(false);
+              this.changeStaffCodeShow(false);
             })
           }
         }
@@ -176,12 +172,15 @@ export default {
             }).then(() => {
             this.changeBackoutBtn(true);
             this.changeFlowState(0);
-            this.changeCurrentActive(0);
             this.$router.push({path: 'medicalCollect'});
             // 清空存储的数据
             this.clearTrashStore();
             this.changeCollectBtn(true);
             this.changeSureBtn(false);
+            this.changebluetoothWeighShow(false);
+            this.changeBagCodeShow(false);
+            this.changeAstOfficeShow(false);
+            this.changeStaffCodeShow(false);
         })
       })
     },
@@ -222,9 +221,12 @@ export default {
                   this.$router.push({path: 'medicalCollect'});
                   this.changeSureBtn(false);
                   this.changePrintBtn(true);
-                  this.changeCurrentActive(0);
+                  this.changeFlowState(0);
                   this.changeOtherBtn(true);
-                  this.changebluetoothWeighShow(false)
+                  this.changebluetoothWeighShow(false);
+                  this.changeBagCodeShow(false);
+                  this.changeAstOfficeShow(false);
+                  this.changeStaffCodeShow(false);
               });
           } else {
             this.$dialog.alert({
@@ -232,14 +234,15 @@ export default {
                 }).then(() => {
                 this.changeBackoutBtn(true);
                 this.changeFlowState(0);
-                this.changeCurrentActive(0);
                 this.$router.push({path: 'medicalCollect'});
                 // 清空存储的数据
                 this.clearTrashStore();
                 this.changeCollectBtn(true);
                 this.changeSureBtn(false);
                 this.changebluetoothWeighShow(false);
-                this.changeBagCodeShow(false)
+                this.changeBagCodeShow(false);
+                this.changeAstOfficeShow(false);
+                this.changeStaffCodeShow(false);
             })
           }
         }
@@ -251,12 +254,15 @@ export default {
             }).then(() => {
             this.changeBackoutBtn(true);
             this.changeFlowState(0);
-            this.changeCurrentActive(0);
             this.$router.push({path: 'medicalCollect'});
             // 清空存储的数据
             this.clearTrashStore();
             this.changeCollectBtn(true);
             this.changeSureBtn(false);
+            this.changebluetoothWeighShow(false);
+            this.changeBagCodeShow(false);
+            this.changeAstOfficeShow(false);
+            this.changeStaffCodeShow(false);
         })
       })
     }

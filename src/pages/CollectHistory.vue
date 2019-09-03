@@ -365,14 +365,14 @@ export default {
     margin-top: 100px;
       /deep/ .van-icon-manager-o {
         position: absolute;
-        top: 44px;
+        top: 22px;
         right: 6px;
         font-size: 18px;
         color: #fff;
       }
        /deep/ .van-icon-arrow-left {
         position: absolute;
-        top: 44px;
+        top: 22px;
         left: 4px;
         font-size: 20px;
         color: #fff
@@ -384,7 +384,7 @@ export default {
       left: 0;
       width: 100%;
       height: 100%;
-      margin-top: 80px;
+      margin-top: 60px;
       background: #fff;
       /deep/ .van-tabs--line {
         margin-top: 10px;
