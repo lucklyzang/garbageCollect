@@ -393,12 +393,12 @@ export default {
       margin-top: 60px;
       background: #fff;
       /deep/ .van-tabs--line {
-        margin-top: 10px;
+        margin-top: 4px;
         .van-tabs__line {
           background-color: @color-theme;
         }
         .van-tabs__content {
-          margin-top: 10px;
+          // margin-top: 10px;
         }
       }
       .content-middle-top {

@@ -2,9 +2,9 @@ export default {
   state:{
     navTitle: '医废监测',
     // 流程扫描节点
-    currentActive: 0,
+    currentActive: -1,
     // 流程扫描节点暂存
-    codeStep: -1,
+    codeStep: 0,
     // 流程开始判断
     judgeFlowPosition: null,
     // 判断是否进行下个流程

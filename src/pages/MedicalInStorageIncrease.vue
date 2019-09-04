@@ -5,7 +5,7 @@
       <van-icon name="manager-o" slot="right" @click="skipMyInfo"></van-icon> 
     </HeaderTop>
     <div class="content-middle">
-      <p class="select-wrapper">
+      <p class="select-wrapper" ref="selectWrapper">
         <van-field
           label="监测区域"
           placeholder="请输入"
@@ -36,11 +36,13 @@
           label="交接单位"
           placeholder="请输入"
           v-model="company"
+          ref="transfterUnit"
         />
         <van-field
           label="交接人员"
           placeholder="请输入"
           v-model="companyName"
+          ref="transferPerson"
         />
       </p>
       <p class="increaseBtn">
@@ -93,6 +95,18 @@ export default {
     window.onpopstate = () => {
       this.$router.push({path: 'medicalOutStorage'});  //输入要返回的上一级路由地址
       this.changeTitleTxt({tit: '医废出库'})
+    };
+    // 键盘弹起时不会遮住输入框
+    let originalHeight = document.documentElement.clientHeight || document.body.clientHeight;
+    window.onresize = ()=>{
+      let resizeHeight = document.documentElement.clientHeight || document.body.clientHeight;
+      if (resizeHeight < originalHeight) {
+        return (()=>{
+          this.$refs['selectWrapper'].style.cssText='height:200px;overflow:auto' 
+        })()
+      } else {
+        this.$refs['selectWrapper'].style.cssText='height:auto' 
+      }
     }
   },
 

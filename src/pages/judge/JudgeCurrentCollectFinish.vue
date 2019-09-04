@@ -1,5 +1,9 @@
 <template>
-  <div></div>
+  <div class="wrappLoad">
+    <van-loading v-show="showLoading" size="44px" type="spinner" text-size="24px" vertical color="#38bdd0">
+      数据提交中...
+    </van-loading>
+  </div>
 </template>
 
 <script>
@@ -8,6 +12,7 @@ import { mapGetters, mapMutations } from 'vuex'
 export default {
   data () {
     return {
+      showLoading: false
     };
   },
 
@@ -55,7 +60,7 @@ export default {
     ]),
     showDialog () {
       this.$dialog.confirm({
-        message: '此次收集已完成?'
+        message: '此科室收集已完成?'
       }).then(() => {
         if (this.lajiCode.length == 0) {
           if (this.clickBackoutBtn) {
@@ -86,13 +91,13 @@ export default {
         };
         if (this.lajiCode.length == 1) {
            this.$dialog.alert({
-             message: `收集单条数测试${this.lanyaCz.length}`
+             message: `收集${this.lanyaCz.length}条医废数据`
               }).then(() => {
                 this.postTrashOne();
              });
         } else if (this.lajiCode.length > 1) {
            this.$dialog.alert({
-               message: `收集多条数测试${this.lanyaCz.length}`
+               message: `收集${this.lanyaCz.length}条医废数据`
                }).then(() => {
                 this.postTrashMore();
              });
@@ -126,11 +131,13 @@ export default {
         "careName":  this.yihuCode[0].workerName, //护士名称
         "weight":  this.lanyaCz[0]  //医废重量
       };
+      this.showLoading = true;
       // 本次科室收集垃圾提交到服务端
       trashCollectOne(trashData).then((res) => {
         if (res) {
           if (res.data.code == 200) {
-             this.$dialog.alert({
+              this.showLoading = false;
+              this.$dialog.alert({
                 message: '收集数据提交成功'
                 }).then(() => {
                   this.changeBackoutBtn(false);
@@ -145,12 +152,12 @@ export default {
                   this.changeStaffCodeShow(false);
               });
           } else {
+            this.showLoading = false;
             this.$dialog.alert({
               message: `提交服务端数据${res.data.code}`
               }).then(() => {
               this.changeBackoutBtn(true);
               this.changeFlowState(0);
-              // this.changeCurrentActive(0);
               this.$router.push({path: 'medicalCollect'});
               // 清空存储的数据
               this.clearTrashStore();
@@ -166,6 +173,7 @@ export default {
       })
       .catch((err) => {
         console.log(err);
+        this.showLoading = false;
          this.$dialog.alert({
           message: `${err}`
             }).then(() => {
@@ -188,6 +196,7 @@ export default {
     postTrashMore () {
       let listObi = {};
       let trashDataList = [];
+      this.showLoading = true;
       for (let i = 0, len = this.lajiCode.length; i < len; i++) {
         trashDataList.push({
           "collectNumber": this.lajiCode[i].barCode,  //收集条码，在二维码中获取的编号 必输
@@ -213,6 +222,7 @@ export default {
       trashCollectMore(listObi).then((res) => {
         if (res) {
            if (res.data.code == 200) {
+             this.showLoading = false;
              this.$dialog.alert({
                 message: '收集数据提交成功'
                 }).then(() => {
@@ -228,6 +238,7 @@ export default {
                   this.changeStaffCodeShow(false);
               });
           } else {
+            this.showLoading = false;
             this.$dialog.alert({
               message: `提交服务端数据${res.data.code}`
                 }).then(() => {
@@ -248,6 +259,7 @@ export default {
       })
       .catch((err) => {
         console.log(err);
+        this.showLoading = false;
          this.$dialog.alert({
           message: `${err}`
             }).then(() => {
@@ -269,4 +281,14 @@ export default {
 }
 </script>
 <style lang='less' scoped>
+  .wrappLoad {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    /deep/ .van-loading {
+      position: absolute;
+      top: 44%;
+      left: 46%;
+    }
+  }
 </style>

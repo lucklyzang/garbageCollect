@@ -6,8 +6,8 @@
       </HeaderTop>
       <div class="content">
         <div class="content-header">
-          <van-steps :active="showCurrentActive" active-icon="success"
-            active-color="#38bdd0">
+          <van-steps :active="showCurrentActive"
+            active-color="#38bdd0"  inactive-icon="arrow">
             <van-step>扫描科室二维码</van-step>
             <van-step>扫描医护人员工作条码</van-step>
             <van-step>扫描垃圾袋条码</van-step>
@@ -223,7 +223,6 @@ export default {
       this.changeTitleTxt({tit:'我的'})
     },
     startTask () {
-      this.changeCodeStep(0);
       this.sweepAstoffice()
     },
     // 重新扫码弹窗
@@ -234,7 +233,7 @@ export default {
         this.sweepAstoffice()
       });
     },
-    // 判断流程从哪步开始(当前科室与其它科室收集流程不同)
+    // 判断流程从哪步开始(当前科室与其它科室收集开始流程不同)
     judgeFlowPosition () {
       if (this.judgeFlowValue == 2) {
         this.changeCurrentActive(1);
@@ -243,8 +242,8 @@ export default {
         this.changeIsPlus(true);
       };
       if (this.judgeFlowValue == 0) {
-        this.changeCurrentActive(0);
-        this.changeCodeStep(-1)
+        this.changeCurrentActive(-1);
+        this.changeCodeStep(0)
       }      
     },
     // 撤销操作
@@ -312,29 +311,37 @@ export default {
       if (this.codeStep == 0) {
         // 二维码是否扫描正确判断
         if (code && Object.keys(code).length > 0) {
-          if (code.name && code.proName && code.depName) {
-            judgeStagingPoint(code.type,code.number).then((res) => {
-              if (res && res.data.code == 200) {
-                this.changeCurrentActive(this.codeStep);
-                this.changeCodeStep(this.codeStep);
-                this.changeIsPlus(true);
-                this.changeCollectBtn(false);
-                this.changeSureBtn(true);
-                this.storageKeshiCode(code);
-                this.changeExtraKeshiMsg(code);
-                this.changeStartCollectTime(this.formatTime());
-                this.changeAstOfficeShow(true);
-              } else {
-                this.againSweepCode()
-              }
-            })
-            .catch((err) => {
-              this.againSweepCode();
-              console.log(err);
-            })
+          if (code.hasOwnProperty('type') && code.hasOwnProperty('number')) {
+            if (code.type && code.number) {
+              judgeStagingPoint(code.type,code.number).then((res) => {
+                if (res && res.data.code == 200) {
+                  this.changeCurrentActive(this.codeStep);
+                  this.changeCodeStep(this.codeStep);
+                  this.changeIsPlus(true);
+                  this.changeCollectBtn(false);
+                  this.changeSureBtn(true);
+                  this.storageKeshiCode(code);
+                  this.changeExtraKeshiMsg(code);
+                  this.changeStartCollectTime(this.formatTime());
+                  this.changeAstOfficeShow(true);
+                } else {
+                  this.againSweepCode()
+                }
+              })
+              .catch((err) => {
+                this.againSweepCode();
+                console.log(err);
+              })
+            } else {
+              this.$dialog.alert({
+                message: '扫描的科室信息不全,请重新扫描'
+              }).then(() => {
+                this.sweepAstoffice();
+              })
+            }
           } else {
             this.$dialog.alert({
-              message: `当前扫描没有收集到任何科室信息,请重新扫描`
+              message: '当前流程与预期流程不符,请重新扫描'
             }).then(() => {
               this.sweepAstoffice();
             })
@@ -350,27 +357,35 @@ export default {
       // 扫码的医护人员信息存入store
       if (this.codeStep == 1) {
         if (code && Object.keys(code).length > 0) {
-          if (code.workerName && code.proName && code.depName) {
-            judgeMedicalPerson(code.workerNumber,this.batchNumber).then((res) => {
-                if (res && res.data.code == 200) {
-                  this.changeCurrentActive(this.codeStep);
-                  this.changeCodeStep(this.codeStep);
-                  this.changeIsPlus(true);
-                  this.storageYihuCode(code);
-                  this.changeExtraYihuMsg(code);
-                  this.changeStaffCodeShow(true);
-                  this.changeAstOfficeShow(false);
-                } else {
-                  this.againSweepCode()
-              }
-            })
-            .catch((err) => {
-              this.againSweepCode();
-              console.log(err)
-            })
+          if (code.hasOwnProperty('workerName')) {
+            if (code.workerName) {
+              judgeMedicalPerson(code.workerNumber,this.batchNumber).then((res) => {
+                  if (res && res.data.code == 200) {
+                    this.changeCurrentActive(this.codeStep);
+                    this.changeCodeStep(this.codeStep);
+                    this.changeIsPlus(true);
+                    this.storageYihuCode(code);
+                    this.changeExtraYihuMsg(code);
+                    this.changeStaffCodeShow(true);
+                    this.changeAstOfficeShow(false);
+                  } else {
+                    this.againSweepCode()
+                }
+              })
+              .catch((err) => {
+                this.againSweepCode();
+                console.log(err)
+              })
+            } else {
+              this.$dialog.alert({
+                message: '扫描的医护人员信息不全,请重新扫描'
+              }).then(() => {
+                this.sweepAstoffice();
+              })
+            }
           } else {
             this.$dialog.alert({
-              message: '当前扫描没有收集到任何医护人员信息,请重新扫描'
+              message: '当前流程与预期流程不符,请重新扫描'
             }).then(() => {
               this.sweepAstoffice();
             })
@@ -387,19 +402,27 @@ export default {
       if (this.codeStep == 2) {
         // 扫码回调中没有信息提示重新扫描
         if (code && Object.keys(code).length > 0) {
-          if (code.wasteName && code.proName && code.depName) {
-            this.currentTotalWeigh = 0;
-            this.changeCurrentActive(this.codeStep);
-            this.changeCodeStep(this.codeStep);
-            this.changeIsPlus(true);
-            this.storageLajiCode(code);
-            this.changeExtraLajiMsg(code);
-            this.changeBagCodeShow(true);
-            this.changeStaffCodeShow(false);
-            this.changeCurrentLajicodeState(true);
+          if (code.hasOwnProperty('wasteName') && code.hasOwnProperty('proName') && code.hasOwnProperty('depName') && code.hasOwnProperty('barCode')) {
+            if (code.wasteName && code.proName && code.depName && code.barCode) {
+              this.currentTotalWeigh = 0;
+              this.changeCurrentActive(this.codeStep);
+              this.changeCodeStep(this.codeStep);
+              this.changeIsPlus(true);
+              this.storageLajiCode(code);
+              this.changeExtraLajiMsg(code);
+              this.changeBagCodeShow(true);
+              this.changeStaffCodeShow(false);
+              this.changeCurrentLajicodeState(true);
+            } else {
+              this.$dialog.alert({
+                message: '扫描的医废信息不全,请重新扫描'
+              }).then(() => {
+                this.sweepAstoffice();
+              })
+            }
           } else {
             this.$dialog.alert({
-            message: '当前扫描没有收集到任何医废信息,请重新扫描'
+            message: '当前流程与预期流程不符,请重新扫描'
             }).then(() => {
               this.sweepAstoffice();
             })
@@ -427,7 +450,7 @@ export default {
         this.changeIsPlus(true);
         this.changeBagCodeShow(false);
         // this.storageLanyaCz(Math.round(this.currentTotalWeigh * 100) / 100);
-        this.changeExtraLyczMsg(Math.round(this.currentTotalWeigh * 100) / 100);
+        this.changeExtraLyczMsg(Math.round(str * 100) / 100);
       }
     },
     //打印凭单
@@ -435,6 +458,13 @@ export default {
       // num,dep,category,weight,collector,handover
       // this.lajiCode[0].wasteName,
       // 编号, 科室, 垃圾类型，垃圾重量，收集人，交接人
+      if (this.lajiCode.length == 0) {
+        this.$dialog.alert({
+          message: '当前没有要打印的凭条'
+        }).then(() => {
+        });
+        return
+      }; 
       if (this.lajiCode.length == 1) {
         this.printProof(this.lajiCode[0].barCode,this.keshiCode[0].depName,this.lajiCode[0].wasteName,
          this.lanyaCz[0],this.userInfo.workerName,this.yihuCode[0].workerName);
@@ -459,9 +489,9 @@ export default {
       this.changeIsPlus(false);
       if (middleCurrentActive > 4) {return};
       if (middleCurrentActive == 4) {
-        this.$router.push({path:'judgeCurrentDepantment'});
         // 医废总重量存入store
         this.storageLanyaCz(Math.round(this.currentTotalWeigh * 100) / 100);
+        this.$router.push({path:'judgeCurrentDepantment'});
       } else if (middleCurrentActive == 3) {
         this.weightRubbish()
       } else {
