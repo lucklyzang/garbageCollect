@@ -17,12 +17,8 @@
           v-model="monitorDot"
         />
         <van-field
-          label="车牌号码"
-          placeholder="请输入"
-          v-model="cardNumber"
-        />
-        <van-field
           label="出库人员"
+          readonly
           placeholder="请输入"
           v-model="outboundPerson"
         />
@@ -32,17 +28,23 @@
           placeholder="请输入"
           v-model="calculate"
         />
-        <van-field
+        <VanFieldSelectPicker
           label="交接单位"
-          placeholder="请输入"
+          placeholder="请选择"
           v-model="company"
-          ref="transfterUnit"
+          :columns="companyList"
         />
-        <van-field
+        <VanFieldSelectPicker
           label="交接人员"
-          placeholder="请输入"
+          placeholder="请选择"
           v-model="companyName"
-          ref="transferPerson"
+          :columns="companyNameList"
+        />
+        <VanFieldSelectPicker
+          label="车牌号码"
+          placeholder="请选择"
+          v-model="cardNumber"
+          :columns="cardNumberList"
         />
       </p>
       <p class="increaseBtn">
@@ -59,7 +61,7 @@
 import HeaderTop from '../components/HeaderTop'
 import FooterBottom from '../components/FooterBottom'
 import VanFieldSelectPicker from '../components/VanFieldSelectPicker'
-import {operateOutStorage} from '../api/rubbishCollect.js'
+import {operateOutStorage, queryCompany} from '../api/rubbishCollect.js'
 import { pushHistory } from '@/common/js/utils'
 import { mapGetters, mapMutations } from 'vuex'
 export default {
@@ -73,20 +75,29 @@ export default {
       monitorArea: '',
       monitorDot: '',
       cardNumber: '',
-      outboundPerson: '',
+      cardNumberList: [],
       itemWeight: this.totalWeight,
       company: '',
-      companyName: ''
+      companyList: [],
+      companyName: '',
+      companyNameList: [],
+      companyIdList: [],
+      outCompanyMsg: []
     };
   },
   computed: {
     ...mapGetters([
       'navTopTitle',
       'totalWeight',
-      'batchs'
+      'batchs',
+      'userInfo'
     ]),
     calculate () {
       return Math.round(this.totalWeight * 100) / 100
+    },
+    // 出库人员
+    outboundPerson () {
+      return this.userInfo.workerName
     }
   },
 
@@ -107,6 +118,39 @@ export default {
       } else {
         this.$refs['selectWrapper'].style.cssText='height:auto' 
       }
+    };
+    // 查询出库公司
+    this.queryCompanyInfo()
+  },
+
+  watch: {
+    // 根据公司名显示对应的车牌号及收集人员姓名
+    company: {
+      handler (newVal,oldVal) {
+        this.companyNameList = [];
+        this.cardNumberList = [];
+        let currentCompanyMsg = this.outCompanyMsg.filter((item) => {
+          return item.company == this.company
+        });
+        for (let itemList of currentCompanyMsg) {
+          for (let item in itemList) {
+            if (Object.prototype.toString.call(itemList[item]) == '[object Object]') {
+              Object.keys(itemList[item]).forEach((line) => {
+                if (line !== '' && itemList[item][line] !== '') {
+                  this.companyNameList.push(line);
+                }
+              })
+            } else if (Object.prototype.toString.call(itemList[item]) == '[object Array]') {
+              itemList[item].forEach((item) => {
+                if (item !== '') {
+                  this.cardNumberList.push(item)
+                }
+              })
+            }
+          }
+        }
+      },
+      immediate: true
     }
   },
 
@@ -144,7 +188,7 @@ export default {
       let outStorageMsg = {
         cardNumber: this.cardNumber ,//车牌号
         company: this.company, //收集公司
-        companyId: '',       //交接人员编号
+        companyId: '', //交接人员编号this.companyIdList[this.companyNameList.indexOf(this.companyName)]
         companyName: this.companyName, //交接人姓名
         outTime: this.formatTime(), //出库时间  格式 yyyy-MM-dd HH:mm:ss
         outTotalWeight: this.calculate,  //出库重量
@@ -183,6 +227,30 @@ export default {
           this.changeTitleTxt({tit: '医废出库'})
           this.initBatchs()
         });
+        console.log(err)
+      })
+    },
+    // 查询出库公司信息
+    queryCompanyInfo () {
+      this.companyList = [];
+      this.outCompanyMsg = [];
+      queryCompany(this.userInfo.proId).then((res) => {
+        if (res && res.data.code == 200) {
+          if (res.data.data.length > 0) {
+            this.outCompanyMsg = res.data.data;
+            for (let item of res.data.data) {
+              for (let single in item) {
+                if (single === 'company' ) {
+                  if (item[single] !== '') {
+                    this.companyList.push(item[single])
+                  }
+                }
+              }
+            }
+          }
+        }
+      })
+      .catch((err) => {
         console.log(err)
       })
     },

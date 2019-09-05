@@ -56,7 +56,7 @@
       pushHistory();
       window.onpopstate = () => {
         this.$router.push({name: 'login'});  //输入要返回的上一级路由地址
-      }
+      };
     },
     computed:{
       ...mapGetters([

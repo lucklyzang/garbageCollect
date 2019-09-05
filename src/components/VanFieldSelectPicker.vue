@@ -2,8 +2,8 @@
   <div>
     <van-field
       v-model="result"
+      ref="currentField"
       v-bind="$attrs"
-      is-link
       @click="show = !show"
     />
     <van-popup v-model="show" position="bottom">
@@ -11,7 +11,7 @@
         :columns="columns"
         show-toolbar
         :title="$attrs.label"
-        @cancel="show = !show"
+        @cancel="onCancle"
         @confirm="onConfirm"
       />
     </van-popup>
@@ -37,10 +37,16 @@ export default {
       result: this.selectValue
     };
   },
+  mounted () {
+  },
   methods: {
     onConfirm(value) {
       this.result = value;
       this.show = !this.show;
+    },
+    onCancle () {
+      this.show = !this.show;
+      this.$refs['currentField'].focus()
     }
   },
   watch: {

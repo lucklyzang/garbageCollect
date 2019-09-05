@@ -91,3 +91,11 @@ export function queryWarning(data) {
     params: data
   })
 };
+
+// 查询出库公司
+export function queryCompany(proId) {
+  return request({
+    url: `dict/queryDict/${proId}`,
+    method: 'get',
+  })
+};
