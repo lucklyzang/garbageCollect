@@ -233,6 +233,14 @@ export default {
         this.sweepAstoffice()
       });
     },
+    // 扫码验证网络异常弹窗
+    abnormalSweepCode () {
+       this.$dialog.alert({
+        message: '网络异常,请重试'
+      }).then(() => {
+        this.sweepAstoffice()
+      });
+    },
     // 判断流程从哪步开始(当前科室与其它科室收集开始流程不同)
     judgeFlowPosition () {
       if (this.judgeFlowValue == 2) {
@@ -329,8 +337,7 @@ export default {
                 }
               })
               .catch((err) => {
-                this.againSweepCode();
-                console.log(err);
+                this.abnormalSweepCode();
               })
             } else {
               this.$dialog.alert({
@@ -373,8 +380,7 @@ export default {
                 }
               })
               .catch((err) => {
-                this.againSweepCode();
-                console.log(err)
+                this.abnormalSweepCode();
               })
             } else {
               this.$dialog.alert({

@@ -8,40 +8,153 @@
       <div class="content-middle-top">
         <van-field v-model="startTime" placeholder="开始日期" readonly="readonly" @click="startTimePop = true"/>
         <van-popup v-model="startTimePop" label="离开时间" position="bottom" :overlay="true"> 
-          <van-datetime-picker  v-model="currentDateStart"  type="date"  :min-date="minDate"
+          <van-datetime-picker  v-model="currentDateStart"  type="date"  :min-date="minDateStart"
           @cancel="startTimePop = false"  @confirm="startTimePop = false"  @change="startTimeChange"/>
         </van-popup>
         <van-field v-model="endTime" placeholder="结束日期" readonly="readonly" @click="endTimePop = true"/>
         <van-popup v-model="endTimePop" label="离开时间" position="bottom" :overlay="true"> 
-          <van-datetime-picker  v-model="currentDateEnd"  type="date"  
+          <van-datetime-picker  v-model="currentDateEnd"  type="date"  :min-date="minDateEnd"
           @cancel="endTimePop = false"  @confirm="endTimePop = false"  @change="endTimeChange"/>
         </van-popup>
-        <p class="middle-top-search">
-          <van-button type="info" size="small" @click="searchWarning(startTime,endTime)">搜索</van-button>
-        </p>
+        <p></p>
       </div>
-      <div class="content-middle-list">
-        <div class="content-middle-list-item" v-for="item in overtimeList">
-          <div class="list-item">
-            <p class="list-item-left">
-              预警类型: {{item.warnType}}
-            </p>
-            <p class="list-item-right">
-              所属医院: <span>{{item.proName}}</span>
-            </p>
-            <div class="list-strip">
-              <p>科室: {{item.depName}}</p>
-              <p class="list-sign">预警原因: {{item.warnReason}}</p>
-              <p class="list-times">处理人: {{item.dealName}}</p>
-              <p class="list-code">预警时间: {{item.createTime}}</p>
-            </div>
-            <div class="list-item-bottom">
-              收集人员: <span>{{item.workerName}}</span>
+      <van-tabs v-model="activeName"  @click="onClickTab">
+        <van-tab title="未处理" name="0">
+          <div class="content-middle-list">
+            <div class="content-middle-list-item" v-for="item in overtimeList" @click="dispose(item)">
+              <div class="list-item">
+                <p class="list-item-left">
+                  预警类型: {{item.warnType}}
+                </p>
+                <p class="list-item-right">
+                  所属医院: <span>{{item.proName}}</span>
+                </p>
+                <div class="list-strip">
+                  <p>科室: {{item.depName}}</p>
+                  <p class="list-sign">预警原因: {{item.warnReason}}</p>
+                  <p class="list-times">处理人: {{item.dealName}}</p>
+                  <p class="list-code">预警时间: {{item.createTime}}</p>
+                </div>
+                <div class="list-item-bottom">
+                  收集人员: <span>{{item.workerName}}</span>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
+        </van-tab>
+        <van-tab title="未审核" name="1">
+          <div class="content-middle-list">
+            <div class="content-middle-list-item" v-for="item in notExamineList"  @click="checkAgree(item)">
+              <div class="list-item">
+                <p class="list-item-left">
+                  预警类型: {{item.warnType}}
+                </p>
+                <p class="list-item-right">
+                  所属医院: <span>{{item.proName}}</span>
+                </p>
+                <div class="list-strip">
+                  <p>科室: {{item.depName}}</p>
+                  <p class="list-sign">预警原因: {{item.warnReason}}</p>
+                  <p class="list-times">处理人: {{item.dealName}}</p>
+                  <p class="list-code">处理时间: {{item.dealTime}}</p>
+                </div>
+                <div class="list-item-bottom">
+                  收集人员: <span>{{item.workerName}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </van-tab>
+        <van-tab title="已完成" name="2">
+          <div class="content-middle-list">
+            <div class="content-middle-list-item" v-for="item in finishList">
+              <div class="list-item">
+                <p class="list-item-left">
+                  预警类型: {{item.warnType}}
+                </p>
+                <p class="list-item-right">
+                  所属医院: <span>{{item.proName}}</span>
+                </p>
+                <div class="list-strip">
+                  <p>科室: {{item.depName}}</p>
+                  <p class="list-sign">审核意见: {{item.checkIdea}}</p>
+                  <p class="list-sign">预警原因: {{item.warnReason}}</p>
+                  <p class="list-times">审核人: {{item.checkName}}</p>
+                  <p class="list-code">审核时间: {{item.checkTime}}</p>
+                </div>
+                <div class="list-item-bottom">
+                  收集人员: <span>{{item.workerName}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </van-tab>
+        <van-tab title="未完成" name="3">
+          <div class="content-middle-list">
+            <div class="content-middle-list-item" v-for="item in unFinishList">
+              <div class="list-item">
+                <p class="list-item-left">
+                  预警类型: {{item.warnType}}
+                </p>
+                <p class="list-item-right">
+                  所属医院: <span>{{item.proName}}</span>
+                </p>
+                <div class="list-strip">
+                  <p>科室: {{item.depName}}</p>
+                  <p class="list-sign">审核意见: {{item.checkIdea}}</p>
+                  <p class="list-sign">预警原因: {{item.warnReason}}</p>
+                  <p class="list-times">审核人: {{item.checkName}}</p>
+                  <p class="list-code">审核时间: {{item.checkTime}}</p>
+                </div>
+                <div class="list-item-bottom">
+                  收集人员: <span>{{item.workerName}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </van-tab>
+      </van-tabs>
     </div>
+    <!-- 预警处理弹框 -->
+    <van-dialog
+      v-model="handlePopShow"
+      title="预警处理"
+      show-cancel-button
+      @confirm="disposeSure"
+      @cancel="disposeCancle"
+    >
+      <van-cell-group>
+        <van-field
+          v-model="handleMsg"
+          label="预警原因"
+          type="textarea"
+          placeholder="请输入预警原因"
+          rows="3"
+          autosize
+        />
+      </van-cell-group>
+    </van-dialog>
+    <!-- 审核处理弹框 -->
+    <van-dialog
+      v-model="checkPopShow"
+      title="审核处理"
+      show-cancel-button
+      cancel-button-text="不通过"
+      confirm-button-text="通过"
+      @confirm="checkSure"
+      @cancel="checkCancle"
+    >
+      <van-cell-group>
+        <van-field
+          v-model="checkMsg"
+          label="审核意见"
+          type="textarea"
+          placeholder="请输入审核意见"
+          rows="3"
+          autosize
+        />
+      </van-cell-group>
+    </van-dialog>
     <!-- <FooterBottom></FooterBottom> -->
   </div>
 </template>
@@ -50,7 +163,7 @@
 import HeaderTop from '../components/HeaderTop'
 import FooterBottom from '../components/FooterBottom'
 import { mapGetters, mapMutations } from 'vuex'
-import {queryWarning} from '../api/rubbishCollect.js'
+import {queryWarning, warningDispose} from '../api/rubbishCollect.js'
 import { pushHistory } from '@/common/js/utils'
 export default {
    components:{
@@ -61,21 +174,34 @@ export default {
     return {
       endTimePop: false,
       startTimePop: false,
+      handlePopShow: false,
+      checkPopShow: false,
       currentDateStart: '',
+      currentId: '',
       currentDateEnd: '',
       startTime: '',
       endTime: '',
       topTitle: '医废收集',
       overtimeList: [],
+      notExamineList: [],
+      finishList: [],
+      unFinishList: [],
+      activeName: '0',
+      handleMsg: '',
+      checkMsg: '',
       clickQueryBtn: false,
-      minDate: new Date(2018, 0, 1)
+      minDateStart: new Date(2018, 0, 1),
+      minDateEnd: new Date(2018, 0, 1)
     };
   },
   computed: {
     ...mapGetters([
       'navTopTitle',
       'userInfo'
-    ])
+    ]),
+    getUserInfo () {
+      return this.userInfo.proId
+    }
   },
 
   mounted() {
@@ -85,7 +211,7 @@ export default {
       this.changeTitleTxt({tit: '医废监测'})
     };
     this.initDate();
-    this.queryWarning();
+    this.queryWarning(this.getUserInfo, this.formatTime(), this.formatTime(), 0)
   },
   methods: {
     ...mapMutations([
@@ -115,61 +241,287 @@ export default {
       this.startTime = `${currentDateList[0]}-${currentDateList[1]}-${currentDateList[2]}`;
       this.endTime = `${currentDateList[0]}-${currentDateList[1]}-${currentDateList[2]}`
     },
-    searchWarning (startTime,endTime) {
-      if (this.startTime == '' || this.endTime == '') {
+    // 点击标签按钮事件
+    onClickTab (name, title) {
+      this.overtimeList = [];
+      this.notExamineList = [];
+      this.finishList = [];
+      this.unFinishList = [];
+      if (this.startTime == "" || this.endTime == "") {
         this.$dialog.alert({
-          message: '开始或结束日期不能为空'
-        }).then(() => {
+            message: '请选择开始或结束日期'
+          }).then(() => {
         });
       } else {
-        this.queryWarning(startTime,endTime)
+        this.queryWarning(this.userInfo.proId, this.startTime, this.endTime, name)
       }
     },
+    //预警处理时的弹窗事件
+    dispose(item) {
+      this.handlePopShow = true;
+      this.currentId = item.id
+    },
+    // 预警处理确定事件
+    disposeSure () {
+      let disposeMsg = {
+        id: this.currentId,  //预警ID
+        dealId: this.userInfo.id,  //预警处理人ID,
+        dealName: this.userInfo.workerName, //预警处理人姓名,			
+        warnReason: this.handleMsg,   //预警原因  
+        state: 1,     //状态，处理时传1，审核时传2
+        dealTime: this.formatTimeOther()    
+      };
+      warningDispose(disposeMsg).then((res) => {
+        this.handleMsg = '';
+        if (res.data.code == 200) {
+          this.$dialog.alert({
+            title: '',
+            message: '处理成功'
+          }).then(() => {
+            this.queryWarning(this.getUserInfo,  this.startTime, this.endTime, 0)
+          });
+        } else {
+          this.$dialog.alert({
+            title: '',
+            message: `${res.data.msg}`
+          }).then(() => {
+          });
+        }
+        this.handlePopShow = false;
+      })
+      .catch((err) => {
+        this.$dialog.alert({
+          title: '',
+          message: '处理失败'
+        }).then(() => {
+        });
+        this.handlePopShow = false;
+      })
+    },
+    // 预警处理取消事件
+    disposeCancle () {
+      this.handleMsg = '';
+      this.handlePopShow = false;
+    },
+
+    //审核时的弹窗事件
+    checkAgree(item) {
+      this.checkPopShow = true;
+      this.currentId = item.id
+    },
+    // 审核通过处理事件
+    checkSure () {
+      let checkData = {
+        id: this.currentId,  //预警ID
+        checkId: this.userInfo.id,  //审核人ID,
+        checkName: this.userInfo.workerName, //审核人姓名,			
+        checkIdea: this.checkMsg,   //审核意见  
+        state: 2,     //状态，处理时传1，审核时传2
+        checkTime: this.formatTimeOther()    
+      };
+      warningDispose(checkData).then((res) => {
+        this.checkMsg = '';
+        if (res.data.code == 200) {
+          this.$dialog.alert({
+            title: '',
+            message: '审核通过处理成功'
+          }).then(() => {
+            this.queryWarning(this.getUserInfo,  this.startTime, this.endTime, 1)
+          });
+        } else {
+          this.$dialog.alert({
+            title: '',
+            message: `${res.data.msg}`
+          }).then(() => {
+          });
+        }
+        this.checkPopShow = false;
+      })
+      .catch((err) => {
+        this.$dialog.alert({
+          title: '',
+          message: '审核通过处理失败'
+        }).then(() => {
+        });
+        this.checkPopShow = false;
+      })
+    },
+    // 审核不通过事件
+    checkCancle () {
+       let checkData = {
+        id: this.currentId,  //预警ID
+        checkId: this.userInfo.id,  //审核人ID,
+        checkName: this.userInfo.workerName, //审核人姓名,			
+        checkIdea: this.checkMsg,   //审核意见  
+        state: 3,  //状态，处理时传1，审核时传2
+        checkTime: this.formatTimeOther()    
+      };
+      warningDispose(checkData).then((res) => {
+        this.checkMsg = '';
+        if (res.data.code == 200) {
+          this.$dialog.alert({
+            title: '',
+            message: '审核不通过处理成功'
+          }).then(() => {
+            this.queryWarning(this.getUserInfo,  this.startTime, this.endTime, 1)
+          });
+        } else {
+          this.$dialog.alert({
+            title: '',
+            message: `${res.data.msg}`
+          }).then(() => {
+          });
+        }
+        this.checkPopShow = false;
+      })
+      .catch((err) => {
+        this.$dialog.alert({
+          title: '',
+          message: '审核不通过处理失败'
+        }).then(() => {
+        });
+        this.checkPopShow = false;
+      })
+    },
+
     // 查询预警批次
-    queryWarning (startTime = this.formatTime(), endTime = this.formatTime()) {
+    queryWarning (proId,startDate,endDate,state) {
       this.overtimeList = [];
+      this.notExamineList = [];
+      this.finishList = [];
+      this.unFinishList = [];
       let warningInfo = {
-        proId: this.userInfo.proId,  
-        startDate: startTime,
-        endDate:  endTime, 
-        warnId: 3,
+        proId,  
+        startDate,
+        endDate, 
+        warnId: '',
         workerId: '',    //收集人员ID 
         depId: '',       //科室ID
-        state: '',       //状态
+        state  //状态
       };
       queryWarning(warningInfo).then((res) => {
         if (res) {
           if (res.data.code == 200) {
-            if (res.data.data.length > 0) {
-              let outStorage = res.data.data;
-              for (let item of outStorage) {
-                this.overtimeList.push({
-                'checkIdea': item.checkIdea,  //审核意见，
-                'checkName': item.checkName,  //审核人
-                'checkTime': item.checkTime,  //审核时间
-                'createTime': item.createTime, //预警时间
-                'dealIdea': item.dealIdea,    //处理意见
-                'dealName': item.dealName,  //处理人
-                'dealTime': item.dealTime,  //处理时间
-                'depName': item.depName,//部门 
-                'id': item.id,             //预警ID
-                'proId': item.proId,           //所属医院ID
-                'proName': item.proName,  //所属医院名称
-                'state': item.state,             //状态 0-待处理 1-待审核，2-已完成
-                'warnId': item.warnId,            //预警类型ID
-                'warnReason': item.warnReason,      //预警原因
-                'warnType': item.warnType, //预警类型描述
-                'workerId': item.workerId,          //收集人ID
-                'workerName': item.workerName, //收集人姓名
-                })
+            if (state == 0) {
+              if (res.data.data.length > 0) {
+                let outStorage = res.data.data;
+                for (let item of outStorage) {
+                  this.overtimeList.push({
+                  'checkIdea': item.checkIdea,  //审核意见，
+                  'checkName': item.checkName,  //审核人
+                  'checkTime': item.checkTime,  //审核时间
+                  'createTime': item.createTime, //预警时间
+                  'dealIdea': item.dealIdea,    //处理意见
+                  'dealName': item.dealName,  //处理人
+                  'dealTime': item.dealTime,  //处理时间
+                  'depName': item.depName,//部门 
+                  'id': item.id,             //预警ID
+                  'proId': item.proId,           //所属医院ID
+                  'proName': item.proName,  //所属医院名称
+                  'state': item.state,             //状态 0-待处理 1-待审核，2-已完成
+                  'warnId': item.warnId,            //预警类型ID
+                  'warnReason': item.warnReason,      //预警原因
+                  'warnType': item.warnType, //预警类型描述
+                  'workerId': item.workerId,          //收集人ID
+                  'workerName': item.workerName, //收集人姓名
+                  })
+                }
+              } else {
+                this.$dialog.alert({
+                    message: '当前没有未处理的批次信息'
+                  }).then(() => {
+                });
               }
-            } else {
-               this.$dialog.alert({
-                  message: '当前没有预警的批次信息'
-                }).then(() => {
-                // this.$router.push({path: 'home'});
-                // this.changeTitleTxt({tit: '医废监测'})
-              });
+            } else if (state == 1) {
+              if (res.data.data.length > 0) {
+                let outStorage = res.data.data;
+                for (let item of outStorage) {
+                  this.notExamineList.push({
+                  'checkIdea': item.checkIdea,  //审核意见，
+                  'checkName': item.checkName,  //审核人
+                  'checkTime': item.checkTime,  //审核时间
+                  'createTime': item.createTime, //预警时间
+                  'dealIdea': item.dealIdea,    //处理意见
+                  'dealName': item.dealName,  //处理人
+                  'dealTime': item.dealTime,  //处理时间
+                  'depName': item.depName,//部门 
+                  'id': item.id,             //预警ID
+                  'proId': item.proId,           //所属医院ID
+                  'proName': item.proName,  //所属医院名称
+                  'state': item.state,             //状态 0-待处理 1-待审核，2-已完成
+                  'warnId': item.warnId,            //预警类型ID
+                  'warnReason': item.warnReason,      //预警原因
+                  'warnType': item.warnType, //预警类型描述
+                  'workerId': item.workerId,          //收集人ID
+                  'workerName': item.workerName, //收集人姓名
+                  })
+                }
+              } else {
+                this.$dialog.alert({
+                    message: '当前没有未审核的批次信息'
+                  }).then(() => {
+                });
+              }
+            } else if (state == 2) {
+              if (res.data.data.length > 0) {
+                let outStorage = res.data.data;
+                for (let item of outStorage) {
+                  this.finishList.push({
+                  'checkIdea': item.checkIdea,  //审核意见，
+                  'checkName': item.checkName,  //审核人
+                  'checkTime': item.checkTime,  //审核时间
+                  'createTime': item.createTime, //预警时间
+                  'dealIdea': item.dealIdea,    //处理意见
+                  'dealName': item.dealName,  //处理人
+                  'dealTime': item.dealTime,  //处理时间
+                  'depName': item.depName,//部门 
+                  'id': item.id,             //预警ID
+                  'proId': item.proId,           //所属医院ID
+                  'proName': item.proName,  //所属医院名称
+                  'state': item.state,             //状态 0-待处理 1-待审核，2-已完成
+                  'warnId': item.warnId,            //预警类型ID
+                  'warnReason': item.warnReason,      //预警原因
+                  'warnType': item.warnType, //预警类型描述
+                  'workerId': item.workerId,          //收集人ID
+                  'workerName': item.workerName, //收集人姓名
+                  })
+                }
+              } else {
+                this.$dialog.alert({
+                    message: '当前没有已完成的批次信息'
+                  }).then(() => {
+                });
+              }
+            }else if (state == 3) {
+              if (res.data.data.length > 0) {
+                let outStorage = res.data.data;
+                for (let item of outStorage) {
+                  this.unFinishList.push({
+                  'checkIdea': item.checkIdea,  //审核意见，
+                  'checkName': item.checkName,  //审核人
+                  'checkTime': item.checkTime,  //审核时间
+                  'createTime': item.createTime, //预警时间
+                  'dealIdea': item.dealIdea,    //处理意见
+                  'dealName': item.dealName,  //处理人
+                  'dealTime': item.dealTime,  //处理时间
+                  'depName': item.depName,//部门 
+                  'id': item.id,             //预警ID
+                  'proId': item.proId,           //所属医院ID
+                  'proName': item.proName,  //所属医院名称
+                  'state': item.state,             //状态 0-待处理 1-待审核，2-已完成
+                  'warnId': item.warnId,            //预警类型ID
+                  'warnReason': item.warnReason,      //预警原因
+                  'warnType': item.warnType, //预警类型描述
+                  'workerId': item.workerId,          //收集人ID
+                  'workerName': item.workerName, //收集人姓名
+                  })
+                }
+              } else {
+                this.$dialog.alert({
+                    message: '当前没有已完成的批次信息'
+                  }).then(() => {
+                });
+              }
             }
           }
         }
@@ -178,9 +530,13 @@ export default {
         console.log(err)
       })
     },
-    // 时间格式方法
+    // 时间格式方法1
     formatTime () {
       return this.$moment(new Date().getTime()).format('YYYY-MM-DD')
+    },
+    // 时间格式方法2
+    formatTimeOther () {
+      return this.$moment(new Date().getTime()).format('YYYY-MM-DD HH:mm:ss')
     }
   }
 }
@@ -203,7 +559,12 @@ export default {
       right: 6px;
       font-size: 18px;
       color: #fff;
-    }
+    };
+     /deep/ .van-dialog {
+      .van-dialog__content{
+        margin-top: 10px !important
+      }
+    };
     .content-middle {
       position: fixed;
       top: 0;
@@ -212,6 +573,15 @@ export default {
       height: 100%;
       margin-top: 60px;
       background: #fff;
+      /deep/ .van-tabs--line {
+        margin-top: 4px;
+        .van-tabs__line {
+          background-color: @color-theme;
+        }
+        .van-tabs__content {
+          // margin-top: 10px;
+        }
+      }
       .content-middle-top {
         position: relative;
         /deep/ .van-cell {
@@ -243,7 +613,7 @@ export default {
         overflow: auto;
        .content-middle-list-item {
           padding: 14px;
-          height: 140px;
+          height: 150px;
           border-bottom: 1px solid #e8e4e4;
           .list-item {
             position: relative;

@@ -8,12 +8,12 @@
       <div class="content-middle-top">
         <van-field v-model="startTime" placeholder="开始日期" readonly="readonly" @click="startTimePop = true"/>
         <van-popup v-model="startTimePop" label="离开时间" position="bottom" :overlay="true"> 
-          <van-datetime-picker  v-model="currentDateStart"  type="date"  :min-date="minDate"
+          <van-datetime-picker  v-model="currentDateStart"  type="date"  :min-date="minDateStart"
           @cancel="startTimePop = false"  @confirm="startTimePop = false"  @change="startTimeChange"/>
         </van-popup>
         <van-field v-model="endTime" placeholder="结束日期" readonly="readonly" @click="endTimePop = true"/>
         <van-popup v-model="endTimePop" label="离开时间" position="bottom" :overlay="true"> 
-          <van-datetime-picker  v-model="currentDateEnd"  type="date"  
+          <van-datetime-picker  v-model="currentDateEnd"  type="date"  :min-date="minDateEnd"
           @cancel="endTimePop = false"  @confirm="endTimePop = false"  @change="endTimeChange"/>
         </van-popup>
         <p class="middle-top-search" v-show="false">
@@ -136,7 +136,8 @@ export default {
       outStorageList: [],
       finishList: [],
       activeName: 0,
-      minDate: new Date(2018, 0, 1)
+      minDateStart: new Date(2018, 0, 1),
+      minDateEnd: new Date(2018, 0, 1)
     };
   },
   computed: {

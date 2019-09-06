@@ -98,14 +98,6 @@ export default {
       this.changeTitleTxt({tit: '医废监测'})
     }
     this.queryAllBatch();
-    // if (!this.batchNumber && !this.userInfo.batchNumber) {
-    //     this.$dialog.alert({
-    //         message: '批次号不能为空'
-    //       }).then(() => {
-    //       });
-    //   } else {
-    //     this.queryAllBatch()
-    //   };
     // 二维码回调方法绑定到window下面,提供给外部调用
     let me = this;
     window['scanQRcodeCallback'] = (code) => {
@@ -130,39 +122,51 @@ export default {
       this.$router.push({path: 'myInfo'});
       this.changeTitleTxt({tit:'我的'})
     },
+    // 扫码验证网络异常弹窗
+    abnormalSweepCode () {
+       this.$dialog.alert({
+        message: '网络异常,请重试'
+      }).then(() => {
+        this.sweepAstoffice()
+      });
+    },
     // 扫码后的回调
     scanQRcodeCallback (code) {
       if (code && Object.keys(code).length > 0) {
-        if (code.name && code.proName && code.depName && code.type && code.proId && code.number) {
-          judgeSummaryPoint(code.type,code.number).then((res) => {
-            if (res && res.data.code == 200) {
-              this.stageMsg = true;
-              this.sureBtnShow = true;
-              this.inStoageBtn = false;
-              this.stagingMsg = code;
-              this.storeId = code.id;
-              this.storeNumber = code.number;
-              this.proId = code.proId;
-              this.proName = code.proName;
-            } else {
-              this.$dialog.alert({
-                message: '流程与扫描数据不匹配,请重试'
-                }).then(() => {
-                this.medicalInStoragr()
-              });
-            }
-          })
-          .catch((err)=>{
+        if (code.hasOwnProperty('name') && code.hasOwnProperty('proName') && code.hasOwnProperty('depName') && code.hasOwnProperty('type')
+          && code.hasOwnProperty('proId') && code.hasOwnProperty('number')) {
+          if (code.name && code.proName && code.depName && code.type && code.proId && code.number) {
+            judgeSummaryPoint(code.type,code.number).then((res) => {
+              if (res && res.data.code == 200) {
+                this.stageMsg = true;
+                this.sureBtnShow = true;
+                this.inStoageBtn = false;
+                this.stagingMsg = code;
+                this.storeId = code.id;
+                this.storeNumber = code.number;
+                this.proId = code.proId;
+                this.proName = code.proName;
+              } else {
+                this.$dialog.alert({
+                  message: '当前流程与预期流程不符,请重新扫描'
+                  }).then(() => {
+                  this.medicalInStoragr()
+                });
+              }
+            })
+            .catch((err)=>{
+              this.abnormalSweepCode()
+            })
+          } else {
             this.$dialog.alert({
-              message: '流程与扫描数据不匹配,请重试'
-              }).then(() => {
-              this.medicalInStoragr()
-            });
-            console.log(err)
-          })
+              message: '当前扫描收集信息不全,请重试'
+            }).then(() => {
+              this.medicalInStoragr();
+            })
+          }
         } else {
           this.$dialog.alert({
-            message: '当前扫描没有收集到任何暂存点信息,请重新扫描'
+            message: '当前流程与预期流程不符,请重新扫描'
           }).then(() => {
             this.medicalInStoragr();
           })

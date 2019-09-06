@@ -129,6 +129,8 @@ export default {
       handler (newVal,oldVal) {
         this.companyNameList = [];
         this.cardNumberList = [];
+        this.companyName = '';
+        this.cardNumber = '';
         let currentCompanyMsg = this.outCompanyMsg.filter((item) => {
           return item.company == this.company
         });
