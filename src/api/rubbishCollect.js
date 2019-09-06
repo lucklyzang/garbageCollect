@@ -99,3 +99,11 @@ export function queryCompany(proId) {
     method: 'get',
   })
 };
+// 预警处理
+export function warningDispose(data) {
+  return request({
+    url: 'warninfo/update',
+    method: 'put',
+    data
+  })
+};
