@@ -2,8 +2,10 @@ import axios from 'axios'
 import { MessageBox,} from 'element-ui'
 import store from '@/store'
 // http://192.168.8.100:8080
+// 'http://192.168.8.100:8080/blink'
+// http://39.100.111.20:8080/blink
 const service = axios.create({
-  baseURL: 'http://192.168.8.100:8080',
+  baseURL: 'http://192.168.8.100:8080/blink'
   // timeout: 5000 // request timeout
 });
 
@@ -13,6 +15,7 @@ service.interceptors.request.use(
     if (store.getters.token) {
       config.headers['X-Token'] = 'default'
     }
+    config.headers['REQUEST_TYPE'] = '1'
     return config
   },
 

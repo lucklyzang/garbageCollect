@@ -157,7 +157,7 @@ export default {
       this.changeTitleTxt({tit: '医废监测'})
     };
     this.initDate();
-    this.queryMethods(this.getUserInfo, this.formatTime(), this.formatTime(), 0)
+    this.queryMethods(this.userInfo.proId, this.formatTime(), this.formatTime(), 0)
   },
 
   methods: {
@@ -349,14 +349,18 @@ export default {
             }
           } else {
             this.$dialog.alert({
-              message: '查询信息异常'
+              message: `${res.data.msg}`
             }).then(() => {
             });
           }
         }
       })
       .catch((err) => {
-        console.log(err)
+        console.log(err);
+        this.$dialog.alert({
+          message: `${err.message}`
+        }).then(() => {
+        })
       })
     },
     // 时间格式方法

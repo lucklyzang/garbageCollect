@@ -337,7 +337,11 @@ export default {
                 }
               })
               .catch((err) => {
-                this.abnormalSweepCode();
+                this.$dialog.alert({
+                  message: `${err.message}`
+                }).then(() => {
+                  this.abnormalSweepCode();
+                });
               })
             } else {
               this.$dialog.alert({
@@ -380,7 +384,11 @@ export default {
                 }
               })
               .catch((err) => {
-                this.abnormalSweepCode();
+                this.$dialog.alert({
+                  message: `${err.message}`
+                }).then(() => {
+                  this.abnormalSweepCode();
+                }); 
               })
             } else {
               this.$dialog.alert({

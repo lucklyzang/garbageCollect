@@ -63,6 +63,7 @@ export default {
         this.clearTrashStore();
         this.changeFlowState(0);
         this.changeClickBackoutBtn(false);
+        this.changePrintBtn(false);
         this.changeCurrentLajicodeState(false);
         this.changeBagCodeShow(false);
         this.changeAstOfficeShow(false);

@@ -292,7 +292,7 @@ export default {
       .catch((err) => {
         this.$dialog.alert({
           title: '',
-          message: '处理失败'
+          message: `${err.message}`
         }).then(() => {
         });
         this.handlePopShow = false;
@@ -340,7 +340,7 @@ export default {
       .catch((err) => {
         this.$dialog.alert({
           title: '',
-          message: '审核通过处理失败'
+          message: `${err.message}`
         }).then(() => {
         });
         this.checkPopShow = false;
@@ -377,7 +377,7 @@ export default {
       .catch((err) => {
         this.$dialog.alert({
           title: '',
-          message: '审核不通过处理失败'
+          message: `${err.message}`
         }).then(() => {
         });
         this.checkPopShow = false;
@@ -527,7 +527,10 @@ export default {
         }
       })
       .catch((err)=>{
-        console.log(err)
+        this.$dialog.alert({
+          message: `${err.message}`
+        }).then(() => {
+        });
       })
     },
     // 时间格式方法1

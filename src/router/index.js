@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import {setStore, getStore} from '@/common/js/utils.js'
 const Home = () => import('../pages/Home')
 const Login = () => import('../pages/Login')
 const MedicalCollect = () => import('../pages/MedicalSweepCode')
@@ -85,10 +86,22 @@ let baseRoute  = [
 let router = new Router({
   routes: baseRoute
 });
-// router.beforeEach((to, from, next) => {
-//   let routeName = to.meta.name || to.name;
-//   window.document.title = (routeName ? routeName + ' - ' : '') + 'Vue-Access-Control';
-//   next();
-// });
+router.beforeEach((to, from, next) => {
+  if (getStore('isLogin')) {
+    if (to.name == 'home') {
+      next();
+    } else if (to.name == 'login') {
+      if (getStore('userName') && getStore('userPassword')) {
+        next({path: '/home'})
+      } else {
+        next({path: '/'})
+      }
+    } else {
+      next()
+    }
+  } else {
+    next()
+  }
+});
 export default router
 

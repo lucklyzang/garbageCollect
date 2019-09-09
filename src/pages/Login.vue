@@ -1,28 +1,36 @@
 <template>
   <div id="LoginBox">
-    <p class="logo">
-      <img :src="loginBanner" alt="">
-    </p>
-    <van-cell-group>
-      <van-field label="用户名" placeholder="请输入用户名" type="text" v-model="username"></van-field>
-      <van-field label="密码" placeholder="请输入密码" type="password" v-model="password"></van-field>
-   </van-cell-group>
-    <van-cell-group>
-      <van-button  @click.native="login">登录</van-button>
-    </van-cell-group>
+    <div class="bg-box">
+      <img :src="LoginBg" alt="">
+    </div>
+    <div class="bg-icon">
+      <img :src="BgIcon" alt="">
+    </div>
+    <div class="inputBox">
+      <van-cell-group>
+        <van-field left-icon="manager" label="用户名" placeholder="请输入用户名" type="text" v-model="username"></van-field>
+        <van-field left-icon="lock" label="密码" placeholder="请输入密码" type="password" v-model="password"></van-field>
+      </van-cell-group>
+      <van-cell-group>
+        <van-button  @click.native="login">登录</van-button>
+      </van-cell-group>
+    </div>
   </div>
 </template>
 
 <script>
-import {logIn} from '../api/login.js'
+import {logIn} from '@/api/login.js'
+import {setStore, getStore} from '@/common/js/utils.js'
 import { mapGetters, mapMutations } from 'vuex'
-import loginBg from '@/components/images/login-bg.png'
+import BgIcon from '@/components/images/bg-icon.png'
+import LoginBg from '@/components/images/login-bg.png'
 export default {
   data () {
     return {
-      username:'',
-      password: '',
-      loginBanner: loginBg
+      username: this.loginName,
+      password: this.loginPassword,
+      BgIcon: BgIcon,
+      LoginBg: LoginBg
     };
   },
   watch: {
@@ -30,7 +38,14 @@ export default {
   },
   components: {},
 
-  computed: {},
+  computed: {
+    loginName () {
+      return getStore('userName')
+    },
+    loginPassword () {
+      return getStore('password')
+    }
+  },
 
   mounted () {},
 
@@ -41,14 +56,19 @@ export default {
     // 账号密码登录方法
     login () {
       let loginMessage = {
-        workerNumber: this.username,
+        username: this.username,
         password: this.password
       };
       logIn(loginMessage).then((res)=>{
         if (res) {
           if (res.data.code == 200) {
+            // 登录用户名密码及用户信息存入Locastorage
+            setStore('userName', this.username);
+            setStore('userPassword', this.password);
+            setStore('userInfo', res.data.data);
+            setStore('isLogin', true);
+            this.storeUserInfo(JSON.parse(getStore('userInfo')));
             this.$router.push({path:'/home'});
-            this.storeUserInfo(res.data.data);
           } else {
              this.$dialog.alert({
               message: `${res.data.msg}`
@@ -58,7 +78,10 @@ export default {
         }
       })
       .catch((err) => {
-        console.log(err)
+        this.$dialog.alert({
+          message: `${err.message}`
+        }).then(() => {
+        })
       })
     }
   } 
@@ -69,15 +92,27 @@ export default {
     position: fixed;
     width: 100%;
     height: 100%;
-    background: #fff;
-    .logo {
-      text-align: center;
+    .bg-box {
+      position: absolute;
       width: 100%;
-      margin-bottom: 40px;
-      height: 220px;
-      line-height: 200px;
-      font-size: 28px;
-      color:#aad5ba;
+      height: 100%;
+      top: 0;
+      left: 0;
+      img {
+        width: 100%;
+        height: 100%
+      }
+    }
+    .inputBox {
+      width: 100%;
+      position: absolute;
+      top: 35%
+    }
+    .bg-icon {
+      position: absolute;
+      top: 10%;
+      left: 38%;
+      width: 100px;
       img {
         width: 100%;
         height: 100%
@@ -94,31 +129,47 @@ export default {
       background: none;
       /deep/ .van-field {
         margin-top: 10px;
-        color: #6d6d6d;
+        color: #fff;
         &:not(:last-child):after {
           display: none
         }
         .van-cell_title {
           font-size: 12px;
         }
-        // .van-cell_value {
-        //   .van-field__body {
-            input {
-              margin-top: -4px;
-              font-size: 12px
-          //   }
-          // }
+        input {
+          font-size: 12px;
+          color: #fff
         }
       }
+      /deep/ .van-field:last-child {
+        margin-top: 20px
+      }
       /deep/ .van-cell {
-        border-bottom: 1px solid #dddcdc;
-        height: 35px;
-        vertical-align: middle;
-        padding-left: 0;
+        border: 2px solid #87dfee;
+        background: transparent;
+        border-radius: 60px;
+        ::-webkit-input-placeholder {
+          color: #fff;
+        }
+        :-moz-placeholder {/* Firefox 18- */
+          color: #fff;
+        }
+        ::-moz-placeholder{/* Firefox 19+ */
+        color: #fff;
+        }
+        :-ms-input-placeholder {
+          color: #fff;
+        }
         .van-field__label {
           font-size: 12px;
-          margin-top: -4px;
-          color: #5b5b5b
+          color: #fff;
+          padding-left: 6px
+        }
+        /deep/ .van-field__left-icon {
+          i {
+            font-size: 20px;
+            color: #fff
+          }
         }
       }
     }
@@ -128,12 +179,12 @@ export default {
       /deep/ .van-button {
         width: 100%;
         margin-top: 35px;
-        background: #1dc5a4;
-        color: #fff;
+        background: #fff;
+        color: black;
         border-radius: 0;
         font-size: 12px;
         border-radius: 30px;
-        height: 35px;
+        height: 46px;
         border: none;
         line-height: 35px;
       }
@@ -144,7 +195,7 @@ export default {
       bottom: 20px;
       text-align: center;
       font-size: 12px;
-      color: #adadad
+      color: #fff
     }
   }
 </style>

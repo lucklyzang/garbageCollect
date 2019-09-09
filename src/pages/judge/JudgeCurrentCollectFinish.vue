@@ -172,10 +172,9 @@ export default {
         }
       })
       .catch((err) => {
-        console.log(err);
         this.showLoading = false;
          this.$dialog.alert({
-          message: `${err}`
+          message: `${err.message}`
             }).then(() => {
             this.changeBackoutBtn(true);
             this.changeFlowState(0);
@@ -258,10 +257,9 @@ export default {
         }
       })
       .catch((err) => {
-        console.log(err);
         this.showLoading = false;
          this.$dialog.alert({
-          message: `${err}`
+          message: `${err.message}`
             }).then(() => {
             this.changeBackoutBtn(true);
             this.changeFlowState(0);

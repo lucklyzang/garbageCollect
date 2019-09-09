@@ -223,7 +223,10 @@ export default {
         }
       })
       .catch((err)=>{
-        console.log(err)
+        this.$dialog.alert({
+          message: `${err.message}`
+        }).then(() => {
+        });
       })
     },
     // 时间格式方法

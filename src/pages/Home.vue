@@ -92,7 +92,10 @@
                   this.createBatchNumber(res.data.data.batchNumber)
                 }
               }).catch((err) => {
-                console.log(err)
+                this.$dialog.alert({
+                  message: `${err.message}`
+                }).then(() => {
+                })
               })
             } else {
               this.$dialog.alert({

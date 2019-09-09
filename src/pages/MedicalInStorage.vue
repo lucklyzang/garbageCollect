@@ -193,7 +193,7 @@ export default {
     // 查询收集的垃圾批次信息00012019081900022019082200
     queryAllBatch () {
       this.classList = [];
-      queryBatch({batchNumber:this.batchNumber ? this.batchNumber : this.userInfo.batchNumber ,state: 0}).then((res)=>{
+      queryBatch({batchNumber:this.batchNumber ? this.batchNumber : this.userInfo.batchNumber ,workerId:this.userInfo.id, state: 0}).then((res)=>{
         if (res && res.data.code == 200) {
           if (res.data.data.length > 0) {
             let dataList = res.data.data;

@@ -222,7 +222,7 @@ export default {
       })
       .catch((err) => {
         this.$dialog.alert({
-          message: '医废出库失败'
+          message: `${err.message}`
         }).then(() => {
           this.initFormContent();
           this.$router.push({path: 'medicalOutStorage'});
@@ -253,7 +253,10 @@ export default {
         }
       })
       .catch((err) => {
-        console.log(err)
+        this.$dialog.alert({
+          message: `${err.message}`
+        }).then(() => {
+        });
       })
     },
     // 时间格式方法
