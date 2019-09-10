@@ -23,7 +23,7 @@
       <van-tabs v-model="activeName" @click="onClickTab">
         <van-tab title="未入库" name="0">
           <div class="content-middle-list">
-            <div class="content-middle-list-item" v-for="item in notInStorageList">
+            <div class="content-middle-list-item" v-for="item in notInStorageList" @click="skipDetail(item)">
               <div class="list-item">
                 <p class="list-item-left">批次: {{item.batchNumber}}</p>
                 <p class="list-item-right">
@@ -44,7 +44,7 @@
         </van-tab>
         <van-tab title="已入库" name="1">
           <div class="content-middle-list">
-            <div class="content-middle-list-item" v-for="item in inStorageList">
+            <div class="content-middle-list-item" v-for="item in inStorageList" @click="skipDetail(item)">
               <div class="list-item">
                 <p class="list-item-left">批次: {{item.batchNumber}}</p>
                 <p class="list-item-right">
@@ -65,7 +65,7 @@
         </van-tab>
         <van-tab title="已出库" name="2">
            <div class="content-middle-list">
-            <div class="content-middle-list-item" v-for="item in outStorageList">
+            <div class="content-middle-list-item" v-for="item in outStorageList" @click="skipDetail(item)">
               <div class="list-item">
                 <p class="list-item-left">批次: {{item.batchNumber}}</p>
                 <p class="list-item-right">
@@ -86,7 +86,7 @@
         </van-tab>
         <van-tab title="已完成" name="3">
           <div class="content-middle-list">
-            <div class="content-middle-list-item" v-for="item in finishList">
+            <div class="content-middle-list-item" v-for="item in finishList" @click="skipDetail(item)">
               <div class="list-item">
                 <p class="list-item-left">批次: {{item.batchNumber}}</p>
                 <p class="list-item-right">
@@ -135,6 +135,7 @@ export default {
       inStorageList: [],
       outStorageList: [],
       finishList: [],
+      currentName: null,
       activeName: 0,
       minDateStart: new Date(2018, 0, 1),
       minDateEnd: new Date(2018, 0, 1)
@@ -162,7 +163,9 @@ export default {
 
   methods: {
     ...mapMutations([
-      'changeTitleTxt'
+      'changeTitleTxt',
+      'storeCollectInfo',
+      'storeCurrentName'
     ]),
     // 返回上一页
     backTo () {
@@ -188,8 +191,16 @@ export default {
       this.startTime = `${currentDateList[0]}-${currentDateList[1]}-${currentDateList[2]}`;
       this.endTime = `${currentDateList[0]}-${currentDateList[1]}-${currentDateList[2]}`
     },
+    // 跳转到详情页
+    skipDetail (item) {
+      this.storeCollectInfo(item);
+      this.storeCurrentName(this.currentName)
+      this.$router.push({path:'CollectDetails'});
+      this.changeTitleTxt({tit:'历史详情'})
+    },
     // 点击标签按钮事件
     onClickTab (name, title) {
+      this.currentName = name;
       this.notInStorageList = [];
       this.inStorageList = [];
       this.outStorageList = [];

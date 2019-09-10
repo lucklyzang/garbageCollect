@@ -33,6 +33,8 @@
   import testStatistics from '@/common/images/home/test-statistics.png'
   import videoSurveillance from '@/common/images/home/video-surveillance.png'
   import homeBanner from '@/common/images/home/home-banner.png'
+  import addCheck from '@/common/images/home/add-check.png'
+  import warningCheck from '@/common/images/home/warning-check.png'
   import { pushHistory } from '@/common/js/utils'
   export default {
     components:{
@@ -48,6 +50,8 @@
           { itemText: '医废出库', imgUrl: medicalOut, name: 'medicalOutStorage'},{ itemText: '报表统计', imgUrl: statement},
           { itemText: '异常预警', imgUrl: abnormalWarning, name: 'abnormalWarning'},{ itemText: '收集历史', imgUrl: collectHistory, name: 'collectHistory'},
           { itemText: '检测统计', imgUrl: testStatistics },{ itemText: '视频监控', imgUrl: videoSurveillance},
+          { itemText: '预警审核', imgUrl: warningCheck, name: 'warningCheck'},
+          { itemText: '补录审核', imgUrl: addCheck, name: 'addCheck'}
         ],
         bannerUrl: homeBanner
       }

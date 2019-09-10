@@ -14,6 +14,10 @@ const AbnormalWarning = () => import('../pages/AbnormalWarning')
 const CollectHistory = () => import('../pages/CollectHistory')
 const MyInfo = () => import('../pages/MyInfo')
 const CommonSweepCode = () => import('../pages/CommonSweepCode')
+const HandleIdea = () => import('../pages/HandleIdea')
+const WarningCheck = () => import('../pages/WarningCheck')
+const AddCheck = () => import('../pages/AddCheck')
+const CollectDetails = () => import('../pages/CollectDetails')
 Vue.use(Router)
 
 let baseRoute  = [
@@ -73,14 +77,34 @@ let baseRoute  = [
     component: AbnormalWarning,
   },
   {
+    path: '/handleIdea',
+    name: 'handleIdea',
+    component: HandleIdea,
+  },
+  {
     path: '/collectHistory',
     name: 'collectHistory',
     component: CollectHistory,
   },
   {
+    path: '/collectDetails',
+    name: 'collectDetails',
+    component: CollectDetails,
+  },
+  {
     path: '/myInfo',
     name: 'myInfo',
     component: MyInfo,
+  },
+  {
+    path: '/warningCheck',
+    name: 'warningCheck',
+    component: WarningCheck,
+  },
+  {
+    path: '/addCheck',
+    name: 'addCheck',
+    component: AddCheck,
   },
 ];
 let router = new Router({

@@ -107,3 +107,19 @@ export function warningDispose(data) {
     data
   })
 };
+// 补录审核批次查询
+export function queryAddList(data) {
+  return request({
+    url: 'supplement/queryAll',
+    method: 'get',
+    params: data
+  })
+};
+// 补录审核接口
+export function addCheck(data) {
+  return request({
+    url: 'supplement/deal',
+    method: 'put',
+    data
+  })
+};
