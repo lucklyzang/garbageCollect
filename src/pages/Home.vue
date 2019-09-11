@@ -47,7 +47,7 @@
         currentActive: 0,
         itemList: [
           { itemText: '医废收集', imgUrl: collectWaste, name: 'medicalCollect'},{ itemText: '医废入库', imgUrl: medicalIn, name: 'medicalInStorage'},
-          { itemText: '医废出库', imgUrl: medicalOut, name: 'medicalOutStorage'},{ itemText: '报表统计', imgUrl: statement},
+          { itemText: '医废出库', imgUrl: medicalOut, name: 'medicalOutStorage'},{ itemText: '报表统计', imgUrl: statement, name: 'reportAudit'},
           { itemText: '异常预警', imgUrl: abnormalWarning, name: 'abnormalWarning'},{ itemText: '收集历史', imgUrl: collectHistory, name: 'collectHistory'},
           { itemText: '视频监控', imgUrl: videoSurveillance},{ itemText: '预警审核', imgUrl: warningCheck, name: 'warningCheck'},
           { itemText: '补录审核', imgUrl: addCheck, name: 'addCheck'}

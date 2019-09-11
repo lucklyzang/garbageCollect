@@ -19,6 +19,7 @@ const HandleIdea = () => import('../pages/HandleIdea')
 const WarningCheck = () => import('../pages/WarningCheck')
 const AddCheck = () => import('../pages/AddCheck')
 const CollectDetails = () => import('../pages/CollectDetails')
+const ReportAudit = () => import('../pages/ReportAudit')
 Vue.use(Router)
 
 let baseRoute  = [
@@ -113,6 +114,11 @@ let baseRoute  = [
     name: 'addCheck',
     component: AddCheck,
   },
+  {
+    path: '/reportAudit',
+    name: 'reportAudit',
+    component: ReportAudit,
+  }
 ];
 let router = new Router({
   routes: baseRoute

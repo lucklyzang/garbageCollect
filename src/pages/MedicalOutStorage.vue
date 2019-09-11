@@ -115,7 +115,7 @@ export default {
     },
     // 返回上一页
     backTo () {
-      this.$router.go(-1);
+      this.$router.push({name:'medicalOutStorage'});
       this.changeTitleTxt({tit:'医废监测'})
     },
     searchOutStorage (startTime,endTime) {

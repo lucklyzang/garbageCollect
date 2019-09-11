@@ -109,7 +109,7 @@ export default {
     ]),
     // 返回上一页
     backTo () {
-      this.$router.go(-1);
+      this.$router.push({name:'home'});
       this.changeTitleTxt({tit:'医废监测'})
     },
     // 判断身份类别

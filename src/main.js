@@ -6,6 +6,8 @@ import Vant from 'vant';
 import 'vant/lib/index.css';
 import moment from 'moment'
 import {setStore, getStore} from '@/common/js/utils.js'
+import echarts from 'echarts'
+Vue.prototype.$echarts = echarts
 Vue.filter('dateformat', function(dataStr, pattern = 'YYYY-MM-DD HH:mm:ss') {
   return moment(dataStr).format(pattern)
 });
