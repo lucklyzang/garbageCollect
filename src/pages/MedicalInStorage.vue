@@ -302,7 +302,7 @@ export default {
         }
       }
       .content-middle-list {
-        height: 380px;
+        height: 55vh;
         overflow: auto;
         .content-middle-list-item {
           padding: 14px;

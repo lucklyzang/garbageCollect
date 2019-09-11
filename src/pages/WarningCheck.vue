@@ -437,7 +437,7 @@ export default {
         }
       }
       .content-middle-list {
-        height: 500px;
+        height: 76vh;
         overflow: auto;
        .content-middle-list-item {
           padding: 14px;

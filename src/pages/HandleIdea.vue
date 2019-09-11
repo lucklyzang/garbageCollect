@@ -160,6 +160,8 @@ export default {
       height: 100%;
       .content-middle-top {
         margin-top: 80px;
+        height: 80vh;
+        overflow: auto;
       }
       .content-middle-bottom {
          width: 100%;

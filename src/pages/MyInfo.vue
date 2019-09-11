@@ -19,7 +19,7 @@
           <div>{{this.getCarNum ? this.getCarNum: '无'}}</div>
         </van-panel>
          <van-panel title="身份类别">
-          <div>{{judgeCardType(this.getCardType)}}</div>
+          <div>{{this.getCardType}}</div>
         </van-panel>
          <van-panel title="可收集垃圾类别">
           <div>{{this.getRubbishType ? judgeRubbishType(this.getRubbishType) : '无'}}</div>
@@ -77,7 +77,7 @@ export default {
       return this.userInfo.carNumber
     },
     getCardType () {
-      return this.userInfo.type
+      return this.userInfo.roleName
     },
     getRubbishType () {
       return this.userInfo.canWasteTypes
@@ -95,7 +95,8 @@ export default {
     window.onpopstate = () => {
       this.$router.push({path: 'home'});  //输入要返回的上一级路由地址
       this.changeTitleTxt({tit: '医废监测'})
-    }
+    };
+    this.changeRouterFlag(true)
   },
   methods: {
     ...mapMutations([
@@ -103,7 +104,8 @@ export default {
       'changeTotalWeight',
       'changeBatchs',
       'initTotalWeight',
-      'initBatchs'
+      'initBatchs',
+      'changeRouterFlag'
     ]),
     // 返回上一页
     backTo () {
@@ -157,6 +159,9 @@ export default {
         case 6 :
           return '其它'
           break;
+        case '1,2,3,4,5,6':
+          return '感染性, 损伤性, 药物性, 病理性, 化学性, 其它'
+          break;
       }
     },
     // 退出登录
@@ -165,12 +170,12 @@ export default {
         message: '确定注销账号?'
       })
       .then(() => {
-         // 清除localStorage存储的用户信息
+        // 清除localStorage存储的用户信息
         removeStore('userName');
         removeStore('userPassword');
         removeStore('userInfo');
         removeStore('isLogin');
-        this.$router.push({name:'login'});
+        this.$router.replace({name:'login'});
       })
       .catch(() => {})
     },
@@ -241,7 +246,6 @@ export default {
             background-color: transparent;
             /deep/ .van-button {
             width: 100%;
-            margin-top: 35px;
             background: @color-theme;
             color: #fff;
             border-radius: 0;
@@ -255,7 +259,7 @@ export default {
         }
       }
       .content-middle-medail {
-        height: 440px;
+        height: 65vh;
         overflow: auto;
         /deep/ .van-panel__header {
           color: black;

@@ -56,7 +56,7 @@
                 <div class="list-strip">
                   <p>补录人: {{item.suppName}}</p>
                   <p class="list-sign">补录原因: {{item.remark}}</p>
-                   <p class="list-sign">审核意见: {{item.checkIdea}}</p>
+                  <p class="list-sign">审核意见: {{item.checkIdea}}</p>
                   <p class="list-code">补录时间: {{item.createTime}}</p>
                   <p class="list-code">收集时间: {{item.collectTime}}</p>
                   <p class="list-code">重量: {{item.weight}} <span style="color:#c97889">kg</span></p>
@@ -429,11 +429,11 @@ export default {
         }
       }
       .content-middle-list {
-        height: 500px;
+        height: 76vh;
         overflow: auto;
        .content-middle-list-item {
           padding: 14px;
-          height: 150px;
+          height: 160px;
           border-bottom: 1px solid #e8e4e4;
           .list-item {
             position: relative;

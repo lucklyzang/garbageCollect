@@ -135,7 +135,7 @@ export default {
       inStorageList: [],
       outStorageList: [],
       finishList: [],
-      currentName: null,
+      currentName: 0,
       activeName: 0,
       minDateStart: new Date(2018, 0, 1),
       minDateEnd: new Date(2018, 0, 1)
@@ -196,7 +196,7 @@ export default {
       this.storeCollectInfo(item);
       this.storeCurrentName(this.currentName)
       this.$router.push({path:'CollectDetails'});
-      this.changeTitleTxt({tit:'历史详情'})
+      this.changeTitleTxt({tit:'收集历史详情'})
     },
     // 点击标签按钮事件
     onClickTab (name, title) {
@@ -436,7 +436,7 @@ export default {
         }
       }
       .content-middle-list {
-        height: 500px;
+        height: 76vh;
         overflow: auto;
         .content-middle-list-item {
           position: relative;

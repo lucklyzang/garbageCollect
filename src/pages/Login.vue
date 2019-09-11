@@ -24,6 +24,7 @@ import {setStore, getStore} from '@/common/js/utils.js'
 import { mapGetters, mapMutations } from 'vuex'
 import BgIcon from '@/components/images/bg-icon.png'
 import LoginBg from '@/components/images/login-bg.png'
+import { pushHistory } from '@/common/js/utils'
 export default {
   data () {
     return {
@@ -34,7 +35,6 @@ export default {
     };
   },
   watch: {
-    
   },
   components: {},
 
@@ -47,11 +47,19 @@ export default {
     }
   },
 
-  mounted () {},
+  mounted () {
+    pushHistory();
+    window.onpopstate = () => {
+      this.$router.push({path: '/'});  //输入要返回的上一级路由地址
+    };
+    this.changeRouterFlag(false)
+  },
 
   methods: {
     ...mapMutations([
-      'storeUserInfo'
+      'storeUserInfo',
+      'changeTitleTxt',
+      'changeRouterFlag'
     ]),
     // 账号密码登录方法
     login () {
@@ -67,8 +75,10 @@ export default {
             setStore('userPassword', this.password);
             setStore('userInfo', res.data.data);
             setStore('isLogin', true);
+            this.changeRouterFlag(true);
             this.storeUserInfo(JSON.parse(getStore('userInfo')));
             this.$router.push({path:'/home'});
+            this.changeTitleTxt({tit:'医废监测'})
           } else {
              this.$dialog.alert({
               message: `${res.data.msg}`

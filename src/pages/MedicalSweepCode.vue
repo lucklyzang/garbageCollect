@@ -90,7 +90,6 @@ export default {
   data () {
     return {
       newSummary: false,
-      currentTotalWeigh: 0,
       newSummary: false
     };
   },
@@ -418,7 +417,6 @@ export default {
         if (code && Object.keys(code).length > 0) {
           if (code.hasOwnProperty('wasteName') && code.hasOwnProperty('proName') && code.hasOwnProperty('depName') && code.hasOwnProperty('barCode')) {
             if (code.wasteName && code.proName && code.depName && code.barCode) {
-              this.currentTotalWeigh = 0;
               this.changeCurrentActive(this.codeStep);
               this.changeCodeStep(this.codeStep);
               this.changeIsPlus(true);
@@ -459,12 +457,12 @@ export default {
       if (str) {
         this.changeCurrentActive(this.codeStep);
         this.changeCodeStep(this.codeStep);
-        this.currentTotalWeigh+=Number(str);
         this.changebluetoothWeighShow(true);
         this.changeIsPlus(true);
         this.changeBagCodeShow(false);
-        // this.storageLanyaCz(Math.round(this.currentTotalWeigh * 100) / 100);
-        this.changeExtraLyczMsg(Math.round(str * 100) / 100);
+        //每类医废重量存入store
+        this.storageLanyaCz(str);
+        this.changeExtraLyczMsg(str);
       }
     },
     //打印凭单
@@ -503,8 +501,6 @@ export default {
       this.changeIsPlus(false);
       if (middleCurrentActive > 4) {return};
       if (middleCurrentActive == 4) {
-        // 医废总重量存入store
-        this.storageLanyaCz(Math.round(this.currentTotalWeigh * 100) / 100);
         this.$router.push({path:'judgeCurrentDepantment'});
       } else if (middleCurrentActive == 3) {
         this.weightRubbish()
@@ -552,7 +548,7 @@ export default {
       margin-top: 60px;
       background: #fff;
       .content-middle {
-        height: 400px;
+        height: 60vh;
         width: 100%;
         > div {
           height: 100%;

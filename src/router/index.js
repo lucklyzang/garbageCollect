@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import {setStore, getStore} from '@/common/js/utils.js'
+import store from '@/store'
 const Home = () => import('../pages/Home')
 const Login = () => import('../pages/Login')
 const MedicalCollect = () => import('../pages/MedicalSweepCode')
@@ -85,11 +86,17 @@ let baseRoute  = [
     path: '/collectHistory',
     name: 'collectHistory',
     component: CollectHistory,
+    meta: {
+      keepAlive: false
+    }
   },
   {
     path: '/collectDetails',
     name: 'collectDetails',
     component: CollectDetails,
+    meta: {
+      keepAlive: false
+    }
   },
   {
     path: '/myInfo',
@@ -112,19 +119,24 @@ let router = new Router({
 });
 router.beforeEach((to, from, next) => {
   if (getStore('isLogin')) {
-    if (to.name == 'home') {
+    if (to.name === 'home') {
       next();
-    } else if (to.name == 'login') {
+    } else if (to.name === 'login') {
       if (getStore('userName') && getStore('userPassword')) {
         next({path: '/home'})
       } else {
-        next({path: '/'})
+        next({name: 'login'})
       }
     } else {
       next()
     }
   } else {
-    next()
+    if (!store.getters.routerFlag) { // 禁用路由返回，保存到vuex内的
+      next(false)
+      return
+    } else {
+      next()
+    }
   }
 });
 export default router

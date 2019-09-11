@@ -49,24 +49,28 @@
           { itemText: '医废收集', imgUrl: collectWaste, name: 'medicalCollect'},{ itemText: '医废入库', imgUrl: medicalIn, name: 'medicalInStorage'},
           { itemText: '医废出库', imgUrl: medicalOut, name: 'medicalOutStorage'},{ itemText: '报表统计', imgUrl: statement},
           { itemText: '异常预警', imgUrl: abnormalWarning, name: 'abnormalWarning'},{ itemText: '收集历史', imgUrl: collectHistory, name: 'collectHistory'},
-          { itemText: '检测统计', imgUrl: testStatistics },{ itemText: '视频监控', imgUrl: videoSurveillance},
-          { itemText: '预警审核', imgUrl: warningCheck, name: 'warningCheck'},
+          { itemText: '视频监控', imgUrl: videoSurveillance},{ itemText: '预警审核', imgUrl: warningCheck, name: 'warningCheck'},
           { itemText: '补录审核', imgUrl: addCheck, name: 'addCheck'}
         ],
+        roleList: ['管理员','项目经理'],
         bannerUrl: homeBanner
       }
     },
     mounted(){
       pushHistory();
       window.onpopstate = () => {
-        this.$router.push({name: 'login'});  //输入要返回的上一级路由地址
+        this.$router.replace({name: 'login'});  //输入要返回的上一级路由地址
       };
+      this.initItemList ()
     },
     computed:{
       ...mapGetters([
         'navTopTitle',
         'userInfo'
-      ])
+      ]),
+      getCardType () {
+        return this.userInfo.roleName
+      },
     },
     methods:{
       ...mapMutations([
@@ -77,6 +81,12 @@
       // 返回上一页
       backTo () {
         this.$router.go(-1)
+      },
+      // 初始化首页展示菜单列表
+      initItemList () {
+        if (this.roleList.indexOf(this.getCardType) == -1) {
+          this.itemList.splice(-2,2)
+        }
       },
       // 跳转到我的页面
       skipMyInfo () {

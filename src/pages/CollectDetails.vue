@@ -7,71 +7,71 @@
       <div class="content-middle-top">
         <div v-show="currentName==0">
           <div class="list-item">
-            <p class="list-item-left">批次: {{collectInfo.batchNumber}}</p>
+            <p class="list-item-left">批次: {{getCollectInfo.batchNumber ? getCollectInfo.batchNumber : ''}}</p>
             <div class="list-strip">
-              <p>医院: {{collectInfo.proName}}</p>
-              <p class="list-sign">交接人: {{collectInfo.companyName ? collectInfo.companyName : '无'}}</p>
-              <p class="list-times">交接公司: {{collectInfo.company ? collectInfo.company : '无'}}</p>
-              <p class="list-code">收集车号: {{collectInfo.cardNumber ? collectInfo.cardNumber : '无'}}</p>
-              <p>收集总重量: {{collectInfo.totalWeight ? collectInfo.totalWeight : '0.00'}}kg</p>
-              <p class="list-sign">总包数: {{collectInfo.totalCount ? collectInfo.totalCount : 0}}</p>
-              <p class="list-times">交接公司: {{collectInfo.company ? collectInfo.company : '无'}}</p>
+              <p>医院: {{getCollectInfo.proName}}</p>
+              <p class="list-sign">交接人: {{getCollectInfo.companyName ? getCollectInfo.companyName : '无'}}</p>
+              <p class="list-times">交接公司: {{getCollectInfo.company ? getCollectInfo.company : '无'}}</p>
+              <p class="list-code">收集车号: {{getCollectInfo.cardNumber ? getCollectInfo.cardNumber : '无'}}</p>
+              <p>收集总重量: {{getCollectInfo.totalWeight ? getCollectInfo.totalWeight : '0.00'}}kg</p>
+              <p class="list-sign">总包数: {{getCollectInfo.totalCount ? getCollectInfo.totalCount : 0}}</p>
+              <p class="list-times">交接公司: {{getCollectInfo.company ? getCollectInfo.company : '无'}}</p>
             </div>
           </div>
         </div>
         <div v-show="currentName==1">
           <div class="list-item">
-            <p class="list-item-left">批次: {{collectInfo.batchNumber}}</p>
+            <p class="list-item-left">批次: {{getCollectInfo.batchNumber ? getCollectInfo.batchNumber : ''}}</p>
             <div class="list-strip">
-              <p>医院: {{collectInfo.proName}}</p>
-              <p class="list-sign">交接人: {{collectInfo.companyName ? collectInfo.companyName : '无'}}</p>
-              <p class="list-sign">入库人员: {{collectInfo.inWorkerName ? collectInfo.inWorkerName : '无'}}</p>
-              <p class="list-times">交接公司: {{collectInfo.company ? collectInfo.company : '无'}}</p>
-              <p class="list-code">收集车号: {{collectInfo.cardNumber ? collectInfo.cardNumber : '无'}}</p>
-              <p class="list-sign">入库总重量: {{collectInfo.inTotalWeight ? collectInfo.inTotalWeight : '无'}}kg</p>
-              <p class="list-sign">入库时间: {{collectInfo.inTime ? collectInfo.inTime : '无'}}</p>
-              <p>收集总重量: {{collectInfo.totalWeight ? collectInfo.totalWeight : '0.00'}}kg</p>
-              <p class="list-sign">总包数: {{collectInfo.totalCount ? collectInfo.totalCount : 0}}</p>
-              <p class="list-times">交接公司: {{collectInfo.company ? collectInfo.company : '无'}}</p>
+              <p>医院: {{getCollectInfo.proName}}</p>
+              <p class="list-sign">交接人: {{getCollectInfo.companyName ? getCollectInfo.companyName : '无'}}</p>
+              <p class="list-sign">入库人员: {{getCollectInfo.inWorkerName ? getCollectInfo.inWorkerName : '无'}}</p>
+              <p class="list-times">交接公司: {{getCollectInfo.company ? getCollectInfo.company : '无'}}</p>
+              <p class="list-code">收集车号: {{getCollectInfo.cardNumber ? getCollectInfo.cardNumber : '无'}}</p>
+              <p class="list-sign">入库总重量: {{getCollectInfo.inTotalWeight ? getCollectInfo.inTotalWeight : '无'}}kg</p>
+              <p class="list-sign">入库时间: {{getCollectInfo.inTime ? getCollectInfo.inTime : '无'}}</p>
+              <p>收集总重量: {{getCollectInfo.totalWeight ? getCollectInfo.totalWeight : '0.00'}}kg</p>
+              <p class="list-sign">总包数: {{getCollectInfo.totalCount ? getCollectInfo.totalCount : 0}}</p>
+              <p class="list-times">交接公司: {{getCollectInfo.company ? getCollectInfo.company : '无'}}</p>
             </div>
           </div>
         </div>
          <div v-show="currentName==2">
           <div class="list-item">
-            <p class="list-item-left">批次: {{collectInfo.batchNumber}}</p>
+            <p class="list-item-left">批次: {{getCollectInfo.batchNumber ? getCollectInfo.batchNumber : ''}}</p>
             <div class="list-strip">
-              <p>医院: {{collectInfo.proName}}</p>
-              <p class="list-sign">交接人: {{collectInfo.companyName ? collectInfo.companyName : '无'}}</p>
-              <p class="list-sign">出库人员: {{collectInfo.outWorkerName ? collectInfo.outWorkerName : '无'}}</p>
-              <p class="list-times">交接公司: {{collectInfo.company ? collectInfo.company : '无'}}</p>
-              <p class="list-code">收集车号: {{collectInfo.cardNumber ? collectInfo.cardNumber : '无'}}</p>
-              <p class="list-sign">出库总重量: {{collectInfo.outTotalWeight ? collectInfo.outTotalWeight : '无'}}kg</p>
-              <p class="list-sign">出库时间: {{collectInfo.outTime ? collectInfo.outTime : '无'}}</p>
-              <p>收集总重量: {{collectInfo.totalWeight ? collectInfo.totalWeight : '0.00'}}kg</p>
-              <p class="list-sign">总包数: {{collectInfo.totalCount ? collectInfo.totalCount : 0}}</p>
-              <p class="list-times">交接公司: {{collectInfo.company ? collectInfo.company : '无'}}</p>
-              <p class="list-times">总暂存点编号: {{collectInfo.storeNumber ? collectInfo.storeNumber : '无'}}</p>
+              <p>医院: {{getCollectInfo.proName}}</p>
+              <p class="list-sign">交接人: {{getCollectInfo.companyName ? getCollectInfo.companyName : '无'}}</p>
+              <p class="list-sign">出库人员: {{getCollectInfo.outWorkerName ? getCollectInfo.outWorkerName : '无'}}</p>
+              <p class="list-times">交接公司: {{getCollectInfo.company ? getCollectInfo.company : '无'}}</p>
+              <p class="list-code">收集车号: {{getCollectInfo.cardNumber ? getCollectInfo.cardNumber : '无'}}</p>
+              <p class="list-sign">出库总重量: {{getCollectInfo.outTotalWeight ? getCollectInfo.outTotalWeight : '无'}}kg</p>
+              <p class="list-sign">出库时间: {{getCollectInfo.outTime ? getCollectInfo.outTime : '无'}}</p>
+              <p>收集总重量: {{getCollectInfo.totalWeight ? getCollectInfo.totalWeight : '0.00'}}kg</p>
+              <p class="list-sign">总包数: {{getCollectInfo.totalCount ? getCollectInfo.totalCount : 0}}</p>
+              <p class="list-times">交接公司: {{getCollectInfo.company ? getCollectInfo.company : '无'}}</p>
+              <p class="list-times">总暂存点编号: {{getCollectInfo.storeNumber ? getCollectInfo.storeNumber : '无'}}</p>
             </div>
           </div>
         </div>
          <div v-show="currentName==3">
           <div class="list-item">
-            <p class="list-item-left">批次: {{collectInfo.batchNumber}}</p>
+            <p class="list-item-left">批次: {{getCollectInfo.batchNumber ? getCollectInfo.batchNumber : ''}}</p>
             <div class="list-strip">
-              <p>医院: {{collectInfo.proName}}</p>
-              <p class="list-sign">交接人: {{collectInfo.companyName ? collectInfo.companyName : '无'}}</p>
-              <p class="list-sign">入库人员: {{collectInfo.inWorkerName ? collectInfo.inWorkerName : '无'}}</p>
-              <p class="list-sign">出库人员: {{collectInfo.outWorkerName ? collectInfo.outWorkerName : '无'}}</p>
-              <p class="list-times">交接公司: {{collectInfo.company ? collectInfo.company : '无'}}</p>
-              <p class="list-code">收集车号: {{collectInfo.cardNumber ? collectInfo.cardNumber : '无'}}</p>
-              <p class="list-sign">入库总重量: {{collectInfo.inTotalWeight ? collectInfo.inTotalWeight : '无'}}kg</p>
-              <p class="list-sign">出库总重量: {{collectInfo.outTotalWeight ? collectInfo.outTotalWeight : '无'}}kg</p>
-              <p class="list-sign">入库时间: {{collectInfo.inTime ? collectInfo.inTime : '无'}}</p>
-              <p class="list-sign">出库时间: {{collectInfo.outTime ? collectInfo.outTime : '无'}}</p>
-              <p>收集总重量: {{collectInfo.totalWeight ? collectInfo.totalWeight : '0.00'}}kg</p>
-              <p class="list-sign">总包数: {{collectInfo.totalCount ? collectInfo.totalCount : 0}}</p>
-              <p class="list-times">交接公司: {{collectInfo.company ? collectInfo.company : '无'}}</p>
-              <p class="list-times">总暂存点编号: {{collectInfo.storeNumber ? collectInfo.storeNumber : '无'}}</p>
+              <p>医院: {{getCollectInfo.proName}}</p>
+              <p class="list-sign">交接人: {{getCollectInfo.companyName ? getCollectInfo.companyName : '无'}}</p>
+              <p class="list-sign">入库人员: {{getCollectInfo.inWorkerName ? getCollectInfo.inWorkerName : '无'}}</p>
+              <p class="list-sign">出库人员: {{getCollectInfo.outWorkerName ? getCollectInfo.outWorkerName : '无'}}</p>
+              <p class="list-times">交接公司: {{getCollectInfo.company ? getCollectInfo.company : '无'}}</p>
+              <p class="list-code">收集车号: {{getCollectInfo.cardNumber ? getCollectInfo.cardNumber : '无'}}</p>
+              <p class="list-sign">入库总重量: {{getCollectInfo.inTotalWeight ? getCollectInfo.inTotalWeight : '无'}}kg</p>
+              <p class="list-sign">出库总重量: {{getCollectInfo.outTotalWeight ? getCollectInfo.outTotalWeight : '无'}}kg</p>
+              <p class="list-sign">入库时间: {{getCollectInfo.inTime ? getCollectInfo.inTime : '无'}}</p>
+              <p class="list-sign">出库时间: {{getCollectInfo.outTime ? getCollectInfo.outTime : '无'}}</p>
+              <p>收集总重量: {{getCollectInfo.totalWeight ? getCollectInfo.totalWeight : '0.00'}}kg</p>
+              <p class="list-sign">总包数: {{getCollectInfo.totalCount ? getCollectInfo.totalCount : 0}}</p>
+              <p class="list-times">交接公司: {{getCollectInfo.company ? getCollectInfo.company : '无'}}</p>
+              <p class="list-times">总暂存点编号: {{getCollectInfo.storeNumber ? getCollectInfo.storeNumber : '无'}}</p>
             </div>
           </div>
         </div>
@@ -105,6 +105,9 @@ export default {
     ]),
     getUserInfo () {
       return this.userInfo.proId
+    },
+    getCollectInfo () {
+      return this.collectInfo
     }
   },
 
@@ -168,7 +171,7 @@ export default {
       height: 100%;
       .content-middle-top {
         margin-top: 80px;
-        height: 500px;
+        height: 80vh;
         overflow: auto;
         padding: 16px;
           .list-item {

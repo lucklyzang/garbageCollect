@@ -30,9 +30,13 @@
           </div>
           <div class="list-item">
             <p class="list-item-left">回收趟次: {{item.batchNumber}}</p>
+            <p class="list-item-right">
+              重量: <span>{{item.trashHeight}}kg</span>
+            </p>
             <div class="list-strip">
               <p class="list-times">收集人员: {{item.inWorkerName}}</p>
               <p class="list-code">时间: {{item.inTime}}</p>
+              <p class="list-code">包数: {{item.totalCount}}</p>
             </div>
           </div>
         </div>
@@ -208,6 +212,7 @@ export default {
                   inWorkerName: item.inWorkerName,
                   inTime: item.inTime,
                   trashHeight: item.inTotalWeight,
+                  totalCount: item.totalCount,
                   check: false
                 })
               }
@@ -290,13 +295,13 @@ export default {
         }
       }
       .content-middle-list {
-        height: 385px;
+        height: 68vh;
         overflow: auto;
         .content-middle-list-item {
           position: relative;
           box-sizing: border-box;
           padding: 10px 10px;
-          height: 100px;
+          height: 120px;
           border-bottom: 1px solid #e8e4e4;
           .change-btn-position {
             position: absolute;
@@ -318,6 +323,16 @@ export default {
               color: black;
               font-size: 14px;
               font-weight: bold;
+            }
+            .list-item-right {
+              position: absolute;
+              bottom: 0;
+              right: 0;
+              color: #bdbdbd;
+              font-size: 12px;
+              span {
+                color: #c97889
+              }
             }
             .list-strip {
               position: absolute;
