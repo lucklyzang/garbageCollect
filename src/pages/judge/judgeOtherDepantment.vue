@@ -35,12 +35,14 @@ export default {
       'changeAstOfficeShow',
       'changeStaffCodeShow',
       'changebluetoothWeighShow',
-      'changeCodeStep'
+      'changeCodeStep',
+      'changeIsExecute'
     ]),
     showDialog () {
       this.$dialog.confirm({
         message: '是否其它科室收集?'
       }).then(() => {
+        this.changeIsExecute(true);
         this.changeFlowState(0);
         this.$router.push({path: 'medicalCollect'});
         this.changeCollectBtn(true);
@@ -57,6 +59,7 @@ export default {
         this.changeCurrentLajicodeState(false);
         this.changeBackoutBtn(true)
       }).catch(() => {
+        this.changeIsExecute(true);
         this.$router.push({path:'medicalInStorage'});
         this.changeTitleTxt({tit: '医废入库'});
         // 清空上个科室存储的数据

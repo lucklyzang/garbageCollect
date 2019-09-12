@@ -123,3 +123,11 @@ export function addCheck(data) {
     data
   })
 };
+// 统计接口
+export function statisticsData(proId,data) {
+  return request({
+    url: `collect/statistic/${proId}`,
+    method: 'get',
+    params: data
+  })
+};

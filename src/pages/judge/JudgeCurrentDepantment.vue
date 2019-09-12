@@ -29,13 +29,15 @@ export default {
       'changeClickBackoutBtn',
       'changeCurrentActive',
       'changebluetoothWeighShow',
-      'changeStaffCodeShow'
+      'changeStaffCodeShow',
+      'changeIsExecute'
     ]),
     showDialog () {
       this.$dialog.confirm({
         message: '是否当前科室继续收集?'
       }).then(() => {
         this.$router.push({path: 'medicalCollect'});
+        this.changeIsExecute(true);
         this.changeFlowState(2);
         this.changeCollectBtn(false);
         this.changeSureBtn(true);
@@ -46,6 +48,7 @@ export default {
         this.changebluetoothWeighShow(false);
         this.changeStaffCodeShow(true)
       }).catch(() => {
+        this.changeIsExecute(true);
         this.changeCurrentLajicodeState(false);
         this.$router.replace({path:'judgeCurrentCollectFinish'});
         this.changeClickBackoutBtn(false);

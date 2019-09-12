@@ -41,6 +41,8 @@ export default {
     outStorageTime: null,
     // 批次号列表
     batchs: null,
+    // 是否执行判断流程开始位置方法
+    isExecute: true,
     // 科室信息汇总
     garColMsg: [
       {
@@ -54,6 +56,7 @@ export default {
     callPeriod: false,
   },
   getters:{
+    isExecute: state => state.isExecute,
     navTopTitle: state => state.navTitle,
     currentActive: state => state.currentActive,
     keshiCode: state => state.garColMsg[0].keshiCode,
@@ -226,6 +229,10 @@ export default {
       // 改变是否进行下一步的状态
       changeIsPlus (state,payLoad) {
         state.isPlus = payLoad
+      },
+      // 改变是否执行判断流程开始位置方法
+      changeIsExecute (state, payLoad) {
+        state.isExecute = payLoad
       }
   },
   actions:{}

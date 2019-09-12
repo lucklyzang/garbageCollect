@@ -52,7 +52,6 @@
               <p>重量: {{extraLyczMsg}}</p>
             </div>
           </van-panel>
-          <div v-show="newSummary" class="new-summary"></div>
         </div>
         <div class="content-footer">
           <span class="showBackoutButton" v-show="showBackoutButton">
@@ -89,8 +88,6 @@ export default {
     },
   data () {
     return {
-      newSummary: false,
-      newSummary: false
     };
   },
   computed: {
@@ -121,7 +118,8 @@ export default {
       'extraLyczMsg',
       'currentActive',
       'codeStep',
-      'isPlus'
+      'isPlus',
+      'isExecute'
     ]),
     showCurrentActive () {
       return this.currentActive
@@ -159,13 +157,26 @@ export default {
     pushHistory();
     // 监听历史记录点, 添加返回事件监听
     window.onpopstate = () => {
-      this.$router.push({path: 'home'});  //输入要返回的上一级路由地址
-      this.changeTitleTxt({tit: '医废监测'});
-      //清除当前流程的扫码信息
-      this.initSweepCodeInfo()
+      this.changeIsExecute(false);
+      this.$dialog.confirm({
+        message: '返回上一级后,将清空本次收集的医废数据'
+      })
+      .then(() => {
+        this.$router.push({path: 'home'});  //输入要返回的上一级路由地址
+        this.changeTitleTxt({tit: '医废监测'});
+        //清除当前流程的扫码信息
+        this.changeIsExecute(true);
+        this.initSweepCodeInfo()
+      })
+      .catch(() => {
+        this.$router.push({path: 'medicalCollect'});
+        this.changeTitleTxt({tit: '医废收集'});
+      })
     }
     // 判断流程从哪步开始
-    this.judgeFlowPosition();
+    if (this.isExecute) {
+      this.judgeFlowPosition();
+    };
     // 二维码回调方法绑定到window下面,提供给外部调用
     let me = this;
     window['scanQRcodeCallback'] = (code) => {
@@ -209,17 +220,44 @@ export default {
       'changeCurrentActive',
       'changeCodeStep',
       'changeIsPlus',
-      'changeFlowState'
+      'changeFlowState',
+      'changeIsExecute'
     ]),
     // 返回上一页
     backTo () {
-      this.$router.push({path: 'home'});
-      this.changeTitleTxt({tit:'医废监测'})
+      this.changeIsExecute(false);
+      this.$dialog.confirm({
+        message: '返回上一级后,将清空本次收集的医废数据'
+      })
+      .then(() => {
+        this.$router.push({path: 'home'});
+        this.changeTitleTxt({tit:'医废监测'});
+        //清除当前流程的扫码信息
+        this.changeIsExecute(true);
+        this.initSweepCodeInfo()
+      })
+      .catch(() => {
+        this.$router.push({path: 'medicalCollect'});
+        this.changeTitleTxt({tit: '医废收集'});
+      })
     },
     // 跳转到我的页面
     skipMyInfo () {
-      this.$router.push({path: 'myInfo'});
-      this.changeTitleTxt({tit:'我的'})
+      this.changeIsExecute(false);
+      this.$dialog.confirm({
+        message: '跳转到我的页面后,将清空本次收集的医废数据'
+      })
+      .then(() => {
+        this.$router.push({path: 'myInfo'});
+        this.changeTitleTxt({tit:'我的'});
+        //清除当前流程的扫码信息
+        this.changeIsExecute(true);
+        this.initSweepCodeInfo()
+      })
+      .catch(() => {
+        this.$router.push({path: 'medicalCollect'});
+        this.changeTitleTxt({tit: '医废收集'});
+      })
     },
     startTask () {
       this.sweepAstoffice()
@@ -455,6 +493,14 @@ export default {
     // 称重后的回调
     getWeightCallback(str) {
       if (str) {
+        if (str == 0.0) {
+          this.$dialog.alert({
+            message: '收集医废重量不能为0,请重新称重'
+          }).then(() => {
+            this.weightRubbish()
+          });
+          return
+        };
         this.changeCurrentActive(this.codeStep);
         this.changeCodeStep(this.codeStep);
         this.changebluetoothWeighShow(true);
