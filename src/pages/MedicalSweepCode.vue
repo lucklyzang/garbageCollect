@@ -499,16 +499,22 @@ export default {
           }).then(() => {
             this.weightRubbish()
           });
-          return
-        };
-        this.changeCurrentActive(this.codeStep);
-        this.changeCodeStep(this.codeStep);
-        this.changebluetoothWeighShow(true);
-        this.changeIsPlus(true);
-        this.changeBagCodeShow(false);
-        //每类医废重量存入store
-        this.storageLanyaCz(str);
-        this.changeExtraLyczMsg(str);
+        } else {
+          this.changeCurrentActive(this.codeStep);
+          this.changeCodeStep(this.codeStep);
+          this.changebluetoothWeighShow(true);
+          this.changeIsPlus(true);
+          this.changeBagCodeShow(false);
+          //每类医废重量存入store
+          this.storageLanyaCz(str);
+          this.changeExtraLyczMsg(str);
+        }
+      } else {
+        this.$dialog.alert({
+          message: '没有获取到重量,请重新称重'
+        }).then(() => {
+          this.weightRubbish()
+        });
       }
     },
     //打印凭单

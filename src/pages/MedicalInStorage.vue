@@ -222,7 +222,10 @@ export default {
         }
       })
       .catch((err)=> {
-        console.log(err)
+        this.$dialog.alert({
+          message: `${err.message}`
+        }).then(() => {
+        });
       })
     },
     //确定入库
