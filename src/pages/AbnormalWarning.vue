@@ -21,7 +21,7 @@
       <van-tabs v-model="activeName"  @click="onClickTab">
         <van-tab title="全部" name="0">
           <div class="content-middle-list">
-            <div class="content-middle-list-item" v-for="item in overtimeList">
+            <div class="content-middle-list-item all-type" v-for="item in overtimeList">
               <div class="list-item">
                 <p class="list-item-left">
                   预警类型: {{item.warnType}}
@@ -30,8 +30,7 @@
                   所属医院: <span>{{item.proName}}</span>
                 </p>
                 <div class="list-strip">
-                  <p>科室: {{item.depName}}</p>
-                  <p class="list-sign">预警原因: {{item.warnReason}}</p>
+                  <p class="list-sign">批次号: {{item.batchNumber}}</p>
                   <p class="list-times">处理人: {{item.dealName}}</p>
                   <p class="list-code">预警时间: {{item.createTime}}</p>
                 </div>
@@ -53,7 +52,6 @@
                   所属医院: <span>{{item.proName}}</span>
                 </p>
                 <div class="list-strip">
-                  <p>科室: {{item.depName}}</p>
                   <p class="list-sign">预警原因: {{item.warnReason}}</p>
                   <p class="list-times">处理人: {{item.dealName}}</p>
                   <p class="list-code">处理时间: {{item.dealTime}}</p>
@@ -76,11 +74,10 @@
                   所属医院: <span>{{item.proName}}</span>
                 </p>
                 <div class="list-strip">
-                  <p>科室: {{item.depName}}</p>
-                  <p class="list-sign">审核意见: {{item.checkIdea}}</p>
-                  <p class="list-sign">预警原因: {{item.warnReason}}</p>
-                  <p class="list-times">审核人: {{item.checkName}}</p>
-                  <p class="list-code">审核时间: {{item.checkTime}}</p>
+                  <p class="list-sign">处理意见: {{item.warnReason}}</p>
+                  <p class="list-times">处理人: {{item.dealName}}</p>
+                  <p class="list-code">处理时间: {{item.dealTime}}</p>
+                  <p class="list-code">收集时间: {{item.createTime}}</p>
                 </div>
                 <div class="list-item-bottom">
                   收集人员: <span>{{item.workerName}}</span>
@@ -100,7 +97,6 @@
                   所属医院: <span>{{item.proName}}</span>
                 </p>
                 <div class="list-strip">
-                  <p>科室: {{item.depName}}</p>
                   <p class="list-sign">审核意见: {{item.checkIdea}}</p>
                   <p class="list-sign">预警原因: {{item.warnReason}}</p>
                   <p class="list-times">审核人: {{item.checkName}}</p>
@@ -277,6 +273,7 @@ export default {
                   'warnType': item.warnType, //预警类型描述
                   'workerId': item.workerId,          //收集人ID
                   'workerName': item.workerName, //收集人姓名
+                  'batchNumber': item.batchNumber
                   })
                 }
               } else {
@@ -469,7 +466,7 @@ export default {
         overflow: auto;
        .content-middle-list-item {
           padding: 14px;
-          height: 150px;
+          height: 140px;
           border-bottom: 1px solid #e8e4e4;
           .list-item {
             position: relative;
@@ -517,6 +514,9 @@ export default {
               }
             }
           }
+        }
+        .all-type {
+          height: 110px
         }
       }
       .btn-group {

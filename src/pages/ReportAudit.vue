@@ -7,6 +7,7 @@
     <div class="content-middle">
       <div class="content-middle-title">
         <p class="day-height">今日医废总重量: {{dayTotalWeight}}kg</p>
+        <p class="week-height">一周医废总重量: {{weekTotalWeight}}kg</p>
         <p class="month-height">一月医废总重量: {{monthTotalWeight}}kg</p>
         <p class="year-height">一年医废总重量: {{yearTotalWeight}}kg</p>
       </div>
@@ -40,7 +41,8 @@ export default {
       wasteType: ['感染性','损伤性','药物性','病理性','化学性', '其它'],
       dayTotalWeight: '',
       monthTotalWeight: '',
-      yearTotalWeight: ''
+      yearTotalWeight: '',
+      weekTotalWeight: ''
     };
   },
   computed: {
@@ -139,18 +141,19 @@ export default {
     },
     // 获取图表数据
     getChartData () {
-      this.dayData = [],
-      this.weekData = [],
-      this.monthData = [],
-      this.yearData = []
+      this.dayData = [];
+      this.weekData = [];
+      this.monthData = [];
+      this.yearData = [];
+      this.weekTotalWeight = '';
       statisticsData(this.userInfo.proId, {workerId: this.userInfo.id}).then((res) => {
         if (res && res.data) {
           if (res.data.code == 200) {
             if (res.data.data.todayList.length > 0 && res.data.data.monthList.length > 0 && res.data.data.sevenDays.length > 0
              && res.data.data.yearList.length > 0) {
               this.dayTotalWeight = res.data.data.today.toFixed(2);
-              this.monthTotalWeight = res.data.data.month;
-              this.yearTotalWeight = res.data.data.year
+              this.monthTotalWeight = res.data.data.month.toFixed(2);
+              this.yearTotalWeight = res.data.data.year.toFixed(2)
               // 一天的数据
               res.data.data.todayList.forEach((item,index) => {
                 this.dayData.push({
@@ -173,6 +176,8 @@ export default {
                 document.getElementById("content-middle-weekData")
               ),'一周医废类型分布情况',this.weekData);
 
+              // 一周的总重量
+              this.weekTotalWeight = (res.data.data.sevenDays.reduce((total,current) => {return total + current})).toFixed(2)
               // 一月的数据
               res.data.data.monthList.forEach((item,index) => {
                 this.monthData.push({
@@ -260,7 +265,12 @@ export default {
           margin-right: 10px;
           background: #f25858
         }
+        .week-height {
+          background: #f2e189
+        }
         .month-height {
+          margin-top: 10px;
+          margin-right: 10px;
           background: #3ad675
         }
         .year-height {

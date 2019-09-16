@@ -23,7 +23,7 @@
       <van-tabs v-model="activeName" @click="onClickTab">
         <van-tab title="未入库" name="0">
           <div class="content-middle-list">
-            <div class="content-middle-list-item" v-for="item in notInStorageList" @click="skipDetail(item)">
+            <div class="content-middle-list-item not-inStorage" v-for="item in notInStorageList" @click="skipDetail(item)">
               <div class="list-item">
                 <p class="list-item-left">批次: {{item.batchNumber}}</p>
                 <p class="list-item-right">
@@ -32,11 +32,6 @@
                 <div class="list-strip">
                   <p>医院: {{item.proName}}</p>
                   <p class="list-sign">入库人: {{item.inWorkerName}}</p>
-                  <p class="list-times">交接公司: {{item.company}}</p>
-                  <p class="list-code">收集车号: {{item.cardNumber}}</p>
-                </div>
-                <div class="list-item-bottom">
-                  交接人员: <span>{{item.companyName}}</span>
                 </div>
               </div>
             </div>
@@ -44,7 +39,7 @@
         </van-tab>
         <van-tab title="已入库" name="1">
           <div class="content-middle-list">
-            <div class="content-middle-list-item" v-for="item in inStorageList" @click="skipDetail(item)">
+            <div class="content-middle-list-item inStorage" v-for="item in inStorageList" @click="skipDetail(item)">
               <div class="list-item">
                 <p class="list-item-left">批次: {{item.batchNumber}}</p>
                 <p class="list-item-right">
@@ -53,11 +48,7 @@
                 <div class="list-strip">
                   <p>医院: {{item.proName}}</p>
                   <p class="list-sign">入库人: {{item.inWorkerName}}</p>
-                  <p class="list-times">交接公司: {{item.company}}</p>
-                  <p class="list-code">收集车号: {{item.cardNumber}}</p>
-                </div>
-                <div class="list-item-bottom">
-                  交接人员: <span>{{item.companyName}}</span>
+                  <p class="list-times">入库时间: {{item.inTime}}</p>
                 </div>
               </div>
             </div>
@@ -65,7 +56,7 @@
         </van-tab>
         <van-tab title="已出库" name="2">
            <div class="content-middle-list">
-            <div class="content-middle-list-item" v-for="item in outStorageList" @click="skipDetail(item)">
+            <div class="content-middle-list-item out-storage" v-for="item in outStorageList" @click="skipDetail(item)">
               <div class="list-item">
                 <p class="list-item-left">批次: {{item.batchNumber}}</p>
                 <p class="list-item-right">
@@ -76,6 +67,7 @@
                   <p class="list-sign">入库人: {{item.inWorkerName}}</p>
                   <p class="list-times">交接公司: {{item.company}}</p>
                   <p class="list-code">收集车号: {{item.cardNumber}}</p>
+                  <p class="list-code">出库时间: {{item.outTime}}</p>
                 </div>
                 <div class="list-item-bottom">
                   交接人员: <span>{{item.companyName}}</span>
@@ -90,16 +82,13 @@
               <div class="list-item">
                 <p class="list-item-left">批次: {{item.batchNumber}}</p>
                 <p class="list-item-right">
-                  重量: <span>{{item.totalWeight}}kg</span>
+                  重量: <span>{{item.outTotalWeight}}kg</span>
                 </p>
                 <div class="list-strip">
                   <p>医院: {{item.proName}}</p>
                   <p class="list-sign">入库人: {{item.inWorkerName}}</p>
-                  <p class="list-times">交接公司: {{item.company}}</p>
-                  <p class="list-code">收集车号: {{item.cardNumber}}</p>
-                </div>
-                <div class="list-item-bottom">
-                  交接人员: <span>{{item.companyName}}</span>
+                  <p class="list-times">入库时间: {{item.inTime}}</p>
+                  <p class="list-code">出库时间: {{item.outTime}}</p>
                 </div>
               </div>
             </div>
@@ -490,6 +479,15 @@ export default {
               }
             }
           }
+        }
+        .not-inStorage {
+          height: 90px
+        }
+        .inStorage {
+          height: 116px
+        }
+        .out-storage {
+          height: 164px
         }
       }
   }

@@ -42,7 +42,7 @@
             <div class="list-strip">
               <p>医院: {{getCollectInfo.proName}}</p>
               <p class="list-sign">交接人: {{getCollectInfo.companyName ? getCollectInfo.companyName : '无'}}</p>
-              <p class="list-sign">出库人员: {{getCollectInfo.outWorkerName ? getCollectInfo.outWorkerName : '无'}}</p>
+              <!-- <p class="list-sign">出库人员: {{getCollectInfo.outWorkerName ? getCollectInfo.outWorkerName : '无'}}</p> -->
               <p class="list-times">交接公司: {{getCollectInfo.company ? getCollectInfo.company : '无'}}</p>
               <p class="list-code">收集车号: {{getCollectInfo.cardNumber ? getCollectInfo.cardNumber : '无'}}</p>
               <p class="list-sign">出库总重量: {{getCollectInfo.outTotalWeight ? getCollectInfo.outTotalWeight : '无'}}kg</p>

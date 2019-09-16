@@ -102,11 +102,11 @@ export default {
       storageYihuCode (state,payLoad) {
         state.garColMsg[0].yihuCode.push(payLoad)
       },
-      //存储垃圾袋信息信息
+      //存储垃圾袋信息
       storageLajiCode (state,payLoad) {
         state.garColMsg[0].lajiCode.push(payLoad)
       },
-      //更改垃圾袋信息信息
+      //更改垃圾袋信息
       changeStorageLajiCode (state,payLoad) {
         state.garColMsg[0].lajiCode = payLoad
       },  

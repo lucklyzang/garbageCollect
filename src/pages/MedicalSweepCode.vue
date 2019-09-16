@@ -152,7 +152,26 @@ export default {
       return this.bluetoothWeighShow
     },
   },
+  created () {
+    // let map = {};
+    // let momentTypeList = [];
+    // let arr2 = [{'wasteName': '损伤性','id': 1},{'wasteName': '感染性','id': 2},{'wasteName': '损伤性','id': 3},{'wasteName': '感染性','id': 4},{'wasteName': '其它','id': 5}];
+    //   let lanyaCz = [2,90,4,5,10];
+    //   for (let item of arr2) {
+    //     for (let itemList in item) {
+    //       if (itemList == 'wasteName') {
+    //         momentTypeList.push(item[itemList])
+    //       }
+    //     }
+    //   };
+    //   momentTypeList.forEach((value, index) => {
+    //     Object.prototype.hasOwnProperty.call(map, value) || (map[value] = 0);
+    //     map[value] += Number(lanyaCz[index]);
+    //   });
 
+    // console.log(Object.keys(map));
+    // console.log(Object.values(map));
+  },
   mounted () {
     pushHistory();
     // 监听历史记录点, 添加返回事件监听
@@ -528,20 +547,46 @@ export default {
         }).then(() => {
         });
         return
-      }; 
-      if (this.lajiCode.length == 1) {
-        this.printProof(this.lajiCode[0].barCode,this.keshiCode[0].depName,this.lajiCode[0].wasteName,
-         this.lanyaCz[0],this.userInfo.workerName,this.yihuCode[0].workerName);
-      } else if (this.lajiCode.length > 1) {
-        for (let i = 0, len = this.lajiCode.length; i<len; i++) {
-          this.printProof(this.lajiCode[i].barCode,this.keshiCode[0].depName,this.lajiCode[i].wasteName,
-          this.lanyaCz[i],this.userInfo.workerName,this.yihuCode[0].workerName);
-        }
       };
       this.changePrintBtn(false);
       this.changeOtherBtn(true);
       this.changeBackoutBtn(false);
+      if (this.lajiCode.length == 1) {
+        this.printProof(this.lajiCode[0].barCode,this.keshiCode[0].depName,this.lajiCode[0].wasteName,
+         this.lanyaCz[0],this.userInfo.workerName,this.yihuCode[0].workerName);
+      } else if (this.lajiCode.length > 1) {
+        // 合并重复的垃圾类型及其重量
+        let map = {};
+        let momentTypeList = [];
+        // 记录打印次数
+        let timeNum = 1;
+        for (let item of this.lajiCode) {
+          for (let itemList in item) {
+            if (itemList == 'wasteName') {
+              momentTypeList.push(item[itemList])
+            }
+          }
+        };
+        momentTypeList.forEach((value, index) => {
+          Object.prototype.hasOwnProperty.call(map, value) || (map[value] = 0);
+          map[value] += Number(this.lanyaCz[index]);
+        });
+        // 循环调用打印接口
+        for (var i = 0, len = this.lajiCode.length; i<len; i++) {
+          if (i == Object.values(map).length) {return};
+          this.printProof(this.lajiCode[i].barCode,this.keshiCode[0].depName,Object.keys(map)[i],
+          Object.values(map)[i],this.userInfo.workerName,this.yihuCode[0].workerName);
+          // 打印两联
+          if (timeNum < 2) { 
+            if (i == Object.values(map).length-1) {
+              i = -1;
+              timeNum++
+            }
+          }
+        }
+      }
     },
+
     // 确认扫码无误进入下个流程
     sureCurrentCodeMsg () {
       let middleCurrentActive = this.codeStep;
