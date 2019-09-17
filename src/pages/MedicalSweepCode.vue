@@ -159,8 +159,7 @@ export default {
     window.onpopstate = () => {
       this.changeIsExecute(false);
       this.$dialog.confirm({
-        message: '返回上一级后,将清空本次收集的医废数据',
-        closeOnPopstate: true
+        message: '返回上一级后,将清空本次收集的医废数据'
       })
       .then(() => {
         this.$router.push({path: 'home'});  //输入要返回的上一级路由地址

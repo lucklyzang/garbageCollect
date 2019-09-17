@@ -6,7 +6,6 @@ import store from '@/store'
 // http://47.108.27.209:8080/blink
 const service = axios.create({
   baseURL: 'http://39.100.111.20:8080/blink'
-  // timeout: 5000 // request timeout
 });
 
 // request interceptor

@@ -163,7 +163,7 @@ export default {
               });
               this.drawLine(this.$echarts.init(
                 document.getElementById("content-middle-dayData")
-              ),'一天医废类型分布情况',this.dayData);
+              ),'今日医废类型分布情况',this.dayData);
 
               // 一周的数据
               res.data.data.sevenDays.forEach((item,index) => {
@@ -206,6 +206,12 @@ export default {
               }).then(() => {
               });
             }
+          } else {
+            this.$dialog.alert({
+              message: `${res.data.msg}`,
+              closeOnPopstate: true
+            }).then(() => {
+            });
           }
         }
       })
@@ -251,6 +257,7 @@ export default {
         padding-top: 14px;
         width: 97%;
         margin: 0 auto;
+        text-align: center;
         p {
           display: inline-block;
           vertical-align: middle;

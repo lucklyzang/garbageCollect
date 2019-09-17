@@ -77,6 +77,7 @@
       confirmButtonText="通过"
       cancelButtonText="不通过"
       :close-on-popstate="true"
+      :close-on-click-overlay="true"
       @confirm="checkSure"
       @cancel="checkCancle"
       >
