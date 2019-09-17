@@ -34,7 +34,8 @@ export default {
     ]),
     showDialog () {
       this.$dialog.confirm({
-        message: '是否当前科室继续收集?'
+        message: '是否当前科室继续收集?',
+        closeOnPopstate: true
       }).then(() => {
         this.$router.push({path: 'medicalCollect'});
         this.changeIsExecute(true);

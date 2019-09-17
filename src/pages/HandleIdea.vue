@@ -78,7 +78,7 @@ export default {
     sureInfo () {
       if (this.handleMessage.length == 0) {
         this.$dialog.alert({
-            title: '',
+            closeOnPopstate: true,
             message: '处理意见不能为空'
         }).then(() => {
         });
@@ -96,7 +96,7 @@ export default {
         this.handleMsg = '';
         if (res.data.code == 200) {
           this.$dialog.alert({
-            title: '',
+            closeOnPopstate: true,
             message: '处理成功'
           }).then(() => {
             this.initWaningInfo();
@@ -104,7 +104,7 @@ export default {
           });
         } else {
           this.$dialog.alert({
-            title: '',
+            closeOnPopstate: true,
             message: `${res.data.msg}`
           }).then(() => {
             this.initWaningInfo();
@@ -114,7 +114,7 @@ export default {
       })
       .catch((err) => {
         this.$dialog.alert({
-          title: '',
+          closeOnPopstate: true,
           message: `${err.message}`
         }).then(() => {
           this.initWaningInfo();

@@ -45,7 +45,7 @@
         </van-tab>
         <van-tab title="已审核" name="1">
           <div class="content-middle-list">
-            <div class="content-middle-list-item" v-for="item in checkedList">
+            <div class="content-middle-list-item checked" v-for="item in checkedList">
               <div class="list-item">
                 <p class="list-item-left">
                   补录批次: {{item. batchNumber}}
@@ -76,6 +76,7 @@
       show-cancel-button
       confirmButtonText="通过"
       cancelButtonText="不通过"
+      :close-on-popstate="true"
       @confirm="checkSure"
       @cancel="checkCancle"
       >
@@ -186,7 +187,8 @@ export default {
       name == 0 ? currentName = 0 : currentName = 1;
       if (this.startTime == "" || this.endTime == "") {
         this.$dialog.alert({
-            message: '请选择开始或结束日期'
+            message: '请选择开始或结束日期',
+            closeOnPopstate: true
           }).then(() => {
         });
       } 
@@ -207,14 +209,14 @@ export default {
         this.checkWaringMsg = '';
         if (res.data.code == 200) {
           this.$dialog.alert({
-            title: '',
+            closeOnPopstate: true,
             message: '审核通过处理成功'
           }).then(() => {
             this.queryAdd(this.getUserInfo,  this.startTime, this.endTime, 0)
           });
         } else {
           this.$dialog.alert({
-            title: '',
+            closeOnPopstate: true,
             message: `${res.data.msg}`
           }).then(() => {
           });
@@ -223,7 +225,7 @@ export default {
       })
       .catch((err) => {
         this.$dialog.alert({
-          title: '',
+          closeOnPopstate: true,
           message: `${err.message}`
         }).then(() => {
         });
@@ -244,14 +246,14 @@ export default {
         this.checkWaringMsg = '';
         if (res.data.code == 200) {
           this.$dialog.alert({
-            title: '',
+            closeOnPopstate: true,
             message: '审核不通过处理成功'
           }).then(() => {
             this.queryAdd(this.getUserInfo,  this.startTime, this.endTime, 0)
           });
         } else {
           this.$dialog.alert({
-            title: '',
+            closeOnPopstate: true,
             message: `${res.data.msg}`
           }).then(() => {
           });
@@ -260,7 +262,7 @@ export default {
       })
       .catch((err) => {
         this.$dialog.alert({
-          title: '',
+          closeOnPopstate: true,
           message: `${err.message}`
         }).then(() => {
         });
@@ -307,7 +309,8 @@ export default {
                 }
               }else {
                 this.$dialog.alert({
-                    message: '当前未补录批次信息为空'
+                    message: '当前未补录批次信息为空',
+                    closeOnPopstate: true
                   }).then(() => {
                 });
               }
@@ -338,7 +341,8 @@ export default {
                 }
               }else {
                 this.$dialog.alert({
-                    message: '当前未补录批次信息为空'
+                    message: '当前未补录批次信息为空',
+                    closeOnPopstate: true
                   }).then(() => {
                 });
               }
@@ -433,7 +437,7 @@ export default {
         overflow: auto;
        .content-middle-list-item {
           padding: 14px;
-          height: 160px;
+          height: 174px;
           border-bottom: 1px solid #e8e4e4;
           .list-item {
             position: relative;
@@ -481,6 +485,9 @@ export default {
               }
             }
           }
+        }
+        .checked {
+          height: 186px
         }
       }
       .btn-group {

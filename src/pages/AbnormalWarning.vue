@@ -43,7 +43,7 @@
         </van-tab>
         <van-tab title="待处理" name="1">
           <div class="content-middle-list">
-            <div class="content-middle-list-item" v-for="item in notExamineList" @click="skipHandlePage(item)">
+            <div class="content-middle-list-item await-conduct" v-for="item in notExamineList" @click="skipHandlePage(item)">
               <div class="list-item">
                 <p class="list-item-left">
                   预警类型: {{item.warnType}}
@@ -52,6 +52,7 @@
                   所属医院: <span>{{item.proName}}</span>
                 </p>
                 <div class="list-strip">
+                  <p class="list-sign">批次号: {{item.batchNumber}}</p>
                   <p class="list-sign">预警原因: {{item.warnReason}}</p>
                   <p class="list-times">处理人: {{item.dealName}}</p>
                   <p class="list-code">处理时间: {{item.dealTime}}</p>
@@ -65,7 +66,7 @@
         </van-tab>
         <van-tab title="待审核" name="2">
           <div class="content-middle-list">
-            <div class="content-middle-list-item" v-for="item in finishList">
+            <div class="content-middle-list-item await-check" v-for="item in finishList">
               <div class="list-item">
                 <p class="list-item-left">
                   预警类型: {{item.warnType}}
@@ -74,6 +75,7 @@
                   所属医院: <span>{{item.proName}}</span>
                 </p>
                 <div class="list-strip">
+                  <p class="list-sign">批次号: {{item.batchNumber}}</p>
                   <p class="list-sign">处理意见: {{item.warnReason}}</p>
                   <p class="list-times">处理人: {{item.dealName}}</p>
                   <p class="list-code">处理时间: {{item.dealTime}}</p>
@@ -88,7 +90,7 @@
         </van-tab>
         <van-tab title="已完成" name="3">
           <div class="content-middle-list">
-            <div class="content-middle-list-item" v-for="item in unFinishList">
+            <div class="content-middle-list-item finished" v-for="item in unFinishList">
               <div class="list-item">
                 <p class="list-item-left">
                   预警类型: {{item.warnType}}
@@ -97,6 +99,7 @@
                   所属医院: <span>{{item.proName}}</span>
                 </p>
                 <div class="list-strip">
+                  <p class="list-sign">批次号: {{item.batchNumber}}</p>
                   <p class="list-sign">审核意见: {{item.checkIdea}}</p>
                   <p class="list-sign">预警原因: {{item.warnReason}}</p>
                   <p class="list-times">审核人: {{item.checkName}}</p>
@@ -206,16 +209,16 @@ export default {
     onClickTab (name, title) {
       let state;
       switch (name) {
-        case 0:
+        case '0':
           state = ''
           break;
-        case 1:
+        case '1':
           state = 0
           break;
-        case 2:
+        case '2':
           state = 1
           break;
-        case 3:
+        case '3':
           state = 2
           break; 
       };
@@ -225,7 +228,8 @@ export default {
       this.unFinishList = [];
       if (this.startTime == "" || this.endTime == "") {
         this.$dialog.alert({
-            message: '请选择开始或结束日期'
+            message: '请选择开始或结束日期',
+            closeOnPopstate: true
           }).then(() => {
         });
       } else {
@@ -278,7 +282,8 @@ export default {
                 }
               } else {
                 this.$dialog.alert({
-                    message: '当前没有未处理的批次信息'
+                    message: '当前没有异常预警的的批次信息',
+                    closeOnPopstate: true
                   }).then(() => {
                 });
               }
@@ -294,7 +299,8 @@ export default {
                   'dealIdea': item.dealIdea,    //处理意见
                   'dealName': item.dealName,  //处理人
                   'dealTime': item.dealTime,  //处理时间
-                  'depName': item.depName,//部门 
+                  'depName': item.depName,//部门
+                  'batchNumber': item.batchNumber, 
                   'id': item.id,             //预警ID
                   'proId': item.proId,           //所属医院ID
                   'proName': item.proName,  //所属医院名称
@@ -308,8 +314,9 @@ export default {
                 }
               } else {
                 this.$dialog.alert({
-                    message: '当前没有待处理的批次信息'
-                  }).then(() => {
+                  message: '当前没有待处理的批次信息',
+                  closeOnPopstate: true
+                }).then(() => {
                 });
               }
             } else if (state === 1) {
@@ -324,7 +331,8 @@ export default {
                   'dealIdea': item.dealIdea,    //处理意见
                   'dealName': item.dealName,  //处理人
                   'dealTime': item.dealTime,  //处理时间
-                  'depName': item.depName,//部门 
+                  'depName': item.depName,//部门
+                  'batchNumber': item.batchNumber,
                   'id': item.id,             //预警ID
                   'proId': item.proId,           //所属医院ID
                   'proName': item.proName,  //所属医院名称
@@ -338,7 +346,8 @@ export default {
                 }
               } else {
                 this.$dialog.alert({
-                    message: '当前没有待审核的批次信息'
+                    message: '当前没有待审核的批次信息',
+                    closeOnPopstate: true
                   }).then(() => {
                 });
               }
@@ -354,7 +363,8 @@ export default {
                   'dealIdea': item.dealIdea,    //处理意见
                   'dealName': item.dealName,  //处理人
                   'dealTime': item.dealTime,  //处理时间
-                  'depName': item.depName,//部门 
+                  'depName': item.depName,//部门
+                  'batchNumber': item.batchNumber, 
                   'id': item.id,             //预警ID
                   'proId': item.proId,           //所属医院ID
                   'proName': item.proName,  //所属医院名称
@@ -368,7 +378,8 @@ export default {
                 }
               } else {
                 this.$dialog.alert({
-                    message: '当前没有已完成的批次信息'
+                    message: '当前没有已完成的批次信息',
+                    closeOnPopstate: true
                   }).then(() => {
                 });
               }
@@ -378,7 +389,8 @@ export default {
       })
       .catch((err)=>{
         this.$dialog.alert({
-          message: `${err.message}`
+          message: `${err.message}`,
+          closeOnPopstate: true
         }).then(() => {
         });
       })
@@ -481,7 +493,7 @@ export default {
             }
             .list-item-right {
               position: absolute;
-              top: 0;
+              top: 4px;
               right: 0;
               color: #bdbdbd;
               font-size: 12px;
@@ -514,6 +526,15 @@ export default {
               }
             }
           }
+        }
+        .await-check {
+          height: 156px
+        }
+        .await-conduct {
+          height: 144px
+        }
+        .finished {
+          height: 156px
         }
         .all-type {
           height: 110px

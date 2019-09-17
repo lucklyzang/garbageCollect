@@ -109,7 +109,7 @@ export default {
       },
         tooltip : {
           trigger: 'item',
-          formatter: ""
+          formatter: "{a} <br/>{b} : {c} ({d}%)"
         },
         legend: {
           orient: 'vertical',
@@ -201,7 +201,8 @@ export default {
               ),'一年医废类型分布情况',this.yearData);
             } else {
               this.$dialog.alert({
-                message: '收集医废数据为空'
+                message: '收集医废数据为空',
+                closeOnPopstate: true
               }).then(() => {
               });
             }
@@ -210,7 +211,8 @@ export default {
       })
       .catch((err) => {
         this.$dialog.alert({
-          message: `${err.message}`
+          message: `${err.message}`,
+          closeOnPopstate: true
         }).then(() => {
         })
       })

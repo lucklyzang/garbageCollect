@@ -12,7 +12,7 @@
       <div class="content-middle-list">
         <div class="content-middle-list-item" v-for="item in classList">
           <div class="list-item">
-            <p class="list-item-left">{{item.wasteName}}</p>
+            <p class="list-item-left">医废类型: {{item.wasteName}}</p>
             <p class="list-item-right">
               重量: <span>{{item.weight}}kg</span>
             </p>
@@ -125,7 +125,8 @@ export default {
     // 扫码验证网络异常弹窗
     abnormalSweepCode () {
        this.$dialog.alert({
-        message: '网络异常,请重试'
+        message: '网络异常,请重试',
+        closeOnPopstate: true
       }).then(() => {
         this.sweepAstoffice()
       });
@@ -148,7 +149,8 @@ export default {
                 this.proName = code.proName;
               } else {
                 this.$dialog.alert({
-                  message: '当前流程与预期流程不符,请重新扫描'
+                  message: '当前流程与预期流程不符,请重新扫描',
+                  closeOnPopstate: true
                   }).then(() => {
                   this.medicalInStoragr()
                 });
@@ -159,21 +161,24 @@ export default {
             })
           } else {
             this.$dialog.alert({
-              message: '当前扫描收集信息不全,请重试'
+              message: '当前扫描收集信息不全,请重试',
+              closeOnPopstate: true
             }).then(() => {
               this.medicalInStoragr();
             })
           }
         } else {
           this.$dialog.alert({
-            message: '当前流程与预期流程不符,请重新扫描'
+            message: '当前流程与预期流程不符,请重新扫描',
+            closeOnPopstate: true
           }).then(() => {
             this.medicalInStoragr();
           })
         }
       } else {
         this.$dialog.alert({
-          message: '当前扫描没有收集到任何暂存点信息,请重新扫描'
+          message: '当前扫描没有收集到任何暂存点信息,请重新扫描',
+          closeOnPopstate: true
         }).then(() => {
           this.medicalInStoragr();
         })
@@ -183,7 +188,8 @@ export default {
     medicalInStoragr () {
       if (!this.batchNumber && !this.userInfo.batchNumber) {
         this.$dialog.alert({
-          message: '批次号不能为空'
+          message: '批次号不能为空',
+          closeOnPopstate: true
         }).then(() => {
         });
         return
@@ -213,7 +219,8 @@ export default {
             }
           } else {
              this.$dialog.alert({
-              message: '当前没有待入库的信息'
+              message: '当前没有待入库的信息',
+              closeOnPopstate: true
             }).then(() => {
               this.$router.push({path: 'home'});
               this.changeTitleTxt({tit: '医废监测'})
@@ -223,7 +230,8 @@ export default {
       })
       .catch((err)=> {
         this.$dialog.alert({
-          message: `${err.message}`
+          message: `${err.message}`,
+          closeOnPopstate: true
         }).then(() => {
         });
       })
@@ -242,13 +250,15 @@ export default {
         if (res) {
           if (res.data.code == 200) {
             this.$dialog.alert({
-              message: '医废入库成功'
+              message: '医废入库成功',
+              closeOnPopstate: true
             }).then(() => {
               this.$router.push({path: 'medicalOutStorage'})
             });
           } else {
             this.$dialog.alert({
-              message: '医废入库失败'
+              message: '医废入库失败',
+              closeOnPopstate: true
             }).then(() => {
             });
           }
@@ -309,7 +319,7 @@ export default {
         overflow: auto;
         .content-middle-list-item {
           padding: 14px;
-          height: 110px;
+          height: 140px;
           border-bottom: 1px solid #e8e4e4;
           .list-item {
             position: relative;

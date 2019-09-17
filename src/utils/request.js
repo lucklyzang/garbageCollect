@@ -3,6 +3,7 @@ import { MessageBox,} from 'element-ui'
 import store from '@/store'
 // 'http://192.168.8.100:8080/blink'
 // http://39.100.111.20:8080/blink
+// http://47.108.27.209:8080/blink
 const service = axios.create({
   baseURL: 'http://39.100.111.20:8080/blink'
   // timeout: 5000 // request timeout

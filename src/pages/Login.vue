@@ -20,11 +20,10 @@
 
 <script>
 import {logIn} from '@/api/login.js'
-import {setStore, getStore} from '@/common/js/utils.js'
 import { mapGetters, mapMutations } from 'vuex'
 import BgIcon from '@/components/images/bg-icon.png'
 import LoginBg from '@/components/images/login-bg.png'
-import { pushHistory } from '@/common/js/utils'
+import { pushHistory, setStore, getStore } from '@/common/js/utils'
 export default {
   data () {
     return {
@@ -81,7 +80,8 @@ export default {
             this.changeTitleTxt({tit:'医废监测'})
           } else {
              this.$dialog.alert({
-              message: `${res.data.msg}`
+              message: `${res.data.msg}`,
+              closeOnPopstate: true
             }).then(() => {
             });
           }
@@ -89,7 +89,8 @@ export default {
       })
       .catch((err) => {
         this.$dialog.alert({
-          message: `${err.message}`
+          message: `${err.message}`,
+          closeOnPopstate: true
         }).then(() => {
         })
       })

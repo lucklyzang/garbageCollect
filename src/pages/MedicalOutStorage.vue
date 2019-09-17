@@ -29,7 +29,7 @@
             <van-checkbox v-model="item.check"  @change="oneChecked(item.check)"></van-checkbox>
           </div>
           <div class="list-item">
-            <p class="list-item-left">回收趟次: {{item.batchNumber}}</p>
+            <p class="list-item-left">回收批次: {{item.batchNumber}}</p>
             <p class="list-item-right">
               重量: <span>{{item.trashHeight}}kg</span>
             </p>
@@ -115,13 +115,14 @@ export default {
     },
     // 返回上一页
     backTo () {
-      this.$router.push({name:'medicalOutStorage'});
+      this.$router.push({name:'home'});
       this.changeTitleTxt({tit:'医废监测'})
     },
     searchOutStorage (startTime,endTime) {
       if (this.startTime == '' || this.endTime == '') {
         this.$dialog.alert({
-          message: '开始或结束日期不能为空'
+          message: '开始或结束日期不能为空',
+          closeOnPopstate: true
         }).then(() => {
         });
       } else {
@@ -142,7 +143,8 @@ export default {
       });
       if (outStorageArray.length == 0) {
         this.$dialog.alert({
-          message: '请选择要出库的批次'
+          message: '请选择要出库的批次',
+          closeOnPopstate: true
         }).then(() => {
         });
       } else {
@@ -218,10 +220,9 @@ export default {
               }
             } else {
                this.$dialog.alert({
-                  message: '当前没有待出库的批次'
+                  message: '当前没有待出库的批次',
+                  closeOnPopstate: true
                 }).then(() => {
-                  this.$router.push({path: 'home'});
-                  this.changeTitleTxt({tit: '医废监测'})
               });
             }
           }
@@ -229,7 +230,8 @@ export default {
       })
       .catch((err)=>{
         this.$dialog.alert({
-          message: `${err.message}`
+          message: `${err.message}`,
+          closeOnPopstate: true
         }).then(() => {
         });
       })
@@ -301,7 +303,7 @@ export default {
           position: relative;
           box-sizing: border-box;
           padding: 10px 10px;
-          height: 120px;
+          height: 140px;
           border-bottom: 1px solid #e8e4e4;
           .change-btn-position {
             position: absolute;
@@ -326,7 +328,7 @@ export default {
             }
             .list-item-right {
               position: absolute;
-              bottom: 0;
+              bottom: 2px;
               right: 0;
               color: #bdbdbd;
               font-size: 12px;
@@ -346,16 +348,6 @@ export default {
                 &:first-child {
                   margin-top: 0
                 }
-              }
-            }
-            .list-item-bottom {
-              position: absolute;
-              bottom: 2px;
-              right: 0;
-              color: #bdbdbd;
-              font-size: 12px;
-              span {
-                color: #5d5d5d
               }
             }
           }

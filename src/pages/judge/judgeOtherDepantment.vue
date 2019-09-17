@@ -40,7 +40,8 @@ export default {
     ]),
     showDialog () {
       this.$dialog.confirm({
-        message: '是否其它科室收集?'
+        message: '是否其它科室收集?',
+        closeOnPopstate: true
       }).then(() => {
         this.changeIsExecute(true);
         this.changeFlowState(0);

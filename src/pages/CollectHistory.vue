@@ -60,7 +60,7 @@
               <div class="list-item">
                 <p class="list-item-left">批次: {{item.batchNumber}}</p>
                 <p class="list-item-right">
-                  出库总重量: <span>{{item.outTotalWeight}}kg</span>
+                  出库重量: <span>{{item.inTotalWeight}}kg</span>
                 </p>
                 <div class="list-strip">
                   <p>医院: {{item.proName}}</p>
@@ -78,7 +78,7 @@
         </van-tab>
         <van-tab title="已完成" name="3">
           <div class="content-middle-list">
-            <div class="content-middle-list-item" v-for="item in finishList" @click="skipDetail(item)">
+            <div class="content-middle-list-item in-finished" v-for="item in finishList" @click="skipDetail(item)">
               <div class="list-item">
                 <p class="list-item-left">批次: {{item.batchNumber}}</p>
                 <p class="list-item-right">
@@ -196,7 +196,8 @@ export default {
       this.finishList = [];
       if (this.startTime == "" || this.endTime == "") {
         this.$dialog.alert({
-            message: '请选择开始或结束日期'
+            message: '请选择开始或结束日期',
+            closeOnPopstate: true
           }).then(() => {
         });
       } else {
@@ -246,7 +247,8 @@ export default {
                 }
               } else {
                 this.$dialog.alert({
-                  message: '未入库信息为空'
+                  message: '未入库信息为空',
+                  closeOnPopstate: true
                 }).then(() => {
                 });
               }
@@ -278,7 +280,8 @@ export default {
                 }
               } else {
                 this.$dialog.alert({
-                  message: '已入库信息为空'
+                  message: '已入库信息为空',
+                  closeOnPopstate: true
                 }).then(() => {
                 });
               }
@@ -310,7 +313,8 @@ export default {
                 }
               } else {
                 this.$dialog.alert({
-                  message: '已出库信息为空'
+                  message: '已出库信息为空',
+                  closeOnPopstate: true
                 }).then(() => {
                 });
               }
@@ -342,23 +346,25 @@ export default {
                 }
               } else {
                 this.$dialog.alert({
-                  message: '已完成信息为空'
+                  message: '已完成信息为空',
+                  closeOnPopstate: true
                 }).then(() => {
                 });
               }
             }
           } else {
             this.$dialog.alert({
-              message: `${res.data.msg}`
+              message: `${res.data.msg}`,
+              closeOnPopstate: true
             }).then(() => {
             });
           }
         }
       })
       .catch((err) => {
-        console.log(err);
         this.$dialog.alert({
-          message: `${err.message}`
+          message: `${err.message}`,
+          closeOnPopstate: true
         }).then(() => {
         })
       })
@@ -481,13 +487,25 @@ export default {
           }
         }
         .not-inStorage {
-          height: 90px
+          height: 110px;
+          .list-item-right {
+            top: 74px !important
+          }
         }
         .inStorage {
-          height: 116px
+          height: 136px
         }
         .out-storage {
-          height: 164px
+          height: 184px;
+          .list-item-bottom {
+            bottom: 5px !important
+          }
+        }
+        .in-finished {
+          height: 164px;
+           .list-item-right {
+            top: 126px !important
+          }
         }
       }
   }

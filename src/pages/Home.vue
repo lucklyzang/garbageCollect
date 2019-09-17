@@ -107,13 +107,15 @@
                 }
               }).catch((err) => {
                 this.$dialog.alert({
-                  message: `${err.message}`
+                  message: `${err.message}`,
+                  closeOnPopstate: true
                 }).then(() => {
                 })
               })
             } else {
               this.$dialog.alert({
-                message: '用户ID不能为空,请重新登录'
+                message: '用户ID不能为空,请重新登录',
+                closeOnPopstate: true
               }).then(() => {
                 this.$router.push({name: 'login'})
               });

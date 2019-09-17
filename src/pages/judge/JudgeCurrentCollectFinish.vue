@@ -1,6 +1,6 @@
 <template>
   <div class="wrappLoad">
-    <van-loading v-show="showLoading" size="44px" type="spinner" text-size="24px" vertical color="#38bdd0">
+    <van-loading v-show="showLoading" size="44px" type="spinner" text-size="20px" vertical color="#38bdd0">
       数据提交中...
     </van-loading>
   </div>
@@ -35,7 +35,7 @@ export default {
   },
 
   mounted() {
-    this.showDialog()
+    // this.showDialog()
   },
 
   methods: {
@@ -60,7 +60,8 @@ export default {
     ]),
     showDialog () {
       this.$dialog.confirm({
-        message: '此科室收集已完成?'
+        message: '此科室收集已完成?',
+        closeOnPopstate: true
       }).then(() => {
         if (this.lajiCode.length == 0) {
           if (this.clickBackoutBtn) {
@@ -77,7 +78,8 @@ export default {
             this.clearTrashStore();
           } else {
             this.$dialog.alert({
-              message: '当前没有收集到任何医废数据,请重新扫描'
+              message: '当前没有收集到任何医废数据,请重新扫描',
+              closeOnPopstate: true
             }).then(() => {
               this.changeBackoutBtn(true);
               this.$router.push({path: 'medicalCollect'});
@@ -91,13 +93,15 @@ export default {
         };
         if (this.lajiCode.length == 1) {
            this.$dialog.alert({
-             message: `收集${this.lanyaCz.length}条医废数据`
+             message: `收集${this.lanyaCz.length}条医废数据`,
+             closeOnPopstate: true
               }).then(() => {
                 this.postTrashOne();
              });
         } else if (this.lajiCode.length > 1) {
            this.$dialog.alert({
-               message: `收集${this.lanyaCz.length}条医废数据`
+              message: `收集${this.lanyaCz.length}条医废数据`,
+              closeOnPopstate: true
                }).then(() => {
                 this.postTrashMore();
              });
@@ -138,7 +142,8 @@ export default {
           if (res.data.code == 200) {
               this.showLoading = false;
               this.$dialog.alert({
-                message: '收集数据提交成功'
+                message: '收集数据提交成功',
+                closeOnPopstate: true
                 }).then(() => {
                   this.changeBackoutBtn(false);
                   this.$router.push({path: 'medicalCollect'});
@@ -154,7 +159,8 @@ export default {
           } else {
             this.showLoading = false;
             this.$dialog.alert({
-              message: `提交服务端数据${res.data.code}`
+              message: `提交服务端数据${res.data.code}`,
+              closeOnPopstate: true
               }).then(() => {
               this.changeBackoutBtn(true);
               this.changeFlowState(0);
@@ -174,7 +180,8 @@ export default {
       .catch((err) => {
         this.showLoading = false;
          this.$dialog.alert({
-          message: `${err.message}`
+          message: `${err.message}`,
+          closeOnPopstate: true
             }).then(() => {
             this.changeBackoutBtn(true);
             this.changeFlowState(0);
@@ -223,7 +230,8 @@ export default {
            if (res.data.code == 200) {
              this.showLoading = false;
              this.$dialog.alert({
-                message: '收集数据提交成功'
+                message: '收集数据提交成功',
+                closeOnPopstate: true
                 }).then(() => {
                   this.changeBackoutBtn(false);
                   this.$router.push({path: 'medicalCollect'});
@@ -239,7 +247,8 @@ export default {
           } else {
             this.showLoading = false;
             this.$dialog.alert({
-              message: `提交服务端数据${res.data.code}`
+              message: `提交服务端数据${res.data.code}`,
+              closeOnPopstate: true
                 }).then(() => {
                 this.changeBackoutBtn(true);
                 this.changeFlowState(0);
@@ -259,7 +268,8 @@ export default {
       .catch((err) => {
         this.showLoading = false;
          this.$dialog.alert({
-          message: `${err.message}`
+          message: `${err.message}`,
+          closeOnPopstate: true
             }).then(() => {
             this.changeBackoutBtn(true);
             this.changeFlowState(0);
@@ -284,9 +294,12 @@ export default {
     width: 100%;
     height: 100%;
     /deep/ .van-loading {
-      position: absolute;
-      top: 44%;
-      left: 46%;
+      position:absolute;
+      top:50%;
+      left:50%;
+      -webkit-transform: translate(-50%,-50%);
+      -moz-transform: translate(-50%,-50%);
+      transform:translate(-50%,-50%);
     }
   }
 </style>

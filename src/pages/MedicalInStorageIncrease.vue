@@ -96,8 +96,11 @@ export default {
       return Math.round(this.totalWeight * 100) / 100
     },
     // 出库人员
-    outboundPerson () {
-      return this.userInfo.workerName
+    outboundPerson: {
+      get () {
+        return this.userInfo.workerName
+      },
+      set () {}
     }
   },
 
@@ -138,13 +141,13 @@ export default {
           for (let item in itemList) {
             if (Object.prototype.toString.call(itemList[item]) == '[object Object]') {
               Object.keys(itemList[item]).forEach((line) => {
-                if (line !== '' && itemList[item][line] !== '') {
+                if (line) {
                   this.companyNameList.push(line);
                 }
               })
             } else if (Object.prototype.toString.call(itemList[item]) == '[object Array]') {
               itemList[item].forEach((item) => {
-                if (item !== '') {
+                if (item) {
                   this.cardNumberList.push(item)
                 }
               })
@@ -169,7 +172,6 @@ export default {
       this.monitorArea = '',
       this.monitorDot = '',
       this.cardNumber = '',
-      this.outboundPerson = '',
       this.company = '',
       this.companyName = '',
       this.changeTotalWeight(0)
@@ -202,7 +204,8 @@ export default {
             this.initTotalWeight();
             this.initBatchs();
             this.$dialog.alert({
-              message: '医废出库成功'
+              message: '医废出库成功',
+              closeOnPopstate: true
             }).then(() => {
               this.$router.push({path: 'home'});
               this.changeTitleTxt({tit: '医废监测'})
@@ -210,7 +213,8 @@ export default {
             });
           } else {
             this.$dialog.alert({
-              message: '医废出库失败'
+              message: `${res.data.msg}`,
+              closeOnPopstate: true
             }).then(() => {
               this.initFormContent();
               this.$router.push({path: 'medicalOutStorage'});
@@ -222,7 +226,8 @@ export default {
       })
       .catch((err) => {
         this.$dialog.alert({
-          message: `${err.message}`
+          message: `${err.message}`,
+          closeOnPopstate: true
         }).then(() => {
           this.initFormContent();
           this.$router.push({path: 'medicalOutStorage'});
@@ -254,7 +259,8 @@ export default {
       })
       .catch((err) => {
         this.$dialog.alert({
-          message: `${err.message}`
+          message: `${err.message}`,
+          closeOnPopstate: true
         }).then(() => {
         });
       })

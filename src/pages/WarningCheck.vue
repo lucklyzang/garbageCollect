@@ -21,7 +21,7 @@
       <van-tabs v-model="activeName"  @click="onClickTab">
         <van-tab title="待审核" name="0">
           <div class="content-middle-list">
-            <div class="content-middle-list-item" v-for="item in notCheckList" @click="waringCheck(item)">
+            <div class="content-middle-list-item not-checked" v-for="item in notCheckList" @click="waringCheck(item)">
               <div class="list-item">
                 <p class="list-item-left">
                   预警类型: {{item.warnType}}
@@ -30,8 +30,8 @@
                   所属医院: <span>{{item.proName}}</span>
                 </p>
                 <div class="list-strip">
-                  <p>科室: {{item.depName}}</p>
-                  <p class="list-sign">预警原因: {{item.warnReason}}</p>
+                  <p>回收批次: {{item.batchNumber}}</p>
+                  <p class="list-sign">处理意见: {{item.warnReason}}</p>
                   <p class="list-times">处理人: {{item.dealName}}</p>
                   <p class="list-code">预警时间: {{item.createTime}}</p>
                 </div>
@@ -44,7 +44,7 @@
         </van-tab>
         <van-tab title="已审核" name="1">
           <div class="content-middle-list">
-            <div class="content-middle-list-item" v-for="item in checkedList">
+            <div class="content-middle-list-item  checked" v-for="item in checkedList">
                <div class="list-item">
                 <p class="list-item-left">
                   预警类型: {{item.warnType}}
@@ -53,7 +53,7 @@
                   所属医院: <span>{{item.proName}}</span>
                 </p>
                 <div class="list-strip">
-                  <p>科室: {{item.depName}}</p>
+                  <p>批次: {{item.batchNumber}}</p>
                   <p class="list-sign">审核意见: {{item.checkIdea}}</p>
                   <p class="list-sign">预警原因: {{item.warnReason}}</p>
                   <p class="list-times">审核人: {{item.checkName}}</p>
@@ -74,6 +74,7 @@
       show-cancel-button
       confirmButtonText="通过"
       cancelButtonText="不通过"
+      :close-on-popstate="true"
       @confirm="checkSure"
       @cancel="checkCancle"
       >
@@ -157,7 +158,7 @@ export default {
     },
     // 返回上一页
     backTo () {
-      this.$router.push({name:'medicalOutStorage'});
+      this.$router.push({name:'home'});
       this.changeTitleTxt({tit:'医废监测'})
     },
     // 跳转到我的页面
@@ -188,7 +189,8 @@ export default {
       name == 0 ? currentName = 1 : currentName = 2;
       if (this.startTime == "" || this.endTime == "") {
         this.$dialog.alert({
-            message: '请选择开始或结束日期'
+            message: '请选择开始或结束日期',
+            closeOnPopstate: true
           }).then(() => {
         });
       }
@@ -209,14 +211,14 @@ export default {
         this.checkWaringMsg = '';
         if (res.data.code == 200) {
           this.$dialog.alert({
-            title: '',
+            closeOnPopstate: true,
             message: '审核通过处理成功'
           }).then(() => {
             this.queryWarning(this.getUserInfo,  this.startTime, this.endTime, 1)
           });
         } else {
           this.$dialog.alert({
-            title: '',
+            closeOnPopstate: true,
             message: `${res.data.msg}`
           }).then(() => {
           });
@@ -225,7 +227,7 @@ export default {
       })
       .catch((err) => {
         this.$dialog.alert({
-          title: '',
+          closeOnPopstate: true,
           message: `${err.message}`
         }).then(() => {
         });
@@ -246,14 +248,14 @@ export default {
         this.checkWaringMsg = '';
         if (res.data.code == 200) {
           this.$dialog.alert({
-            title: '',
+            closeOnPopstate: true,
             message: '审核不通过处理成功'
           }).then(() => {
             this.queryWarning(this.getUserInfo,  this.startTime, this.endTime, 1)
           });
         } else {
           this.$dialog.alert({
-            title: '',
+            closeOnPopstate: true,
             message: `${res.data.msg}`
           }).then(() => {
           });
@@ -262,7 +264,7 @@ export default {
       })
       .catch((err) => {
         this.$dialog.alert({
-          title: '',
+          closeOnPopstate: true,
           message: `${err.message}`
         }).then(() => {
         });
@@ -298,7 +300,8 @@ export default {
                   'dealIdea': item.dealIdea,    //处理意见
                   'dealName': item.dealName,  //处理人
                   'dealTime': item.dealTime,  //处理时间
-                  'depName': item.depName,//部门 
+                  'depName': item.depName,//部门
+                  'batchNumber': item.batchNumber, 
                   'id': item.id,             //预警ID
                   'proId': item.proId,           //所属医院ID
                   'proName': item.proName,  //所属医院名称
@@ -312,7 +315,8 @@ export default {
                 }
               } else {
                 this.$dialog.alert({
-                    message: '当前没有待审核批次信息'
+                    message: '当前没有待审核批次信息',
+                    closeOnPopstate: true
                   }).then(() => {
                 });
               }
@@ -329,6 +333,7 @@ export default {
                   'dealName': item.dealName,  //处理人
                   'dealTime': item.dealTime,  //处理时间
                   'depName': item.depName,//部门 
+                  'batchNumber': item.batchNumber, 
                   'id': item.id,             //预警ID
                   'proId': item.proId,           //所属医院ID
                   'proName': item.proName,  //所属医院名称
@@ -342,7 +347,8 @@ export default {
                 }
               } else {
                 this.$dialog.alert({
-                    message: '当前没有已审核批次信息'
+                    message: '当前没有已审核批次信息',
+                    closeOnPopstate: true
                   }).then(() => {
                 });
               }
@@ -352,7 +358,8 @@ export default {
       })
       .catch((err)=>{
         this.$dialog.alert({
-          message: `${err.message}`
+          message: `${err.message}`,
+          closeOnPopstate: true
         }).then(() => {
         });
       })
@@ -441,7 +448,7 @@ export default {
         overflow: auto;
        .content-middle-list-item {
           padding: 14px;
-          height: 150px;
+          height: 136px;
           border-bottom: 1px solid #e8e4e4;
           .list-item {
             position: relative;
@@ -488,6 +495,17 @@ export default {
                 color: #5d5d5d
               }
             }
+          }
+        }
+        .checked {
+          height: 160px;
+          .list-item-right {
+            top: 6px !important
+          }
+        }
+        .not-checked {
+          .list-item-right {
+            top: 6px !important
           }
         }
       }

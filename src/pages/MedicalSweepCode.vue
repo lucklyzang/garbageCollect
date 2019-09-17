@@ -152,33 +152,15 @@ export default {
       return this.bluetoothWeighShow
     },
   },
-  created () {
-    // let map = {};
-    // let momentTypeList = [];
-    // let arr2 = [{'wasteName': '损伤性','id': 1},{'wasteName': '感染性','id': 2},{'wasteName': '损伤性','id': 3},{'wasteName': '感染性','id': 4},{'wasteName': '其它','id': 5}];
-    //   let lanyaCz = [2,90,4,5,10];
-    //   for (let item of arr2) {
-    //     for (let itemList in item) {
-    //       if (itemList == 'wasteName') {
-    //         momentTypeList.push(item[itemList])
-    //       }
-    //     }
-    //   };
-    //   momentTypeList.forEach((value, index) => {
-    //     Object.prototype.hasOwnProperty.call(map, value) || (map[value] = 0);
-    //     map[value] += Number(lanyaCz[index]);
-    //   });
 
-    // console.log(Object.keys(map));
-    // console.log(Object.values(map));
-  },
   mounted () {
     pushHistory();
     // 监听历史记录点, 添加返回事件监听
     window.onpopstate = () => {
       this.changeIsExecute(false);
       this.$dialog.confirm({
-        message: '返回上一级后,将清空本次收集的医废数据'
+        message: '返回上一级后,将清空本次收集的医废数据',
+        closeOnPopstate: true
       })
       .then(() => {
         this.$router.push({path: 'home'});  //输入要返回的上一级路由地址
@@ -246,7 +228,8 @@ export default {
     backTo () {
       this.changeIsExecute(false);
       this.$dialog.confirm({
-        message: '返回上一级后,将清空本次收集的医废数据'
+        message: '返回上一级后,将清空本次收集的医废数据',
+        closeOnPopstate: true
       })
       .then(() => {
         this.$router.push({path: 'home'});
@@ -264,7 +247,8 @@ export default {
     skipMyInfo () {
       this.changeIsExecute(false);
       this.$dialog.confirm({
-        message: '跳转到我的页面后,将清空本次收集的医废数据'
+        message: '跳转到我的页面后,将清空本次收集的医废数据',
+        closeOnPopstate: true
       })
       .then(() => {
         this.$router.push({path: 'myInfo'});
@@ -284,7 +268,8 @@ export default {
     // 重新扫码弹窗
     againSweepCode () {
        this.$dialog.alert({
-        message: '流程与扫描数据不匹配,请重试'
+        message: '流程与扫描数据不匹配,请重试',
+        closeOnPopstate: true
       }).then(() => {
         this.sweepAstoffice()
       });
@@ -292,7 +277,8 @@ export default {
     // 扫码验证网络异常弹窗
     abnormalSweepCode () {
        this.$dialog.alert({
-        message: '网络异常,请重试'
+        message: '网络异常,请重试',
+        closeOnPopstate: true
       }).then(() => {
         this.sweepAstoffice()
       });
@@ -313,7 +299,8 @@ export default {
     // 撤销操作
     backOut () {
       this.$dialog.confirm({
-        message: '确定撤销该次医废收集?'
+        message: '确定撤销该次医废收集?',
+        closeOnPopstate: true
       }).then(() => {
         this.changeClickBackoutBtn(true);
         if (this.lajiCode.length == 0) {
@@ -394,28 +381,32 @@ export default {
               })
               .catch((err) => {
                 this.$dialog.alert({
-                  message: `${err.message}`
+                  message: `${err.message}`,
+                  closeOnPopstate: true
                 }).then(() => {
                   this.abnormalSweepCode();
                 });
               })
             } else {
               this.$dialog.alert({
-                message: '扫描的科室信息不全,请重新扫描'
+                message: '扫描的科室信息不全,请重新扫描',
+                closeOnPopstate: true
               }).then(() => {
                 this.sweepAstoffice();
               })
             }
           } else {
             this.$dialog.alert({
-              message: '当前流程与预期流程不符,请重新扫描'
+              message: '当前流程与预期流程不符,请重新扫描',
+              closeOnPopstate: true
             }).then(() => {
               this.sweepAstoffice();
             })
           }
         } else {
           this.$dialog.alert({
-            message: '当前扫描没有收集到任何科室信息,请重新扫描'
+            message: '当前扫描没有收集到任何科室信息,请重新扫描',
+            closeOnPopstate: true
           }).then(() => {
             this.sweepAstoffice();
           })
@@ -441,28 +432,32 @@ export default {
               })
               .catch((err) => {
                 this.$dialog.alert({
-                  message: `${err.message}`
+                  message: `${err.message}`,
+                  closeOnPopstate: true
                 }).then(() => {
                   this.abnormalSweepCode();
                 }); 
               })
             } else {
               this.$dialog.alert({
-                message: '扫描的医护人员信息不全,请重新扫描'
+                message: '扫描的医护人员信息不全,请重新扫描',
+                closeOnPopstate: true
               }).then(() => {
                 this.sweepAstoffice();
               })
             }
           } else {
             this.$dialog.alert({
-              message: '当前流程与预期流程不符,请重新扫描'
+              message: '当前流程与预期流程不符,请重新扫描',
+              closeOnPopstate: true
             }).then(() => {
               this.sweepAstoffice();
             })
           }
         } else {
           this.$dialog.alert({
-            message: '当前扫描没有收集到任何医护人员信息,请重新扫描'
+            message: '当前扫描没有收集到任何医护人员信息,请重新扫描',
+            closeOnPopstate: true
           }).then(() => {
             this.sweepAstoffice();
           })
@@ -484,21 +479,24 @@ export default {
               this.changeCurrentLajicodeState(true);
             } else {
               this.$dialog.alert({
-                message: '扫描的医废信息不全,请重新扫描'
+                message: '扫描的医废信息不全,请重新扫描',
+                closeOnPopstate: true
               }).then(() => {
                 this.sweepAstoffice();
               })
             }
           } else {
             this.$dialog.alert({
-            message: '当前流程与预期流程不符,请重新扫描'
+            message: '当前流程与预期流程不符,请重新扫描',
+            closeOnPopstate: true
             }).then(() => {
               this.sweepAstoffice();
             })
           }
         } else {
           this.$dialog.alert({
-            message: '当前扫描没有收集到任何医废信息,请重新扫描'
+            message: '当前扫描没有收集到任何医废信息,请重新扫描',
+            closeOnPopstate: true
           }).then(() => {
             this.sweepAstoffice();
           })
@@ -514,7 +512,8 @@ export default {
       if (str) {
         if (str == 0.0) {
           this.$dialog.alert({
-            message: '收集医废重量不能为0,请重新称重'
+            message: '收集医废重量不能为0,请重新称重',
+            closeOnPopstate: true
           }).then(() => {
             this.weightRubbish()
           });
@@ -530,7 +529,8 @@ export default {
         }
       } else {
         this.$dialog.alert({
-          message: '没有获取到重量,请重新称重'
+          message: '没有获取到重量,请重新称重',
+          closeOnPopstate: true
         }).then(() => {
           this.weightRubbish()
         });
@@ -543,7 +543,8 @@ export default {
       // 编号, 科室, 垃圾类型，垃圾重量，收集人，交接人
       if (this.lajiCode.length == 0) {
         this.$dialog.alert({
-          message: '当前没有要打印的凭条'
+          message: '当前没有要打印的凭条',
+          closeOnPopstate: true
         }).then(() => {
         });
         return
@@ -552,8 +553,13 @@ export default {
       this.changeOtherBtn(true);
       this.changeBackoutBtn(false);
       if (this.lajiCode.length == 1) {
+        let flag = true;
         this.printProof(this.lajiCode[0].barCode,this.keshiCode[0].depName,this.lajiCode[0].wasteName,
-         this.lanyaCz[0],this.userInfo.workerName,this.yihuCode[0].workerName);
+          this.lanyaCz[0],this.userInfo.workerName,this.yihuCode[0].workerName);
+        if (flag) {
+          this.printProof(this.lajiCode[0].barCode,this.keshiCode[0].depName,this.lajiCode[0].wasteName,
+            this.lanyaCz[0],this.userInfo.workerName,this.yihuCode[0].workerName);
+        }
       } else if (this.lajiCode.length > 1) {
         // 合并重复的垃圾类型及其重量
         let map = {};
