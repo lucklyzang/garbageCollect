@@ -30,14 +30,13 @@
                   所属医院: <span>{{item.proName}}</span>
                 </p>
                 <div class="list-strip">
-                  <p>补录人: {{item.suppName}}</p>
                   <p class="list-sign">补录原因: {{item.remark}}</p>
                   <p class="list-code">补录时间: {{item.createTime}}</p>
                   <p class="list-code">收集时间: {{item.collectTime}}</p>
                   <p class="list-code">重量: {{item.weight}} <span style="color:#c97889">kg</span></p>
                 </div>
                 <div class="list-item-bottom">
-                  收集人员: <span>{{item.workerName}}</span>
+                  补录人: <span>{{item.suppName}}</span>
                 </div>
               </div>
             </div>
@@ -57,8 +56,9 @@
                   <p>补录人: {{item.suppName}}</p>
                   <p class="list-sign">补录原因: {{item.remark}}</p>
                   <p class="list-sign">审核意见: {{item.checkIdea}}</p>
-                  <p class="list-code">补录时间: {{item.createTime}}</p>
                   <p class="list-code">收集时间: {{item.collectTime}}</p>
+                  <p class="list-code">补录时间: {{item.createTime}}</p>
+                  <p class="list-code">审核时间: {{item.checkTime}}</p>
                   <p class="list-code">重量: {{item.weight}} <span style="color:#c97889">kg</span></p>
                 </div>
                 <div class="list-item-bottom">
@@ -322,7 +322,8 @@ export default {
                   this.checkedList.push({
                     'batchNumber': item.batchNumber, //补录批次
                     'collectTime': item.collectTime, //收集时间
-                    'createTime': item.createTime,  //补录时间			
+                    'createTime': item.createTime,  //补录时间
+                    'checkTime': item.checkTime,			
                     'id': item.id,			
                     'proId': item.proId,
                     'proName': item.proName,
@@ -488,7 +489,7 @@ export default {
           }
         }
         .checked {
-          height: 186px
+          height: 208px
         }
       }
       .btn-group {

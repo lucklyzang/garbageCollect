@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { MessageBox,} from 'element-ui'
 import store from '@/store'
 // 'http://192.168.8.100:8080/blink'
 // http://39.100.111.20:8080/blink
@@ -22,10 +21,9 @@ service.interceptors.request.use(
     console.log(error)
     return Promise.reject(error)
   }
-)
+);
 
 // response interceptor
-
 service.interceptors.response.use(
   response => {
     return response
@@ -35,8 +33,6 @@ service.interceptors.response.use(
     return Promise.reject(error)
   }
 
-)
-
-
+);
 
 export default service

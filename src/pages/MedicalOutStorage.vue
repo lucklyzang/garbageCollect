@@ -291,6 +291,8 @@ export default {
         background: #fbfbfb;
         line-height: 40px;
         padding-left: 10px;
+        padding-top: 11px;
+        box-sizing: border-box;
         /deep/ .van-icon {
           background: @color-theme;
           border-color: @color-theme

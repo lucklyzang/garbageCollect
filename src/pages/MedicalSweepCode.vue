@@ -17,21 +17,13 @@
         <div class="content-middle">
           <van-panel v-show="showAstOfficeShow" title="科室信息" desc="" status="">
             <div class="ast-office">
-                <!-- <p>number: {{extraKeshiMsg.number}}</p>
-                <p>proId:{{extraKeshiMsg.proId}}</p> -->
                 <p>科室: {{extraKeshiMsg ? extraKeshiMsg.name : ''}}</p>
-                <!-- <p>id:{{extraKeshiMsg.id}}</p> -->
                 <p>医院: {{extraKeshiMsg ? extraKeshiMsg.proName : ''}}</p>
-                <!-- <p>type:{{extraKeshiMsg.type}}</p> -->
                 <p>房间: {{extraKeshiMsg ? extraKeshiMsg.depName : ''}}</p>
             </div>
           </van-panel>
           <van-panel v-show="showStaffCodeShow" title="医护人员信息" desc="" status="">
             <div class="staff-code">
-              <!-- <p>workerNumber: {{judgeFlowValue ? yihuCode[0].workerNumber : extraYihuMsg.workerNumber}}</p>
-              <p>proId:{{judgeFlowValue ? yihuCode[0].proId : extraYihuMsg.proId}}</p>
-              <p>depId:{{judgeFlowValue ? yihuCode[0].depId : extraYihuMsg.depId}}</p>
-              <p>id:{{judgeFlowValue ?  yihuCode[0].id : extraYihuMsg.id}}</p> -->
               <p>医院: {{judgeFlowValue == 2 ? yihuCode[0].proName : extraYihuMsg ? extraYihuMsg.proName : ''}}</p>
               <p>姓名: {{judgeFlowValue == 2 ? yihuCode[0].workerName : extraYihuMsg ? extraYihuMsg.workerName : ''}}</p>
               <p>房间: {{judgeFlowValue == 2 ? yihuCode[0].depName : extraYihuMsg ? extraYihuMsg.depName : ''}}</p>
@@ -40,11 +32,8 @@
           <van-panel v-show="showBagCodeShow" title="医废信息" desc="" status="">
             <div class="bag-code">
               <p>医废类型: {{extraLajiMsg ? extraLajiMsg.wasteName : ''}}</p>
-              <!-- <p>proId:{{extraLajiMsg.proId}}</p>
-              <p>depId:{{extraLajiMsg.depId}}</p> -->
               <p>医院: {{extraLajiMsg ? extraLajiMsg.proName : ''}}</p>
               <p>房间: {{extraLajiMsg ? extraLajiMsg.depName : ''}}</p>
-              <!-- <p>barCode:{{extraLajiMsg.barCode}}</p> -->
             </div>
           </van-panel>
           <van-panel v-show="showBluetoothWeighShow" title="医废重量" desc="" status="">

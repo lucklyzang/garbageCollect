@@ -30,13 +30,13 @@
                   所属医院: <span>{{item.proName}}</span>
                 </p>
                 <div class="list-strip">
-                  <p>回收批次: {{item.batchNumber}}</p>
+                  <p>科室: {{item.depName}}</p>
                   <p class="list-sign">处理意见: {{item.warnReason}}</p>
-                  <p class="list-times">处理人: {{item.dealName}}</p>
                   <p class="list-code">预警时间: {{item.createTime}}</p>
+                  <p class="list-code">处理时间: {{item.dealTime}}</p>
                 </div>
                 <div class="list-item-bottom">
-                  收集人员: <span>{{item.workerName}}</span>
+                  处理人: <span>{{item.dealName}}</span>
                 </div>
               </div>
             </div>
@@ -505,6 +505,7 @@ export default {
           }
         }
         .not-checked {
+          height: 140px;
           .list-item-right {
             top: 6px !important
           }

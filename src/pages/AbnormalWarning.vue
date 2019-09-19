@@ -30,8 +30,7 @@
                   所属医院: <span>{{item.proName}}</span>
                 </p>
                 <div class="list-strip">
-                  <p class="list-sign">批次号: {{item.batchNumber}}</p>
-                  <p class="list-times">处理人: {{item.dealName}}</p>
+                  <p class="list-times">科室: {{item.depName}}</p>
                   <p class="list-code">预警时间: {{item.createTime}}</p>
                 </div>
                 <div class="list-item-bottom">
@@ -52,10 +51,8 @@
                   所属医院: <span>{{item.proName}}</span>
                 </p>
                 <div class="list-strip">
-                  <p class="list-sign">批次号: {{item.batchNumber}}</p>
-                  <p class="list-sign">预警原因: {{item.warnReason}}</p>
-                  <p class="list-times">处理人: {{item.dealName}}</p>
-                  <p class="list-code">处理时间: {{item.dealTime}}</p>
+                  <p class="list-times">科室: {{item.depName}}</p>
+                  <p class="list-code">预警时间: {{item.createTime}}</p>
                 </div>
                 <div class="list-item-bottom">
                   收集人员: <span>{{item.workerName}}</span>
@@ -75,7 +72,7 @@
                   所属医院: <span>{{item.proName}}</span>
                 </p>
                 <div class="list-strip">
-                  <p class="list-sign">批次号: {{item.batchNumber}}</p>
+                  <p class="list-sign">科室: {{item.depName}}</p>
                   <p class="list-sign">处理意见: {{item.warnReason}}</p>
                   <p class="list-times">处理人: {{item.dealName}}</p>
                   <p class="list-code">处理时间: {{item.dealTime}}</p>
@@ -531,13 +528,13 @@ export default {
           height: 156px
         }
         .await-conduct {
-          height: 144px
+          height: 90px
         }
         .finished {
           height: 156px
         }
         .all-type {
-          height: 110px
+          height: 90px
         }
       }
       .btn-group {
