@@ -264,24 +264,12 @@ export default {
     startTask () {
       this.sweepAstoffice()
     },
-    // 重新扫码弹窗
-    againSweepCode () {
-       this.$dialog.alert({
-        message: '流程与扫描数据不匹配,请重试',
-        closeOnPopstate: true
-      }).then(() => {
-        this.sweepAstoffice()
-      });
-    },
+
     // 扫码验证网络异常弹窗
     abnormalSweepCode () {
-       this.$dialog.alert({
-        message: '网络异常,请重试',
-        closeOnPopstate: true
-      }).then(() => {
-        this.sweepAstoffice()
-      });
+      this.sweepAstoffice()
     },
+
     // 判断流程从哪步开始(当前科室与其它科室收集开始流程不同)
     judgeFlowPosition () {
       if (this.judgeFlowValue == 2) {
@@ -289,11 +277,12 @@ export default {
         this.changeCodeStep(1);
         this.changeStaffCodeShow(true);
         this.changeIsPlus(true);
-      };
-      if (this.judgeFlowValue == 0) {
+      } else if (this.judgeFlowValue == 0) {
         this.changeCurrentActive(-1);
         this.changeCodeStep(0)
-      }      
+      } else {
+        this.initSweepCodeInfo()
+      }
     },
     // 撤销操作
     backOut () {
@@ -375,7 +364,12 @@ export default {
                   this.changeStartCollectTime(this.formatTime());
                   this.changeAstOfficeShow(true);
                 } else {
-                  this.againSweepCode()
+                  this.$dialog.alert({
+                    message: `${res.data.msg}`,
+                    closeOnPopstate: true
+                  }).then(() => {
+                    this.sweepAstoffice()
+                  });
                 }
               })
               .catch((err) => {
@@ -426,7 +420,12 @@ export default {
                     this.changeStaffCodeShow(true);
                     this.changeAstOfficeShow(false);
                   } else {
-                    this.againSweepCode()
+                    this.$dialog.alert({
+                    message: `${res.data.msg}`,
+                    closeOnPopstate: true
+                  }).then(() => {
+                    this.sweepAstoffice()
+                  });
                 }
               })
               .catch((err) => {
@@ -511,10 +510,9 @@ export default {
       if (str) {
         if (str == 0.0) {
           this.$dialog.alert({
-            message: '收集医废重量不能为0,请重新称重',
+            message: '收集医废重量不能为0,请重新获取',
             closeOnPopstate: true
           }).then(() => {
-            this.weightRubbish()
           });
         } else {
           this.changeCurrentActive(this.codeStep);
@@ -528,10 +526,9 @@ export default {
         }
       } else {
         this.$dialog.alert({
-          message: '没有获取到重量,请重新称重',
+          message: '没有获取到重量,请重新获取',
           closeOnPopstate: true
         }).then(() => {
-          this.weightRubbish()
         });
       }
     },

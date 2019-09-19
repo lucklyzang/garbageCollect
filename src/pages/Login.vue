@@ -3,10 +3,12 @@
     <div class="bg-box">
       <img :src="LoginBg" alt="">
     </div>
-    <div class="bg-icon">
-      <img :src="BgIcon" alt="">
+    <div class="bg-icon-wrapper" ref="bgIconWrapper">
+      <div class="bg-icon">
+        <img :src="BgIcon" alt="">
+      </div>
     </div>
-    <div class="inputBox">
+    <div class="input-box" v-show="showAccountLogin" ref="inputBox">
       <van-cell-group>
         <van-field left-icon="manager" label="用户名" placeholder="请输入用户名" type="text" v-model="username"></van-field>
         <van-field left-icon="lock" label="密码" placeholder="请输入密码" type="password" v-model="password"></van-field>
@@ -14,6 +16,18 @@
       <van-cell-group>
         <van-button  @click.native="login">登录</van-button>
       </van-cell-group>
+    </div>
+    <div class="sweep-code" v-show="showSweepLogin">
+      <van-cell-group>
+        <van-button @click="sweepPersonCode">扫描个人二维码</van-button>
+      </van-cell-group>
+    </div>
+    <div class="check-box" ref="checkBox">
+      <div class="check-box-content">
+        <p v-for="(item, index) in checkList" @click="checkClick(item,index)" :class="{activeClass:index == currentIndex}">
+          {{item}}
+        </p>
+      </div>
     </div>
   </div>
 </template>
@@ -30,12 +44,21 @@ export default {
       username: this.loginName,
       password: this.loginPassword,
       BgIcon: BgIcon,
-      LoginBg: LoginBg
+      LoginBg: LoginBg,
+      showAccountLogin: true,
+      showSweepLogin: false,
+      sweepMsg: null,
+      currentIndex: 0,
+      checkList: ['账号密码登录','扫码登录']
     };
   },
+
   watch: {
+    currentIndex (newValue, olValue) {
+      newValue == 0 ? this.showAccountLogin = true : this.showAccountLogin = false;
+      newValue == 1 ? this.showSweepLogin = true : this.showSweepLogin = false
+    }
   },
-  components: {},
 
   computed: {
     loginName () {
@@ -43,41 +66,129 @@ export default {
     },
     loginPassword () {
       return getStore('password')
-    }
+    },
+    ...mapGetters([
+      'loginSweepCode'
+    ])
   },
 
   mounted () {
+    // 二维码回调方法绑定到window下面,提供给外部调用
+    let me = this;
+    window['scanQRcodeCallback'] = (code) => {
+      me.scanQRcodeCallback(code);
+    };
     pushHistory();
     window.onpopstate = () => {
       this.$router.push({path: '/'});  //输入要返回的上一级路由地址
     };
-    this.changeRouterFlag(false)
+    this.changeRouterFlag(false);
+
+    // 监控键盘弹起
+    let originalHeight = document.documentElement.clientHeight || document.body.clientHeight;
+    window.onresize = ()=>{
+      let resizeHeight = document.documentElement.clientHeight || document.body.clientHeight;
+      if (resizeHeight < originalHeight) {
+        return (()=>{
+          this.$refs['checkBox'].style.cssText='top:95%';
+          this.$refs['inputBox'].style.cssText='top:32%';
+          this.$refs['bgIconWrapper'].style.cssText='top:10px' 
+        })()
+      } else {
+        this.$refs['checkBox'].style.cssText='top:69%';
+        this.$refs['inputBox'].style.cssText='top:35%';
+        this.$refs['bgIconWrapper'].style.cssText='top:10%' 
+      }
+    };
   },
 
   methods: {
     ...mapMutations([
       'storeUserInfo',
       'changeTitleTxt',
-      'changeRouterFlag'
+      'changeRouterFlag',
+      'changeLoginMethod'
     ]),
+
+    // 登录方式切换点击事件
+    checkClick (item, index) {
+      this.currentIndex = index
+    },
+
+    // 扫描二维码方法
+    sweepPersonCode () {
+      window.android.scanQRcode()
+    },
+    
+    // 扫码后的回调
+    scanQRcodeCallback(code) {
+      if(code && Object.keys(code).length > 0) {
+        if (code.hasOwnProperty('msg')) {
+          if (code.msg) {
+            this.sweepMsg = code.msg;
+            this.login()
+          } else {
+            this.$dialog.alert({
+            message: '个人信息不能为空,请重新扫描',
+            closeOnPopstate: true
+            }).then(() => {
+              this.sweepPersonCode() 
+            })
+          }
+        } else {
+          this.$dialog.alert({
+          message: '请扫描正确的二维码',
+          closeOnPopstate: true
+          }).then(() => {
+            this.sweepPersonCode() 
+          })
+        }
+      } else {
+        this.$dialog.alert({
+          message: '没有扫描到任何个人信息,请重新扫描',
+          closeOnPopstate: true
+        }).then(() => {
+          this.sweepPersonCode() 
+        })
+      }
+    },
+
     // 账号密码登录方法
     login () {
-      let loginMessage = {
-        username: this.username,
-        password: this.password
+      let loginMessage;
+      if (this.showAccountLogin) {
+        loginMessage = {
+          username: this.username,
+          password: this.password
+        }
+      } else {
+        loginMessage = {
+          username: this.sweepMsg,
+          flag: 1,
+        }
       };
       logIn(loginMessage).then((res)=>{
         if (res) {
           if (res.data.code == 200) {
+            if (this.showAccountLogin) {
+              setStore('loginSweepCode',false);
+              if (getStore('loginSweepCode') == 'false') {
+                setStore('userName', this.username);
+                setStore('userPassword', this.password);
+              }
+            } else {
+              setStore('loginSweepCode',true);
+              if (getStore('loginSweepCode') == 'true') {
+                setStore('userName', this.sweepMsg)
+              }
+            };
             // 登录用户名密码及用户信息存入Locastorage
-            setStore('userName', this.username);
-            setStore('userPassword', this.password);
             setStore('userInfo', res.data.data);
             setStore('isLogin', true);
             this.changeRouterFlag(true);
             this.storeUserInfo(JSON.parse(getStore('userInfo')));
             this.$router.push({path:'/home'});
-            this.changeTitleTxt({tit:'医废监测'})
+            this.changeTitleTxt({tit:'医废监测'});
           } else {
              this.$dialog.alert({
               message: `${res.data.msg}`,
@@ -103,6 +214,9 @@ export default {
     position: fixed;
     width: 100%;
     height: 100%;
+    .activeClass {
+      color: #fff !important
+    }
     .bg-box {
       position: absolute;
       width: 100%;
@@ -114,19 +228,50 @@ export default {
         height: 100%
       }
     }
-    .inputBox {
+    .input-box {
       width: 100%;
       position: absolute;
       top: 35%
     }
-    .bg-icon {
+    .sweep-code {
+      width: 100%;
       position: absolute;
+      top: 40%
+    }
+    .check-box {
+      width: 100%;
+      position: absolute;
+      top: 69%;
+      .check-box-content {
+        width: 86%;
+        margin: 0 auto;
+        height: 20px;
+        p {
+          color:#87dfee;
+          letter-spacing: 1px;
+          &:first-child {
+            float: left
+          }
+          &:last-child {
+            float: right
+          }
+        }
+        
+      }
+    }
+    .bg-icon-wrapper {
+      width: 100%;
+      position: absolute;
+      text-align: center;
       top: 10%;
-      left: 38%;
-      width: 100px;
-      img {
-        width: 100%;
-        height: 100%
+      left: 0;
+      .bg-icon {
+        width: 100px;
+        display: inline-block;
+        img {
+          width: 100%;
+          height: 100%
+        }
       }
     }
     .van-hairline--top-bottom::after {

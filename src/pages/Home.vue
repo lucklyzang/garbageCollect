@@ -49,17 +49,19 @@
           { itemText: '医废收集', imgUrl: collectWaste, name: 'medicalCollect'},{ itemText: '医废入库', imgUrl: medicalIn, name: 'medicalInStorage'},
           { itemText: '医废出库', imgUrl: medicalOut, name: 'medicalOutStorage'},{ itemText: '报表统计', imgUrl: statement, name: 'reportAudit'},
           { itemText: '异常预警', imgUrl: abnormalWarning, name: 'abnormalWarning'},{ itemText: '收集历史', imgUrl: collectHistory, name: 'collectHistory'},
-          { itemText: '视频监控', imgUrl: videoSurveillance},{ itemText: '预警审核', imgUrl: warningCheck, name: 'warningCheck'},
+          { itemText: '视频监控', imgUrl: videoSurveillance, name: 'videoMonitor'},{ itemText: '预警审核', imgUrl: warningCheck, name: 'warningCheck'},
           { itemText: '补录审核', imgUrl: addCheck, name: 'addCheck'}
         ],
         roleList: ['管理员','项目经理'],
         bannerUrl: homeBanner
       }
     },
+    
     mounted(){
       pushHistory();
       window.onpopstate = () => {
-        this.$router.replace({name: 'login'});  //输入要返回的上一级路由地址
+        this.$router.replace({name: 'home'});  //输入要返回的上一级路由地址
+        this.changeTitleTxt({tit:'医废监测'});
       };
       this.initItemList ()
     },
@@ -76,11 +78,13 @@
       ...mapMutations([
         'changeTitleTxt',
         'changeApplicationCollectTime',
-        'createBatchNumber'
+        'createBatchNumber',
+        'changeRouterFlag'
       ]),
       // 返回上一页
       backTo () {
-        this.$router.go(-1)
+        this.$router.replace({name: 'home'});
+        this.changeTitleTxt({tit:'医废监测'})
       },
       // 初始化首页展示菜单列表
       initItemList () {

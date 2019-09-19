@@ -58,7 +58,9 @@ export default {
         // 清空上个科室存储的数据
         this.clearTrashStore();
         this.changeCurrentLajicodeState(false);
-        this.changeBackoutBtn(true)
+        this.changeBackoutBtn(true);
+        // 断开蓝牙秤
+        window.android.disconnectScales()
       }).catch(() => {
         this.changeIsExecute(true);
         this.$router.push({path:'medicalInStorage'});
@@ -76,7 +78,9 @@ export default {
         this.changeCollectBtn(true);
         this.changeSureBtn(false);
         this.changeBackoutBtn(true);
-        this.changeOtherBtn(false); 
+        this.changeOtherBtn(false);
+        // 断开蓝牙秤
+        window.android.disconnectScales() 
       });
     }
   }

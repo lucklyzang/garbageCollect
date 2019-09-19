@@ -1,11 +1,14 @@
 export default {
   state:{
     userInfo: null,
-    routerFlag: true
+    routerFlag: true,
+    // 是否扫码登录
+    loginSweepCode: false
   },
   getters:{
     userInfo : state => state.userInfo,
-    routerFlag : state => state.routerFlag
+    routerFlag : state => state.routerFlag,
+    loginSweepCode : state => state.loginSweepCode
   },
   mutations:{
     storeUserInfo (state, playLoad) {
@@ -13,6 +16,9 @@ export default {
     },
     changeRouterFlag (state, playLoad) {
       state.routerFlag = playLoad
+    },
+    changeLoginMethod (state, playLoad) {
+      state.loginSweepCode = playLoad
     }
   },
   actions:{}

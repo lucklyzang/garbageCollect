@@ -109,7 +109,7 @@ export default {
       'changeTitleTxt', 
     ]),
     // 扫描二维码方法
-    sweepAstoffice () {
+    sweepStage () {
       window.android.scanQRcode()
     },
     // 返回上一页
@@ -122,15 +122,7 @@ export default {
       this.$router.push({path: 'myInfo'});
       this.changeTitleTxt({tit:'我的'})
     },
-    // 扫码验证网络异常弹窗
-    abnormalSweepCode () {
-       this.$dialog.alert({
-        message: '网络异常,请重试',
-        closeOnPopstate: true
-      }).then(() => {
-        this.sweepAstoffice()
-      });
-    },
+    
     // 扫码后的回调
     scanQRcodeCallback (code) {
       if (code && Object.keys(code).length > 0) {
@@ -149,7 +141,7 @@ export default {
                 this.proName = code.proName;
               } else {
                 this.$dialog.alert({
-                  message: '当前流程与预期流程不符,请重新扫描',
+                  message: `${res.data.msg}`,
                   closeOnPopstate: true
                   }).then(() => {
                   this.medicalInStoragr()
@@ -157,7 +149,12 @@ export default {
               }
             })
             .catch((err)=>{
-              this.abnormalSweepCode()
+              this.$dialog.alert({
+                message: `${err.message}`,
+                closeOnPopstate: true
+              }).then(() => {
+                this.medicalInStoragr()
+              });
             })
           } else {
             this.$dialog.alert({
@@ -194,7 +191,7 @@ export default {
         });
         return
       };
-      this.sweepAstoffice()
+      this.sweepStage()
     },
     // 查询收集的垃圾批次信息00012019081900022019082200
     queryAllBatch () {

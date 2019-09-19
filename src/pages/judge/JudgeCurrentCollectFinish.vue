@@ -35,7 +35,7 @@ export default {
   },
 
   mounted() {
-    // this.showDialog()
+    this.showDialog()
   },
 
   methods: {

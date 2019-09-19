@@ -493,7 +493,10 @@ export default {
           }
         }
         .inStorage {
-          height: 136px
+          height: 136px;
+          .list-item-right {
+            top: 98px !important
+          }
         }
         .out-storage {
           height: 184px;

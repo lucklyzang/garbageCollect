@@ -20,6 +20,7 @@ const WarningCheck = () => import('../pages/WarningCheck')
 const AddCheck = () => import('../pages/AddCheck')
 const CollectDetails = () => import('../pages/CollectDetails')
 const ReportAudit = () => import('../pages/ReportAudit')
+const VideoMonitor = () => import('../pages/VideoMonitor')
 Vue.use(Router)
 
 let baseRoute  = [
@@ -118,6 +119,11 @@ let baseRoute  = [
     path: '/reportAudit',
     name: 'reportAudit',
     component: ReportAudit,
+  },
+  {
+    path: '/videoMonitor',
+    name: 'videoMonitor',
+    component: VideoMonitor,
   }
 ];
 let router = new Router({
@@ -125,13 +131,20 @@ let router = new Router({
 });
 router.beforeEach((to, from, next) => {
   if (getStore('isLogin')) {
-    if (to.name === 'home') {
-      next();
-    } else if (to.name === 'login') {
-      if (getStore('userName') && getStore('userPassword')) {
-        next({path: '/home'})
+    if (to.name === 'login') {
+      // 判断登录方式(用户名密码登录或扫码登录)
+      if (getStore('loginSweepCode') == 'false') {
+        if (getStore('userName') && getStore('userPassword')) {
+          next({path: '/home'})
+        } else {
+          next()
+        }
       } else {
-        next({name: 'login'})
+        if (getStore('userName')) {
+          next({path: '/home'})
+        } else {
+          next()
+        }
       }
     } else {
       next()
