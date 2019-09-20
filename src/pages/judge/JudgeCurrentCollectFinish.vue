@@ -35,7 +35,19 @@ export default {
   },
 
   mounted() {
-    this.showDialog()
+    this.showDialog();
+    // 控制设备物理返回按键
+    let that = this;
+    pushHistory()
+    that.gotoURL(() => { 
+      pushHistory()
+      this.$dialog.alert({
+        message: '请关闭此科室收集是否已完成判断弹框',
+        closeOnPopstate: true
+      }).then(() => {
+        that.showDialog()
+      });
+    });
   },
 
   methods: {

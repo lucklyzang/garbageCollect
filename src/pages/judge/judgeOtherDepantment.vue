@@ -15,7 +15,19 @@ export default {
   computed: {},
 
   mounted() {
-    this.showDialog()
+    this.showDialog();
+    // 控制设备物理返回按键
+    let that = this;
+    pushHistory()
+    that.gotoURL(() => { 
+      pushHistory()
+      this.$dialog.alert({
+        message: '请关闭是否其它科室搜集判断弹框',
+        closeOnPopstate: true
+      }).then(() => {
+        that.showDialog()
+      });
+    });
   },
 
   methods: {
