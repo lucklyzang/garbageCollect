@@ -65,8 +65,7 @@ export default {
       }).then(() => {
         if (this.lajiCode.length == 0) {
           if (this.clickBackoutBtn) {
-            this.$router.push({path:'medicalInStorage'});
-            this.changeTitleTxt({tit: '医废入库'});
+            this.$router.replace({path:'judgeOtherDepantment'});
             this.changeCollectBtn(true);
             this.changeSureBtn(false);
             this.changeBagCodeShow(false);
@@ -83,6 +82,7 @@ export default {
             }).then(() => {
               this.changeBackoutBtn(true);
               this.$router.push({path: 'medicalCollect'});
+              this.changeTitleTxt({tit: '医废收集'});
               this.changeFlowState(2);
               this.changeCollectBtn(false);
               this.changeSureBtn(true);
@@ -111,7 +111,7 @@ export default {
       }).catch(() => {
         this.$router.replace({path: 'judgeCurrentDepantment'});
         this.changeCurrentLajicodeState(false);
-        this.changeClickBackoutBtn(false);
+        this.changeClickBackoutBtn(false)
       });
     },
 
@@ -159,7 +159,7 @@ export default {
           } else {
             this.showLoading = false;
             this.$dialog.alert({
-              message: `提交服务端数据${res.data.code}`,
+              message: `${res.data.msg}`,
               closeOnPopstate: true
               }).then(() => {
               this.changeBackoutBtn(true);
@@ -247,7 +247,7 @@ export default {
           } else {
             this.showLoading = false;
             this.$dialog.alert({
-              message: `提交服务端数据${res.data.code}`,
+              message: `${res.data.msg}`,
               closeOnPopstate: true
                 }).then(() => {
                 this.changeBackoutBtn(true);

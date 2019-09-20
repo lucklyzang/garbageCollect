@@ -105,11 +105,14 @@ export default {
   },
 
   mounted () {
-    pushHistory();
-    window.onpopstate = () => {
+    // 控制设备物理返回按键
+    let that = this;
+    pushHistory()
+    that.gotoURL(() => { 
+      pushHistory()
       this.$router.push({path: 'medicalOutStorage'});  //输入要返回的上一级路由地址
       this.changeTitleTxt({tit: '医废出库'})
-    };
+    });
     // 键盘弹起时不会遮住输入框
     let originalHeight = document.documentElement.clientHeight || document.body.clientHeight;
     window.onresize = ()=>{

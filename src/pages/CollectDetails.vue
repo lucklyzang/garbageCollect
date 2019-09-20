@@ -112,11 +112,14 @@ export default {
   },
 
   mounted () {
-    pushHistory();
-    window.onpopstate = () => {
+     // 控制设备物理返回按键
+    let that = this;
+    pushHistory()
+    that.gotoURL(() => { 
+      pushHistory()
       this.$router.push({path: 'collectHistory'});  //输入要返回的上一级路由地址
       this.changeTitleTxt({tit: '收集历史'})
-    };
+    });
     this.handleMessage = '';
   },
 

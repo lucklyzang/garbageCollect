@@ -21,7 +21,17 @@
         -webkit-overflow-scrolling: touch;
         position: relative;
       }
-    </style>      
+    </style>
+    <script>
+      function pushHistory(){
+        var state = {
+          title: '',
+          url: ''
+        };
+        window.history.pushState(state,state.title,state.url);
+      }
+      pushHistory()
+    </script>      
   </head>
   <body>
     <div id="app"></div>

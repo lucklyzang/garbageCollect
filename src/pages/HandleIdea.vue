@@ -55,11 +55,14 @@ export default {
   },
 
   mounted () {
-    pushHistory();
-    window.onpopstate = () => {
+    // 控制设备物理返回按键
+    let that = this;
+    pushHistory()
+    that.gotoURL(() => { 
+      pushHistory()
       this.$router.push({path: 'abnormalWarning'});  //输入要返回的上一级路由地址
       this.changeTitleTxt({tit: '医废预警'})
-    };
+    });
     this.handleMessage = '';
   },
 
@@ -93,7 +96,6 @@ export default {
         dealTime: this.formatTimeOther()    
       };
       warningDispose(disposeMsg).then((res) => {
-        this.handleMsg = '';
         if (res.data.code == 200) {
           this.$dialog.alert({
             closeOnPopstate: true,
@@ -101,13 +103,14 @@ export default {
           }).then(() => {
             this.initWaningInfo();
             this.handleMessage = '';
+            this.$router.push({path: 'abnormalWarning'})
+            this.changeTitleTxt({tit:'医废预警'})
           });
         } else {
           this.$dialog.alert({
             closeOnPopstate: true,
             message: `${res.data.msg}`
           }).then(() => {
-            this.initWaningInfo();
             this.handleMessage = '';
           });
         }
@@ -117,7 +120,6 @@ export default {
           closeOnPopstate: true,
           message: `${err.message}`
         }).then(() => {
-          this.initWaningInfo();
           this.handleMessage = '';
         });
       })

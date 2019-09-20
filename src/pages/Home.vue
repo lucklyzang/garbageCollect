@@ -58,13 +58,17 @@
     },
     
     mounted(){
-      pushHistory();
-      window.onpopstate = () => {
-        this.$router.replace({name: 'home'});  //输入要返回的上一级路由地址
-        this.changeTitleTxt({tit:'医废监测'});
-      };
+      // 控制设备物理返回按键
+      let that = this;
+      pushHistory()
+      that.gotoURL(() => { 
+        pushHistory()
+        this.$router.push({path: 'home'});  //输入要返回的上一级路由地址
+        this.changeTitleTxt({tit: '医废监测'})
+      });
       this.initItemList ()
     },
+    
     computed:{
       ...mapGetters([
         'navTopTitle',

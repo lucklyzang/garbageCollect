@@ -30,7 +30,7 @@ export default {
       'changeCurrentActive',
       'changebluetoothWeighShow',
       'changeStaffCodeShow',
-      'changeIsExecute'
+      'changeBagCodeShow'
     ]),
     showDialog () {
       this.$dialog.confirm({
@@ -38,7 +38,6 @@ export default {
         closeOnPopstate: true
       }).then(() => {
         this.$router.push({path: 'medicalCollect'});
-        this.changeIsExecute(true);
         this.changeFlowState(2);
         this.changeCollectBtn(false);
         this.changeSureBtn(true);
@@ -46,13 +45,14 @@ export default {
         this.changeOtherBtn(false);
         this.changeCurrentLajicodeState(false);
         this.changeClickBackoutBtn(false);
+        this.changeBagCodeShow(false);
         this.changebluetoothWeighShow(false);
         this.changeStaffCodeShow(true)
       }).catch(() => {
-        this.changeIsExecute(true);
         this.changeCurrentLajicodeState(false);
         this.$router.replace({path:'judgeCurrentCollectFinish'});
         this.changeClickBackoutBtn(false);
+        this.changeBagCodeShow(false);
         this.changebluetoothWeighShow(false)   
       });
     }

@@ -58,9 +58,12 @@ export default {
   },
 
   mounted () {
-    pushHistory();
-    window.onpopstate = () => {
-      if (this.currentActive == 0) {
+     // 控制设备物理返回按键
+    let that = this;
+    pushHistory()
+    that.gotoURL(() => { 
+    pushHistory()
+     if (this.currentActive == 0) {
         this.changeCurrentActive(0);
         this.$router.push({path: 'medicalCollect'})
       } else if (this.currentActive == 1) {
@@ -73,29 +76,12 @@ export default {
         this.changeCurrentActive(2);
         this.$router.push({path: 'medicalCollect'})
       }
-    };
-     if (this.currentActive == 3) {
+    });
+    if (this.currentActive == 3) {
       this.weightRubbish()
     } else {
       this.sweepAstoffice();
     };
-    // if (this.callPeriod) {
-    //   if (this.currentActive == 3) {
-    //     this.weightRubbish()
-    //   } else {
-    //     this.sweepAstoffice();
-    //   };
-    // } else {
-    //   if (this.currentActive == 0) {
-    //     this.commonDialog(0)
-    //   } else if (this.currentActive == 1) {
-    //     this.commonDialog(1)
-    //   } else if (this.currentActive == 2) {
-    //     this.commonDialog(2)
-    //   } else if (this.currentActive == 3) {
-    //     this.commonDialog(3)
-    //   };
-    // }
     // 二维码回调方法绑定到window下面,提供给外部调用
     let me = this;
     window['scanQRcodeCallback'] = (code) => {

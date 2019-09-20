@@ -92,11 +92,14 @@ export default {
   },
 
   mounted() {
-    pushHistory();
-    window.onpopstate = () => {
+    // 控制设备物理返回按键
+    let that = this;
+    pushHistory()
+    that.gotoURL(() => { 
+      pushHistory()
       this.$router.push({path: 'home'});  //输入要返回的上一级路由地址
       this.changeTitleTxt({tit: '医废监测'})
-    }
+    });
     this.queryAllBatch();
     // 二维码回调方法绑定到window下面,提供给外部调用
     let me = this;

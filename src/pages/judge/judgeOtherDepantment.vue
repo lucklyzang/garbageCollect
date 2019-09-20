@@ -35,17 +35,16 @@ export default {
       'changeAstOfficeShow',
       'changeStaffCodeShow',
       'changebluetoothWeighShow',
-      'changeCodeStep',
-      'changeIsExecute'
+      'changeCodeStep'
     ]),
     showDialog () {
       this.$dialog.confirm({
         message: '是否其它科室收集?',
         closeOnPopstate: true
       }).then(() => {
-        this.changeIsExecute(true);
         this.changeFlowState(0);
         this.$router.push({path: 'medicalCollect'});
+        this.changeTitleTxt({tit: '医废收集'});
         this.changeCollectBtn(true);
         this.changeSureBtn(false);
         this.changePrintBtn(false);
@@ -59,10 +58,7 @@ export default {
         this.clearTrashStore();
         this.changeCurrentLajicodeState(false);
         this.changeBackoutBtn(true);
-        // 断开蓝牙秤
-        window.android.disconnectScales()
       }).catch(() => {
-        this.changeIsExecute(true);
         this.$router.push({path:'medicalInStorage'});
         this.changeTitleTxt({tit: '医废入库'});
         // 清空上个科室存储的数据
@@ -78,9 +74,7 @@ export default {
         this.changeCollectBtn(true);
         this.changeSureBtn(false);
         this.changeBackoutBtn(true);
-        this.changeOtherBtn(false);
-        // 断开蓝牙秤
-        window.android.disconnectScales() 
+        this.changeOtherBtn(false)
       });
     }
   }

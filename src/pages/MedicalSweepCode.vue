@@ -107,8 +107,7 @@ export default {
       'extraLyczMsg',
       'currentActive',
       'codeStep',
-      'isPlus',
-      'isExecute'
+      'isPlus'
     ]),
     showCurrentActive () {
       return this.currentActive
@@ -143,29 +142,26 @@ export default {
   },
 
   mounted () {
-    pushHistory();
-    // 监听历史记录点, 添加返回事件监听
-    window.onpopstate = () => {
-      this.changeIsExecute(false);
+    // 控制设备物理返回按键
+    let that = this;
+    pushHistory()
+    that.gotoURL(() => { 
+      pushHistory()
       this.$dialog.confirm({
         message: '返回上一级后,将清空本次收集的医废数据'
       })
       .then(() => {
         this.$router.push({path: 'home'});  //输入要返回的上一级路由地址
         this.changeTitleTxt({tit: '医废监测'});
-        //清除当前流程的扫码信息
-        this.changeIsExecute(true);
-        this.initSweepCodeInfo()
+        this.initSweepCodeInfo();
       })
       .catch(() => {
-        this.$router.push({path: 'medicalCollect'});
-        this.changeTitleTxt({tit: '医废收集'});
       })
-    }
+    })
+
     // 判断流程从哪步开始
-    if (this.isExecute) {
-      this.judgeFlowPosition();
-    };
+    this.judgeFlowPosition();
+
     // 二维码回调方法绑定到window下面,提供给外部调用
     let me = this;
     window['scanQRcodeCallback'] = (code) => {
@@ -209,12 +205,11 @@ export default {
       'changeCurrentActive',
       'changeCodeStep',
       'changeIsPlus',
-      'changeFlowState',
-      'changeIsExecute'
+      'changeFlowState'
     ]),
+
     // 返回上一页
     backTo () {
-      this.changeIsExecute(false);
       this.$dialog.confirm({
         message: '返回上一级后,将清空本次收集的医废数据',
         closeOnPopstate: true
@@ -223,17 +218,13 @@ export default {
         this.$router.push({path: 'home'});
         this.changeTitleTxt({tit:'医废监测'});
         //清除当前流程的扫码信息
-        this.changeIsExecute(true);
         this.initSweepCodeInfo()
       })
       .catch(() => {
-        this.$router.push({path: 'medicalCollect'});
-        this.changeTitleTxt({tit: '医废收集'});
       })
     },
     // 跳转到我的页面
     skipMyInfo () {
-      this.changeIsExecute(false);
       this.$dialog.confirm({
         message: '跳转到我的页面后,将清空本次收集的医废数据',
         closeOnPopstate: true
@@ -242,12 +233,9 @@ export default {
         this.$router.push({path: 'myInfo'});
         this.changeTitleTxt({tit:'我的'});
         //清除当前流程的扫码信息
-        this.changeIsExecute(true);
         this.initSweepCodeInfo()
       })
       .catch(() => {
-        this.$router.push({path: 'medicalCollect'});
-        this.changeTitleTxt({tit: '医废收集'});
       })
     },
     startTask () {
@@ -315,7 +303,9 @@ export default {
 
     // 初始化扫码信息
     initSweepCodeInfo () {
+      this.changeCodeStep(0);
       this.changeFlowState(0);
+      this.changeCurrentActive(-1);
       this.changeCollectBtn(true);
       this.changeBackoutBtn(true);
       this.changeSureBtn(false);
@@ -599,7 +589,7 @@ export default {
 
     // 收集确认
     collectSure () {
-      this.$router.push({path:'judgeOtherDepantment'})
+      this.$router.replace({path:'judgeOtherDepantment'})
     },
 
     // 时间格式方法

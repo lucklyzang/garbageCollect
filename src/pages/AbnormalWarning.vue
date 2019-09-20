@@ -30,11 +30,12 @@
                   所属医院: <span>{{item.proName}}</span>
                 </p>
                 <div class="list-strip">
-                  <p class="list-times">科室: {{item.depName}}</p>
+                  <p class="list-times" v-if="item.warnId == 1">科室: {{item.depName}}</p>
+                  <p class="list-times" v-if="item.warnId == 3">批次: {{item.batchNumber}}</p>
                   <p class="list-code">预警时间: {{item.createTime}}</p>
                 </div>
                 <div class="list-item-bottom">
-                  收集人员: <span>{{item.workerName}}</span>
+                  收集人员: <span>{{item.workerName ? item.workerName : '无'}}</span>
                 </div>
               </div>
             </div>
@@ -55,7 +56,7 @@
                   <p class="list-code">预警时间: {{item.createTime}}</p>
                 </div>
                 <div class="list-item-bottom">
-                  收集人员: <span>{{item.workerName}}</span>
+                  收集人员: <span>{{item.workerName ? item.workerName : '无'}}</span>
                 </div>
               </div>
             </div>
@@ -79,7 +80,7 @@
                   <p class="list-code">收集时间: {{item.createTime}}</p>
                 </div>
                 <div class="list-item-bottom">
-                  收集人员: <span>{{item.workerName}}</span>
+                  收集人员: <span>{{item.workerName ? item.workerName : '无'}}</span>
                 </div>
               </div>
             </div>
@@ -103,7 +104,7 @@
                   <p class="list-code">审核时间: {{item.checkTime}}</p>
                 </div>
                 <div class="list-item-bottom">
-                  收集人员: <span>{{item.workerName}}</span>
+                  收集人员: <span>{{item.workerName ? item.workerName : '无'}}</span>
                 </div>
               </div>
             </div>
@@ -159,18 +160,22 @@ export default {
   },
 
   mounted() {
-    pushHistory();
-    window.onpopstate = () => {
+    // 控制设备物理返回按键
+    let that = this;
+    pushHistory()
+    that.gotoURL(() => { 
+      pushHistory()
       this.$router.push({path: 'home'});  //输入要返回的上一级路由地址
       this.changeTitleTxt({tit: '医废监测'})
-    };
+    });
     this.initDate();
     this.queryWarning(this.getUserInfo, this.formatTime(), this.formatTime(), '')
   },
   methods: {
     ...mapMutations([
       'changeTitleTxt',
-      'storeWarningInfo'
+      'storeWarningInfo',
+      'initWaningInfo'
     ]),
     startTimeChange(e) { 
       let startTimeArr = e.getValues();//["2019", "03", "22", "17", "28"] 
@@ -192,6 +197,7 @@ export default {
     },
     // 跳转到处理意见页面
     skipHandlePage (item) {
+      this.initWaningInfo();
       this.storeWarningInfo(item);
       this.$router.push({path: 'handleIdea'})
       this.changeTitleTxt({tit:'填写处理信息'})
