@@ -37,15 +37,14 @@ export default {
   mounted() {
     this.showDialog();
     // 控制设备物理返回按键
-    let that = this;
-    pushHistory()
-    that.gotoURL(() => { 
-      pushHistory()
+    pushHistory();
+    this.gotoURL(() => { 
+      pushHistory();
       this.$dialog.alert({
-        message: '请关闭此科室收集是否已完成判断弹框',
+        message: '请先处理此科室收集是否已完成弹框',
         closeOnPopstate: true
       }).then(() => {
-        that.showDialog()
+        this.showDialog()
       });
     });
   },

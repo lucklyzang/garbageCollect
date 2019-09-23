@@ -536,7 +536,6 @@ export default {
             this.lanyaCz[0],this.userInfo.workerName,this.yihuCode[0].workerName);
         }
       } else if (this.lajiCode.length > 1) {
-        // 合并重复的垃圾类型及其重量
         let map = {};
         let momentTypeList = [];
         // 记录打印次数
@@ -548,6 +547,7 @@ export default {
             }
           }
         };
+        // 合并重复的垃圾类型及其重量
         momentTypeList.forEach((value, index) => {
           Object.prototype.hasOwnProperty.call(map, value) || (map[value] = 0);
           map[value] += Number(this.lanyaCz[index]);

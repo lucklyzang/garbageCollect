@@ -10,23 +10,20 @@ export default {
     };
   },
 
-  components: {},
-
-  computed: {},
-
   mounted() {
     this.showDialog();
     // 控制设备物理返回按键
-    let that = this;
-    pushHistory()
-    that.gotoURL(() => { 
-      pushHistory()
-      this.$dialog.alert({
-        message: '请关闭是否继续当前科室判断弹框',
-        closeOnPopstate: true
-      }).then(() => {
-        that.showDialog()
-      });
+    pushHistory();
+    this.gotoURL(() => { 
+      pushHistory();
+      setTimeout(() => {
+        this.$dialog.alert({
+          message: '请先处理是否当前科室继续收集弹框',
+          closeOnPopstate: true
+        }).then(() => {
+          this.showDialog()
+        })
+      },10)
     });
   },
 
