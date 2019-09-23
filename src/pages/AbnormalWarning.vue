@@ -19,7 +19,11 @@
         <p></p>
       </div>
       <van-tabs v-model="activeName"  @click="onClickTab">
-        <van-tab title="全部" name="0">
+        <van-tab name="0">
+          <div slot="title">
+            <span class="title">全部</span>
+            <span class="right-sign sign-all" v-show="currentIndex == 0">{{signAll == '' ? 0 : signAll}}</span>
+          </div>
           <div class="content-middle-list">
             <div class="content-middle-list-item all-type" v-for="item in overtimeList">
               <div class="list-item">
@@ -41,7 +45,11 @@
             </div>
           </div>
         </van-tab>
-        <van-tab title="待处理" name="1">
+        <van-tab name="1">
+          <div slot="title">
+            <span class="title">待处理</span>
+            <span class="right-sign sign-deal" v-show="currentIndex == 1">{{signDeal =='' ? 0 : signDeal}}</span>
+          </div>
           <div class="content-middle-list">
             <div class="content-middle-list-item await-conduct" v-for="item in notExamineList" @click="skipHandlePage(item)">
               <div class="list-item">
@@ -62,7 +70,11 @@
             </div>
           </div>
         </van-tab>
-        <van-tab title="待审核" name="2">
+        <van-tab name="2">
+          <div slot="title">
+            <span class="title">待审核</span>
+            <span class="right-sign sign-check" v-show="currentIndex == 2">{{signCheck == '' ? 0 : signCheck}}</span>
+          </div>
           <div class="content-middle-list">
             <div class="content-middle-list-item await-check" v-for="item in finishList">
               <div class="list-item">
@@ -86,7 +98,11 @@
             </div>
           </div>
         </van-tab>
-        <van-tab title="已完成" name="3">
+        <van-tab name="3">
+          <div slot="title">
+            <span class="title">已完成</span>
+            <span class="right-sign sign-finish" v-show="currentIndex == 3">{{signFinish == '' ? 0 : signFinish}}</span>
+          </div>
           <div class="content-middle-list">
             <div class="content-middle-list-item finished" v-for="item in unFinishList">
               <div class="list-item">
@@ -146,7 +162,12 @@ export default {
       checkMsg: '',
       clickQueryBtn: false,
       minDateStart: new Date(2018, 0, 1),
-      minDateEnd: new Date(2018, 0, 1)
+      minDateEnd: new Date(2018, 0, 1),
+      signFinish: '',
+      signAll: '',
+      signDeal: '',
+      signCheck: '',
+      currentIndex: ''
     };
   },
   computed: {
@@ -211,6 +232,7 @@ export default {
     // 点击标签按钮事件
     onClickTab (name, title) {
       let state;
+      this.currentIndex = name;
       switch (name) {
         case '0':
           state = ''
@@ -225,10 +247,7 @@ export default {
           state = 2
           break; 
       };
-      this.overtimeList = [];
-      this.notExamineList = [];
-      this.finishList = [];
-      this.unFinishList = [];
+      this.initData();
       if (this.startTime == "" || this.endTime == "") {
         this.$dialog.alert({
             message: '请选择开始或结束日期',
@@ -242,10 +261,7 @@ export default {
 
     // 查询预警批次
     queryWarning (proId,startDate,endDate,state) {
-      this.overtimeList = [];
-      this.notExamineList = [];
-      this.finishList = [];
-      this.unFinishList = [];
+      this.initData();
       let warningInfo = {
         proId,  
         startDate,
@@ -261,6 +277,7 @@ export default {
             if (state === '') {
               if (res.data.data.length > 0) {
                 let outStorage = res.data.data;
+                this.signAll = res.data.data.length;
                 for (let item of outStorage) {
                   this.overtimeList.push({
                   'checkIdea': item.checkIdea,  //审核意见，
@@ -293,6 +310,7 @@ export default {
             } else if (state === 0) {
               if (res.data.data.length > 0) {
                 let outStorage = res.data.data;
+                this.signDeal = res.data.data.length;
                 for (let item of outStorage) {
                   this.notExamineList.push({
                   'checkIdea': item.checkIdea,  //审核意见，
@@ -325,6 +343,7 @@ export default {
             } else if (state === 1) {
               if (res.data.data.length > 0) {
                 let outStorage = res.data.data;
+                this.signCheck = res.data.data.length;
                 for (let item of outStorage) {
                   this.finishList.push({
                   'checkIdea': item.checkIdea,  //审核意见，
@@ -357,6 +376,7 @@ export default {
             } else if (state === 2) {
               if (res.data.data.length > 0) {
                 let outStorage = res.data.data;
+                this.signFinish = res.data.data.length;
                 for (let item of outStorage) {
                   this.unFinishList.push({
                   'checkIdea': item.checkIdea,  //审核意见，
@@ -405,6 +425,17 @@ export default {
     // 时间格式方法2
     formatTimeOther () {
       return this.$moment(new Date().getTime()).format('YYYY-MM-DD HH:mm:ss')
+    },
+    // 初始化数据
+    initData () {
+      this.overtimeList = [];
+      this.notExamineList = [];
+      this.finishList = [];
+      this.unFinishList = [];
+      this.signFinish = '';
+      this.signAll = '';
+      this.signDeal =  '';
+      this.signCheck = '';
     }
   }
 }
@@ -412,35 +443,15 @@ export default {
 </script>
 <style lang='less' scoped>
 @import "../common/stylus/variable.less";
+@import "../common/stylus/modifyUi.less";
   .content-wrapper {
-    margin-top: 100px;
-    /deep/ .van-icon-arrow-left {
-      position: absolute;
-      top: 22px;
-      left: 4px;
-      font-size: 20px;
-      color: #fff
-    }
-    /deep/ .van-icon-manager-o {
-      position: absolute;
-      top: 22px;
-      right: 6px;
-      font-size: 18px;
-      color: #fff;
-    };
      /deep/ .van-dialog {
       .van-dialog__content{
         margin-top: 10px !important
       }
     };
     .content-middle {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      margin-top: 60px;
-      background: #fff;
+     .content-middle();
       /deep/ .van-tabs--line {
         margin-top: 4px;
         .van-tabs__line {
@@ -464,6 +475,14 @@ export default {
             background: @color-theme;
             border-color: @color-theme
           }
+        }
+      }
+      /deep/ .van-tabs {
+        .right-sign {
+         .repeat-sign
+        }
+        .sign-all {
+          left: 64px
         }
       }
       .changeBtn {

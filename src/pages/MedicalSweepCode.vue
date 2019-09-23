@@ -602,21 +602,8 @@ export default {
 </script>
 <style lang='less' scoped>
 @import "../common/stylus/variable.less";
+@import "../common/stylus/modifyUi.less";
   .content-wrapper {
-    /deep/ .van-icon-arrow-left {
-      position: absolute;
-      top: 22px;
-      left: 4px;
-      font-size: 20px;
-      color: #fff
-    }
-    /deep/ .van-icon-manager-o {
-      position: absolute;
-      top: 22px;
-      right: 6px;
-      font-size: 18px;
-      color: #fff;
-    }
     .content {
       position: fixed;
       top: 0;

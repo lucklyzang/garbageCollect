@@ -21,7 +21,11 @@
         </p>
       </div>
       <van-tabs v-model="activeName" @click="onClickTab">
-        <van-tab title="未入库" name="0">
+        <van-tab name="0">
+          <div slot="title">
+            <span class="title">未入库</span>
+            <span class="right-sign sign-not-in" v-show="currentIndex == 0">{{signNotIn == '' ? 0 : signNotIn}}</span>
+          </div>
           <div class="content-middle-list">
             <div class="content-middle-list-item not-inStorage" v-for="item in notInStorageList" @click="skipDetail(item)">
               <div class="list-item">
@@ -37,7 +41,11 @@
             </div>
           </div>
         </van-tab>
-        <van-tab title="已入库" name="1">
+        <van-tab name="1">
+          <div slot="title">
+            <span class="title">已入库</span>
+            <span class="right-sign sign-in" v-show="currentIndex == 1">{{signIn == '' ? 0 : signIn}}</span>
+          </div>
           <div class="content-middle-list">
             <div class="content-middle-list-item inStorage" v-for="item in inStorageList" @click="skipDetail(item)">
               <div class="list-item">
@@ -54,7 +62,11 @@
             </div>
           </div>
         </van-tab>
-        <van-tab title="已出库" name="2">
+        <van-tab  name="2">
+          <div slot="title">
+            <span class="title">已出库</span>
+            <span class="right-sign sign-out" v-show="currentIndex == 2">{{signOut == '' ? 0 : signOut}}</span>
+          </div>
            <div class="content-middle-list">
             <div class="content-middle-list-item out-storage" v-for="item in outStorageList" @click="skipDetail(item)">
               <div class="list-item">
@@ -76,7 +88,11 @@
             </div>
           </div>
         </van-tab>
-        <van-tab title="已完成" name="3">
+        <van-tab  name="3">
+          <div slot="title">
+            <span class="title">已完成</span>
+            <span class="right-sign sign-finish" v-show="currentIndex == 3">{{signFinish == '' ? 0 : signFinish}}</span>
+          </div>
           <div class="content-middle-list">
             <div class="content-middle-list-item in-finished" v-for="item in finishList" @click="skipDetail(item)">
               <div class="list-item">
@@ -127,7 +143,12 @@ export default {
       currentName: 0,
       activeName: 0,
       minDateStart: new Date(2018, 0, 1),
-      minDateEnd: new Date(2018, 0, 1)
+      minDateEnd: new Date(2018, 0, 1),
+      currentIndex: '',
+      signNotIn: '',
+      signIn: '',
+      signOut: '',
+      signFinish: ''
     };
   },
   computed: {
@@ -190,10 +211,8 @@ export default {
     // 点击标签按钮事件
     onClickTab (name, title) {
       this.currentName = name;
-      this.notInStorageList = [];
-      this.inStorageList = [];
-      this.outStorageList = [];
-      this.finishList = [];
+      this.currentIndex = name;
+      this.initData();
       if (this.startTime == "" || this.endTime == "") {
         this.$dialog.alert({
             message: '请选择开始或结束日期',
@@ -206,10 +225,7 @@ export default {
     },
     // 收集历史请求方法
     queryMethods (proId,startDate,endDate,name) {
-      this.notInStorageList = [];
-      this.inStorageList = [];
-      this.outStorageList = [];
-      this.finishList = [];
+      this.initData();
       let dataParams = {
         proId,
         startDate,
@@ -221,6 +237,7 @@ export default {
           if (res.data.code == 200) {
             if (name == 0) {
               if (res.data.data.length > 0) {
+                this.signNotIn = res.data.data.length;
                 for (let item of res.data.data) {
                   this.notInStorageList.push(
                     {
@@ -255,6 +272,7 @@ export default {
             } else if (name == 1) {
                if (res.data.data.length > 0) {
                 for (let item of res.data.data) {
+                  this.signIn = res.data.data.length;
                   this.inStorageList.push(
                     {
                       'batchNumber':  item.batchNumber,  //批次号  				
@@ -287,6 +305,7 @@ export default {
               }
             } else if (name == 2) {
                if (res.data.data.length > 0) {
+                this.signOut = res.data.data.length;
                 for (let item of res.data.data) {
                   this.outStorageList.push(
                     {
@@ -320,6 +339,7 @@ export default {
               }
             } else if (name == 3) {
                if (res.data.data.length > 0) {
+                this.signFinish = res.data.data.length;
                 for (let item of res.data.data) {
                   this.finishList.push(
                     {
@@ -372,6 +392,17 @@ export default {
     // 时间格式方法
     formatTime () {
       return this.$moment(new Date().getTime()).format('YYYY-MM-DD')
+    },
+    // 初始化数据
+    initData () {
+      this.notInStorageList = [];
+      this.inStorageList = [];
+      this.outStorageList = [];
+      this.finishList = [];
+      this.signNotIn = '';
+      this.signIn =  '';
+      this.signOut = '';
+      this.signFinish = ''
     }
   }
 }
@@ -379,38 +410,13 @@ export default {
 </script>
 <style lang='less' scoped>
   @import "../common/stylus/variable.less";
-  .content-wrapper {
-    margin-top: 100px;
-      /deep/ .van-icon-manager-o {
-        position: absolute;
-        top: 22px;
-        right: 6px;
-        font-size: 18px;
-        color: #fff;
-      }
-       /deep/ .van-icon-arrow-left {
-        position: absolute;
-        top: 22px;
-        left: 4px;
-        font-size: 20px;
-        color: #fff
-      }
-    }
+  @import "../common/stylus/modifyUi.less";
     .content-middle {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      margin-top: 60px;
-      background: #fff;
+      .content-middle();
       /deep/ .van-tabs--line {
         margin-top: 4px;
         .van-tabs__line {
           background-color: @color-theme;
-        }
-        .van-tabs__content {
-          // margin-top: 10px;
         }
       }
       .content-middle-top {
@@ -428,6 +434,11 @@ export default {
             background: @color-theme;
             border-color: @color-theme
           }
+        }
+      }
+      /deep/ .van-tabs {
+        .right-sign {
+         .repeat-sign
         }
       }
       .content-middle-list {

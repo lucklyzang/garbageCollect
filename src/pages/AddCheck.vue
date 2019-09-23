@@ -19,7 +19,11 @@
         <p></p>
       </div>
       <van-tabs v-model="activeName"  @click="onClickTab">
-        <van-tab title="待审核" name="0">
+        <van-tab name="0">
+          <div slot="title">
+            <span class="title">待审核</span>
+            <span class="right-sign sign-not-check" v-show="currentIndex == 0">{{signNotCheck == '' ? 0 : signNotCheck}}</span>
+          </div>
           <div class="content-middle-list">
             <div class="content-middle-list-item" v-for="item in notCheckList" @click="addRecordCheck(item)">
               <div class="list-item">
@@ -42,7 +46,11 @@
             </div>
           </div>
         </van-tab>
-        <van-tab title="已审核" name="1">
+        <van-tab name="1">
+          <div slot="title">
+            <span class="title">已审核</span>
+            <span class="right-sign sign-checked" v-show="currentIndex == 1">{{signChecked == '' ? 0 : signChecked}}</span>
+          </div>
           <div class="content-middle-list">
             <div class="content-middle-list-item checked" v-for="item in checkedList">
               <div class="list-item">
@@ -54,6 +62,7 @@
                 </p>
                 <div class="list-strip">
                   <p>补录人: {{item.suppName}}</p>
+                  <p class="list-sign">收集人: {{item.workerName}}</p>
                   <p class="list-sign">补录原因: {{item.remark}}</p>
                   <p class="list-sign">审核意见: {{item.checkIdea}}</p>
                   <p class="list-code">收集时间: {{item.collectTime}}</p>
@@ -62,7 +71,7 @@
                   <p class="list-code">重量: {{item.weight}} <span style="color:#c97889">kg</span></p>
                 </div>
                 <div class="list-item-bottom">
-                  收集人员: <span>{{item.workerName}}</span>
+                  审核人: <span>{{item.checkName}}</span>
                 </div>
               </div>
             </div>
@@ -124,7 +133,10 @@ export default {
       clickQueryBtn: false,
       addCheckShow: false,
       minDateStart: new Date(2018, 0, 1),
-      minDateEnd: new Date(2018, 0, 1)
+      minDateEnd: new Date(2018, 0, 1),
+      currentIndex: '',
+      signNotCheck: '',
+      signChecked: ''
     };
   },
   computed: {
@@ -185,8 +197,8 @@ export default {
     },
     // 点击标签按钮事件
     onClickTab (name, title) {
-      this.notCheckList = [];
-      this.checkedList = [];
+      this.currentIndex = name;
+      this.initData();
       let currentName;
       name == 0 ? currentName = 0 : currentName = 1;
       if (this.startTime == "" || this.endTime == "") {
@@ -276,8 +288,7 @@ export default {
 
     // 查询补录批次
     queryAdd (proId,startDate,endDate,state) {
-      this.notCheckList = [];
-      this.checkedList = [];
+      this.initData();
       let addMsg = {
         proId,
         startDate,
@@ -290,6 +301,7 @@ export default {
             if (state == 0) {
               if (res.data.data.length > 0) {
                 let outStorage = res.data.data;
+                this.signNotCheck = outStorage.length;
                 for (let item of outStorage) {
                   this.notCheckList.push({
                     'batchNumber': item.batchNumber, //补录批次
@@ -321,6 +333,7 @@ export default {
             } else if (state === 1) {
                if (res.data.data.length > 0) {
                 let outStorage = res.data.data;
+                this.signChecked = outStorage.length;
                 for (let item of outStorage) {
                   this.checkedList.push({
                     'batchNumber': item.batchNumber, //补录批次
@@ -331,6 +344,7 @@ export default {
                     'proId': item.proId,
                     'proName': item.proName,
                     'checkIdea': item.checkIdea,
+                    'checkName': item.checkName,
                     'remark': item.remark,
                     'state': item.state,             //状态
                     'storeNumber': item.storeNumber,
@@ -366,6 +380,13 @@ export default {
     // 时间格式方法2
     formatTimeOther () {
       return this.$moment(new Date().getTime()).format('YYYY-MM-DD HH:mm:ss')
+    },
+    // 初始化数据
+    initData () {
+      this.notCheckList = [];
+      this.checkedList = [];
+      this.signNotCheck = '',
+      this.signChecked = ''
     }
   }
 }
@@ -373,42 +394,19 @@ export default {
 </script>
 <style lang='less' scoped>
 @import "../common/stylus/variable.less";
+@import "../common/stylus/modifyUi.less";
   .content-wrapper {
-    margin-top: 100px;
-    /deep/ .van-icon-arrow-left {
-      position: absolute;
-      top: 22px;
-      left: 4px;
-      font-size: 20px;
-      color: #fff
-    }
-    /deep/ .van-icon-manager-o {
-      position: absolute;
-      top: 22px;
-      right: 6px;
-      font-size: 18px;
-      color: #fff;
-    };
      /deep/ .van-dialog {
       .van-dialog__content{
         margin-top: 10px !important
       }
     };
     .content-middle {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      margin-top: 60px;
-      background: #fff;
+      .content-middle();
       /deep/ .van-tabs--line {
         margin-top: 4px;
         .van-tabs__line {
           background-color: @color-theme;
-        }
-        .van-tabs__content {
-          // margin-top: 10px;
         }
       }
       .content-middle-top {
@@ -425,6 +423,11 @@ export default {
             background: @color-theme;
             border-color: @color-theme
           }
+        }
+      }
+      /deep/ .van-tabs {
+        .right-sign {
+         .repeat-sign(120px)
         }
       }
       .changeBtn {
@@ -492,7 +495,7 @@ export default {
           }
         }
         .checked {
-          height: 208px
+          height: 228px
         }
       }
       .btn-group {

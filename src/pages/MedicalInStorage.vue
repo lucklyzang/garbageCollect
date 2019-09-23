@@ -273,31 +273,11 @@ export default {
 
 </script>
 <style lang='less' scoped>
- @import "../common/stylus/variable.less";
+@import "../common/stylus/variable.less";
+@import "../common/stylus/modifyUi.less";
   .content-wrapper {
-    margin-top: 100px;
-    /deep/ .van-icon-arrow-left {
-      position: absolute;
-      top: 22px;
-      left: 4px;
-      font-size: 20px;
-      color: #fff
-    }
-    /deep/ .van-icon-manager-o {
-      position: absolute;
-      top: 22px;
-      right: 6px;
-      font-size: 18px;
-      color: #fff;
-    }
     .content-middle {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      margin-top: 60px;
-      background: #fff;
+      .content-middle();
       .content-middle-top {
         background: #7ad0e4;
         height: 26px;

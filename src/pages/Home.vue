@@ -142,22 +142,7 @@
 <style lang='less' scoped>
   @import "../common/stylus/variable.less";
   @import "../common/stylus/mixin.less";
-  .word-cup {
-    /deep/ .van-icon-arrow-left {
-      position: absolute;
-      top: 22px;
-      left: 4px;
-      font-size: 20px;
-      color: #fff
-    }
-    /deep/ .van-icon-manager-o {
-      position: absolute;
-      top: 22px;
-      right: 6px;
-      font-size: 18px;
-      color: #fff
-    }
-  }
+  @import "../common/stylus/modifyUi.less";
   .content {
     position: fixed;
     width: 100%;

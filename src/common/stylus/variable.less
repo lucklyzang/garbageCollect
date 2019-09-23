@@ -2,8 +2,6 @@
 @color-background: #f4f4f4;           //背景色
 @color-theme: #38bdd0;          //主题颜色
 
-
-
 //字体定义规范
 @font-size-small-s: 10px;
 @font-size-small: 12px;
@@ -20,3 +18,30 @@
 //宽度定义规范
 @card-theme-margin: 10px;  //卡片式布局间隙
 
+//重复的样式
+.repeat-sign (@left: 70px) {
+  background: #38bdd0;
+  color: #fff;
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  position: absolute;
+  top: 4px;
+  left: @left;
+  border-radius: 50%;
+  font-size: 10px;
+  text-align: center;
+  line-height: 20px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.content-middle (@margin-top: 60px, @height: 100%) {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: @height;
+  margin-top: @margin-top;
+  background: #fff;
+}
