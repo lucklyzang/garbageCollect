@@ -7,68 +7,182 @@
       <div class="content-middle-top">
         <div v-show="currentName==0">
           <div class="list-item">
-            <p class="list-item-left">批次: {{getCollectInfo.batchNumber ? getCollectInfo.batchNumber : ''}}</p>
-            <div class="list-strip">
-              <p>医院: {{getCollectInfo.proName}}</p>
-              <p class="list-sign">交接人: {{getCollectInfo.companyName ? getCollectInfo.companyName : '无'}}</p>
-              <p class="list-times">交接公司: {{getCollectInfo.company ? getCollectInfo.company : '无'}}</p>
-              <p class="list-code">收集车号: {{getCollectInfo.cardNumber ? getCollectInfo.cardNumber : '无'}}</p>
-              <p>收集总重量: {{getCollectInfo.totalWeight ? getCollectInfo.totalWeight : '0.00'}}kg</p>
-              <p class="list-sign">总包数: {{getCollectInfo.totalCount ? getCollectInfo.totalCount : 0}}</p>
+            <div class="item-column">
+              <p class="title">批次</p>
+              <p class="title-content">{{getCollectInfo.batchNumber ? getCollectInfo.batchNumber : ''}}</p>
+            </div>
+            <div class="item-column">
+              <p class="title">医院</p>
+              <p class="title-content">{{getCollectInfo.proName}}</p>
+            </div>
+            <div class="item-column">
+              <p class="title">交接人</p>
+              <p class="title-content">{{getCollectInfo.companyName ? getCollectInfo.companyName : '无'}}</p>
+            </div>
+            <div class="item-column">
+              <p class="title">交接公司</p>
+              <p class="title-content">{{getCollectInfo.company ? getCollectInfo.company : '无'}}</p>
+            </div>
+            <div class="item-column">
+              <p class="title">收集车号</p>
+              <p class="title-content">{{getCollectInfo.cardNumber ? getCollectInfo.cardNumber : '无'}}</p>
+            </div>
+            <div class="item-column">
+              <p class="title">收集总重量</p>
+              <p class="title-content">{{getCollectInfo.totalWeight ? getCollectInfo.totalWeight : '0.00'}}kg</p>
+            </div>
+            <div class="item-column">
+              <p class="title">总包数</p>
+              <p class="title-content">{{getCollectInfo.totalCount ? getCollectInfo.totalCount : 0}}</p>
             </div>
           </div>
         </div>
         <div v-show="currentName==1">
           <div class="list-item">
-            <p class="list-item-left">批次: {{getCollectInfo.batchNumber ? getCollectInfo.batchNumber : ''}}</p>
-            <div class="list-strip">
-              <p>医院: {{getCollectInfo.proName}}</p>
-              <p class="list-sign">交接人: {{getCollectInfo.companyName ? getCollectInfo.companyName : '无'}}</p>
-              <p class="list-sign">入库人员: {{getCollectInfo.inWorkerName ? getCollectInfo.inWorkerName : '无'}}</p>
-              <p class="list-times">交接公司: {{getCollectInfo.company ? getCollectInfo.company : '无'}}</p>
-              <p class="list-code">收集车号: {{getCollectInfo.cardNumber ? getCollectInfo.cardNumber : '无'}}</p>
-              <p class="list-sign">入库总重量: {{getCollectInfo.inTotalWeight ? getCollectInfo.inTotalWeight : '无'}}kg</p>
-              <p class="list-sign">入库时间: {{getCollectInfo.inTime ? getCollectInfo.inTime : '无'}}</p>
-              <p>收集总重量: {{getCollectInfo.totalWeight ? getCollectInfo.totalWeight : '0.00'}}kg</p>
-              <p class="list-sign">总包数: {{getCollectInfo.totalCount ? getCollectInfo.totalCount : 0}}</p>
+            <div class="item-column">
+              <p class="title">批次</p>
+              <p class="title-content">{{getCollectInfo.batchNumber ? getCollectInfo.batchNumber : ''}}</p>
             </div>
+            <div class="item-column">
+              <p class="title">医院</p>
+              <p class="title-content">{{getCollectInfo.proName}}</p>
+            </div>
+            <div class="item-column">
+              <p class="title">交接人</p>
+              <p class="title-content">{{getCollectInfo.companyName ? getCollectInfo.companyName : '无'}}</p>
+            </div>
+            <div class="item-column">
+              <p class="title">入库人员</p>
+              <p class="title-content">{{getCollectInfo.inWorkerName ? getCollectInfo.inWorkerName : '无'}}</p>
+            </div>
+            <div class="item-column">
+              <p class="title">交接公司</p>
+              <p class="title-content">{{getCollectInfo.company ? getCollectInfo.company : '无'}}</p>
+            </div>
+            <div class="item-column">
+              <p class="title">收集车号</p>
+              <p class="title-content">{{getCollectInfo.cardNumber ? getCollectInfo.cardNumber : '无'}}</p>
+            </div>
+            <div class="item-column">
+              <p class="title">入库总重量</p>
+              <p class="title-content">{{getCollectInfo.inTotalWeight ? getCollectInfo.inTotalWeight : '无'}}kg</p>
+            </div> 
+            <div class="item-column">
+              <p class="title">入库时间</p>
+              <p class="title-content">{{getCollectInfo.inTime ? getCollectInfo.inTime : '无'}}</p>
+            </div> 
+            <div class="item-column">
+              <p class="title">收集总重量</p>
+              <p class="title-content">{{getCollectInfo.totalWeight ? getCollectInfo.totalWeight : '0.00'}}kg</p>
+            </div>   
+            <div class="item-column">
+              <p class="title">总包数</p>
+              <p class="title-content">{{getCollectInfo.totalCount ? getCollectInfo.totalCount : 0}}</p>
+            </div> 
           </div>
         </div>
-         <div v-show="currentName==2">
+        <div v-show="currentName==2">
           <div class="list-item">
-            <p class="list-item-left">批次: {{getCollectInfo.batchNumber ? getCollectInfo.batchNumber : ''}}</p>
-            <div class="list-strip">
-              <p>医院: {{getCollectInfo.proName}}</p>
-              <p class="list-sign">交接人: {{getCollectInfo.companyName ? getCollectInfo.companyName : '无'}}</p>
-              <!-- <p class="list-sign">出库人员: {{getCollectInfo.outWorkerName ? getCollectInfo.outWorkerName : '无'}}</p> -->
-              <p class="list-times">交接公司: {{getCollectInfo.company ? getCollectInfo.company : '无'}}</p>
-              <p class="list-code">收集车号: {{getCollectInfo.cardNumber ? getCollectInfo.cardNumber : '无'}}</p>
-              <p class="list-sign">出库总重量: {{getCollectInfo.outTotalWeight ? getCollectInfo.outTotalWeight : '无'}}kg</p>
-              <p class="list-sign">出库时间: {{getCollectInfo.outTime ? getCollectInfo.outTime : '无'}}</p>
-              <p>收集总重量: {{getCollectInfo.totalWeight ? getCollectInfo.totalWeight : '0.00'}}kg</p>
-              <p class="list-sign">总包数: {{getCollectInfo.totalCount ? getCollectInfo.totalCount : 0}}</p>
-              <p class="list-times">总暂存点编号: {{getCollectInfo.storeNumber ? getCollectInfo.storeNumber : '无'}}</p>
+            <div class="item-column">
+              <p class="title">批次</p>
+              <p class="title-content">{{getCollectInfo.batchNumber ? getCollectInfo.batchNumber : ''}}</p>
             </div>
+            <div class="item-column">
+              <p class="title">医院</p>
+              <p class="title-content">{{getCollectInfo.proName}}</p>
+            </div>
+            <div class="item-column">
+              <p class="title">交接人</p>
+              <p class="title-content">{{getCollectInfo.companyName ? getCollectInfo.companyName : '无'}}</p>
+            </div>
+            <div class="item-column">
+              <p class="title">交接公司</p>
+              <p class="title-content">{{getCollectInfo.company ? getCollectInfo.company : '无'}}</p>
+            </div>
+            <div class="item-column">
+              <p class="title">收集车号</p>
+              <p class="title-content">{{getCollectInfo.cardNumber ? getCollectInfo.cardNumber : '无'}}</p>
+            </div> 
+            <div class="item-column">
+              <p class="title">出库总重量</p>
+              <p class="title-content">{{getCollectInfo.outTotalWeight ? getCollectInfo.outTotalWeight : '无'}}kg</p>
+            </div>   
+            <div class="item-column">
+              <p class="title">出库时间</p>
+              <p class="title-content">{{getCollectInfo.outTime ? getCollectInfo.outTime : '无'}}</p>
+            </div>  
+            <div class="item-column">
+              <p class="title">收集总重量</p>
+              <p class="title-content">{{getCollectInfo.totalWeight ? getCollectInfo.totalWeight : '0.00'}}kg</p>
+            </div>    
+            <div class="item-column">
+              <p class="title">总包数</p>
+              <p class="title-content">{{getCollectInfo.totalCount ? getCollectInfo.totalCount : 0}}</p>
+            </div>  
+            <div class="item-column">
+              <p class="title">总暂存点编号</p>
+              <p class="title-content">{{getCollectInfo.storeNumber ? getCollectInfo.storeNumber : '无'}}</p>
+            </div>  
           </div>
         </div>
          <div v-show="currentName==3">
           <div class="list-item">
-            <p class="list-item-left">批次: {{getCollectInfo.batchNumber ? getCollectInfo.batchNumber : ''}}</p>
-            <div class="list-strip">
-              <p>医院: {{getCollectInfo.proName}}</p>
-              <p class="list-sign">交接人: {{getCollectInfo.companyName ? getCollectInfo.companyName : '无'}}</p>
-              <p class="list-sign">入库人员: {{getCollectInfo.inWorkerName ? getCollectInfo.inWorkerName : '无'}}</p>
-              <p class="list-sign">出库人员: {{getCollectInfo.outWorkerName ? getCollectInfo.outWorkerName : '无'}}</p>
-              <p class="list-times">交接公司: {{getCollectInfo.company ? getCollectInfo.company : '无'}}</p>
-              <p class="list-code">收集车号: {{getCollectInfo.cardNumber ? getCollectInfo.cardNumber : '无'}}</p>
-              <p class="list-sign">入库总重量: {{getCollectInfo.inTotalWeight ? getCollectInfo.inTotalWeight : '0.00'}}kg</p>
-              <p class="list-sign">出库总重量: {{getCollectInfo.outTotalWeight ? getCollectInfo.outTotalWeight : '0.00'}}kg</p>
-              <p class="list-sign">入库时间: {{getCollectInfo.inTime ? getCollectInfo.inTime : '无'}}</p>
-              <p class="list-sign">出库时间: {{getCollectInfo.outTime ? getCollectInfo.outTime : '无'}}</p>
-              <p>收集总重量: {{getCollectInfo.totalWeight ? getCollectInfo.totalWeight : '0.00'}}kg</p>
-              <p class="list-sign">总包数: {{getCollectInfo.totalCount ? getCollectInfo.totalCount : 0}}</p>
-              <p class="list-times">总暂存点编号: {{getCollectInfo.storeNumber ? getCollectInfo.storeNumber : '无'}}</p>
+            <div class="item-column">
+              <p class="title">批次</p>
+              <p class="title-content">{{getCollectInfo.batchNumber ? getCollectInfo.batchNumber : ''}}</p>
             </div>
+            <div class="item-column">
+              <p class="title">医院</p>
+              <p class="title-content">{{getCollectInfo.proName}}</p>
+            </div>
+            <div class="item-column">
+              <p class="title">交接人</p>
+              <p class="title-content">{{getCollectInfo.companyName ? getCollectInfo.companyName : '无'}}</p>
+            </div>
+            <div class="item-column">
+              <p class="title">入库人员</p>
+              <p class="title-content">{{getCollectInfo.inWorkerName ? getCollectInfo.inWorkerName : '无'}}</p>
+            </div>
+            <div class="item-column">
+              <p class="title">出库人员</p>
+              <p class="title-content">{{getCollectInfo.outWorkerName ? getCollectInfo.outWorkerName : '无'}}</p>
+            </div> 
+            <div class="item-column">
+              <p class="title">交接公司</p>
+              <p class="title-content">{{getCollectInfo.company ? getCollectInfo.company : '无'}}</p>
+            </div>
+            <div class="item-column">
+              <p class="title">收集车号</p>
+              <p class="title-content">{{getCollectInfo.cardNumber ? getCollectInfo.cardNumber : '无'}}</p>
+            </div>
+            <div class="item-column">
+              <p class="title">入库总重量</p>
+              <p class="title-content">{{getCollectInfo.inTotalWeight ? getCollectInfo.inTotalWeight : '无'}}kg</p>
+            </div>  
+            <div class="item-column">
+              <p class="title">出库总重量</p>
+              <p class="title-content">{{getCollectInfo.outTotalWeight ? getCollectInfo.outTotalWeight : '无'}}kg</p>
+            </div>   
+            <div class="item-column">
+              <p class="title">入库时间</p>
+              <p class="title-content">{{getCollectInfo.inTime ? getCollectInfo.inTime : '无'}}</p>
+            </div>
+            <div class="item-column">
+              <p class="title">出库时间</p>
+              <p class="title-content">{{getCollectInfo.outTime ? getCollectInfo.outTime : '无'}}</p>
+            </div>    
+            <div class="item-column">
+              <p class="title">收集总重量</p>
+              <p class="title-content">{{getCollectInfo.totalWeight ? getCollectInfo.totalWeight : '0.00'}}kg</p>
+            </div>    
+            <div class="item-column">
+              <p class="title">总包数</p>
+              <p class="title-content">{{getCollectInfo.totalCount ? getCollectInfo.totalCount : 0}}</p>
+            </div>  
+            <div class="item-column">
+              <p class="title">总暂存点编号</p>
+              <p class="title-content">{{getCollectInfo.storeNumber ? getCollectInfo.storeNumber : '无'}}</p>
+            </div>  
           </div>
         </div>
       </div>
@@ -162,37 +276,30 @@ export default {
   .content-wrapper {
     .content-middle {
      .content-middle(0);
+     background: #f5f5f5;
       .content-middle-top {
-        margin-top: 80px;
-        height: 80vh;
+        margin-top: 61px;
+        height: 90vh;
         overflow: auto;
-        padding: 16px;
-          .list-item {
-            position: relative;
-            height: 100%;
-            .list-item-left {
-              position: absolute;
-              top: 0;
-              left: 0;
-              color: black;
+        padding: 12px;
+        .list-item {
+          .item-column {
+            height: 40px;
+            padding: 12px 0 12px 10px;
+            background: #fff;
+            margin-bottom: 12px;
+            .title {
               font-size: 14px;
+              color: #535353;
+              margin-bottom: 12px;
               font-weight: bold;
             }
-            .list-strip {
-              position: absolute;
-              top: 20px;
-              left: 0;
-              color: #707070;
+            .title-content {
               font-size: 13px;
-              margin-top: 12px;
-              p {
-                margin-top: 12px;
-                &:first-child {
-                  margin-top: 0
-                }
-              }
+              color: #b3b3b3
             }
           }
+        }
       }
     }
   }

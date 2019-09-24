@@ -59,10 +59,10 @@ export default {
     pushHistory()
     that.gotoURL(() => { 
       pushHistory()
-      this.$router.push({path: 'home'});  //输入要返回的上一级路由地址
+      this.$router.push({path: 'home'});
       this.changeTitleTxt({tit: '医废监测'})
     });
-    // 基于准备好的dom，初始化echarts实例 写在 mounted（）里面
+   
     let vesselEleDay = this.$echarts.init(
       document.getElementById("content-middle-dayData")
     );
@@ -75,6 +75,8 @@ export default {
     let vesselEleYear = this.$echarts.init(
       document.getElementById("content-middle-yearData")
     );
+    
+    // 自适应不同尺寸的屏幕
     window.onresize = function(){
       vesselEleDay.resize();
       vesselEleWeek.resize();  

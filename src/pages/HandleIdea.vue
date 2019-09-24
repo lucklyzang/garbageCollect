@@ -169,6 +169,9 @@ export default {
             line-height: 35px;
             padding: 0 120px
           }
+          &:after {
+            display: none
+          }
         }
       }
     }

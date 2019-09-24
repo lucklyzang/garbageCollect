@@ -70,7 +70,7 @@
                   <p class="list-code">审核时间: {{item.checkTime}}</p>
                 </div>
                 <div class="list-item-bottom">
-                  审核人: <span>{{item.dealName}}</span>
+                  审核人: <span>{{item.checkName}}</span>
                 </div>
               </div>
             </div>
