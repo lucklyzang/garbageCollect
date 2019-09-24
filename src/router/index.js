@@ -89,7 +89,7 @@ let baseRoute  = [
     name: 'collectHistory',
     component: CollectHistory,
     meta: {
-      keepAlive: false
+      keepAlive: true
     }
   },
   {
@@ -97,7 +97,7 @@ let baseRoute  = [
     name: 'collectDetails',
     component: CollectDetails,
     meta: {
-      keepAlive: false
+      keepAlive: true
     }
   },
   {

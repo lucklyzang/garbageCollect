@@ -34,7 +34,8 @@
                   所属医院: <span>{{item.proName}}</span>
                 </p>
                 <div class="list-strip">
-                  <p>科室: {{item.depName}}</p>
+                  <p class="list-times" v-if="item.warnId == 1">科室: {{item.depName}}</p>
+                  <p class="list-times" v-if="item.warnId == 3">批次: {{item.batchNumber}}</p>
                   <p class="list-sign">处理意见: {{item.warnReason}}</p>
                   <p class="list-code">预警时间: {{item.createTime}}</p>
                   <p class="list-code">处理时间: {{item.dealTime}}</p>
@@ -61,7 +62,8 @@
                   所属医院: <span>{{item.proName}}</span>
                 </p>
                 <div class="list-strip">
-                  <p>科室: {{item.depName}}</p>
+                  <p class="list-times" v-if="item.warnId == 1">科室: {{item.depName}}</p>
+                  <p class="list-times" v-if="item.warnId == 3">批次: {{item.batchNumber}}</p>
                   <p class="list-sign">审核意见: {{item.checkIdea}}</p>
                   <p class="list-sign">预警原因: {{item.warnReason}}</p>
                   <p class="list-times">处理人: {{item.dealName}}</p>

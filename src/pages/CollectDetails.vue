@@ -15,7 +15,6 @@
               <p class="list-code">收集车号: {{getCollectInfo.cardNumber ? getCollectInfo.cardNumber : '无'}}</p>
               <p>收集总重量: {{getCollectInfo.totalWeight ? getCollectInfo.totalWeight : '0.00'}}kg</p>
               <p class="list-sign">总包数: {{getCollectInfo.totalCount ? getCollectInfo.totalCount : 0}}</p>
-              <p class="list-times">交接公司: {{getCollectInfo.company ? getCollectInfo.company : '无'}}</p>
             </div>
           </div>
         </div>
@@ -32,7 +31,6 @@
               <p class="list-sign">入库时间: {{getCollectInfo.inTime ? getCollectInfo.inTime : '无'}}</p>
               <p>收集总重量: {{getCollectInfo.totalWeight ? getCollectInfo.totalWeight : '0.00'}}kg</p>
               <p class="list-sign">总包数: {{getCollectInfo.totalCount ? getCollectInfo.totalCount : 0}}</p>
-              <p class="list-times">交接公司: {{getCollectInfo.company ? getCollectInfo.company : '无'}}</p>
             </div>
           </div>
         </div>
@@ -49,7 +47,6 @@
               <p class="list-sign">出库时间: {{getCollectInfo.outTime ? getCollectInfo.outTime : '无'}}</p>
               <p>收集总重量: {{getCollectInfo.totalWeight ? getCollectInfo.totalWeight : '0.00'}}kg</p>
               <p class="list-sign">总包数: {{getCollectInfo.totalCount ? getCollectInfo.totalCount : 0}}</p>
-              <p class="list-times">交接公司: {{getCollectInfo.company ? getCollectInfo.company : '无'}}</p>
               <p class="list-times">总暂存点编号: {{getCollectInfo.storeNumber ? getCollectInfo.storeNumber : '无'}}</p>
             </div>
           </div>
@@ -64,13 +61,12 @@
               <p class="list-sign">出库人员: {{getCollectInfo.outWorkerName ? getCollectInfo.outWorkerName : '无'}}</p>
               <p class="list-times">交接公司: {{getCollectInfo.company ? getCollectInfo.company : '无'}}</p>
               <p class="list-code">收集车号: {{getCollectInfo.cardNumber ? getCollectInfo.cardNumber : '无'}}</p>
-              <p class="list-sign">入库总重量: {{getCollectInfo.inTotalWeight ? getCollectInfo.inTotalWeight : '无'}}kg</p>
-              <p class="list-sign">出库总重量: {{getCollectInfo.outTotalWeight ? getCollectInfo.outTotalWeight : '无'}}kg</p>
+              <p class="list-sign">入库总重量: {{getCollectInfo.inTotalWeight ? getCollectInfo.inTotalWeight : '0.00'}}kg</p>
+              <p class="list-sign">出库总重量: {{getCollectInfo.outTotalWeight ? getCollectInfo.outTotalWeight : '0.00'}}kg</p>
               <p class="list-sign">入库时间: {{getCollectInfo.inTime ? getCollectInfo.inTime : '无'}}</p>
               <p class="list-sign">出库时间: {{getCollectInfo.outTime ? getCollectInfo.outTime : '无'}}</p>
               <p>收集总重量: {{getCollectInfo.totalWeight ? getCollectInfo.totalWeight : '0.00'}}kg</p>
               <p class="list-sign">总包数: {{getCollectInfo.totalCount ? getCollectInfo.totalCount : 0}}</p>
-              <p class="list-times">交接公司: {{getCollectInfo.company ? getCollectInfo.company : '无'}}</p>
               <p class="list-times">总暂存点编号: {{getCollectInfo.storeNumber ? getCollectInfo.storeNumber : '无'}}</p>
             </div>
           </div>
@@ -112,29 +108,29 @@ export default {
   },
 
   mounted () {
-     // 控制设备物理返回按键
-    let that = this;
-    pushHistory()
-    that.gotoURL(() => { 
-      pushHistory()
-      this.$router.push({path: 'collectHistory'});  //输入要返回的上一级路由地址
-      this.changeTitleTxt({tit: '收集历史'})
-    });
+    // 控制设备物理返回按键
+    this.monitorBack();
     this.handleMessage = '';
+  },
+
+  // 由于该页面被缓存,调用activated钩子函数保证每次组件切换时,监听物理返回按键的方法都会执行
+  activated () {
+    // 控制设备物理返回按键
+    this.monitorBack()
   },
 
   methods: {
     ...mapMutations([
       'changeTitleTxt',
-      'initCollectInfo',
-      'initCurrentName'
+      'initCurrentName',
+      'changeIsCall'
     ]),
     // 返回上一页
     backTo () {
       this.$router.push({path: 'collectHistory'});
       this.changeTitleTxt({tit: '收集历史'});
-      this.initCollectInfo();
-      this.initCurrentName()
+      this.initCurrentName();
+      this.changeIsCall(false)
     }, 
     // 时间格式方法
     formatTime () {
@@ -143,6 +139,18 @@ export default {
     // 时间格式方法2
     formatTimeOther () {
       return this.$moment(new Date().getTime()).format('YYYY-MM-DD HH:mm:ss')
+    },
+
+    // 控制设备物理返回按键
+    monitorBack () {
+      let that = this;
+      pushHistory()
+      that.gotoURL(() => { 
+        pushHistory()
+        this.$router.push({path: 'collectHistory'});  //输入要返回的上一级路由地址
+        this.changeTitleTxt({tit: '收集历史'});
+        this.changeIsCall(false)
+      })
     }
   }
 }

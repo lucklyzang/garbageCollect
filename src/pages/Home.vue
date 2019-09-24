@@ -82,7 +82,8 @@
         'changeTitleTxt',
         'changeApplicationCollectTime',
         'createBatchNumber',
-        'changeRouterFlag'
+        'changeRouterFlag',
+        'changeIsCall'
       ]),
       // 返回上一页
       backTo () {
@@ -127,6 +128,8 @@
                 this.$router.push({name: 'login'})
               });
             }
+          } else if (text === '收集历史') {
+            this.changeIsCall(true)
           };
           this.$router.push({path:name});
           this.changeTitleTxt({tit:text})

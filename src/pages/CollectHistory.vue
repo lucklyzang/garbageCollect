@@ -2,7 +2,7 @@
   <div class="content-wrapper">
     <HeaderTop :title="navTopTitle">
       <van-icon name="arrow-left" slot="left" @click="backTo"></van-icon> 
-      <van-icon name="manager-o" slot="right" @click="skipMyInfo"></van-icon> 
+      <van-icon name="manager-o" slot="right" @click="skipMyInfo"></van-icon>
     </HeaderTop>
     <div class="content-middle">
       <div class="content-middle-top">
@@ -72,12 +72,12 @@
               <div class="list-item">
                 <p class="list-item-left">批次: {{item.batchNumber}}</p>
                 <p class="list-item-right">
-                  出库重量: <span>{{item.inTotalWeight}}kg</span>
+                  出库重量: <span>{{item.outTotalWeight}}kg</span>
                 </p>
                 <div class="list-strip">
                   <p>医院: {{item.proName}}</p>
                   <p class="list-sign">入库人: {{item.inWorkerName}}</p>
-                  <p class="list-times">交接公司: {{item.company}}</p>
+                  <p class="list-times">交接公司: {{item.company ? item.company : '无'}}</p>
                   <p class="list-code">收集车号: {{item.cardNumber}}</p>
                   <p class="list-code">出库时间: {{item.outTime}}</p>
                 </div>
@@ -104,7 +104,7 @@
                   <p>医院: {{item.proName}}</p>
                   <p class="list-sign">入库人: {{item.inWorkerName}}</p>
                   <p class="list-times">入库时间: {{item.inTime}}</p>
-                  <p class="list-code">出库时间: {{item.outTime}}</p>
+                  <p class="list-code">出库时间: {{item.outTime ? item.outTime : '无'}}</p>
                 </div>
               </div>
             </div>
@@ -154,7 +154,8 @@ export default {
   computed: {
     ...mapGetters([
       'navTopTitle',
-      'userInfo'
+      'userInfo',
+      'isCall'
     ]),
     getUserInfo () {
       return this.userInfo.proId
@@ -162,20 +163,26 @@ export default {
   },
 
   mounted () {
-    pushHistory();
-    window.onpopstate = () => {
-      this.$router.push({path: 'home'});  //输入要返回的上一级路由地址
-      this.changeTitleTxt({tit: '医废监测'})
-    };
-    this.initDate();
-    this.queryMethods(this.userInfo.proId, this.formatTime(), this.formatTime(), 0)
+   // 控制设备物理返回按键
+    this.monitorBack();
+    this.initMethod()
+  },
+
+  // 由于该页面被缓存,调用activated钩子函数保证每次组件切换时,监听物理返回按键的方法都会执行
+  activated () {
+    // 控制设备物理返回按键
+    this.monitorBack();
+    if (this.isCall) {
+      this.initMethod()
+    }
   },
 
   methods: {
     ...mapMutations([
       'changeTitleTxt',
       'storeCollectInfo',
-      'storeCurrentName'
+      'storeCurrentName',
+      'initCollectInfo'
     ]),
     // 返回上一页
     backTo () {
@@ -203,6 +210,7 @@ export default {
     },
     // 跳转到详情页
     skipDetail (item) {
+      this.initCollectInfo();
       this.storeCollectInfo(item);
       this.storeCurrentName(this.currentName)
       this.$router.push({path:'CollectDetails'});
@@ -403,6 +411,25 @@ export default {
       this.signIn =  '';
       this.signOut = '';
       this.signFinish = ''
+    },
+
+    // 控制设备物理返回按键
+    monitorBack () {
+      let that = this;
+      pushHistory()
+      that.gotoURL(() => { 
+        pushHistory()
+        this.$router.push({path: 'home'});  //输入要返回的上一级路由地址
+        this.changeTitleTxt({tit: '医废监测'})
+      })
+    },
+
+    //初始化方法
+    initMethod () {
+      this.activeName = 0;
+      this.currentIndex = 0;
+      this.initDate();
+      this.queryMethods(this.userInfo.proId, this.formatTime(), this.formatTime(), 0)
     }
   }
 }
