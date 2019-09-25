@@ -62,7 +62,7 @@ import HeaderTop from '../components/HeaderTop'
 import FooterBottom from '../components/FooterBottom'
 import VanFieldSelectPicker from '../components/VanFieldSelectPicker'
 import {operateOutStorage, queryCompany} from '../api/rubbishCollect.js'
-import { pushHistory } from '@/common/js/utils'
+import { formatTime } from '@/common/js/utils'
 import { mapGetters, mapMutations } from 'vuex'
 export default {
   components:{
@@ -197,7 +197,7 @@ export default {
         company: this.company, //收集公司
         companyId: '', //交接人员编号this.companyIdList[this.companyNameList.indexOf(this.companyName)]
         companyName: this.companyName, //交接人姓名
-        outTime: this.formatTime(), //出库时间  格式 yyyy-MM-dd HH:mm:ss
+        outTime: formatTime('YYYY-MM-DD'), //出库时间  格式 yyyy-MM-dd HH:mm:ss
         outTotalWeight: this.calculate,  //出库重量
         batchs: this.batchs, //出库的批次
       };
@@ -267,10 +267,6 @@ export default {
         }).then(() => {
         });
       })
-    },
-    // 时间格式方法
-    formatTime () {
-      return this.$moment(new Date().getTime()).format('YYYY-MM-DD HH:mm:ss')
     }
   }
 }

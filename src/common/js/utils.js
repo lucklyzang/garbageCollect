@@ -1,8 +1,10 @@
-
+import moment from 'moment'
 /**
- * 返回当前时间
+ * 格式化当前时间
  */
-export const getNowTimeStamp = () => new Date().getTime()
+export const formatTime = (formatType) => {
+  return moment(new Date().getTime()).format(formatType)
+}
 
 /**
  * 存储localStorage

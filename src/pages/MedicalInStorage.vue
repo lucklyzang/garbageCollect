@@ -59,7 +59,6 @@
 import HeaderTop from '../components/HeaderTop'
 import FooterBottom from '../components/FooterBottom'
 import { mapGetters, mapMutations } from 'vuex'
-import { pushHistory } from '@/common/js/utils'
 import {queryBatch,judgeSummaryPoint,inStorageAdd} from '../api/rubbishCollect.js'
 export default {
    components:{
@@ -275,6 +274,7 @@ export default {
 <style lang='less' scoped>
 @import "../common/stylus/variable.less";
 @import "../common/stylus/modifyUi.less";
+@import "../common/stylus/mixin.less";
   .content-wrapper {
     .content-middle {
       .content-middle();
@@ -300,7 +300,7 @@ export default {
         .content-middle-list-item {
           padding: 14px;
           height: 140px;
-          border-bottom: 1px solid #e8e4e4;
+          .bottom-border-1px(#d3d3d3);
           .list-item {
             position: relative;
             height: 100%;

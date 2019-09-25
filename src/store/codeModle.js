@@ -41,6 +41,8 @@ export default {
     outStorageTime: null,
     // 批次号列表
     batchs: null,
+    // 记录重量为0的次数
+    recordZeroCount: 0,
     // 科室信息汇总
     garColMsg: [
       {
@@ -80,7 +82,8 @@ export default {
     bluetoothWeighShow: state => state.bluetoothWeighShow,
     callPeriod: state => state.callPeriod,
     codeStep: state => state.codeStep,
-    isPlus: state => state.isPlus
+    isPlus: state => state.isPlus,
+    recordZeroCount: state => state.recordZeroCount
   },
   mutations:{
     changeTitleTxt (state,payLoad) {
@@ -226,6 +229,10 @@ export default {
       // 改变是否进行下一步的状态
       changeIsPlus (state,payLoad) {
         state.isPlus = payLoad
+      },
+      // 改变记录为0的状态
+      ChangeRecordZeroCount (state,payLoad) {
+        state.recordZeroCount = payLoad
       }
   },
   actions:{}

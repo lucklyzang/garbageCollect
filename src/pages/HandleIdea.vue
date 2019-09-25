@@ -30,7 +30,7 @@
 import HeaderTop from '../components/HeaderTop'
 import FooterBottom from '../components/FooterBottom'
 import { mapGetters, mapMutations } from 'vuex'
-import { pushHistory } from '@/common/js/utils'
+import { formatTime } from '@/common/js/utils'
 import {warningDispose} from '../api/rubbishCollect.js'
 import {queryCollectHistory} from '../api/rubbishCollect.js'
 export default {
@@ -93,7 +93,7 @@ export default {
         dealName: this.userInfo.workerName, //预警处理人姓名,			
         warnReason: this.handleMessage,   //预警原因  
         state: 1, //状态，处理时传1，审核时传2
-        dealTime: this.formatTimeOther()    
+        dealTime: formatTime('YYYY-MM-DD HH:mm:ss')    
       };
       warningDispose(disposeMsg).then((res) => {
         if (res.data.code == 200) {
@@ -123,14 +123,6 @@ export default {
           this.handleMessage = '';
         });
       })
-    }, 
-    // 时间格式方法
-    formatTime () {
-      return this.$moment(new Date().getTime()).format('YYYY-MM-DD')
-    },
-    // 时间格式方法2
-    formatTimeOther () {
-      return this.$moment(new Date().getTime()).format('YYYY-MM-DD HH:mm:ss')
     }
   }
 }

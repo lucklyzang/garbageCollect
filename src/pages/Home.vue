@@ -35,7 +35,7 @@
   import homeBanner from '@/common/images/home/home-banner.png'
   import addCheck from '@/common/images/home/add-check.png'
   import warningCheck from '@/common/images/home/warning-check.png'
-  import { pushHistory } from '@/common/js/utils'
+  import { formatTime } from '@/common/js/utils'
   export default {
     components:{
       HeaderTop,
@@ -106,7 +106,7 @@
         if (name) {
           if (text === '医废收集') {
             if (this.userInfo && this.userInfo.id) {
-              this.changeApplicationCollectTime(this.formatTime());
+              this.changeApplicationCollectTime(formatTime('YYYY-MM-DD'));
               // 创建回收批次
               getBatchNumber(this.userInfo.id).then((res) => {
                 if (res && res.data.code == 200) {
@@ -134,10 +134,6 @@
           this.$router.push({path:name});
           this.changeTitleTxt({tit:text})
         }
-      },
-       // 时间格式方法
-      formatTime () {
-        return this.$moment(new Date().getTime()).format('YYYY-MM-DD HH:mm:ss')
       }
     }
   }

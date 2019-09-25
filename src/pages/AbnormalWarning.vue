@@ -88,10 +88,10 @@
                 <div class="list-strip">
                   <p class="list-times" v-if="item.warnId == 1">科室: {{item.depName}}</p>
                   <p class="list-times" v-if="item.warnId == 3">批次: {{item.batchNumber}}</p>
-                  <p class="list-sign">处理意见: {{item.warnReason}}</p>
+                  <p class="list-sign">处理说明: {{item.warnReason}}</p>
                   <p class="list-times">处理人: {{item.dealName}}</p>
                   <p class="list-code">处理时间: {{item.dealTime}}</p>
-                  <p class="list-code">收集时间: {{item.createTime}}</p>
+                  <p class="list-code">预警时间: {{item.createTime}}</p>
                 </div>
                 <div class="list-item-bottom">
                   收集人员: <span>{{item.workerName ? item.workerName : '无'}}</span>
@@ -140,7 +140,7 @@ import HeaderTop from '../components/HeaderTop'
 import FooterBottom from '../components/FooterBottom'
 import { mapGetters, mapMutations } from 'vuex'
 import {queryWarning, warningDispose} from '../api/rubbishCollect.js'
-import { pushHistory } from '@/common/js/utils'
+import { formatTime } from '@/common/js/utils'
 export default {
    components:{
     HeaderTop,
@@ -193,7 +193,7 @@ export default {
       this.changeTitleTxt({tit: '医废监测'})
     });
     this.initDate();
-    this.queryWarning(this.getUserInfo, this.formatTime(), this.formatTime(), '')
+    this.queryWarning(this.getUserInfo, formatTime('YYYY-MM-DD'), formatTime('YYYY-MM-DD'), '')
   },
   methods: {
     ...mapMutations([
@@ -228,7 +228,7 @@ export default {
     },
     // 初始化时间显示框
     initDate () {
-      let currentDateList = this.formatTime().split('-');
+      let currentDateList = formatTime('YYYY-MM-DD').split('-');
       this.startTime = `${currentDateList[0]}-${currentDateList[1]}-${currentDateList[2]}`;
       this.endTime = `${currentDateList[0]}-${currentDateList[1]}-${currentDateList[2]}`
     },
@@ -421,14 +421,6 @@ export default {
         });
       })
     },
-    // 时间格式方法1
-    formatTime () {
-      return this.$moment(new Date().getTime()).format('YYYY-MM-DD')
-    },
-    // 时间格式方法2
-    formatTimeOther () {
-      return this.$moment(new Date().getTime()).format('YYYY-MM-DD HH:mm:ss')
-    },
     // 初始化数据
     initData () {
       this.overtimeList = [];
@@ -447,6 +439,7 @@ export default {
 <style lang='less' scoped>
 @import "../common/stylus/variable.less";
 @import "../common/stylus/modifyUi.less";
+@import "../common/stylus/mixin.less";
   .content-wrapper {
      /deep/ .van-dialog {
       .van-dialog__content{
@@ -459,9 +452,6 @@ export default {
         margin-top: 4px;
         .van-tabs__line {
           background-color: @color-theme;
-        }
-        .van-tabs__content {
-          // margin-top: 10px;
         }
       }
       .content-middle-top {
@@ -504,7 +494,7 @@ export default {
        .content-middle-list-item {
           padding: 14px;
           height: 140px;
-          border-bottom: 1px solid #e8e4e4;
+          .bottom-border-1px(#d3d3d3);
           .list-item {
             position: relative;
             height: 100%;

@@ -36,7 +36,7 @@
                 <div class="list-strip">
                   <p class="list-times" v-if="item.warnId == 1">科室: {{item.depName}}</p>
                   <p class="list-times" v-if="item.warnId == 3">批次: {{item.batchNumber}}</p>
-                  <p class="list-sign">处理意见: {{item.warnReason}}</p>
+                  <p class="list-sign">处理说明: {{item.warnReason}}</p>
                   <p class="list-code">预警时间: {{item.createTime}}</p>
                   <p class="list-code">处理时间: {{item.dealTime}}</p>
                 </div>
@@ -64,9 +64,11 @@
                 <div class="list-strip">
                   <p class="list-times" v-if="item.warnId == 1">科室: {{item.depName}}</p>
                   <p class="list-times" v-if="item.warnId == 3">批次: {{item.batchNumber}}</p>
+                  <p class="list-sign">处理说明: {{item.warnReason}}</p>
                   <p class="list-sign">审核意见: {{item.checkIdea}}</p>
-                  <p class="list-sign">预警原因: {{item.warnReason}}</p>
                   <p class="list-times">处理人: {{item.dealName}}</p>
+                  <p class="list-code">预警时间: {{item.createTime}}</p>
+                  <p class="list-code">处理时间: {{item.dealTime}}</p>
                   <p class="list-code">审核时间: {{item.checkTime}}</p>
                 </div>
                 <div class="list-item-bottom">
@@ -109,7 +111,7 @@ import HeaderTop from '../components/HeaderTop'
 import FooterBottom from '../components/FooterBottom'
 import { mapGetters, mapMutations } from 'vuex'
 import {queryWarning, warningDispose} from '../api/rubbishCollect.js'
-import { pushHistory } from '@/common/js/utils'
+import { formatTime } from '@/common/js/utils'
 export default {
    components:{
     HeaderTop,
@@ -158,7 +160,7 @@ export default {
       this.changeTitleTxt({tit: '医废监测'})
     });
     this.initDate();
-    this.queryWarning(this.getUserInfo, this.formatTime(), this.formatTime(), 1)
+    this.queryWarning(this.getUserInfo, formatTime('YYYY-MM-DD'), formatTime('YYYY-MM-DD'), 1)
   },
   methods: {
     ...mapMutations([
@@ -194,7 +196,7 @@ export default {
     },
     // 初始化时间显示框
     initDate () {
-      let currentDateList = this.formatTime().split('-');
+      let currentDateList = formatTime('YYYY-MM-DD').split('-');
       this.startTime = `${currentDateList[0]}-${currentDateList[1]}-${currentDateList[2]}`;
       this.endTime = `${currentDateList[0]}-${currentDateList[1]}-${currentDateList[2]}`
     },
@@ -222,7 +224,7 @@ export default {
         checkName: this.userInfo.workerName, //审核人姓名,			
         checkIdea: this.checkWaringMsg,   //审核意见  
         state: 2,     //状态，处理时传1，审核时传2
-        checkTime: this.formatTimeOther()    
+        checkTime: formatTime('YYYY-MM-DD HH:mm:ss')    
       };
       warningDispose(checkData).then((res) => {
         this.checkWaringMsg = '';
@@ -259,7 +261,7 @@ export default {
         checkName: this.userInfo.workerName, //审核人姓名,			
         checkIdea: this.checkWaringMsg,   //审核意见  
         state: 3,  //状态，处理时传1，审核时传2
-        checkTime: this.formatTimeOther()    
+        checkTime: formatTime('YYYY-MM-DD HH:mm:ss')    
       };
       warningDispose(checkData).then((res) => {
         this.checkWaringMsg = '';
@@ -383,14 +385,6 @@ export default {
       })
     },
 
-    // 时间格式方法1
-    formatTime () {
-      return this.$moment(new Date().getTime()).format('YYYY-MM-DD')
-    },
-    // 时间格式方法2
-    formatTimeOther () {
-      return this.$moment(new Date().getTime()).format('YYYY-MM-DD HH:mm:ss')
-    },
     // 初始化数据
     initData () {
       this.notCheckList = [];
@@ -405,6 +399,7 @@ export default {
 <style lang='less' scoped>
 @import "../common/stylus/variable.less";
 @import "../common/stylus/modifyUi.less";
+@import "../common/stylus/mixin.less";
   .content-wrapper {
      /deep/ .van-dialog {
       .van-dialog__content{
@@ -456,7 +451,7 @@ export default {
        .content-middle-list-item {
           padding: 14px;
           height: 136px;
-          border-bottom: 1px solid #e8e4e4;
+          .bottom-border-1px(#d3d3d3);
           .list-item {
             position: relative;
             height: 100%;
@@ -505,13 +500,13 @@ export default {
           }
         }
         .checked {
-          height: 160px;
+          height: 200px;
           .list-item-right {
             top: 6px !important
           }
         }
         .not-checked {
-          height: 140px;
+          height: 130px;
           .list-item-right {
             top: 6px !important
           }

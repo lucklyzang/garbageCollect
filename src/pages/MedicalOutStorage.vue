@@ -56,7 +56,7 @@ import HeaderTop from '../components/HeaderTop'
 import FooterBottom from '../components/FooterBottom'
 import { mapGetters, mapMutations } from 'vuex'
 import {queryOutStorage} from '../api/rubbishCollect.js'
-import { pushHistory } from '@/common/js/utils'
+import { formatTime } from '@/common/js/utils'
 export default {
    components:{
     HeaderTop,
@@ -192,13 +192,13 @@ export default {
     
     // 初始化时间显示框
     initDate () {
-      let currentDateList = this.formatTime().split('-');
+      let currentDateList = formatTime('YYYY-MM-DD').split('-');
       this.startTime = `${currentDateList[0]}-${currentDateList[1]}-${currentDateList[2]}`;
       this.endTime = `${currentDateList[0]}-${currentDateList[1]}-${currentDateList[2]}`
     },
 
     // 查询未出库批次
-    queryNotInStorage (startTime = this.formatTime(), endTime = this.formatTime()) {
+    queryNotInStorage (startTime = formatTime('YYYY-MM-DD'), endTime = formatTime('YYYY-MM-DD')) {
       this.classList = [];
       let batchInfo = {
         proId: this.userInfo.proId,  
@@ -238,10 +238,6 @@ export default {
         }).then(() => {
         });
       })
-    },
-    // 时间格式方法
-    formatTime () {
-      return this.$moment(new Date().getTime()).format('YYYY-MM-DD')
     }
   }
 }
@@ -250,6 +246,7 @@ export default {
 <style lang='less' scoped>
 @import "../common/stylus/variable.less";
 @import "../common/stylus/modifyUi.less";
+@import "../common/stylus/mixin.less";
   .content-wrapper {
     .content-middle {
      .content-middle();
@@ -289,7 +286,7 @@ export default {
           box-sizing: border-box;
           padding: 10px 10px;
           height: 140px;
-          border-bottom: 1px solid #e8e4e4;
+          .bottom-border-1px(#d3d3d3);
           .change-btn-position {
             position: absolute;
             top: 30px;

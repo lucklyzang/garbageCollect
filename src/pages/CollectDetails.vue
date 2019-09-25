@@ -195,7 +195,6 @@
 import HeaderTop from '../components/HeaderTop'
 import FooterBottom from '../components/FooterBottom'
 import { mapGetters, mapMutations } from 'vuex'
-import { pushHistory } from '@/common/js/utils'
 export default {
   components: {
     HeaderTop,
@@ -246,14 +245,6 @@ export default {
       this.initCurrentName();
       this.changeIsCall(false)
     }, 
-    // 时间格式方法
-    formatTime () {
-      return this.$moment(new Date().getTime()).format('YYYY-MM-DD')
-    },
-    // 时间格式方法2
-    formatTimeOther () {
-      return this.$moment(new Date().getTime()).format('YYYY-MM-DD HH:mm:ss')
-    },
 
     // 控制设备物理返回按键
     monitorBack () {

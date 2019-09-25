@@ -37,7 +37,7 @@ import {logIn} from '@/api/login.js'
 import { mapGetters, mapMutations } from 'vuex'
 import BgIcon from '@/components/images/bg-icon.png'
 import LoginBg from '@/components/images/login-bg.png'
-import { pushHistory, setStore, getStore } from '@/common/js/utils'
+import { setStore, getStore } from '@/common/js/utils'
 export default {
   data () {
     return {

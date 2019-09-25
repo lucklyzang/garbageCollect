@@ -120,7 +120,7 @@
 import HeaderTop from '../components/HeaderTop'
 import FooterBottom from '../components/FooterBottom'
 import { mapGetters, mapMutations } from 'vuex'
-import { pushHistory } from '@/common/js/utils'
+import { formatTime } from '@/common/js/utils'
 import {queryCollectHistory} from '../api/rubbishCollect.js'
 export default {
   components: {
@@ -204,7 +204,7 @@ export default {
     },
     // 初始化时间显示框
     initDate () {
-      let currentDateList = this.formatTime().split('-');
+      let currentDateList = formatTime('YYYY-MM-DD').split('-');
       this.startTime = `${currentDateList[0]}-${currentDateList[1]}-${currentDateList[2]}`;
       this.endTime = `${currentDateList[0]}-${currentDateList[1]}-${currentDateList[2]}`
     },
@@ -397,10 +397,7 @@ export default {
         })
       })
     },
-    // 时间格式方法
-    formatTime () {
-      return this.$moment(new Date().getTime()).format('YYYY-MM-DD')
-    },
+   
     // 初始化数据
     initData () {
       this.notInStorageList = [];
@@ -429,7 +426,7 @@ export default {
       this.activeName = 0;
       this.currentIndex = 0;
       this.initDate();
-      this.queryMethods(this.userInfo.proId, this.formatTime(), this.formatTime(), 0)
+      this.queryMethods(this.userInfo.proId, formatTime('YYYY-MM-DD'), formatTime('YYYY-MM-DD'), 0)
     }
   }
 }
@@ -438,6 +435,7 @@ export default {
 <style lang='less' scoped>
   @import "../common/stylus/variable.less";
   @import "../common/stylus/modifyUi.less";
+  @import "../common/stylus/mixin.less";
     .content-middle {
       .content-middle();
       /deep/ .van-tabs--line {
@@ -476,7 +474,7 @@ export default {
           box-sizing: border-box;
           padding: 10px 10px;
           height: 140px;
-          border-bottom: 1px solid #e8e4e4;
+          .bottom-border-1px(#d3d3d3);
            .list-item {
             position: relative;
             height: 100%;

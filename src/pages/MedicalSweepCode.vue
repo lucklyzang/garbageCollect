@@ -68,7 +68,7 @@
 import HeaderTop from '../components/HeaderTop'
 import FooterBottom from '../components/FooterBottom'
 import {judgeStagingPoint,judgeMedicalPerson} from '../api/rubbishCollect.js'
-import { pushHistory } from '@/common/js/utils'
+import { formatTime } from '@/common/js/utils'
 import { mapGetters, mapMutations } from 'vuex'
 export default {
    components:{
@@ -107,7 +107,8 @@ export default {
       'extraLyczMsg',
       'currentActive',
       'codeStep',
-      'isPlus'
+      'isPlus',
+      'recordZeroCount'
     ]),
     showCurrentActive () {
       return this.currentActive
@@ -205,7 +206,8 @@ export default {
       'changeCurrentActive',
       'changeCodeStep',
       'changeIsPlus',
-      'changeFlowState'
+      'changeFlowState',
+      'ChangeRecordZeroCount'
     ]),
 
     // 返回上一页
@@ -340,7 +342,7 @@ export default {
                   this.changeSureBtn(true);
                   this.storageKeshiCode(code);
                   this.changeExtraKeshiMsg(code);
-                  this.changeStartCollectTime(this.formatTime());
+                  this.changeStartCollectTime(formatTime('YYYY-MM-DD'));
                   this.changeAstOfficeShow(true);
                 } else {
                   this.$dialog.alert({
@@ -487,30 +489,22 @@ export default {
     // 称重后的回调
     getWeightCallback(str) {
       if (str) {
-        if (str == 0.0) {
-          this.$dialog.alert({
-            message: '收集医废重量不能为0,请重新获取',
-            closeOnPopstate: true
-          }).then(() => {
-          });
-        } else {
-          this.changeCurrentActive(this.codeStep);
-          this.changeCodeStep(this.codeStep);
-          this.changebluetoothWeighShow(true);
-          this.changeIsPlus(true);
-          this.changeBagCodeShow(false);
-          //每类医废重量存入store
-          this.storageLanyaCz(str);
-          this.changeExtraLyczMsg(str);
-        }
+        this.changeCurrentActive(this.codeStep);
+        this.changeCodeStep(this.codeStep);
+        this.changebluetoothWeighShow(true);
+        this.changeIsPlus(true);
+        this.changeBagCodeShow(false);
+        //每类医废实时回调重量存入store
+        this.changeExtraLyczMsg(str);
       } else {
         this.$dialog.alert({
-          message: '没有获取到重量,请重新获取',
+          message: '没有获取到重量,请再次称重',
           closeOnPopstate: true
         }).then(() => {
         });
       }
     },
+    
     //打印凭单
     finishCollect () {
       // num,dep,category,weight,collector,handover
@@ -574,12 +568,36 @@ export default {
       // 当前流程扫码成功后才进入下个流程
       if (this.isPlus) {
         middleCurrentActive++;
-        this.changeCodeStep(middleCurrentActive);
+        this.changeCodeStep(middleCurrentActive)
       };
       this.changeIsPlus(false);
       if (middleCurrentActive > 4) {return};
       if (middleCurrentActive == 4) {
-        this.$router.push({path:'judgeCurrentDepantment'});
+         if (this.extraLyczMsg == 0.0) {
+          this.$dialog.confirm({
+            message: '收集医废重量不能为0,再次称重?',
+            closeOnPopstate: true
+          }).then(() => {
+            this.changeCodeStep(3);
+            this.changeExtraLyczMsg(null);
+            this.weightRubbish()
+          })
+          .catch(() => {
+            let lajiCodeAgent = this.lajiCode;
+            lajiCodeAgent.splice(this.lajiCode.length-1,1);
+            this.initStorageLajiCode();
+            this.changeStorageLajiCode(lajiCodeAgent);
+            this.changebluetoothWeighShow(false);
+            this.$router.push({path:'judgeCurrentDepantment'});
+          })
+        } else {
+          if (this.extraLyczMsg) {
+            // 最终的回调重量存store的重量数组
+            this.storageLanyaCz(this.extraLyczMsg)
+          };
+          this.changeExtraLyczMsg(null);
+          this.$router.push({path:'judgeCurrentDepantment'});
+        }
       } else if (middleCurrentActive == 3) {
         this.weightRubbish()
       } else {
@@ -587,14 +605,9 @@ export default {
       }
     },
 
-    // 收集确认
+    //其它科室收集
     collectSure () {
       this.$router.replace({path:'judgeOtherDepantment'})
-    },
-
-    // 时间格式方法
-    formatTime () {
-      return this.$moment(new Date().getTime()).format('YYYY-MM-DD HH:mm:ss')
     }
   }
 }

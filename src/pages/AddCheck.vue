@@ -34,7 +34,7 @@
                   所属医院: <span>{{item.proName}}</span>
                 </p>
                 <div class="list-strip">
-                  <p class="list-sign">补录原因: {{item.remark}}</p>
+                  <p class="list-sign">补录说明: {{item.remark}}</p>
                   <p class="list-code">补录时间: {{item.createTime}}</p>
                   <p class="list-code">收集时间: {{item.collectTime}}</p>
                   <p class="list-code">重量: {{item.weight}} <span style="color:#c97889">kg</span></p>
@@ -63,7 +63,7 @@
                 <div class="list-strip">
                   <p>补录人: {{item.suppName}}</p>
                   <p class="list-sign">收集人: {{item.workerName}}</p>
-                  <p class="list-sign">补录原因: {{item.remark}}</p>
+                  <p class="list-sign">补录说明: {{item.remark}}</p>
                   <p class="list-sign">审核意见: {{item.checkIdea}}</p>
                   <p class="list-code">收集时间: {{item.collectTime}}</p>
                   <p class="list-code">补录时间: {{item.createTime}}</p>
@@ -110,7 +110,7 @@ import HeaderTop from '../components/HeaderTop'
 import FooterBottom from '../components/FooterBottom'
 import { mapGetters, mapMutations } from 'vuex'
 import {queryAddList, addCheck} from '../api/rubbishCollect.js'
-import { pushHistory } from '@/common/js/utils'
+import { formatTime } from '@/common/js/utils'
 export default {
    components:{
     HeaderTop,
@@ -159,7 +159,7 @@ export default {
       this.changeTitleTxt({tit: '医废监测'})
     });
     this.initDate();
-    this.queryAdd(this.getUserInfo, this.formatTime(), this.formatTime(), 0)
+    this.queryAdd(this.getUserInfo, formatTime('YYYY-MM-DD'), formatTime('YYYY-MM-DD'), 0)
   },
   methods: {
     ...mapMutations([
@@ -191,7 +191,7 @@ export default {
     },
     // 初始化时间显示框
     initDate () {
-      let currentDateList = this.formatTime().split('-');
+      let currentDateList = formatTime('YYYY-MM-DD').split('-');
       this.startTime = `${currentDateList[0]}-${currentDateList[1]}-${currentDateList[2]}`;
       this.endTime = `${currentDateList[0]}-${currentDateList[1]}-${currentDateList[2]}`
     },
@@ -219,7 +219,7 @@ export default {
         checkName: this.userInfo.workerName, //审核人姓名,			
         checkIdea: this.checkWaringMsg,   //审核意见  
         state: 1,     //同意
-        checkTime: this.formatTimeOther()    
+        checkTime: formatTime('YYYY-MM-DD HH:mm:ss')    
       };
       addCheck(checkData).then((res) => {
         this.checkWaringMsg = '';
@@ -256,7 +256,7 @@ export default {
         checkName: this.userInfo.workerName, //审核人姓名,			
         checkIdea: this.checkWaringMsg,   //审核意见  
         state: 2,  //不同意
-        checkTime: this.formatTimeOther()    
+        checkTime: formatTime('YYYY-MM-DD HH:mm:ss')    
       };
       addCheck(checkData).then((res) => {
         this.checkWaringMsg = '';
@@ -373,14 +373,7 @@ export default {
         console.log(err)
       })
     },
-    // 时间格式方法1
-    formatTime () {
-      return this.$moment(new Date().getTime()).format('YYYY-MM-DD')
-    },
-    // 时间格式方法2
-    formatTimeOther () {
-      return this.$moment(new Date().getTime()).format('YYYY-MM-DD HH:mm:ss')
-    },
+
     // 初始化数据
     initData () {
       this.notCheckList = [];
@@ -395,6 +388,7 @@ export default {
 <style lang='less' scoped>
 @import "../common/stylus/variable.less";
 @import "../common/stylus/modifyUi.less";
+@import "../common/stylus/mixin.less";
   .content-wrapper {
      /deep/ .van-dialog {
       .van-dialog__content{
@@ -446,7 +440,7 @@ export default {
        .content-middle-list-item {
           padding: 14px;
           height: 174px;
-          border-bottom: 1px solid #e8e4e4;
+          .bottom-border-1px(#d3d3d3);
           .list-item {
             position: relative;
             height: 100%;

@@ -24,7 +24,6 @@
 import HeaderTop from '../components/HeaderTop'
 import FooterBottom from '../components/FooterBottom'
 import { mapGetters, mapMutations } from 'vuex'
-import { pushHistory } from '@/common/js/utils'
 import {statisticsData} from '../api/rubbishCollect.js'
 export default {
    components:{

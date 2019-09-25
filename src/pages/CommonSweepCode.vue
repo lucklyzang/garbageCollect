@@ -5,7 +5,6 @@
 
 <script>
 import {judgeStagingPoint,judgeMedicalPerson} from '../api/rubbishCollect.js'
-import { pushHistory } from '@/common/js/utils'
 import { mapGetters, mapMutations } from 'vuex'
 export default {
    components:{
@@ -298,10 +297,6 @@ export default {
         this.$router.push({path: 'medicalCollect'});
         this.changeCurrentActive(3);
       }
-    },
-    // 时间格式方法
-    formatTime () {
-      return this.$moment(new Date().getTime()).format('YYYY-MM-DD HH:mm:ss')
     }
   }
 }
