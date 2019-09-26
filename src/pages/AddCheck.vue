@@ -5,6 +5,7 @@
       <van-icon name="manager-o" slot="right" @click="skipMyInfo"></van-icon> 
     </HeaderTop>
     <div class="content-middle">
+     <loading :isShow="showLoadingHint"></loading>
       <div class="content-middle-top">
         <van-field v-model="startTime" placeholder="开始日期" readonly="readonly" @click="startTimePop = true"/>
         <van-popup v-model="startTimePop" label="离开时间" position="bottom" :overlay="true"> 
@@ -109,12 +110,14 @@
 import HeaderTop from '../components/HeaderTop'
 import FooterBottom from '../components/FooterBottom'
 import { mapGetters, mapMutations } from 'vuex'
+import Loading from '../components/Loading'
 import {queryAddList, addCheck} from '../api/rubbishCollect.js'
 import { formatTime } from '@/common/js/utils'
 export default {
    components:{
     HeaderTop,
-    FooterBottom
+    FooterBottom,
+    Loading
   },
   data () {
     return {
@@ -136,7 +139,8 @@ export default {
       minDateEnd: new Date(2018, 0, 1),
       currentIndex: '',
       signNotCheck: '',
-      signChecked: ''
+      signChecked: '',
+      showLoadingHint: false
     };
   },
   computed: {
@@ -295,7 +299,9 @@ export default {
         endDate,
         state
       };
+      this.showLoadingHint = true;
       queryAddList(addMsg).then((res) => {
+        this.showLoadingHint = false;
         if (res) { 
           if (res.data.code == 200) {
             if (state == 0) {
@@ -370,6 +376,7 @@ export default {
         }
       })
       .catch((err) => {
+        this.showLoadingHint = false;
         console.log(err)
       })
     },

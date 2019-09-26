@@ -5,6 +5,7 @@
       <van-icon name="manager-o" slot="right" @click="skipMyInfo"></van-icon> 
     </HeaderTop>
     <div class="content-middle">
+     <loading :isShow="showLoadingHint"></loading>
       <div class="content-middle-title">
         <p class="day-height">今日医废总重量: {{dayTotalWeight}}kg</p>
         <p class="week-height">一周医废总重量: {{weekTotalWeight}}kg</p>
@@ -24,11 +25,13 @@
 import HeaderTop from '../components/HeaderTop'
 import FooterBottom from '../components/FooterBottom'
 import { mapGetters, mapMutations } from 'vuex'
+import Loading from '../components/Loading'
 import {statisticsData} from '../api/rubbishCollect.js'
 export default {
    components:{
     HeaderTop,
-    FooterBottom
+    FooterBottom,
+    Loading
   },
   data () {
     return {
@@ -41,7 +44,8 @@ export default {
       dayTotalWeight: '',
       monthTotalWeight: '',
       yearTotalWeight: '',
-      weekTotalWeight: ''
+      weekTotalWeight: '',
+      showLoadingHint: false
     };
   },
   computed: {
@@ -150,7 +154,9 @@ export default {
       this.monthData = [];
       this.yearData = [];
       this.weekTotalWeight = '';
+      this.showLoadingHint = true;
       statisticsData(this.userInfo.proId, {workerId: this.userInfo.id}).then((res) => {
+        this.showLoadingHint = false;
         if (res && res.data) {
           if (res.data.code == 200) {
             if (res.data.data.todayList.length > 0 && res.data.data.monthList.length > 0 && res.data.data.sevenDays.length > 0
@@ -220,6 +226,7 @@ export default {
         }
       })
       .catch((err) => {
+        this.showLoadingHint = false;
         this.$dialog.alert({
           message: `${err.message}`,
           closeOnPopstate: true

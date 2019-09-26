@@ -6,9 +6,9 @@
 </template>
 
 <script>
-    export default {
-        name: 'NoData'
-    }
+  export default {
+    name: 'NoData'
+  }
 </script>
 
 <style lang='less' scoped>

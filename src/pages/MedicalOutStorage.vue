@@ -5,6 +5,7 @@
       <van-icon name="manager-o" slot="right" @click="skipMyInfo"></van-icon> 
     </HeaderTop>
     <div class="content-middle">
+      <loading :isShow="showLoadingHint"></loading>
       <div class="content-middle-top">
         <van-field v-model="startTime" placeholder="开始日期" readonly="readonly" @click="startTimePop = true"/>
         <van-popup v-model="startTimePop" label="离开时间" position="bottom" :overlay="true"> 
@@ -54,13 +55,15 @@
 <script>
 import HeaderTop from '../components/HeaderTop'
 import FooterBottom from '../components/FooterBottom'
+import Loading from '../components/Loading'
 import { mapGetters, mapMutations } from 'vuex'
 import {queryOutStorage} from '../api/rubbishCollect.js'
 import { formatTime } from '@/common/js/utils'
 export default {
    components:{
     HeaderTop,
-    FooterBottom
+    FooterBottom,
+    Loading
   },
   data () {
     return {
@@ -73,6 +76,7 @@ export default {
       topTitle: '医废收集',
       stagingMsg: '',
       checkedAll: false,
+      showLoadingHint: false,
       classList: [],
       totalWeight: 0,
       batchsArray: [],
@@ -206,7 +210,9 @@ export default {
         endDate:  endTime, 
         state: '', 
       };
+      this.showLoadingHint = true;
       queryOutStorage(batchInfo).then((res) => {
+        this.showLoadingHint = false;
         if (res) {
           if (res.data.code == 200) {
             if (res.data.data.length > 0) {
@@ -232,6 +238,7 @@ export default {
         }
       })
       .catch((err)=>{
+        this.showLoadingHint = false;
         this.$dialog.alert({
           message: `${err.message}`,
           closeOnPopstate: true

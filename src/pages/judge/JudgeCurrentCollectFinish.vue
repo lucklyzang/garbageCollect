@@ -1,13 +1,10 @@
 <template>
-  <div class="wrappLoad">
-    <van-loading v-show="showLoading" size="44px" type="spinner" text-size="20px" vertical color="#38bdd0">
-      数据提交中...
-    </van-loading>
-  </div>
+  <loading :isShow="showLoading" textContent="数据提交中..."></loading>
 </template>
 
 <script>
 import {trashCollectOne,trashCollectMore} from '../../api/rubbishCollect.js'
+import Loading from '@/components/Loading'
 import { mapGetters, mapMutations } from 'vuex'
 export default {
   data () {
@@ -16,7 +13,9 @@ export default {
     };
   },
 
-  components: {},
+  components: {
+    Loading
+  },
 
   computed: {
      ...mapGetters([
@@ -300,17 +299,4 @@ export default {
 }
 </script>
 <style lang='less' scoped>
-  .wrappLoad {
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    /deep/ .van-loading {
-      position:absolute;
-      top:50%;
-      left:50%;
-      -webkit-transform: translate(-50%,-50%);
-      -moz-transform: translate(-50%,-50%);
-      transform:translate(-50%,-50%);
-    }
-  }
 </style>

@@ -5,6 +5,7 @@
       <van-icon name="manager-o" slot="right" @click="skipMyInfo"></van-icon> 
     </HeaderTop>
     <div class="content-middle">
+      <loading :isShow="showLoadingHint"></loading>
       <p class="content-middle-top">
         <span class="text-left">{{hospitalName}}</span>
         <span class="text-right"></span>
@@ -58,12 +59,14 @@
 <script>
 import HeaderTop from '../components/HeaderTop'
 import FooterBottom from '../components/FooterBottom'
+import Loading from '../components/Loading'
 import { mapGetters, mapMutations } from 'vuex'
 import {queryBatch,judgeSummaryPoint,inStorageAdd} from '../api/rubbishCollect.js'
 export default {
    components:{
     HeaderTop,
-    FooterBottom
+    FooterBottom,
+    Loading
   },
   data () {
     return {
@@ -74,6 +77,7 @@ export default {
       sureBtnShow: false,
       inStoageBtn: true,
       stageMsg: false,
+      showLoadingHint: false,
       storeId: 0, 
       storeNumber:'',
       batchNumberLocal:'',
@@ -198,6 +202,7 @@ export default {
     // 查询收集的垃圾批次信息00012019081900022019082200
     queryAllBatch () {
       this.classList = [];
+      this.showLoadingHint = true;
       queryBatch({batchNumber:this.batchNumber ? this.batchNumber : this.userInfo.batchNumber ,workerId:this.userInfo.id, state: 0}).then((res)=>{
         if (res && res.data.code == 200) {
           if (res.data.data.length > 0) {
@@ -225,9 +230,11 @@ export default {
               this.changeTitleTxt({tit: '医废监测'})
             });
           }
-        }
+        };
+        this.showLoadingHint = false
       })
       .catch((err)=> {
+        this.showLoadingHint = false;
         this.$dialog.alert({
           message: `${err.message}`,
           closeOnPopstate: true
