@@ -133,6 +133,7 @@ export default {
         }).then(() => {
         });
       } else {
+        this.checkedAll = false;
         this.queryNotInStorage(startTime,endTime)
       }
     },
@@ -345,7 +346,7 @@ export default {
       .btn-group {
         position: fixed;
         left: 0;
-        bottom: 10px;
+        bottom: 6px;
         width: 100%;
         text-align: center;
         p {

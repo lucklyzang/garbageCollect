@@ -373,7 +373,7 @@ export default {
       .btn-group {
         width: 100%;
         position: fixed;
-        bottom: 10px;
+        bottom: 6px;
         text-align: center;
         .inStoageBtn {
           button {

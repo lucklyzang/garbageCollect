@@ -8,10 +8,10 @@
         <div class="content-header">
           <van-steps :active="showCurrentActive"
             active-color="#38bdd0"  inactive-icon="arrow">
-            <van-step>扫描科室二维码</van-step>
-            <van-step>扫描医护人员工作条码</van-step>
-            <van-step>扫描垃圾袋条码</van-step>
-            <van-step>蓝牙称重</van-step>
+            <van-step>扫描科室</van-step>
+            <van-step>扫描医护</van-step>
+            <van-step>扫描垃圾袋</van-step>
+            <van-step>称重</van-step>
           </van-steps>
         </div>
         <div class="content-middle">
@@ -40,6 +40,11 @@
             <div class="bluetooth-weigh">
               <p>重量: {{extraLyczMsg}}</p>
             </div>
+          </van-panel>
+          <van-panel v-show="manualWeighShow" title="医废重量" desc="" status="">
+            <van-cell-group>
+              <van-field v-model="manualWeight"  label="医废重量(kg)" placeholder="请输入医废重量" />
+            </van-cell-group>
           </van-panel>
         </div>
         <div class="content-footer">
@@ -77,6 +82,8 @@ export default {
     },
   data () {
     return {
+      manualWeight: '',
+      manualWeighShow: false
     };
   },
   computed: {
@@ -325,6 +332,11 @@ export default {
       window.android.scanQRcode()
     },
 
+    // 获取完重量后断开蓝牙秤
+    breakScales () {
+      window.android.disconnectScales()
+    },
+
     // 扫码后的回调
     scanQRcodeCallback(code) {
       // 扫码的科室信息存入store
@@ -482,26 +494,24 @@ export default {
         }
       };
     },
-    // 称重方法
+
+    // 连接蓝牙秤
     weightRubbish () {
       window.android.getWeight()
     },
-    // 称重后的回调
+
+    // 连接蓝牙秤后的回调
     getWeightCallback(str) {
-      if (str) {
-        this.changeCurrentActive(this.codeStep);
-        this.changeCodeStep(this.codeStep);
-        this.changebluetoothWeighShow(true);
-        this.changeIsPlus(true);
-        this.changeBagCodeShow(false);
-        //每类医废实时回调重量存入store
-        this.changeExtraLyczMsg(str);
-      } else {
-        this.$dialog.alert({
-          message: '没有获取到重量,请再次称重',
-          closeOnPopstate: true
-        }).then(() => {
-        });
+      if (this.codeStep == 3) {
+        if (str) {
+          this.changeCurrentActive(this.codeStep);
+          this.changeCodeStep(this.codeStep);
+          this.changebluetoothWeighShow(true);
+          this.changeIsPlus(true);
+          this.changeBagCodeShow(false);
+          //每类医废实时回调重量存入store
+          this.changeExtraLyczMsg(str);
+        }
       }
     },
     
@@ -572,37 +582,79 @@ export default {
       };
       this.changeIsPlus(false);
       if (middleCurrentActive > 4) {return};
-      if (middleCurrentActive == 4) {
-         if (this.extraLyczMsg == 0.0) {
-          this.$dialog.confirm({
-            message: '收集医废重量不能为0,再次称重?',
-            closeOnPopstate: true
-          }).then(() => {
-            this.changeCodeStep(3);
-            this.changeExtraLyczMsg(null);
-            this.weightRubbish()
-          })
-          .catch(() => {
-            let lajiCodeAgent = this.lajiCode;
-            lajiCodeAgent.splice(this.lajiCode.length-1,1);
-            this.initStorageLajiCode();
-            this.changeStorageLajiCode(lajiCodeAgent);
-            this.changebluetoothWeighShow(false);
-            this.$router.push({path:'judgeCurrentDepantment'});
-          })
-        } else {
-          if (this.extraLyczMsg) {
-            // 最终的回调重量存store的重量数组
-            this.storageLanyaCz(this.extraLyczMsg)
-          };
-          this.changeExtraLyczMsg(null);
-          this.$router.push({path:'judgeCurrentDepantment'});
-        }
+        if (middleCurrentActive == 4) {
+          if (this.manualWeighShow == true) {
+            let re = /^0\.\d+$|^[1-9]+(\.\d+)?$/;
+            if (this.manualWeight) {
+              if (!re.test(this.manualWeight)) {
+                this.$dialog.alert({
+                  message: '输入重量不合法,请重新输入',
+                  closeOnPopstate: true
+                  }).then(() => {
+                  });
+              } else {
+              // 最终的回调重量存store的重量数组
+              this.storageLanyaCz(this.manualWeight);
+              this.manualWeighShow = false;
+              this.$router.push({path:'judgeCurrentDepantment'});
+              }
+            } else {
+              this.$dialog.alert({
+                message: '重量不能为空,请重新输入',
+                closeOnPopstate: true
+                }).then(() => {
+              });
+            }
+          } else {
+            // 断开蓝牙秤连接
+            // this.breakScales();
+            if (this.extraLyczMsg == 0.0) {
+              this.$dialog.confirm({
+                message: '收集医废重量不能为0,再次称重?',
+                closeOnPopstate: true
+              }).then(() => {
+                this.changeCodeStep(3);
+                this.changeExtraLyczMsg(null);
+                this.weightRubbish()
+              })
+              .catch(() => {
+                let lajiCodeAgent = this.lajiCode;
+                lajiCodeAgent.splice(this.lajiCode.length-1,1);
+                this.initStorageLajiCode();
+                this.changeStorageLajiCode(lajiCodeAgent);
+                this.changebluetoothWeighShow(false);
+                this.$router.push({path:'judgeCurrentDepantment'});
+              })
+            } else {
+              // 最终的回调重量存store的重量数组
+              this.storageLanyaCz(this.extraLyczMsg)
+              this.changeExtraLyczMsg(null);
+              this.$router.push({path:'judgeCurrentDepantment'});
+            }
+          }
       } else if (middleCurrentActive == 3) {
-        this.weightRubbish()
+        this.chooseWeightMethod()
       } else {
         this.sweepAstoffice()
       }
+    },
+
+    // 选择称重方式
+    chooseWeightMethod () {
+      this.$dialog.confirm({
+        message: '请选择称重方式',
+        closeOnPopstate: true,
+        cancelButtonText: '手动输入',
+        confirmButtonText: '蓝牙称重'
+      })
+      .then(()=>{
+        this.weightRubbish()
+      })
+      .catch(() => {
+        this.manualWeighShow = true;
+        this.changeBagCodeShow(false);
+        this.changeIsPlus(true)
+      })
     },
 
     //其它科室收集
@@ -626,7 +678,7 @@ export default {
       margin-top: 60px;
       background: #fff;
       .content-middle {
-        height: 60vh;
+        height: 70vh;
         width: 100%;
         > div {
           height: 100%;
@@ -639,6 +691,13 @@ export default {
             div {
               p {
                 font-size: 16px
+              }
+            }
+            .van-cell-group {
+              .van-field {
+                span {
+                  font-size: 14px
+                }
               }
             }
           }
@@ -655,23 +714,25 @@ export default {
         }
       };
       .content-header {
-        margin-top: 30px;
+        margin-top: 10px;
         /deep/ .van-steps {
           .van-steps__items {
             .van-hairline {
               .van-step__title {
-                width: 75px;
-                text-align: center;
-                font-size: 14px;
-                margin-top: -10px
-              }
+                font-size: 13px
+              }     
+              .van-step__line {
+                height: 2px;
+                top: 30px;
+                background: #38bdd0;
+              }  
             }
           }
         }
       }
       .content-footer {
         position: fixed;
-        bottom: 10px;
+        bottom: 6px;
         left: 0;
         text-align: center;
         width: 100%;

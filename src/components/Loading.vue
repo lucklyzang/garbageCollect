@@ -31,7 +31,7 @@ export default {
     },
     textContent: {
       type: String,
-      default: '数据加载中...'
+      default: '数据加载中····'
     }
   },
   data () {

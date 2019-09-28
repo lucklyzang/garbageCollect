@@ -216,10 +216,10 @@ export default {
       .content-bottom {
         width: 100%;
         position: fixed;
-        bottom: 10px;
+        bottom: 6px;
         left: 0;
           .van-cell-group {
-            width: 92%;
+            width: 80%;
             margin: 0 auto;
             background-color: transparent;
             /deep/ .van-button {
@@ -227,9 +227,6 @@ export default {
             background: @color-theme;
             color: #fff;
             border-radius: 0;
-            font-size: 12px;
-            border-radius: 30px;
-            height: 35px;
             border: none;
             line-height: 35px;
             padding: 0 120px
