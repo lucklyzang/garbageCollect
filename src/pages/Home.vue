@@ -10,8 +10,10 @@
       </div>
       <div class="content-middle">
         <div class="content-list" v-for="item in itemList" @click="routerSkip(item.name, item.itemText)">
-          <img :src="item.imgUrl" alt="">
-          <p>{{item.itemText}}</p>
+          <p class="title-img">
+            <img :src="item.imgUrl" alt="">
+          </p>
+          <p class="title-content">{{item.itemText}}</p>
         </div>
       </div>
     </div>
@@ -168,11 +170,16 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        img {
-          width: 30px
+        .title-img {
+          width: 30px;
+          height: 31px;
+          img {
+            width: 100%;
+            height: 100%
+          }
         }
-        p {
-          margin-top: 6px;
+        .title-content {
+          margin-top: 7px;
           font-size: 14px;
           color: #515151;
         }
