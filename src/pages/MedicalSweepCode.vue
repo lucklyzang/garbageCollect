@@ -586,17 +586,25 @@ export default {
           if (this.manualWeighShow == true) {
             let re = /^0\.\d+$|^[1-9]+(\.\d+)?$/;
             if (this.manualWeight) {
-              if (!re.test(this.manualWeight)) {
+              if (this.manualWeight <= 0) {
                 this.$dialog.alert({
-                  message: '输入重量不合法,请重新输入',
+                  message: '输入重量不能小于等于0,请重新输入',
                   closeOnPopstate: true
                   }).then(() => {
                   });
               } else {
-              // 最终的回调重量存store的重量数组
-              this.storageLanyaCz(this.manualWeight);
-              this.manualWeighShow = false;
-              this.$router.push({path:'judgeCurrentDepantment'});
+                if (!re.test(this.manualWeight.toString())) {
+                  this.$dialog.alert({
+                    message: '输入重量不合法,请重新输入',
+                    closeOnPopstate: true
+                    }).then(() => {
+                    });
+                } else {
+                  // 手动输入重量存入store的重量数组
+                  this.changeCurrentActive(this.codeStep);
+                  this.storageLanyaCz(this.manualWeight);
+                  this.$router.push({path:'judgeCurrentDepantment'})
+                }
               }
             } else {
               this.$dialog.alert({
