@@ -6,13 +6,19 @@
       </HeaderTop>
       <div class="content">
         <div class="content-header">
-          <van-steps :active="showCurrentActive"
+          <!-- <van-steps :active="showCurrentActive"
             active-color="#38bdd0"  inactive-icon="arrow">
             <van-step>扫描科室</van-step>
             <van-step>扫描医护</van-step>
             <van-step>扫描垃圾袋</van-step>
             <van-step>称重</van-step>
-          </van-steps>
+          </van-steps> -->
+          <div class="progress-title">
+            <span v-for="item in progressTitleList">
+              {{item}}
+            </span>
+          </div>
+          <van-progress :percentage="currentPercentage" pivot-text="0" text-color="#38bdd0" color="#38bdd0" stroke-width="8" />
         </div>
         <div class="content-middle">
           <van-panel v-show="showAstOfficeShow" title="科室信息" desc="" status="">
@@ -83,7 +89,10 @@ export default {
   data () {
     return {
       manualWeight: '',
-      manualWeighShow: false
+      manualWeighShow: false,
+      progressTitleList: ['扫描科室','扫描医护','扫描医废','医废称重'],
+      currentPercentage: 0,
+      temporaryActive: -1
     };
   },
   computed: {
@@ -169,7 +178,7 @@ export default {
 
     // 判断流程从哪步开始
     this.judgeFlowPosition();
-
+   
     // 二维码回调方法绑定到window下面,提供给外部调用
     let me = this;
     window['scanQRcodeCallback'] = (code) => {
@@ -177,6 +186,31 @@ export default {
     },
     window['getWeightCallback'] = (code) => {
       me.getWeightCallback(code);
+    }
+  },
+
+  watch: {
+    temporaryActive : {
+      handler(newVal,oldVal) {
+        switch (newVal) {
+          case -1 :
+            this.currentPercentage = 0;
+            break;
+          case 0 :
+            this.currentPercentage = 11;
+            break;
+          case 1 :
+            this.currentPercentage = 42;
+            break;
+          case 2 :
+            this.currentPercentage = 68;
+            break;
+          case 3 :
+            this.currentPercentage = 100;
+            break;
+        }
+      },
+      immediate: true
     }
   },
 
@@ -216,6 +250,7 @@ export default {
       'changeFlowState',
       'ChangeRecordZeroCount'
     ]),
+
 
     // 返回上一页
     backTo () {
@@ -260,11 +295,13 @@ export default {
     judgeFlowPosition () {
       if (this.judgeFlowValue == 2) {
         this.changeCurrentActive(1);
+        this.temporaryActive = 1;
         this.changeCodeStep(1);
         this.changeStaffCodeShow(true);
         this.changeIsPlus(true);
       } else if (this.judgeFlowValue == 0) {
         this.changeCurrentActive(-1);
+        this.temporaryActive = -1;
         this.changeCodeStep(0)
       } else {
         this.initSweepCodeInfo()
@@ -349,6 +386,7 @@ export default {
                 if (res && res.data.code == 200) {
                   this.changeCurrentActive(this.codeStep);
                   this.changeCodeStep(this.codeStep);
+                  this.temporaryActive = 0;
                   this.changeIsPlus(true);
                   this.changeCollectBtn(false);
                   this.changeSureBtn(true);
@@ -406,6 +444,7 @@ export default {
               judgeMedicalPerson(code.workerNumber,this.batchNumber).then((res) => {
                   if (res && res.data.code == 200) {
                     this.changeCurrentActive(this.codeStep);
+                    this.temporaryActive = 1;
                     this.changeCodeStep(this.codeStep);
                     this.changeIsPlus(true);
                     this.storageYihuCode(code);
@@ -461,6 +500,7 @@ export default {
           if (code.hasOwnProperty('wasteName') && code.hasOwnProperty('proName') && code.hasOwnProperty('depName') && code.hasOwnProperty('barCode')) {
             if (code.wasteName && code.proName && code.depName && code.barCode) {
               this.changeCurrentActive(this.codeStep);
+              this.temporaryActive = 2;
               this.changeCodeStep(this.codeStep);
               this.changeIsPlus(true);
               this.storageLajiCode(code);
@@ -505,6 +545,7 @@ export default {
       if (this.codeStep == 3) {
         if (str) {
           this.changeCurrentActive(this.codeStep);
+          this.temporaryActive = 3;
           this.changeCodeStep(this.codeStep);
           this.changebluetoothWeighShow(true);
           this.changeIsPlus(true);
@@ -602,6 +643,7 @@ export default {
                 } else {
                   // 手动输入重量存入store的重量数组
                   this.changeCurrentActive(this.codeStep);
+                  this.temporaryActive = 3;
                   this.storageLanyaCz(this.manualWeight);
                   this.$router.push({path:'judgeCurrentDepantment'})
                 }
@@ -722,18 +764,34 @@ export default {
         }
       };
       .content-header {
-        margin-top: 10px;
-        /deep/ .van-steps {
-          .van-steps__items {
-            .van-hairline {
-              .van-step__title {
-                font-size: 13px
-              }     
-              .van-step__line {
-                height: 2px;
-                top: 30px;
-                background: #38bdd0;
-              }  
+        width: 94%;
+        margin: 0 auto;
+        margin-top: 16px;
+        .progress-title {
+          width: 100%;
+          position: relative;
+          span {
+            display: inline-block;
+            width: 25%;
+            text-align: center;
+            font-size: 13px;
+            color: black;
+            &:first-child {
+              text-align: left
+            }
+            &:last-child {
+              text-align: right
+            }
+          }
+        }
+        /deep/ .van-progress {
+          margin-top: 14px;
+          margin-bottom: 14px;
+          .van-progress__portion {
+            .van-progress__pivot {
+              min-width: 14px;
+              min-height: 14px;
+              border-radius: 50%
             }
           }
         }
@@ -746,30 +804,32 @@ export default {
         width: 100%;
         span {
           display: inline-block;
+          width: 150px;
+          /deep/ .van-button--normal {
+            padding: 0
+          }
           button {
             background: @color-theme;
             border-color: @color-theme;
-            padding: 0 60px;
+            text-align: center;
+            letter-spacing: 2px;
+            border: none;
           }
         }
         .showBackoutButton {
           button {
             background: #eaeaea;
-            border: none;
-            color: #969799
+            color: black
           }
         }
         .showPrintBtn {
           button {
-            padding: 0 50px;
             background: #eaeaea;
-            border: none;
-            color: #969799
+            color: black
           }
         }
         .showOtherButton {
           button {
-             padding: 0 50px;
           }
         }
       }

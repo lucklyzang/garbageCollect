@@ -375,17 +375,18 @@ export default {
         position: fixed;
         bottom: 6px;
         text-align: center;
+        button {
+          background: @color-theme;
+          border-color: @color-theme;
+          letter-spacing: 2px
+        }
         .inStoageBtn {
           button {
-            background: @color-theme;
-            border-color: @color-theme;
             padding: 0 120px;
           }
         }
         .sureBtnShow {
           button {
-            background: @color-theme;
-            border-color: @color-theme;
             padding: 0 140px;
           }
         }

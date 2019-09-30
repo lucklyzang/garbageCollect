@@ -353,7 +353,8 @@ export default {
           button {
             background: @color-theme;
             border-color: @color-theme;
-            padding: 0 120px;
+            letter-spacing: 2px;
+            padding: 0 120px
           }
         }
       }
