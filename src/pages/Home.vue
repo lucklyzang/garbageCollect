@@ -52,7 +52,7 @@
           { itemText: '医废出库', imgUrl: medicalOut, name: 'medicalOutStorage'},{ itemText: '报表统计', imgUrl: statement, name: 'reportAudit'},
           { itemText: '异常预警', imgUrl: abnormalWarning, name: 'abnormalWarning'},{ itemText: '收集历史', imgUrl: collectHistory, name: 'collectHistory'},
           { itemText: '视频监控', imgUrl: videoSurveillance, name: 'videoMonitor'},{ itemText: '预警审核', imgUrl: warningCheck, name: 'warningCheck'},
-          { itemText: '补录审核', imgUrl: addCheck, name: 'addCheck'}
+          { itemText: '补录审核', imgUrl: addCheck, name: 'addCheck'},{ itemText: '补充打印', imgUrl: addCheck, name: 'addPrint'}
         ],
         roleList: ['管理员','项目经理'],
         bannerUrl: homeBanner

@@ -21,6 +21,7 @@ const AddCheck = () => import('../pages/AddCheck')
 const CollectDetails = () => import('../pages/CollectDetails')
 const ReportAudit = () => import('../pages/ReportAudit')
 const VideoMonitor = () => import('../pages/VideoMonitor')
+const AddPrint = () => import('../pages/AddPrint')
 Vue.use(Router)
 
 let baseRoute  = [
@@ -124,6 +125,11 @@ let baseRoute  = [
     path: '/videoMonitor',
     name: 'videoMonitor',
     component: VideoMonitor,
+  },
+  {
+    path: '/addPrint',
+    name: 'addPrint',
+    component: AddPrint,
   }
 ];
 let router = new Router({

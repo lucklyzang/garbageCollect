@@ -228,8 +228,7 @@ export default {
             color: #fff;
             border-radius: 0;
             border: none;
-            line-height: 35px;
-            padding: 0 120px
+            letter-spacing: 2px
           }
           &:after {
             display: none

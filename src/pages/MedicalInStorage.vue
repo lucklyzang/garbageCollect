@@ -199,7 +199,7 @@ export default {
       };
       this.sweepStage()
     },
-    // 查询收集的垃圾批次信息00012019081900022019082200
+    // 查询收集的垃圾批次信息
     queryAllBatch () {
       this.classList = [];
       this.showLoadingHint = true;

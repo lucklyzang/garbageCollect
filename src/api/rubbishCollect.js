@@ -131,3 +131,27 @@ export function statisticsData(proId,data) {
     params: data
   })
 };
+// 部门接口
+export function queryOffice(data) {
+  return request({
+    url: 'department/queryAll',
+    method: 'get',
+    params: data
+  })
+};
+//收集人员接口
+export function queryCollectPerson(data) {
+  return request({
+    url: 'worker/queryAll',
+    method: 'get',
+    params: data
+  })
+};
+//查询补充打印
+export function queryPrintInfo(data) {
+  return request({
+    url: 'collect/history',
+    method: 'get',
+    params: data
+  })
+};
