@@ -625,7 +625,7 @@ export default {
       if (middleCurrentActive > 4) {return};
         if (middleCurrentActive == 4) {
           if (this.manualWeighShow == true) {
-            let re = /^0\.\d+$|^[1-9]+(\.\d+)?$/;
+            let re = /^[+]{0,1}(\d+)$|^[+]{0,1}(\d+\.\d+)$/;
             if (this.manualWeight) {
               if (this.manualWeight <= 0) {
                 this.$dialog.alert({

@@ -22,6 +22,7 @@
         <van-dropdown-menu  active-color="#38bdd0">
           <van-dropdown-item v-model="office" :options="officeList" />
           <van-dropdown-item v-model="collectPerson" :options="collectPersonList" />
+          <van-dropdown-item v-model="reprint" :options="reprintList" />
         </van-dropdown-menu>
         <p class="middle-top-search">
           <van-button type="info" size="small" @click="queryPrintMessage">搜索</van-button>
@@ -94,6 +95,25 @@ export default {
       officeList: [],
       collectPerson: 2,
       collectPersonList: [],
+      reprint: 0,
+      reprintList: [
+        {
+          text: '设备故障',
+          value: 0
+        },
+        {
+          text: '设备没电',
+          value: 1
+        },
+        {
+          text: '设备没纸',
+          value: 2
+        },
+        {
+          text: '其它',
+          value: 3
+        }
+      ],
       lajiBarCode: [],
       keshiCode: [],
       lajiCodeName: [],
@@ -208,14 +228,14 @@ export default {
     },
     // 查询收集的医废信息
     queryAllBatch () {
-      // if (this.endTime !== this.startTime) {
-      //   this.$dialog.alert({
-      //     message: '起始日期与结束日期必需相同',
-      //     closeOnPopstate: true
-      //   }).then(() => {
-      //   });
-      //   return
-      // };
+      if (this.endTime !== this.startTime) {
+        this.$dialog.alert({
+          message: '起始日期与结束日期必需相同',
+          closeOnPopstate: true
+        }).then(() => {
+        });
+        return
+      };
       this.showLoadingHint = true;
       this.rawInfoList = [];
       queryPrintInfo({ 
@@ -266,6 +286,7 @@ export default {
 
     // 搜索按钮
     queryPrintMessage () {
+      this.checkedAll = false;
       this.queryAllBatch()
     },
 
@@ -348,7 +369,7 @@ export default {
            this.printProof(this.lajiBarCode[0],this.keshiCode[0],this.lajiCodeName[0],
           this.lanyaCz[0],this.collectWorkerName[0],this.yihuCode[0]);
         }
-      } else if (this.lajiCode.length > 1) {
+      } else if (this.lajiBarCode.length > 1) {
         let map = {};
         // 记录打印次数
         let timeNum = 1;
@@ -396,7 +417,7 @@ export default {
         position: relative;
         .van-dropdown-menu__item {
           flex: none;
-          width: 34%;
+          width: 25%;
           justify-content: left
         }
         .middle-top-search {

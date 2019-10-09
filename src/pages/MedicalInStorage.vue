@@ -132,47 +132,37 @@ export default {
     // 扫码后的回调
     scanQRcodeCallback (code) {
       if (code && Object.keys(code).length > 0) {
-        if (code.hasOwnProperty('name') && code.hasOwnProperty('proName') && code.hasOwnProperty('depName') && code.hasOwnProperty('type')
-          && code.hasOwnProperty('proId') && code.hasOwnProperty('number')) {
-          if (code.name && code.proName && code.depName && code.type && code.proId && code.number) {
-            judgeSummaryPoint(code.type,code.number).then((res) => {
-              if (res && res.data.code == 200) {
-                this.stageMsg = true;
-                this.sureBtnShow = true;
-                this.inStoageBtn = false;
-                this.stagingMsg = code;
-                this.storeId = code.id;
-                this.storeNumber = code.number;
-                this.proId = code.proId;
-                this.proName = code.proName;
-              } else {
-                this.$dialog.alert({
-                  message: `${res.data.msg}`,
-                  closeOnPopstate: true
-                  }).then(() => {
-                  this.medicalInStoragr()
-                });
-              }
-            })
-            .catch((err)=>{
+        if (code.name && code.proName && code.depName && code.type && code.proId && code.number) {
+          judgeSummaryPoint(code.type,code.number).then((res) => {
+            if (res && res.data.code == 200) {
+              this.stageMsg = true;
+              this.sureBtnShow = true;
+              this.inStoageBtn = false;
+              this.stagingMsg = code;
+              this.storeId = code.id;
+              this.storeNumber = code.number;
+              this.proId = code.proId;
+              this.proName = code.proName;
+            } else {
               this.$dialog.alert({
-                message: `${err.message}`,
+                message: `${res.data.msg}`,
                 closeOnPopstate: true
-              }).then(() => {
+                }).then(() => {
                 this.medicalInStoragr()
               });
-            })
-          } else {
+            }
+          })
+          .catch((err)=>{
             this.$dialog.alert({
-              message: '当前扫描收集信息不全,请重试',
+              message: `${err.message}`,
               closeOnPopstate: true
             }).then(() => {
-              this.medicalInStoragr();
-            })
-          }
+              this.medicalInStoragr()
+            });
+          })
         } else {
           this.$dialog.alert({
-            message: '当前流程与预期流程不符,请重新扫描',
+            message: '当前扫描收集信息不全,请重试',
             closeOnPopstate: true
           }).then(() => {
             this.medicalInStoragr();
@@ -189,21 +179,21 @@ export default {
     },
     //扫描医废入库暂存点二维码
     medicalInStoragr () {
-      if (!this.batchNumber && !this.userInfo.batchNumber) {
-        this.$dialog.alert({
-          message: '批次号不能为空',
-          closeOnPopstate: true
-        }).then(() => {
-        });
-        return
-      };
+      // if (!this.batchNumber && !this.userInfo.batchNumber) {
+      //   this.$dialog.alert({
+      //     message: '批次号不能为空',
+      //     closeOnPopstate: true
+      //   }).then(() => {
+      //   });
+      //   return
+      // };
       this.sweepStage()
     },
     // 查询收集的垃圾批次信息
     queryAllBatch () {
       this.classList = [];
       this.showLoadingHint = true;
-      queryBatch({batchNumber:this.batchNumber ? this.batchNumber : this.userInfo.batchNumber ,workerId:this.userInfo.id, state: 0}).then((res)=>{
+      queryBatch({batchNumber:this.batchNumber ? this.batchNumber == this.userInfo.batchNumber ? this.batchNumber : this.batchNumber : this.userInfo.batchNumber ,workerId:this.userInfo.id, state: 0}).then((res)=>{
         if (res && res.data.code == 200) {
           if (res.data.data.length > 0) {
             let dataList = res.data.data;

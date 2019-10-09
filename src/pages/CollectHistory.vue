@@ -224,7 +224,6 @@ export default {
     onClickTab (name, title) {
       this.currentName = name;
       this.currentIndex = name;
-      this.initData();
       if (this.startTime == "" || this.endTime == "") {
         this.$dialog.alert({
             message: '请选择开始或结束日期',
@@ -255,8 +254,8 @@ export default {
                 for (let item of res.data.data) {
                   this.notInStorageList.push(
                     {
-                      'batchNumber':  item.batchNumber,  //批次号  				
-                      'cardNumber':  item.cardNumber,   //收集车号
+                      'batchNumber': item.batchNumber,  //批次号  				
+                      'cardNumber': item.cardNumber,   //收集车号
                       'company': item.company,     //交接公司
                       'companyId': item.companyId ,    //交接人编号
                       'companyName': item.companyName,   //交接人姓名    
@@ -432,6 +431,7 @@ export default {
     initMethod () {
       this.activeName = 0;
       this.currentIndex = 0;
+      this.initData();
       this.initDate();
       this.queryMethods(this.userInfo.proId, formatTime('YYYY-MM-DD'), formatTime('YYYY-MM-DD'), 0)
     }

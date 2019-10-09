@@ -115,7 +115,7 @@ export default {
     });
     // 键盘弹起时不会遮住输入框
     let originalHeight = document.documentElement.clientHeight || document.body.clientHeight;
-    window.onresize = ()=>{
+    window.onresize = () => {
       let resizeHeight = document.documentElement.clientHeight || document.body.clientHeight;
       if (resizeHeight < originalHeight) {
         return (()=>{

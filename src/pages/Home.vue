@@ -35,6 +35,7 @@
   import testStatistics from '@/common/images/home/test-statistics.png'
   import videoSurveillance from '@/common/images/home/video-surveillance.png'
   import homeBanner from '@/common/images/home/home-banner.png'
+  import rePrint from '@/common/images/home/re-print.png'
   import addCheck from '@/common/images/home/add-check.png'
   import warningCheck from '@/common/images/home/warning-check.png'
   import { formatTime } from '@/common/js/utils'
@@ -51,8 +52,8 @@
           { itemText: '医废收集', imgUrl: collectWaste, name: 'medicalCollect'},{ itemText: '医废入库', imgUrl: medicalIn, name: 'medicalInStorage'},
           { itemText: '医废出库', imgUrl: medicalOut, name: 'medicalOutStorage'},{ itemText: '报表统计', imgUrl: statement, name: 'reportAudit'},
           { itemText: '异常预警', imgUrl: abnormalWarning, name: 'abnormalWarning'},{ itemText: '收集历史', imgUrl: collectHistory, name: 'collectHistory'},
-          { itemText: '视频监控', imgUrl: videoSurveillance, name: 'videoMonitor'},{ itemText: '预警审核', imgUrl: warningCheck, name: 'warningCheck'},
-          { itemText: '补录审核', imgUrl: addCheck, name: 'addCheck'},{ itemText: '补充打印', imgUrl: addCheck, name: 'addPrint'}
+          { itemText: '视频监控', imgUrl: videoSurveillance, name: 'videoMonitor'},{ itemText: '补充打印', imgUrl: rePrint, name: 'addPrint'},{ itemText: '预警审核', imgUrl: warningCheck, name: 'warningCheck'},
+          { itemText: '补录审核', imgUrl: addCheck, name: 'addCheck'}
         ],
         roleList: ['管理员','项目经理'],
         bannerUrl: homeBanner
