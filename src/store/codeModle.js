@@ -55,7 +55,12 @@ export default {
     // 进入公共扫码页区分调用方法
     callPeriod: false,
     // 是否重新提交收集的数据
-    isRepeatSubmit: false
+    isRepeatSubmit: false,
+    // 手动输入重量框显示
+    manualWeighShow: false,
+    isBlueWeight: false,
+    // 是否当前科室收集
+    isCollectCurrentOffice: true
   },
   getters:{
     navTopTitle: state => state.navTitle,
@@ -87,6 +92,9 @@ export default {
     isPlus: state => state.isPlus,
     recordZeroCount: state => state.recordZeroCount,
     isRepeatSubmit: state => state.isRepeatSubmit,
+    manualWeighShow: state => state.manualWeighShow,
+    isBlueWeight: state => state.isBlueWeight,
+    isCollectCurrentOffice: state => state.isCollectCurrentOffice,
   },
   mutations:{
     changeTitleTxt (state,payLoad) {
@@ -240,7 +248,19 @@ export default {
       // 改变是否重新提交数据的状态
        changeRepeatSubmit (state,payLoad) {
         state.isRepeatSubmit = payLoad
-      }
+      },
+      // 改变称重方式的状态
+      changeManualWeighShow (state,payLoad) {
+        state.manualWeighShow = payLoad
+      },
+      // 改变是否蓝牙称重状态
+      changeIsBlueWeight (state,payLoad) {
+        state.isBlueWeight = payLoad
+      },
+      // 改变是否当前科室收集的状态
+      changeIsCollectCurrentOffice (state,payLoad) {
+        state.isCollectCurrentOffice = payLoad
+      },
   },
   actions:{}
 }

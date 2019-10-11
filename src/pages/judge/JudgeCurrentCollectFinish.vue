@@ -95,7 +95,7 @@ export default {
               this.changeBackoutBtn(true);
               this.$router.push({path: 'medicalCollect'});
               this.changeTitleTxt({tit: '医废收集'});
-              this.changeFlowState(2);
+              this.changeFlowState(1);
               this.changeCollectBtn(false);
               this.changeSureBtn(true);
               this.changePrintBtn(false);
@@ -202,10 +202,10 @@ export default {
               this.$router.push({path: 'medicalCollect'});
               this.changeCollectBtn(false);
               this.changeSureBtn(true);
-              this.changebluetoothWeighShow(true);
+              this.changebluetoothWeighShow(false);
               this.changeBagCodeShow(false);
               this.changeAstOfficeShow(false);
-              this.changeStaffCodeShow(false);
+              this.changeStaffCodeShow(true);
             } else {
               this.changeBackoutBtn(true);
               this.changeFlowState(0);
@@ -303,10 +303,10 @@ export default {
                 this.$router.push({path: 'medicalCollect'});
                 this.changeCollectBtn(false);
                 this.changeSureBtn(true);
-                this.changebluetoothWeighShow(true);
+                this.changebluetoothWeighShow(false);
                 this.changeBagCodeShow(false);
                 this.changeAstOfficeShow(false);
-                this.changeStaffCodeShow(false);
+                this.changeStaffCodeShow(true);
               } else {
                 this.changeBackoutBtn(true);
                 this.changeFlowState(0);

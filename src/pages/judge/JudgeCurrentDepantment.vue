@@ -40,7 +40,10 @@ export default {
       'changebluetoothWeighShow',
       'changeStaffCodeShow',
       'changeBagCodeShow',
-      'changeBackoutBtn'
+      'changeBackoutBtn',
+      'changeAstOfficeShow',
+      'changeManualWeighShow',
+      'changeIsCollectCurrentOffice'
     ]),
     showDialog () {
       this.$dialog.confirm({
@@ -48,23 +51,33 @@ export default {
         closeOnPopstate: true
       }).then(() => {
         this.$router.push({path: 'medicalCollect'});
-        this.changeFlowState(2);
+        this.changeFlowState(1);
+        this.changeCurrentLajicodeState(false);
         this.changeCollectBtn(false);
         this.changeBackoutBtn(true);
         this.changeSureBtn(true);
         this.changePrintBtn(false);
         this.changeOtherBtn(false);
-        this.changeCurrentLajicodeState(false);
         this.changeClickBackoutBtn(false);
         this.changeBagCodeShow(false);
+        this.changeStaffCodeShow(false);
         this.changebluetoothWeighShow(false);
-        this.changeStaffCodeShow(true)
+        this.changeManualWeighShow(false);
+        this.changeIsCollectCurrentOffice(true)
       }).catch(() => {
+        this.$router.push({path: 'medicalCollect'});
+        this.changeFlowState(2);
         this.changeCurrentLajicodeState(false);
-        this.$router.replace({path:'judgeCurrentCollectFinish'});
+        this.changeCollectBtn(false);
+        this.changeBackoutBtn(true);
+        this.changeSureBtn(true);
+        this.changePrintBtn(false);
+        this.changeOtherBtn(false);
         this.changeClickBackoutBtn(false);
         this.changeBagCodeShow(false);
-        this.changebluetoothWeighShow(false)   
+        this.changeAstOfficeShow(false);
+        this.changeStaffCodeShow(false);
+        this.changeIsCollectCurrentOffice(false)   
       });
     }
   }
