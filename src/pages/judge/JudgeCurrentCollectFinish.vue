@@ -29,7 +29,8 @@ export default {
       'startCollectTime',
       'batchNumber',
       'userInfo',
-      'clickBackoutBtn'
+      'clickBackoutBtn',
+      'isRepeatSubmit'
     ])
   },
 
@@ -66,7 +67,8 @@ export default {
       'changeAstOfficeShow',
       'changeStaffCodeShow',
       'changebluetoothWeighShow',
-      'changeCodeStep'
+      'changeCodeStep',
+      'changeRepeatSubmit'
     ]),
     showDialog () {
       this.$dialog.confirm({
@@ -193,17 +195,30 @@ export default {
           message: `${err.message}`,
           closeOnPopstate: true
             }).then(() => {
-            this.changeBackoutBtn(true);
-            this.changeFlowState(0);
-            this.$router.push({path: 'medicalCollect'});
-            // 清空存储的数据
-            this.clearTrashStore();
-            this.changeCollectBtn(true);
-            this.changeSureBtn(false);
-            this.changebluetoothWeighShow(false);
-            this.changeBagCodeShow(false);
-            this.changeAstOfficeShow(false);
-            this.changeStaffCodeShow(false);
+            if (err.message.toString().toLowerCase().indexOf('timeout')!= -1 || err.message.toString().toLowerCase().indexOf('network error')!= -1) {
+              this.changeRepeatSubmit(true);
+              this.changeBackoutBtn(false);
+              this.changeFlowState(3);
+              this.$router.push({path: 'medicalCollect'});
+              this.changeCollectBtn(false);
+              this.changeSureBtn(true);
+              this.changebluetoothWeighShow(true);
+              this.changeBagCodeShow(false);
+              this.changeAstOfficeShow(false);
+              this.changeStaffCodeShow(false);
+            } else {
+              this.changeBackoutBtn(true);
+              this.changeFlowState(0);
+              this.$router.push({path: 'medicalCollect'});
+              // 清空存储的数据
+              this.clearTrashStore();
+              this.changeCollectBtn(true);
+              this.changeSureBtn(false);
+              this.changebluetoothWeighShow(false);
+              this.changeBagCodeShow(false);
+              this.changeAstOfficeShow(false);
+              this.changeStaffCodeShow(false);
+            }
         })
       })
     },
@@ -281,17 +296,30 @@ export default {
           message: `${err.message}`,
           closeOnPopstate: true
             }).then(() => {
-            this.changeBackoutBtn(true);
-            this.changeFlowState(0);
-            this.$router.push({path: 'medicalCollect'});
-            // 清空存储的数据
-            this.clearTrashStore();
-            this.changeCollectBtn(true);
-            this.changeSureBtn(false);
-            this.changebluetoothWeighShow(false);
-            this.changeBagCodeShow(false);
-            this.changeAstOfficeShow(false);
-            this.changeStaffCodeShow(false);
+              if (err.message.toString().toLowerCase().indexOf('timeout')!= -1 || err.message.toString().toLowerCase().indexOf('network error')!= -1) {
+                this.changeRepeatSubmit(true);
+                this.changeBackoutBtn(false);
+                this.changeFlowState(3);
+                this.$router.push({path: 'medicalCollect'});
+                this.changeCollectBtn(false);
+                this.changeSureBtn(true);
+                this.changebluetoothWeighShow(true);
+                this.changeBagCodeShow(false);
+                this.changeAstOfficeShow(false);
+                this.changeStaffCodeShow(false);
+              } else {
+                this.changeBackoutBtn(true);
+                this.changeFlowState(0);
+                this.$router.push({path: 'medicalCollect'});
+                // 清空存储的数据
+                this.clearTrashStore();
+                this.changeCollectBtn(true);
+                this.changeSureBtn(false);
+                this.changebluetoothWeighShow(false);
+                this.changeBagCodeShow(false);
+                this.changeAstOfficeShow(false);
+                this.changeStaffCodeShow(false);
+            }
         })
       })
     }

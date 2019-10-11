@@ -39,7 +39,8 @@ export default {
       'changeCurrentActive',
       'changebluetoothWeighShow',
       'changeStaffCodeShow',
-      'changeBagCodeShow'
+      'changeBagCodeShow',
+      'changeBackoutBtn'
     ]),
     showDialog () {
       this.$dialog.confirm({
@@ -49,6 +50,7 @@ export default {
         this.$router.push({path: 'medicalCollect'});
         this.changeFlowState(2);
         this.changeCollectBtn(false);
+        this.changeBackoutBtn(true);
         this.changeSureBtn(true);
         this.changePrintBtn(false);
         this.changeOtherBtn(false);

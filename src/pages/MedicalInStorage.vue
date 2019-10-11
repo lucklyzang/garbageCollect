@@ -220,7 +220,13 @@ export default {
               this.changeTitleTxt({tit: '医废监测'})
             });
           }
-        };
+        } else {
+          this.$dialog.alert({
+            message: `${res.data.msg}`,
+            closeOnPopstate: true
+          }).then(() => {
+          });
+        }
         this.showLoadingHint = false
       })
       .catch((err)=> {

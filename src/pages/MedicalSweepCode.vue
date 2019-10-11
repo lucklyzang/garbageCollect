@@ -44,7 +44,7 @@
           </van-panel>
           <van-panel v-show="showBluetoothWeighShow" title="医废重量" desc="" status="">
             <div class="bluetooth-weigh">
-              <p>重量: {{extraLyczMsg}}</p>
+              <p>重量: {{judgeFlowValue == 3 ? this.lanyaCz[this.lanyaCz.length-1] ? this.lanyaCz[this.lanyaCz.length-1] : '' : extraLyczMsg}}</p>
             </div>
           </van-panel>
           <van-panel v-show="manualWeighShow" title="医废重量" desc="" status="">
@@ -124,7 +124,8 @@ export default {
       'currentActive',
       'codeStep',
       'isPlus',
-      'recordZeroCount'
+      'recordZeroCount',
+      'isRepeatSubmit'
     ]),
     showCurrentActive () {
       return this.currentActive
@@ -248,7 +249,8 @@ export default {
       'changeCodeStep',
       'changeIsPlus',
       'changeFlowState',
-      'ChangeRecordZeroCount'
+      'ChangeRecordZeroCount',
+      'changeRepeatSubmit'
     ]),
 
 
@@ -303,6 +305,11 @@ export default {
         this.changeCurrentActive(-1);
         this.temporaryActive = -1;
         this.changeCodeStep(0)
+      } else if (this.judgeFlowValue == 3) {
+        this.changeCurrentActive(3);
+        this.temporaryActive = 3;
+        this.changeCodeStep(3);
+        this.changeIsPlus(true);
       } else {
         this.initSweepCodeInfo()
       }
@@ -624,62 +631,67 @@ export default {
       this.changeIsPlus(false);
       if (middleCurrentActive > 4) {return};
         if (middleCurrentActive == 4) {
-          if (this.manualWeighShow == true) {
-            let re = /^[+]{0,1}(\d+)$|^[+]{0,1}(\d+\.\d+)$/;
-            if (this.manualWeight) {
-              if (this.manualWeight <= 0) {
-                this.$dialog.alert({
-                  message: '输入重量不能小于等于0,请重新输入',
-                  closeOnPopstate: true
-                  }).then(() => {
-                  });
-              } else {
-                if (!re.test(this.manualWeight.toString())) {
+          if (this.isRepeatSubmit) {
+            this.$router.replace({path:'judgeCurrentCollectFinish'});
+            this.changeRepeatSubmit(false)
+          } else {
+            if (this.manualWeighShow) {
+              let re = /^[+]{0,1}(\d+)$|^[+]{0,1}(\d+\.\d+)$/;
+              if (this.manualWeight) {
+                if (this.manualWeight <= 0) {
                   this.$dialog.alert({
-                    message: '输入重量不合法,请重新输入',
+                    message: '输入重量不能小于等于0,请重新输入',
                     closeOnPopstate: true
                     }).then(() => {
                     });
                 } else {
-                  // 手动输入重量存入store的重量数组
-                  this.changeCurrentActive(this.codeStep);
-                  this.temporaryActive = 3;
-                  this.storageLanyaCz(this.manualWeight);
-                  this.$router.push({path:'judgeCurrentDepantment'})
+                  if (!re.test(this.manualWeight.toString())) {
+                    this.$dialog.alert({
+                      message: '输入重量不合法,请重新输入',
+                      closeOnPopstate: true
+                      }).then(() => {
+                      });
+                  } else {
+                    // 手动输入重量存入store的重量数组
+                    this.changeCurrentActive(this.codeStep);
+                    this.temporaryActive = 3;
+                    this.storageLanyaCz(this.manualWeight);
+                    this.$router.push({path:'judgeCurrentDepantment'})
+                  }
                 }
+              } else {
+                this.$dialog.alert({
+                  message: '重量不能为空,请重新输入',
+                  closeOnPopstate: true
+                  }).then(() => {
+                });
               }
             } else {
-              this.$dialog.alert({
-                message: '重量不能为空,请重新输入',
-                closeOnPopstate: true
+              // 断开蓝牙秤连接
+              // this.breakScales();
+              if (this.extraLyczMsg == 0.0) {
+                this.$dialog.confirm({
+                  message: '收集医废重量不能为0,再次称重?',
+                  closeOnPopstate: true
                 }).then(() => {
-              });
-            }
-          } else {
-            // 断开蓝牙秤连接
-            // this.breakScales();
-            if (this.extraLyczMsg == 0.0) {
-              this.$dialog.confirm({
-                message: '收集医废重量不能为0,再次称重?',
-                closeOnPopstate: true
-              }).then(() => {
-                this.changeCodeStep(3);
+                  this.changeCodeStep(3);
+                  this.changeExtraLyczMsg(null);
+                  this.weightRubbish()
+                })
+                .catch(() => {
+                  let lajiCodeAgent = this.lajiCode;
+                  lajiCodeAgent.splice(this.lajiCode.length-1,1);
+                  this.initStorageLajiCode();
+                  this.changeStorageLajiCode(lajiCodeAgent);
+                  this.changebluetoothWeighShow(false);
+                  this.$router.push({path:'judgeCurrentDepantment'});
+                })
+              } else {
+                // 最终的回调重量存store的重量数组
+                this.storageLanyaCz(this.extraLyczMsg)
                 this.changeExtraLyczMsg(null);
-                this.weightRubbish()
-              })
-              .catch(() => {
-                let lajiCodeAgent = this.lajiCode;
-                lajiCodeAgent.splice(this.lajiCode.length-1,1);
-                this.initStorageLajiCode();
-                this.changeStorageLajiCode(lajiCodeAgent);
-                this.changebluetoothWeighShow(false);
                 this.$router.push({path:'judgeCurrentDepantment'});
-              })
-            } else {
-              // 最终的回调重量存store的重量数组
-              this.storageLanyaCz(this.extraLyczMsg)
-              this.changeExtraLyczMsg(null);
-              this.$router.push({path:'judgeCurrentDepantment'});
+              }
             }
           }
       } else if (middleCurrentActive == 3) {

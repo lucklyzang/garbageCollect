@@ -54,6 +54,8 @@ export default {
     ],
     // 进入公共扫码页区分调用方法
     callPeriod: false,
+    // 是否重新提交收集的数据
+    isRepeatSubmit: false
   },
   getters:{
     navTopTitle: state => state.navTitle,
@@ -83,7 +85,8 @@ export default {
     callPeriod: state => state.callPeriod,
     codeStep: state => state.codeStep,
     isPlus: state => state.isPlus,
-    recordZeroCount: state => state.recordZeroCount
+    recordZeroCount: state => state.recordZeroCount,
+    isRepeatSubmit: state => state.isRepeatSubmit,
   },
   mutations:{
     changeTitleTxt (state,payLoad) {
@@ -233,6 +236,10 @@ export default {
       // 改变记录为0的状态
       ChangeRecordZeroCount (state,payLoad) {
         state.recordZeroCount = payLoad
+      },
+      // 改变是否重新提交数据的状态
+       changeRepeatSubmit (state,payLoad) {
+        state.isRepeatSubmit = payLoad
       }
   },
   actions:{}
