@@ -23,18 +23,21 @@
 
 //重复的样式
 .repeat-sign (@left: 70px) {
+  transform: scale(.5);
+  transform-origin: 0% top;
   background: #38bdd0;
   color: #fff;
-  width: 20px;
-  height: 20px;
+  width: 40px;
+  height: 40px;
   display: inline-block;
   position: absolute;
   top: 4px;
   left: @left;
   border-radius: 50%;
-  font-size: 10px;
+  font-size: 20px;
   text-align: center;
-  line-height: 20px;
+  line-height: 40px;
+  text-align: center;
   .no-wrap()
 }
 .content-middle (@margin-top: 60px, @height: 100%) {

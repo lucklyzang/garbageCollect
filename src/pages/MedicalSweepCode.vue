@@ -6,19 +6,12 @@
       </HeaderTop>
       <div class="content">
         <div class="content-header">
-          <!-- <van-steps :active="showCurrentActive"
-            active-color="#38bdd0"  inactive-icon="arrow">
-            <van-step>扫描科室</van-step>
-            <van-step>扫描医护</van-step>
-            <van-step>扫描垃圾袋</van-step>
-            <van-step>称重</van-step>
-          </van-steps> -->
           <div class="progress-title">
             <span v-for="item in progressTitleList">
               {{item}}
             </span>
           </div>
-          <van-progress :percentage="currentPercentage" pivot-text="0" text-color="#38bdd0" color="#38bdd0" stroke-width="8" />
+          <common-progress :percentage="currentPercentage" class="progress-style"></common-progress>
         </div>
         <div class="content-middle">
           <van-panel v-show="showAstOfficeShow" title="科室信息" desc="" status="">
@@ -78,13 +71,15 @@
 <script>
 import HeaderTop from '../components/HeaderTop'
 import FooterBottom from '../components/FooterBottom'
+import CommonProgress from '../components/CommonProgress'
 import {judgeStagingPoint,judgeMedicalPerson} from '../api/rubbishCollect.js'
 import { formatTime } from '@/common/js/utils'
 import { mapGetters, mapMutations } from 'vuex'
 export default {
    components:{
       HeaderTop,
-      FooterBottom
+      FooterBottom,
+      CommonProgress
     },
   data () {
     return {
@@ -198,19 +193,19 @@ export default {
       handler(newVal,oldVal) {
         switch (newVal) {
           case -1 :
-            this.currentPercentage = 0;
+            this.currentPercentage = '0';
             break;
           case 0 :
-            this.currentPercentage = 11;
+            this.currentPercentage = '13';
             break;
           case 1 :
-            this.currentPercentage = 42;
+            this.currentPercentage = '43';
             break;
           case 2 :
-            this.currentPercentage = 68;
+            this.currentPercentage = '68';
             break;
           case 3 :
-            this.currentPercentage = 100;
+            this.currentPercentage = '100';
             break;
         }
       },
@@ -329,7 +324,7 @@ export default {
         this.temporaryActive = 2;
         this.changeCodeStep(2);
         this.changeIsPlus(true);
-      }else {
+      } else {
         this.initSweepCodeInfo()
       }
     },
@@ -387,7 +382,8 @@ export default {
       this.changeAstOfficeShow(false);
       this.changeStaffCodeShow(false);
       this.changebluetoothWeighShow(false);
-      this.clearTrashStore()
+      this.changeIsCollectCurrentOffice(true)
+      this.clearTrashStore();
     },
 
     // 扫描二维码方法
@@ -544,7 +540,8 @@ export default {
                 this.changeExtraLajiMsg(code);
                 this.changeBagCodeShow(true);
                 this.changeAstOfficeShow(false);
-                this.changeCurrentLajicodeState(true)
+                this.changeCurrentLajicodeState(true);
+                this.changeManualWeighShow(false)
               } else {
                 this.$dialog.alert({
                   message: '扫描的医废重复,请重新扫描',
@@ -840,16 +837,22 @@ export default {
             }
           }
         }
-        /deep/ .van-progress {
+        // /deep/ .van-progress {
+        //   margin-top: 14px;
+        //   margin-bottom: 14px;
+        //   .van-progress__portion {
+        //     .van-progress__pivot {
+        //       transform: scale(.5);
+        //       transform-origin: 0% -15px;
+        //       min-width: 28px;
+        //       min-height: 28px;
+        //       border-radius: 50%;
+        //     }
+        //   }
+        // }
+        .progress-style {
           margin-top: 14px;
           margin-bottom: 14px;
-          .van-progress__portion {
-            .van-progress__pivot {
-              min-width: 14px;
-              min-height: 14px;
-              border-radius: 50%
-            }
-          }
         }
       }
       .content-footer {
@@ -870,6 +873,8 @@ export default {
             text-align: center;
             letter-spacing: 2px;
             border: none;
+            height: 58px;
+            font-size: 18px
           }
         }
         .showBackoutButton {

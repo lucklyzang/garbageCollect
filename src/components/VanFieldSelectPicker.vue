@@ -4,7 +4,7 @@
       v-model="result"
       ref="currentField"
       v-bind="$attrs"
-      @click="show = !show"
+      @click="formHandle"
     />
     <van-popup v-model="show" position="bottom">
       <van-picker
@@ -44,9 +44,24 @@ export default {
       this.result = value;
       this.show = !this.show;
     },
+
     onCancle () {
       this.show = !this.show;
       this.$refs['currentField'].focus()
+    },
+
+    // 表单点击事件
+    formHandle () {
+      this.show = !this.show;
+      if (this.columns.length == 0) {
+        this.$dialog.alert({
+          message: '暂无历史回显数据可供选择,请手动输入',
+          closeOnPopstate: true
+        }).then(() => {
+          this.$refs['currentField'].focus()
+        });
+        this.show = false;
+      }
     }
   },
   watch: {
