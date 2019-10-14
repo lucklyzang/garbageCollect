@@ -67,7 +67,7 @@ export default {
       }).catch(() => {
         this.$router.push({path: 'medicalCollect'});
         this.changeFlowState(2);
-        this.changeCurrentLajicodeState(false);
+        this.changeCurrentLajicodeState(true);
         this.changeCollectBtn(false);
         this.changeBackoutBtn(true);
         this.changeSureBtn(true);

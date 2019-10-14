@@ -255,7 +255,8 @@ export default {
               message: '医废入库成功',
               closeOnPopstate: true
             }).then(() => {
-              this.$router.push({path: 'medicalOutStorage'})
+              this.$router.push({path: 'medicalOutStorage'});
+              this.changeTitleTxt({tit: '医废出库'})
             });
           } else {
             this.$dialog.alert({

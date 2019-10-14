@@ -372,6 +372,7 @@ export default {
     initSweepCodeInfo () {
       this.changeCodeStep(0);
       this.changeFlowState(0);
+      this.changeIsPlus(false);
       this.changeCurrentActive(-1);
       this.changeCollectBtn(true);
       this.changeBackoutBtn(true);
@@ -382,6 +383,7 @@ export default {
       this.changeAstOfficeShow(false);
       this.changeStaffCodeShow(false);
       this.changebluetoothWeighShow(false);
+      this.changeManualWeighShow(false);
       this.changeIsCollectCurrentOffice(true)
       this.clearTrashStore();
     },
@@ -541,7 +543,8 @@ export default {
                 this.changeBagCodeShow(true);
                 this.changeAstOfficeShow(false);
                 this.changeCurrentLajicodeState(true);
-                this.changeManualWeighShow(false)
+                this.changeManualWeighShow(false);
+                this.changebluetoothWeighShow(false);
               } else {
                 this.$dialog.alert({
                   message: '扫描的医废重复,请重新扫描',
@@ -691,7 +694,7 @@ export default {
                   this.changeCurrentActive(this.codeStep);
                   this.temporaryActive = 2;
                   this.storageLanyaCz(this.manualWeight);
-                  this.$router.push({path:'judgeCurrentDepantment'})
+                  this.$router.push({path:'judgeCurrentDepantment'}) 
                 }
               }
             } else {
@@ -723,7 +726,7 @@ export default {
               })
             } else {
               // 最终的回调重量存store的重量数组
-              this.storageLanyaCz(this.extraLyczMsg)
+              this.storageLanyaCz(this.extraLyczMsg);
               this.changeExtraLyczMsg(null);
               this.$router.push({path:'judgeCurrentDepantment'});
             }
@@ -733,7 +736,8 @@ export default {
         this.chooseWeightMethod()
       } else if (middleCurrentActive == 4) {
         this.$router.replace({path:'judgeCurrentCollectFinish'});
-        this.changeRepeatSubmit(false)
+        this.changeRepeatSubmit(false);
+        this.changeCurrentLajicodeState(false);
       }
       else {
         this.sweepAstoffice()
@@ -754,6 +758,7 @@ export default {
       })
       .catch(() => {
         this.changeManualWeighShow(true);
+        this.changebluetoothWeighShow(false);
         this.changeIsBlueWeight(false);
         this.changeBagCodeShow(false);
         this.changeIsPlus(true)

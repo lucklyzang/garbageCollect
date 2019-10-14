@@ -68,7 +68,8 @@ export default {
       'changeStaffCodeShow',
       'changebluetoothWeighShow',
       'changeCodeStep',
-      'changeRepeatSubmit'
+      'changeRepeatSubmit',
+      'changeManualWeighShow'
     ]),
     showDialog () {
       this.$dialog.confirm({
@@ -84,6 +85,7 @@ export default {
             this.changeAstOfficeShow(false);
             this.changeStaffCodeShow(false);
             this.changebluetoothWeighShow(false);
+            this.changeManualWeighShow(false);
             this.changeFlowState(0);
             // 清空存储的数据
             this.clearTrashStore();
@@ -100,6 +102,11 @@ export default {
               this.changeSureBtn(true);
               this.changePrintBtn(false);
               this.changeOtherBtn(false);
+              this.changeBagCodeShow(false);
+              this.changeStaffCodeShow(false);
+              this.changebluetoothWeighShow(false);
+              this.changeManualWeighShow(false);
+              this.changeIsCollectCurrentOffice(true)
             })
           };
         };
@@ -164,6 +171,7 @@ export default {
                   this.changeOtherBtn(true);
                   this.changeFlowState(0);
                   this.changebluetoothWeighShow(false);
+                  this.changeManualWeighShow(false);
                   this.changeBagCodeShow(false);
                   this.changeAstOfficeShow(false);
                   this.changeStaffCodeShow(false);
@@ -182,6 +190,7 @@ export default {
               this.changeCollectBtn(true);
               this.changeSureBtn(false);
               this.changebluetoothWeighShow(false);
+              this.changeManualWeighShow(false);
               this.changeBagCodeShow(false);
               this.changeAstOfficeShow(false);
               this.changeStaffCodeShow(false);
@@ -203,6 +212,7 @@ export default {
               this.changeCollectBtn(false);
               this.changeSureBtn(true);
               this.changebluetoothWeighShow(false);
+              this.changeManualWeighShow(false);
               this.changeBagCodeShow(false);
               this.changeAstOfficeShow(false);
               this.changeStaffCodeShow(true);
@@ -215,6 +225,7 @@ export default {
               this.changeCollectBtn(true);
               this.changeSureBtn(false);
               this.changebluetoothWeighShow(false);
+              this.changeManualWeighShow(false);
               this.changeBagCodeShow(false);
               this.changeAstOfficeShow(false);
               this.changeStaffCodeShow(false);
@@ -265,6 +276,7 @@ export default {
                   this.changeFlowState(0);
                   this.changeOtherBtn(true);
                   this.changebluetoothWeighShow(false);
+                  this.changeManualWeighShow(false);
                   this.changeBagCodeShow(false);
                   this.changeAstOfficeShow(false);
                   this.changeStaffCodeShow(false);
@@ -283,6 +295,7 @@ export default {
                 this.changeCollectBtn(true);
                 this.changeSureBtn(false);
                 this.changebluetoothWeighShow(false);
+                this.changeManualWeighShow(false);
                 this.changeBagCodeShow(false);
                 this.changeAstOfficeShow(false);
                 this.changeStaffCodeShow(false);
@@ -304,6 +317,7 @@ export default {
                 this.changeCollectBtn(false);
                 this.changeSureBtn(true);
                 this.changebluetoothWeighShow(false);
+                this.changeManualWeighShow(false);
                 this.changeBagCodeShow(false);
                 this.changeAstOfficeShow(false);
                 this.changeStaffCodeShow(true);
@@ -316,6 +330,7 @@ export default {
                 this.changeCollectBtn(true);
                 this.changeSureBtn(false);
                 this.changebluetoothWeighShow(false);
+                this.changeManualWeighShow(false);
                 this.changeBagCodeShow(false);
                 this.changeAstOfficeShow(false);
                 this.changeStaffCodeShow(false);

@@ -56,6 +56,7 @@
           { itemText: '补录审核', imgUrl: addCheck, name: 'addCheck'}
         ],
         roleList: ['管理员','项目经理'],
+        roleListOther: ['垃圾收集人员'],
         bannerUrl: homeBanner
       }
     },
@@ -96,7 +97,10 @@
       // 初始化首页展示菜单列表
       initItemList () {
         if (this.roleList.indexOf(this.getCardType) == -1) {
-          this.itemList.splice(-2,2)
+          this.itemList.splice(-2,2);
+        };
+        if (this.roleListOther.indexOf(this.getCardType) !== -1) {
+          this.itemList.splice(2,1)
         }
       },
       // 跳转到我的页面
