@@ -14,35 +14,36 @@
           <common-progress :percentage="currentPercentage" class="progress-style"></common-progress>
         </div>
         <div class="content-middle">
-          <van-panel v-show="showAstOfficeShow" title="科室信息" desc="" status="">
+          <van-panel v-if="showAstOfficeShow" title="科室信息" desc="" status="">
             <div class="ast-office">
-                <p>科室: {{judgeFlowValue == 1 ? keshiCode[0].name : extraKeshiMsg ? extraKeshiMsg.name : ''}}</p>
-                <p>医院: {{judgeFlowValue == 1 ? keshiCode[0].proName : extraKeshiMsg ? extraKeshiMsg.proName : ''}}</p>
-                <p>房间: {{judgeFlowValue == 1 ? keshiCode[0].depName : extraKeshiMsg ? extraKeshiMsg.depName : ''}}</p>
+                <p>科室: {{judgeFlowValue == 1 ? keshiCode[0].name : judgeFlowValue == 0 ? keshiCode[keshiCode.length-1].name : extraKeshiMsg}}</p>
+                <p>医院: {{judgeFlowValue == 1 ? keshiCode[0].proName : judgeFlowValue == 0 ? keshiCode[keshiCode.length-1].proName : extraKeshiMsg}}</p>
+                <p>房间: {{judgeFlowValue == 1 ? keshiCode[0].depName : judgeFlowValue == 0 ? keshiCode[keshiCode.length-1].depName : extraKeshiMsg}}</p>
             </div>
           </van-panel>
-          <van-panel v-show="showBagCodeShow" title="医废信息" desc="" status="">
+          <van-panel v-if="showBagCodeShow" title="医废信息" desc="" status="">
             <div class="bag-code">
-              <p>医废类型: {{extraLajiMsg ? extraLajiMsg.wasteName : ''}}</p>
-              <p>医院: {{extraLajiMsg ? extraLajiMsg.proName : ''}}</p>
-              <p>房间: {{extraLajiMsg ? extraLajiMsg.depName : ''}}</p>
+              <p>医废类型: {{judgeFlowValue == 1 ? lajiCode[lajiCode.length-1].wasteName : extraLajiMsg ? extraLajiMsg.wasteName : ''}}</p>
+              <p>医院: {{judgeFlowValue == 1 ? lajiCode[lajiCode.length-1].proName : extraLajiMsg ? extraLajiMsg.proName : ''}}</p>
+              <p>房间: {{judgeFlowValue == 1 ? lajiCode[lajiCode.length-1].depName : extraLajiMsg ? extraLajiMsg.depName : ''}}</p>
+              <p>医废编号: {{judgeFlowValue == 1 ? lajiCode[lajiCode.length-1].barCode : extraLajiMsg ? extraLajiMsg.barCode : ''}}</p>
             </div>
           </van-panel>
-          <van-panel v-show="showBluetoothWeighShow" title="医废重量" desc="" status="">
+          <van-panel v-if="showBluetoothWeighShow" title="医废重量" desc="" status="">
             <div class="bluetooth-weigh">
               <p>重量: {{judgeFlowValue == 2 ? lanyaCz[lanyaCz.length-1] ? lanyaCz[lanyaCz.length-1]: '' : extraLyczMsg}}</p>
             </div>
           </van-panel>
-          <van-panel v-show="manualWeighShow" title="医废重量" desc="" status="">
+          <van-panel v-if="manualWeighShow" title="医废重量" desc="" status="">
             <van-cell-group>
               <van-field v-model="manualWeight"  label="医废重量(kg)" placeholder="请输入医废重量" />
             </van-cell-group>
           </van-panel>
-          <van-panel v-show="showStaffCodeShow" title="医护人员信息" desc="" status="">
+          <van-panel v-if="showStaffCodeShow" title="医护人员信息" desc="" status="">
             <div class="staff-code">
-              <p>医院: {{judgeFlowValue == 3 ? yihuCode[0].proName : extraYihuMsg ? extraYihuMsg.proName : ''}}</p>
-              <p>姓名: {{judgeFlowValue == 3 ? yihuCode[0].workerName : extraYihuMsg ? extraYihuMsg.workerName : ''}}</p>
-              <p>房间: {{judgeFlowValue == 3 ? yihuCode[0].depName : extraYihuMsg ? extraYihuMsg.depName : ''}}</p>
+              <p>医院: {{judgeFlowValue == 3 ? yihuCode[yihuCode.length-1].proName : extraYihuMsg ? extraYihuMsg.proName : ''}}</p>
+              <p>姓名: {{judgeFlowValue == 3 ? yihuCode[yihuCode.length-1].workerName : extraYihuMsg ? extraYihuMsg.workerName : ''}}</p>
+              <p>房间: {{judgeFlowValue == 3 ? yihuCode[yihuCode.length-1].depName : extraYihuMsg ? extraYihuMsg.depName : ''}}</p>
             </div>
            </van-panel>
         </div>
@@ -73,7 +74,7 @@ import HeaderTop from '../components/HeaderTop'
 import FooterBottom from '../components/FooterBottom'
 import CommonProgress from '../components/CommonProgress'
 import {judgeStagingPoint,judgeMedicalPerson} from '../api/rubbishCollect.js'
-import { formatTime } from '@/common/js/utils'
+import { formatTime, setStore, getStore, removeStore } from '@/common/js/utils'
 import { mapGetters, mapMutations } from 'vuex'
 export default {
    components:{
@@ -123,7 +124,8 @@ export default {
       'isRepeatSubmit',
       'manualWeighShow',
       'isBlueWeight',
-      'isCollectCurrentOffice'
+      'isCollectCurrentOffice',
+      'garColMsg'
     ]),
     showCurrentActive () {
       return this.currentActive
@@ -170,6 +172,9 @@ export default {
         this.$router.push({path: 'home'});  //输入要返回的上一级路由地址
         this.changeTitleTxt({tit: '医废监测'});
         this.initSweepCodeInfo();
+        removeStore('currentCollectMsg');
+        removeStore('currentStep');
+        removeStore('weightMethods') 
       })
       .catch(() => {
       })
@@ -265,7 +270,10 @@ export default {
         this.$router.push({path: 'home'});
         this.changeTitleTxt({tit:'医废监测'});
         //清除当前流程的扫码信息
-        this.initSweepCodeInfo()
+        this.initSweepCodeInfo();
+        removeStore('currentCollectMsg');
+        removeStore('currentStep');
+        removeStore('weightMethods'); 
       })
       .catch(() => {
       })
@@ -280,7 +288,10 @@ export default {
         this.$router.push({path: 'myInfo'});
         this.changeTitleTxt({tit:'我的'});
         //清除当前流程的扫码信息
-        this.initSweepCodeInfo()
+        this.initSweepCodeInfo();
+        removeStore('currentCollectMsg');
+        removeStore('currentStep');
+        removeStore('weightMethods'); 
       })
       .catch(() => {
       })
@@ -297,29 +308,56 @@ export default {
     // 判断流程从哪步开始(当前科室与其它科室收集开始流程不同)
     judgeFlowPosition () {
       if (this.judgeFlowValue == 1) {
-        this.changeCurrentActive(0);
-        this.temporaryActive = 0;
-        this.changeCodeStep(0);
-        this.changeAstOfficeShow(true);
-        this.changeIsPlus(true);
+        if (getStore('currentStep') && getStore('currentStep') == '1') {
+          this.changeCurrentActive(1);
+          this.temporaryActive = 1;
+          this.changeCodeStep(2);
+        } else {
+          this.changeCurrentActive(0);
+          this.temporaryActive = 0;
+          this.changeCodeStep(0);
+          this.changeAstOfficeShow(true);
+          this.changeIsPlus(true);
+        }
       } else if (this.judgeFlowValue == 0) {
-        this.changeCurrentActive(-1);
-        this.temporaryActive = -1;
-        this.changeCodeStep(0)
+        if (getStore('currentStep') && getStore('currentStep') == '0') {
+          this.changeCurrentActive(0);
+          this.temporaryActive = 0;
+          this.changeCodeStep(1);
+        } else {
+          this.changeCurrentActive(-1);
+          this.temporaryActive = -1;
+          this.changeCodeStep(0)
+        }
       } else if (this.judgeFlowValue == 3) {
         this.changeCurrentActive(3);
         this.temporaryActive = 3;
         this.changeCodeStep(3);
         this.changeIsPlus(true);
       } else if (this.judgeFlowValue == 2) {
-        if (this.isBlueWeight) {
-          this.changebluetoothWeighShow(true);
-          this.changeManualWeighShow(false);
+        if (!getStore('weightMethods')) {
+          if (this.isBlueWeight) {
+            this.changebluetoothWeighShow(true);
+            this.changeManualWeighShow(false);
+          } else {
+            this.changeManualWeighShow(true);
+            this.changebluetoothWeighShow(false);
+            this.manualWeight = this.lanyaCz[this.lanyaCz.length-1]
+          }
         } else {
-          this.changeManualWeighShow(true);
-          this.changebluetoothWeighShow(false);
-          this.manualWeight = this.lanyaCz[this.lanyaCz.length-1]
-        }
+          if (getStore('weightMethods') == 'manual') {
+            this.changeManualWeighShow(true);
+            this.changebluetoothWeighShow(false);
+            this.manualWeight = this.lanyaCz[this.lanyaCz.length-1]
+          } else if (getStore('weightMethods') == 'bluetooth') {
+            this.changebluetoothWeighShow(true);
+            this.changeManualWeighShow(false);
+          };
+          this.changeCurrentActive(2);
+          this.temporaryActive = 2;
+          this.changeCodeStep(2);
+          this.changeIsPlus(true);
+        };
         this.changeCurrentActive(2);
         this.temporaryActive = 2;
         this.changeCodeStep(2);
@@ -354,6 +392,10 @@ export default {
             this.initStorageLanyaCz();
             this.changeStorageLajiCode(lajiCodeMsg);
             this.changeStorageLanyaCz(lanyaCzMsg);
+            //撤销成功后删除h5改变存储的当前的流程
+            removeStore('currentCollectMsg');
+            removeStore('currentStep');
+            removeStore('weightMethods')
           };
           this.$router.push({path:'judgeCurrentDepantment'});
           this.changeCurrentLajicodeState(false)
@@ -418,6 +460,9 @@ export default {
                   this.changeExtraKeshiMsg(code);
                   this.changeStartCollectTime(formatTime('YYYY-MM-DD'));
                   this.changeAstOfficeShow(true);
+                  // h5存储每步的收集信息和流程
+                  setStore('currentCollectMsg',{currentMsg:this.garColMsg});
+                  setStore('currentStep',0);
                 } else {
                   this.$dialog.alert({
                     message: `${res.data.msg}`,
@@ -477,6 +522,9 @@ export default {
                     this.changebluetoothWeighShow(false);
                     this.changeManualWeighShow(false);
                     this.changeIsCollectCurrentOffice(true);
+                    // h5存储每步的收集信息和流程
+                    setStore('currentCollectMsg',{currentMsg:this.garColMsg});
+                    setStore('currentStep',3); 
                   } else {
                     this.$dialog.alert({
                     message: `${res.data.msg}`,
@@ -545,6 +593,9 @@ export default {
                 this.changeCurrentLajicodeState(true);
                 this.changeManualWeighShow(false);
                 this.changebluetoothWeighShow(false);
+                // h5存储每步的收集信息和流程
+                setStore('currentCollectMsg',{currentMsg:this.garColMsg});
+                setStore('currentStep',1);
               } else {
                 this.$dialog.alert({
                   message: '扫描的医废重复,请重新扫描',
@@ -694,7 +745,12 @@ export default {
                   this.changeCurrentActive(this.codeStep);
                   this.temporaryActive = 2;
                   this.storageLanyaCz(this.manualWeight);
-                  this.$router.push({path:'judgeCurrentDepantment'}) 
+                  this.$router.push({path:'judgeCurrentDepantment'});
+                  // h5存储每步的收集信息和流程
+                  setStore('currentCollectMsg',{currentMsg:this.garColMsg});
+                  setStore('currentStep',2);
+                  // h5存储当前的称重方式
+                  setStore('weightMethods','manual'); 
                 }
               }
             } else {
@@ -729,6 +785,11 @@ export default {
               this.storageLanyaCz(this.extraLyczMsg);
               this.changeExtraLyczMsg(null);
               this.$router.push({path:'judgeCurrentDepantment'});
+              // h5存储每步的收集信息和流程
+              setStore('currentCollectMsg',{currentMsg:this.garColMsg});
+              setStore('currentStep',2);
+              // h5存储当前的称重方式
+              setStore('weightMethods','bluetooth');  
             }
           }
         }

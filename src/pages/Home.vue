@@ -38,7 +38,7 @@
   import rePrint from '@/common/images/home/re-print.png'
   import addCheck from '@/common/images/home/add-check.png'
   import warningCheck from '@/common/images/home/warning-check.png'
-  import { formatTime } from '@/common/js/utils'
+  import { formatTime, setStore, getStore, removeStore } from '@/common/js/utils'
   export default {
     components:{
       HeaderTop,
@@ -69,7 +69,8 @@
         this.$router.push({path: 'home'});  //输入要返回的上一级路由地址
         this.changeTitleTxt({tit: '医废监测'})
       });
-      this.initItemList ()
+      this.initItemList ();
+      this.judgeCodeFinish()
     },
     
     computed:{
@@ -87,7 +88,27 @@
         'changeApplicationCollectTime',
         'createBatchNumber',
         'changeRouterFlag',
-        'changeIsCall'
+        'changeIsCall',
+        'changeFlowState',
+        'changeGarColMsg',
+        'changeCollectBtn',
+        'changeSureBtn',
+        'changeBackoutBtn',
+        'changeTotalWeight',
+        'changeStorageLajiCode',
+        'changeStorageLanyaCz',
+        'changeCurrentLajicodeState',
+        'changeClickBackoutBtn',
+        'changeStaffCodeShow',
+        'changePrintBtn',
+        'changeOtherBtn',
+        'changeAstOfficeShow',
+        'changeBagCodeShow',
+        'changebluetoothWeighShow',
+        'changeCodeStep',
+        'changeFlowState',
+        'changeManualWeighShow',
+        'changeIsCollectCurrentOffice'
       ]),
       // 返回上一页
       backTo () {
@@ -140,6 +161,73 @@
           };
           this.$router.push({path:name});
           this.changeTitleTxt({tit:text})
+        }
+      },
+
+      // 判断上次流程有没有收集完毕
+      judgeCodeFinish () {
+        // 获取上次收集流程进行到哪一步
+        if (getStore('currentStep')) {
+          if (getStore('currentStep') == '0') {
+            this.changeFlowState(0);
+            this.changeCollectBtn(true);
+            this.changeSureBtn(false);
+            this.changePrintBtn(false);
+            this.changeOtherBtn(false);
+            this.changeClickBackoutBtn(false);
+            this.changeBagCodeShow(false);
+            this.changeAstOfficeShow(true);
+            this.changeStaffCodeShow(false);
+            this.changebluetoothWeighShow(false);
+            this.changeManualWeighShow(false);
+            this.changeCurrentLajicodeState(false);
+            this.changeBackoutBtn(true);
+          } else if (getStore('currentStep') == '1') {
+            this.changeFlowState(1);
+            this.changeCurrentLajicodeState(false);
+            this.changeCollectBtn(false);
+            this.changeBackoutBtn(true);
+            this.changeSureBtn(true);
+            this.changePrintBtn(false);
+            this.changeOtherBtn(false);
+            this.changeClickBackoutBtn(false);
+            this.changeBagCodeShow(true);
+            this.changeStaffCodeShow(false);
+            this.changebluetoothWeighShow(false);
+            this.changeManualWeighShow(false);
+            this.changeAstOfficeShow(false)
+          } else if (getStore('currentStep') == '2') {
+            this.changeFlowState(2);
+            this.changeCurrentLajicodeState(false);
+            this.changeCollectBtn(false);
+            this.changeBackoutBtn(true);
+            this.changeSureBtn(true);
+            this.changePrintBtn(false);
+            this.changeOtherBtn(false);
+            this.changeClickBackoutBtn(false);
+            this.changeBagCodeShow(false);
+            this.changeAstOfficeShow(false);
+            this.changeStaffCodeShow(false);
+            this.changeIsCollectCurrentOffice(false)   
+          } else if (getStore('currentStep') == '3') {
+            this.changeFlowState(3);
+            this.changeCurrentLajicodeState(false);
+            this.changeCollectBtn(false);
+            this.changeBackoutBtn(true);
+            this.changeSureBtn(true);
+            this.changePrintBtn(false);
+            this.changeOtherBtn(false);
+            this.changeClickBackoutBtn(false);
+            this.changeBagCodeShow(false);
+            this.changeAstOfficeShow(false);
+            this.changeStaffCodeShow(true)  
+          }
+        };
+
+        // 给store收集相关的字段重新赋值
+        if (getStore('currentCollectMsg')) {
+          let collectMsg = JSON.parse(getStore('currentCollectMsg')).currentMsg;
+          this.changeGarColMsg(collectMsg)
         }
       }
     }

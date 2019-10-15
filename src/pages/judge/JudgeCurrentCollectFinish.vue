@@ -6,6 +6,7 @@
 import {trashCollectOne,trashCollectMore} from '../../api/rubbishCollect.js'
 import Loading from '@/components/Loading'
 import { mapGetters, mapMutations } from 'vuex'
+import { setStore, getStore, removeStore } from '@/common/js/utils'
 export default {
   data () {
     return {
@@ -30,7 +31,8 @@ export default {
       'batchNumber',
       'userInfo',
       'clickBackoutBtn',
-      'isRepeatSubmit'
+      'isRepeatSubmit',
+      'garColMsg'
     ])
   },
 
@@ -130,7 +132,7 @@ export default {
       }).catch(() => {
         this.$router.replace({path: 'judgeCurrentDepantment'});
         this.changeCurrentLajicodeState(false);
-        this.changeClickBackoutBtn(false)
+        this.changeClickBackoutBtn(false);
       });
     },
 
@@ -175,6 +177,10 @@ export default {
                   this.changeBagCodeShow(false);
                   this.changeAstOfficeShow(false);
                   this.changeStaffCodeShow(false);
+                  // 数据提交服务端成功过后删除h5存储每步的收集信息和流程和称重方式
+                  removeStore('currentCollectMsg',{currentMsg:this.garColMsg});
+                  removeStore('currentStep',0);
+                  removeStore('weightMethods');
               });
           } else {
             this.showLoading = false;
@@ -200,6 +206,10 @@ export default {
       })
       .catch((err) => {
         this.showLoading = false;
+        // 数据提交服务端成功过后删除h5存储每步的收集信息和流程和称重方式
+        removeStore('currentCollectMsg');
+        removeStore('currentStep');
+        removeStore('weightMethods');
          this.$dialog.alert({
           message: `${err.message}`,
           closeOnPopstate: true
@@ -280,6 +290,10 @@ export default {
                   this.changeBagCodeShow(false);
                   this.changeAstOfficeShow(false);
                   this.changeStaffCodeShow(false);
+                  // 数据提交服务端成功过后删除h5存储每步的收集信息和流程和称重方式
+                  removeStore('currentCollectMsg',{currentMsg:this.garColMsg});
+                  removeStore('currentStep',0);
+                  removeStore('weightMethods');
               });
           } else {
             this.showLoading = false;
@@ -305,7 +319,11 @@ export default {
       })
       .catch((err) => {
         this.showLoading = false;
-         this.$dialog.alert({
+        // 数据提交服务端成功过后删除h5存储每步的收集信息和流程和称重方式
+        removeStore('currentCollectMsg');
+        removeStore('currentStep');
+        removeStore('weightMethods');
+        this.$dialog.alert({
           message: `${err.message}`,
           closeOnPopstate: true
             }).then(() => {

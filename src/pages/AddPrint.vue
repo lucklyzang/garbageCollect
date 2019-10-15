@@ -69,7 +69,7 @@ import HeaderTop from '../components/HeaderTop'
 import FooterBottom from '../components/FooterBottom'
 import { mapGetters, mapMutations } from 'vuex'
 import Loading from '../components/Loading'
-import {queryPrintInfo, queryOffice, queryCollectPerson} from '../api/rubbishCollect.js'
+import {queryPrintInfo, queryOffice, queryCollectPerson, postReplenishPrintData} from '../api/rubbishCollect.js'
 import { formatTime } from '@/common/js/utils'
 export default {
    components:{
@@ -240,8 +240,8 @@ export default {
       this.rawInfoList = [];
       queryPrintInfo({ 
         proId: this.userInfo.proId, //项目ID
-        workerId: this.collectPerson, //当前收集人
-        depId: this.office, //部门ID
+        workerId: '', //当前收集人this.collectPerson
+        depId: '', //部门IDthis.office
         startDate: this.startTime,   //起始日期 格式 yyyy-MM-dd 必输
         endDate: this.endTime,      //终止日期 格式 yyyy-MM-dd 必输		
         currentPage: 1, //当前页
@@ -320,6 +320,62 @@ export default {
       }
     },
 
+    //获取补充打印
+    getPrintReason () {
+      let reason = this.reprint;
+      if (reason == '0') {
+        return '设备故障'
+      } else if (reason == '1') {
+        return '设备没电'
+      } else if (reason == '2') {
+        return '设备没纸'
+      } else {
+        return '其它'
+      }
+    },
+
+    // 提交打印数据到服务端
+    postPrintData () {
+      let checkData = [];
+      this.rawInfoList.filter((item) => { return item.check == true}).forEach((item) => {
+        Object.keys(item).forEach((currentItem) => {
+          if (currentItem == 'collectNumber') {
+            checkData.push(item[currentItem])
+          }
+        })
+      });
+      let printData = {
+        "proId": this.getUserInfo, //打印项目ID
+        "proName": this.userInfo.proName, //打印项目名称
+        "workerId": this.userInfo.id,//打印者ID
+        "workerName": this.userInfo.workerName, //打印者名称
+        "printReason": this.getPrintReason(), //补打原因
+        "remark": checkData //打印医废条码数组
+      };
+      postReplenishPrintData(printData).then((res) => {
+         if (res && res.data.code == 200) {
+          this.$dialog.alert({
+            message: `${res.data.msg}`,
+            closeOnPopstate: true
+          }).then(() => {
+          });
+         } else {
+            this.$dialog.alert({
+            message: `${res.data.msg}`,
+            closeOnPopstate: true
+          }).then(() => {
+          });
+         }
+      })
+      .catch((err) => {
+        this.$dialog.alert({
+          message: `${err.message}`,
+          closeOnPopstate: true
+        }).then(() => {
+        });
+      })
+    },
+
     // 清空上次存储的打印信息
     initWasteInfo () {
       this.lajiBarCode = [],
@@ -391,7 +447,9 @@ export default {
             }
           }
         }
-      }
+      };
+      // 提交打印数据到服务端
+      this.postPrintData()
     }
   }
 }

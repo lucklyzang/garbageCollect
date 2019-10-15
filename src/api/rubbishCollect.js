@@ -155,3 +155,11 @@ export function queryPrintInfo(data) {
     params: data
   })
 };
+//提交补充打印数据
+export function postReplenishPrintData (data) {
+  return request({
+    url: 'printLog/add',
+    method: 'post',
+    data
+  })
+}

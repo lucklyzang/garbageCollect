@@ -86,19 +86,6 @@ export default {
     },
     getBirthday () {
       return this.userInfo.birthday;
-      // $("input[type='radio']").click(function(){
-      //   if ($("input[id='agree']:checked").val() == '同意') {
-      //     $(".mui-btn-primary").css({
-      //       "background-color": "blue",
-      //       "border": "1px solid #fff"
-      //     })
-      //   } else {
-      //      $(".mui-btn-primary").css({
-      //       "background-color": "#b5b1b1",
-      //       "border": "1px solid #b5b1b1"
-      //     })
-      //   }
-      // })
     }
   },
 

@@ -95,6 +95,7 @@ export default {
     manualWeighShow: state => state.manualWeighShow,
     isBlueWeight: state => state.isBlueWeight,
     isCollectCurrentOffice: state => state.isCollectCurrentOffice,
+    garColMsg: state => state.garColMsg
   },
   mutations:{
     changeTitleTxt (state,payLoad) {
@@ -261,6 +262,11 @@ export default {
       changeIsCollectCurrentOffice (state,payLoad) {
         state.isCollectCurrentOffice = payLoad
       },
+
+      // 给科室信息汇总字段重新赋值
+      changeGarColMsg (state,payLoad) {
+        state.garColMsg = payLoad
+      }
   },
   actions:{}
 }

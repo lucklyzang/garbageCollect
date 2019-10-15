@@ -4,6 +4,7 @@
 
 <script>
 import { mapMutations } from 'vuex'
+import { formatTime, setStore, getStore, removeStore } from '@/common/js/utils'
 export default {
   data () {
     return {
@@ -67,6 +68,9 @@ export default {
         this.clearTrashStore();
         this.changeCurrentLajicodeState(false);
         this.changeBackoutBtn(true);
+        removeStore('currentCollectMsg');
+        removeStore('currentStep');
+        removeStore('weightMethods')
       }).catch(() => {
         this.$router.push({path:'medicalInStorage'});
         this.changeTitleTxt({tit: '医废入库'});
@@ -84,7 +88,10 @@ export default {
         this.changeCollectBtn(true);
         this.changeSureBtn(false);
         this.changeBackoutBtn(true);
-        this.changeOtherBtn(false)
+        this.changeOtherBtn(false);
+        removeStore('currentCollectMsg');
+        removeStore('currentStep');
+        removeStore('weightMethods')
       });
     }
   }

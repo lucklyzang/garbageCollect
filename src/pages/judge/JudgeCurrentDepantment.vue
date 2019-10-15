@@ -3,11 +3,16 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
+import { mapMutations, mapGetters } from 'vuex'
+import { formatTime, setStore, getStore, removeStore } from '@/common/js/utils'
 export default {
   data () {
     return {
     };
+  },
+ 
+  computed:{
+    ...mapGetters(['garColMsg'])
   },
 
   mounted() {
@@ -63,7 +68,9 @@ export default {
         this.changeStaffCodeShow(false);
         this.changebluetoothWeighShow(false);
         this.changeManualWeighShow(false);
-        this.changeIsCollectCurrentOffice(true)
+        this.changeIsCollectCurrentOffice(true);
+        setStore('currentCollectMsg', this.garColMsg);
+        setStore('currentStep', 0);
       }).catch(() => {
         this.$router.push({path: 'medicalCollect'});
         this.changeFlowState(2);
@@ -77,7 +84,9 @@ export default {
         this.changeBagCodeShow(false);
         this.changeAstOfficeShow(false);
         this.changeStaffCodeShow(false);
-        this.changeIsCollectCurrentOffice(false)   
+        this.changeIsCollectCurrentOffice(false);
+        setStore('currentCollectMsg', this.garColMsg);
+        setStore('currentStep', 2);
       });
     }
   }
