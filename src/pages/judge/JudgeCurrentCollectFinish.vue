@@ -201,7 +201,7 @@ export default {
               this.changeBagCodeShow(false);
               this.changeAstOfficeShow(false);
               this.changeStaffCodeShow(false);
-              // 数据提交服务端成功过后删除h5存储每步的收集信息和流程和称重方式
+              // 数据提交服务端失败后删除h5存储每步的收集信息和流程和称重方式
               removeStore('currentCollectMsg');
               removeStore('currentStep');
               removeStore('weightMethods');
@@ -241,7 +241,7 @@ export default {
               this.changeBagCodeShow(false);
               this.changeAstOfficeShow(false);
               this.changeStaffCodeShow(false);
-              // 数据提交服务端成功过后删除h5存储每步的收集信息和流程和称重方式
+              // 数据提交服务端失败过后删除h5存储每步的收集信息和流程和称重方式
               removeStore('currentCollectMsg');
               removeStore('currentStep');
               removeStore('weightMethods');

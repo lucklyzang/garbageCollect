@@ -177,7 +177,12 @@ export default {
         removeStore('userPassword');
         removeStore('userInfo');
         removeStore('isLogin');
-        this.$router.replace({name:'login'});
+        // 清除其它用户h5存储的流程信息
+        removeStore('currentCollectMsg');
+        removeStore('currentStep');
+        removeStore('weightMethods');
+        removeStore('continueCurrentCollect');
+        this.$router.replace({name:'login'})
       })
       .catch(() => {})
     }

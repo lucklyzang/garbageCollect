@@ -12,7 +12,7 @@ export default {
   },
  
   computed:{
-    ...mapGetters(['garColMsg'])
+    ...mapGetters(['garColMsg','lajiCode','lanyaCz'])
   },
 
   mounted() {
@@ -72,21 +72,25 @@ export default {
         this.changeManualWeighShow(false);
         this.changeIsCollectCurrentOffice(true);
       }).catch(() => {
-        this.$router.push({path: 'medicalCollect'});
-        this.changeFlowState(2);
-        this.changeCurrentLajicodeState(true);
-        // h5存储是否当前科室收集的状态
-        setStore('continueCurrentCollect','false');
-        this.changeCollectBtn(false);
-        this.changeBackoutBtn(true);
-        this.changeSureBtn(true);
-        this.changePrintBtn(false);
-        this.changeOtherBtn(false);
-        this.changeClickBackoutBtn(false);
-        this.changeBagCodeShow(false);
-        this.changeAstOfficeShow(false);
-        this.changeStaffCodeShow(false);
-        this.changeIsCollectCurrentOffice(false);
+        if (this.lajiCode.length !== 0) {
+          this.$router.push({path: 'medicalCollect'});
+          this.changeFlowState(2);
+          this.changeCurrentLajicodeState(true);
+          // h5存储是否当前科室收集的状态
+          setStore('continueCurrentCollect','false');
+          this.changeCollectBtn(false);
+          this.changeBackoutBtn(true);
+          this.changeSureBtn(true);
+          this.changePrintBtn(false);
+          this.changeOtherBtn(false);
+          this.changeClickBackoutBtn(false);
+          this.changeBagCodeShow(false);
+          this.changeAstOfficeShow(false);
+          this.changeStaffCodeShow(false);
+          this.changeIsCollectCurrentOffice(false)
+        } else {
+          this.$router.replace({path:'judgeOtherDepantment'})
+        }
       });
     }
   }

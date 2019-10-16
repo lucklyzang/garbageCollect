@@ -317,6 +317,7 @@ export default {
         this.temporaryActive = -1;
         // 此时确定按钮还未出现,让进度进到0，可以获取到科室的扫描回调
         this.changeCodeStep(0);
+        this.changeIsCollectCurrentOffice(true)
       } else if (this.judgeFlowValue == 0) {
         this.changeCurrentActive(0);
         this.temporaryActive = 0;
@@ -419,8 +420,9 @@ export default {
 
     // 初始化扫码信息
     initSweepCodeInfo () {
+      this.temporaryActive = -1;
       this.changeCodeStep(0);
-      this.changeFlowState(0);
+      this.changeFlowState(-1);
       this.changeIsPlus(false);
       this.changeCurrentActive(-1);
       this.changeCollectBtn(true);
@@ -433,8 +435,8 @@ export default {
       this.changeStaffCodeShow(false);
       this.changebluetoothWeighShow(false);
       this.changeManualWeighShow(false);
-      this.changeIsCollectCurrentOffice(true)
-      this.clearTrashStore();
+      this.changeIsCollectCurrentOffice(true);
+      this.clearTrashStore()
     },
 
     // 扫描二维码方法

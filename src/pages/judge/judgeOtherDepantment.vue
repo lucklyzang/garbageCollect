@@ -44,7 +44,8 @@ export default {
       'changeStaffCodeShow',
       'changebluetoothWeighShow',
       'changeCodeStep',
-      'changeManualWeighShow'
+      'changeManualWeighShow',
+      'changeIsCollectCurrentOffice'
     ]),
     showDialog () {
       this.$dialog.confirm({
@@ -64,6 +65,7 @@ export default {
         this.changeStaffCodeShow(false);
         this.changebluetoothWeighShow(false);
         this.changeManualWeighShow(false);
+        this.changeIsCollectCurrentOffice(true);
         // 清空上个科室存储的数据
         this.clearTrashStore();
         this.changeCurrentLajicodeState(false);
@@ -86,6 +88,7 @@ export default {
         this.changeStaffCodeShow(false);
         this.changebluetoothWeighShow(false);
         this.changeManualWeighShow(false);
+        this.changeIsCollectCurrentOffice(true);
         this.changeCollectBtn(true);
         this.changeSureBtn(false);
         this.changeBackoutBtn(true);

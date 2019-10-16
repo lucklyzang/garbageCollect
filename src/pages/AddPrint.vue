@@ -93,7 +93,7 @@ export default {
       endTime: '',
       office: 13,
       officeList: [],
-      collectPerson: 2,
+      collectPerson: 83,
       collectPersonList: [],
       reprint: 0,
       reprintList: [
@@ -205,7 +205,7 @@ export default {
         });
       });
       // 查询收集人员信息
-      queryCollectPerson({proId: this.userInfo.proId,type:2}).then((res) => {
+      queryCollectPerson({proId: this.userInfo.proId}).then((res) => {
         if (res && res.data.code == 200) {
           if (res.data.data.length > 0) {
             let officeList = res.data.data;
@@ -476,7 +476,7 @@ export default {
         .van-dropdown-menu__item {
           flex: none;
           width: 25%;
-          justify-content: left
+          justify-content: center
         }
         .middle-top-search {
           position: absolute;
