@@ -51,7 +51,7 @@ export default {
         message: '是否其它科室收集?',
         closeOnPopstate: true
       }).then(() => {
-        this.changeFlowState(0);
+        this.changeFlowState(-1);
         this.$router.push({path: 'medicalCollect'});
         this.changeTitleTxt({tit: '医废收集'});
         this.changeCollectBtn(true);
@@ -70,13 +70,14 @@ export default {
         this.changeBackoutBtn(true);
         removeStore('currentCollectMsg');
         removeStore('currentStep');
-        removeStore('weightMethods')
+        removeStore('weightMethods');
+        removeStore('continueCurrentCollect')
       }).catch(() => {
         this.$router.push({path:'medicalInStorage'});
         this.changeTitleTxt({tit: '医废入库'});
         // 清空上个科室存储的数据
         this.clearTrashStore();
-        this.changeFlowState(0);
+        this.changeFlowState(-1);
         this.changeClickBackoutBtn(false);
         this.changePrintBtn(false);
         this.changeCurrentLajicodeState(false);
@@ -91,7 +92,8 @@ export default {
         this.changeOtherBtn(false);
         removeStore('currentCollectMsg');
         removeStore('currentStep');
-        removeStore('weightMethods')
+        removeStore('weightMethods');
+        removeStore('continueCurrentCollect')
       });
     }
   }

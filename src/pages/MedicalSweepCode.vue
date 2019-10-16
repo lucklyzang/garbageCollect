@@ -16,9 +16,9 @@
         <div class="content-middle">
           <van-panel v-if="showAstOfficeShow" title="科室信息" desc="" status="">
             <div class="ast-office">
-                <p>科室: {{judgeFlowValue == 1 ? keshiCode[0].name : judgeFlowValue == 0 ? keshiCode[keshiCode.length-1].name : extraKeshiMsg}}</p>
-                <p>医院: {{judgeFlowValue == 1 ? keshiCode[0].proName : judgeFlowValue == 0 ? keshiCode[keshiCode.length-1].proName : extraKeshiMsg}}</p>
-                <p>房间: {{judgeFlowValue == 1 ? keshiCode[0].depName : judgeFlowValue == 0 ? keshiCode[keshiCode.length-1].depName : extraKeshiMsg}}</p>
+                <p>科室: {{judgeFlowValue == 0 ? keshiCode[keshiCode.length-1].name : extraKeshiMsg.name ? extraKeshiMsg.name : ''}}</p>
+                <p>医院: {{judgeFlowValue == 0 ? keshiCode[keshiCode.length-1].proName : extraKeshiMsg.proName ? extraKeshiMsg.proName : ''}}</p>
+                <p>房间: {{judgeFlowValue == 0 ? keshiCode[keshiCode.length-1].depName : extraKeshiMsg.depName ? extraKeshiMsg.depName : ''}}</p>
             </div>
           </van-panel>
           <van-panel v-if="showBagCodeShow" title="医废信息" desc="" status="">
@@ -125,7 +125,8 @@ export default {
       'manualWeighShow',
       'isBlueWeight',
       'isCollectCurrentOffice',
-      'garColMsg'
+      'garColMsg',
+      'isStoreWeight'
     ]),
     showCurrentActive () {
       return this.currentActive
@@ -174,7 +175,8 @@ export default {
         this.initSweepCodeInfo();
         removeStore('currentCollectMsg');
         removeStore('currentStep');
-        removeStore('weightMethods') 
+        removeStore('weightMethods');
+        removeStore('continueCurrentCollect') 
       })
       .catch(() => {
       })
@@ -256,7 +258,8 @@ export default {
       'changeRepeatSubmit',
       'changeManualWeighShow',
       'changeIsBlueWeight',
-      'changeIsCollectCurrentOffice'
+      'changeIsCollectCurrentOffice',
+      'changeIsStoreWeight'
     ]),
 
 
@@ -274,6 +277,7 @@ export default {
         removeStore('currentCollectMsg');
         removeStore('currentStep');
         removeStore('weightMethods'); 
+        removeStore('continueCurrentCollect')
       })
       .catch(() => {
       })
@@ -291,7 +295,8 @@ export default {
         this.initSweepCodeInfo();
         removeStore('currentCollectMsg');
         removeStore('currentStep');
-        removeStore('weightMethods'); 
+        removeStore('weightMethods');
+        removeStore('continueCurrentCollect') 
       })
       .catch(() => {
       })
@@ -307,28 +312,34 @@ export default {
 
     // 判断流程从哪步开始(当前科室与其它科室收集开始流程不同)
     judgeFlowPosition () {
-      if (this.judgeFlowValue == 1) {
-        if (getStore('currentStep') && getStore('currentStep') == '1') {
-          this.changeCurrentActive(1);
-          this.temporaryActive = 1;
-          this.changeCodeStep(2);
-        } else {
-          this.changeCurrentActive(0);
-          this.temporaryActive = 0;
-          this.changeCodeStep(0);
-          this.changeAstOfficeShow(true);
-          this.changeIsPlus(true);
-        }
+      if (this.judgeFlowValue == -1) {
+        this.changeCurrentActive(0);
+        this.temporaryActive = -1;
+        // 此时确定按钮还未出现,让进度进到0，可以获取到科室的扫描回调
+        this.changeCodeStep(0);
       } else if (this.judgeFlowValue == 0) {
-        if (getStore('currentStep') && getStore('currentStep') == '0') {
-          this.changeCurrentActive(0);
-          this.temporaryActive = 0;
-          this.changeCodeStep(1);
-        } else {
-          this.changeCurrentActive(-1);
-          this.temporaryActive = -1;
-          this.changeCodeStep(0)
-        }
+        this.changeCurrentActive(0);
+        this.temporaryActive = 0;
+        this.changeCodeStep(0);
+        this.changeAstOfficeShow(true);
+        this.changeIsPlus(true)
+      } else if (this.judgeFlowValue == 1) {
+        this.changeCurrentLajicodeState(false);
+        this.changeCollectBtn(false);
+        this.changeBackoutBtn(true);
+        this.changeSureBtn(true);
+        this.changePrintBtn(false);
+        this.changeOtherBtn(false);
+        this.changeClickBackoutBtn(false);
+        this.changeBagCodeShow(true);
+        this.changeStaffCodeShow(false);
+        this.changebluetoothWeighShow(false);
+        this.changeManualWeighShow(false);
+        this.changeAstOfficeShow(false);
+        this.changeCurrentActive(1);
+        this.temporaryActive = 1;
+        this.changeCodeStep(1);
+        this.changeIsPlus(true)
       } else if (this.judgeFlowValue == 3) {
         this.changeCurrentActive(3);
         this.temporaryActive = 3;
@@ -392,10 +403,6 @@ export default {
             this.initStorageLanyaCz();
             this.changeStorageLajiCode(lajiCodeMsg);
             this.changeStorageLanyaCz(lanyaCzMsg);
-            //撤销成功后删除h5改变存储的当前的流程
-            removeStore('currentCollectMsg');
-            removeStore('currentStep');
-            removeStore('weightMethods')
           };
           this.$router.push({path:'judgeCurrentDepantment'});
           this.changeCurrentLajicodeState(false)
@@ -649,6 +656,7 @@ export default {
           this.changeBagCodeShow(false);
           //每类医废实时回调重量存入store
           this.changeExtraLyczMsg(str);
+          this.changeIsStoreWeight(false)
         }
       }
     },
@@ -741,16 +749,22 @@ export default {
                     }).then(() => {
                     });
                 } else {
-                  // 手动输入重量存入store的重量数组
-                  this.changeCurrentActive(this.codeStep);
-                  this.temporaryActive = 2;
-                  this.storageLanyaCz(this.manualWeight);
-                  this.$router.push({path:'judgeCurrentDepantment'});
-                  // h5存储每步的收集信息和流程
-                  setStore('currentCollectMsg',{currentMsg:this.garColMsg});
-                  setStore('currentStep',2);
-                  // h5存储当前的称重方式
-                  setStore('weightMethods','manual'); 
+                  if (!this.isStoreWeight) {
+                    // 手动输入重量存入store的重量数组
+                    this.changeCurrentActive(this.codeStep);
+                    this.temporaryActive = 2;
+                    this.storageLanyaCz(this.manualWeight);
+                    this.$router.push({path:'judgeCurrentDepantment'});
+                    // h5存储每步的收集信息和流程
+                    setStore('currentCollectMsg',{currentMsg:this.garColMsg});
+                    setStore('currentStep',2);
+                    // h5存储当前的称重方式
+                    setStore('weightMethods','manual')
+                  } else {
+                    this.changeCurrentActive(this.codeStep);
+                    this.temporaryActive = 2;
+                    this.$router.push({path:'judgeCurrentDepantment'})
+                  }
                 }
               }
             } else {
@@ -781,15 +795,20 @@ export default {
                 this.$router.push({path:'judgeCurrentDepantment'});
               })
             } else {
-              // 最终的回调重量存store的重量数组
-              this.storageLanyaCz(this.extraLyczMsg);
-              this.changeExtraLyczMsg(null);
-              this.$router.push({path:'judgeCurrentDepantment'});
-              // h5存储每步的收集信息和流程
-              setStore('currentCollectMsg',{currentMsg:this.garColMsg});
-              setStore('currentStep',2);
-              // h5存储当前的称重方式
-              setStore('weightMethods','bluetooth');  
+              if (!this.isStoreWeight) {
+                // 最终的回调重量存store的重量数组
+                this.storageLanyaCz(this.extraLyczMsg);
+                this.changeExtraLyczMsg(null);
+                this.$router.push({path:'judgeCurrentDepantment'});
+                // h5存储每步的收集信息和流程
+                setStore('currentCollectMsg',{currentMsg:this.garColMsg});
+                setStore('currentStep',2);
+                // h5存储当前的称重方式
+                setStore('weightMethods','bluetooth')
+              } else {
+                this.changeExtraLyczMsg(null);
+                this.$router.push({path:'judgeCurrentDepantment'})
+              }
             }
           }
         }
@@ -822,7 +841,8 @@ export default {
         this.changebluetoothWeighShow(false);
         this.changeIsBlueWeight(false);
         this.changeBagCodeShow(false);
-        this.changeIsPlus(true)
+        this.changeIsPlus(true);
+        this.changeIsStoreWeight(false)
       })
     },
 

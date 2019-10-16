@@ -108,7 +108,8 @@
         'changeCodeStep',
         'changeFlowState',
         'changeManualWeighShow',
-        'changeIsCollectCurrentOffice'
+        'changeIsCollectCurrentOffice',
+        'changeIsStoreWeight'
       ]),
       // 返回上一页
       backTo () {
@@ -170,8 +171,8 @@
         if (getStore('currentStep')) {
           if (getStore('currentStep') == '0') {
             this.changeFlowState(0);
-            this.changeCollectBtn(true);
-            this.changeSureBtn(false);
+            this.changeCollectBtn(false);
+            this.changeSureBtn(true);
             this.changePrintBtn(false);
             this.changeOtherBtn(false);
             this.changeClickBackoutBtn(false);
@@ -197,8 +198,15 @@
             this.changeManualWeighShow(false);
             this.changeAstOfficeShow(false)
           } else if (getStore('currentStep') == '2') {
-            this.changeFlowState(2);
+            this.changeIsCollectCurrentOffice(true);   
+            if (getStore('continueCurrentCollect') == 'false') {
+              this.changeIsCollectCurrentOffice(false);
+            } else if(getStore('continueCurrentCollect') == 'true') {
+              this.changeIsCollectCurrentOffice(true);
+            };
             this.changeCurrentLajicodeState(false);
+            this.changeIsStoreWeight(true);
+            this.changeFlowState(2);
             this.changeCollectBtn(false);
             this.changeBackoutBtn(true);
             this.changeSureBtn(true);
@@ -208,7 +216,6 @@
             this.changeBagCodeShow(false);
             this.changeAstOfficeShow(false);
             this.changeStaffCodeShow(false);
-            this.changeIsCollectCurrentOffice(false)   
           } else if (getStore('currentStep') == '3') {
             this.changeFlowState(3);
             this.changeCurrentLajicodeState(false);

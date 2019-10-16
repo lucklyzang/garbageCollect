@@ -88,7 +88,7 @@ export default {
             this.changeStaffCodeShow(false);
             this.changebluetoothWeighShow(false);
             this.changeManualWeighShow(false);
-            this.changeFlowState(0);
+            this.changeFlowState(-1);
             // 清空存储的数据
             this.clearTrashStore();
           } else {
@@ -99,7 +99,7 @@ export default {
               this.changeBackoutBtn(true);
               this.$router.push({path: 'medicalCollect'});
               this.changeTitleTxt({tit: '医废收集'});
-              this.changeFlowState(1);
+              this.changeFlowState(0);
               this.changeCollectBtn(false);
               this.changeSureBtn(true);
               this.changePrintBtn(false);
@@ -171,16 +171,17 @@ export default {
                   this.changeSureBtn(false);
                   this.changePrintBtn(true);
                   this.changeOtherBtn(true);
-                  this.changeFlowState(0);
+                  this.changeFlowState(-1);
                   this.changebluetoothWeighShow(false);
                   this.changeManualWeighShow(false);
                   this.changeBagCodeShow(false);
                   this.changeAstOfficeShow(false);
                   this.changeStaffCodeShow(false);
                   // 数据提交服务端成功过后删除h5存储每步的收集信息和流程和称重方式
-                  removeStore('currentCollectMsg',{currentMsg:this.garColMsg});
-                  removeStore('currentStep',0);
+                  removeStore('currentCollectMsg');
+                  removeStore('currentStep');
                   removeStore('weightMethods');
+                  removeStore('continueCurrentCollect')
               });
           } else {
             this.showLoading = false;
@@ -189,7 +190,7 @@ export default {
               closeOnPopstate: true
               }).then(() => {
               this.changeBackoutBtn(true);
-              this.changeFlowState(0);
+              this.changeFlowState(-1);
               this.$router.push({path: 'medicalCollect'});
               // 清空存储的数据
               this.clearTrashStore();
@@ -200,17 +201,18 @@ export default {
               this.changeBagCodeShow(false);
               this.changeAstOfficeShow(false);
               this.changeStaffCodeShow(false);
+              // 数据提交服务端成功过后删除h5存储每步的收集信息和流程和称重方式
+              removeStore('currentCollectMsg');
+              removeStore('currentStep');
+              removeStore('weightMethods');
+              removeStore('continueCurrentCollect')
             })
           }
         }
       })
       .catch((err) => {
         this.showLoading = false;
-        // 数据提交服务端成功过后删除h5存储每步的收集信息和流程和称重方式
-        removeStore('currentCollectMsg');
-        removeStore('currentStep');
-        removeStore('weightMethods');
-         this.$dialog.alert({
+        this.$dialog.alert({
           message: `${err.message}`,
           closeOnPopstate: true
             }).then(() => {
@@ -228,7 +230,7 @@ export default {
               this.changeStaffCodeShow(true);
             } else {
               this.changeBackoutBtn(true);
-              this.changeFlowState(0);
+              this.changeFlowState(-1);
               this.$router.push({path: 'medicalCollect'});
               // 清空存储的数据
               this.clearTrashStore();
@@ -239,6 +241,11 @@ export default {
               this.changeBagCodeShow(false);
               this.changeAstOfficeShow(false);
               this.changeStaffCodeShow(false);
+              // 数据提交服务端成功过后删除h5存储每步的收集信息和流程和称重方式
+              removeStore('currentCollectMsg');
+              removeStore('currentStep');
+              removeStore('weightMethods');
+              removeStore('continueCurrentCollect');
             }
         })
       })
@@ -283,7 +290,7 @@ export default {
                   this.$router.push({path: 'medicalCollect'});
                   this.changeSureBtn(false);
                   this.changePrintBtn(true);
-                  this.changeFlowState(0);
+                  this.changeFlowState(-1);
                   this.changeOtherBtn(true);
                   this.changebluetoothWeighShow(false);
                   this.changeManualWeighShow(false);
@@ -291,9 +298,10 @@ export default {
                   this.changeAstOfficeShow(false);
                   this.changeStaffCodeShow(false);
                   // 数据提交服务端成功过后删除h5存储每步的收集信息和流程和称重方式
-                  removeStore('currentCollectMsg',{currentMsg:this.garColMsg});
-                  removeStore('currentStep',0);
+                  removeStore('currentCollectMsg');
+                  removeStore('currentStep');
                   removeStore('weightMethods');
+                  removeStore('continueCurrentCollect')
               });
           } else {
             this.showLoading = false;
@@ -302,7 +310,7 @@ export default {
               closeOnPopstate: true
                 }).then(() => {
                 this.changeBackoutBtn(true);
-                this.changeFlowState(0);
+                this.changeFlowState(-1);
                 this.$router.push({path: 'medicalCollect'});
                 // 清空存储的数据
                 this.clearTrashStore();
@@ -313,16 +321,17 @@ export default {
                 this.changeBagCodeShow(false);
                 this.changeAstOfficeShow(false);
                 this.changeStaffCodeShow(false);
+                // 数据提交服务端成功过后删除h5存储每步的收集信息和流程和称重方式
+                removeStore('currentCollectMsg');
+                removeStore('currentStep');
+                removeStore('weightMethods');
+                removeStore('continueCurrentCollect')
             })
           }
         }
       })
       .catch((err) => {
         this.showLoading = false;
-        // 数据提交服务端成功过后删除h5存储每步的收集信息和流程和称重方式
-        removeStore('currentCollectMsg');
-        removeStore('currentStep');
-        removeStore('weightMethods');
         this.$dialog.alert({
           message: `${err.message}`,
           closeOnPopstate: true
@@ -341,7 +350,7 @@ export default {
                 this.changeStaffCodeShow(true);
               } else {
                 this.changeBackoutBtn(true);
-                this.changeFlowState(0);
+                this.changeFlowState(-1);
                 this.$router.push({path: 'medicalCollect'});
                 // 清空存储的数据
                 this.clearTrashStore();
@@ -352,6 +361,11 @@ export default {
                 this.changeBagCodeShow(false);
                 this.changeAstOfficeShow(false);
                 this.changeStaffCodeShow(false);
+                // 数据提交服务端成功过后删除h5存储每步的收集信息和流程和称重方式
+                removeStore('currentCollectMsg');
+                removeStore('currentStep');
+                removeStore('weightMethods');
+                removeStore('continueCurrentCollect')
             }
         })
       })

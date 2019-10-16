@@ -56,8 +56,10 @@ export default {
         closeOnPopstate: true
       }).then(() => {
         this.$router.push({path: 'medicalCollect'});
-        this.changeFlowState(1);
+        this.changeFlowState(0);
         this.changeCurrentLajicodeState(false);
+        // h5存储是否当前科室收集的状态
+        setStore('continueCurrentCollect','true');
         this.changeCollectBtn(false);
         this.changeBackoutBtn(true);
         this.changeSureBtn(true);
@@ -69,12 +71,12 @@ export default {
         this.changebluetoothWeighShow(false);
         this.changeManualWeighShow(false);
         this.changeIsCollectCurrentOffice(true);
-        setStore('currentCollectMsg', this.garColMsg);
-        setStore('currentStep', 0);
       }).catch(() => {
         this.$router.push({path: 'medicalCollect'});
         this.changeFlowState(2);
         this.changeCurrentLajicodeState(true);
+        // h5存储是否当前科室收集的状态
+        setStore('continueCurrentCollect','false');
         this.changeCollectBtn(false);
         this.changeBackoutBtn(true);
         this.changeSureBtn(true);
@@ -85,8 +87,6 @@ export default {
         this.changeAstOfficeShow(false);
         this.changeStaffCodeShow(false);
         this.changeIsCollectCurrentOffice(false);
-        setStore('currentCollectMsg', this.garColMsg);
-        setStore('currentStep', 2);
       });
     }
   }

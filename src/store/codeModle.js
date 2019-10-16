@@ -60,7 +60,9 @@ export default {
     manualWeighShow: false,
     isBlueWeight: false,
     // 是否当前科室收集
-    isCollectCurrentOffice: true
+    isCollectCurrentOffice: true,
+    // 重量是否已经存储
+    isStoreWeight: false
   },
   getters:{
     navTopTitle: state => state.navTitle,
@@ -95,7 +97,8 @@ export default {
     manualWeighShow: state => state.manualWeighShow,
     isBlueWeight: state => state.isBlueWeight,
     isCollectCurrentOffice: state => state.isCollectCurrentOffice,
-    garColMsg: state => state.garColMsg
+    garColMsg: state => state.garColMsg,
+    isStoreWeight: state => state.isStoreWeight,
   },
   mutations:{
     changeTitleTxt (state,payLoad) {
@@ -262,10 +265,13 @@ export default {
       changeIsCollectCurrentOffice (state,payLoad) {
         state.isCollectCurrentOffice = payLoad
       },
-
       // 给科室信息汇总字段重新赋值
       changeGarColMsg (state,payLoad) {
         state.garColMsg = payLoad
+      },
+      // 改变重量是否已经存储状态
+      changeIsStoreWeight (state,payLoad) {
+        state.isStoreWeight = payLoad
       }
   },
   actions:{}
