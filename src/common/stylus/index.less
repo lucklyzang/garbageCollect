@@ -2,3 +2,52 @@
 @import "./reset.less";
 @import "./base.less";
 @import "./modifyUI.less";
+
+
+/** 
+ * pc端样式
+*/ 
+
+@media screen and (min-width: 1280px){
+
+  // 报表页面样式
+  #content-middle-dayData,#content-middle-weekData,#content-middle-monthData,#content-middle-yearData {
+    width: 49%;
+    margin-right: 2px
+  };
+
+  // 首页菜单栏字体颜色
+  .content .content-middle .content-list .title-content {
+    font-size: 20px
+  }
+};
+
+@media screen and (min-width: 813px) and (max-width: 1280px) {
+
+  // 报表页面样式
+  #content-middle-dayData,#content-middle-weekData,#content-middle-monthData,#content-middle-yearData {
+    width: 49%;
+    margin-right: 2px
+  };
+
+  // 首页菜单栏字体颜色
+  .content .content-middle .content-list .title-content {
+    font-size: 20px
+  }
+};
+
+/** 
+ * pc端样式
+*/ 
+@media screen and (max-width: 813px) {
+
+  // 报表页面样式
+  #content-middle-dayData,#content-middle-weekData,#content-middle-monthData,#content-middle-yearData {
+    width: 97%;
+  };
+
+  // 首页菜单栏字体颜色
+  .content .content-middle .content-list .title-content {
+    font-size: 14px
+  }
+}

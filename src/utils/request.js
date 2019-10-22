@@ -1,6 +1,6 @@
 import axios from 'axios'
 import store from '@/store'
-// 'http://192.168.8.100:8080/blink'
+//'http://192.168.8.100:8080/blink'
 // http://39.100.111.20:8080/blink
 // http://47.108.27.209:8080/blink
 const service = axios.create({

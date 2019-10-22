@@ -57,6 +57,7 @@ export default {
       }).then(() => {
         this.$router.push({path: 'medicalCollect'});
         this.changeFlowState(0);
+        // 根据此状态来决定撤销时的操作逻辑
         this.changeCurrentLajicodeState(false);
         // h5存储是否当前科室收集的状态
         setStore('continueCurrentCollect','true');
@@ -70,11 +71,13 @@ export default {
         this.changeStaffCodeShow(false);
         this.changebluetoothWeighShow(false);
         this.changeManualWeighShow(false);
+        // 根据此状态判断step为2,按确定时的操作逻辑
         this.changeIsCollectCurrentOffice(true);
       }).catch(() => {
         if (this.lajiCode.length !== 0) {
           this.$router.push({path: 'medicalCollect'});
           this.changeFlowState(2);
+          // 根据此状态来决定撤销时的操作逻辑
           this.changeCurrentLajicodeState(true);
           // h5存储是否当前科室收集的状态
           setStore('continueCurrentCollect','false');
@@ -87,6 +90,7 @@ export default {
           this.changeBagCodeShow(false);
           this.changeAstOfficeShow(false);
           this.changeStaffCodeShow(false);
+          // 根据此状态判断step为2,按确定时的操作逻辑
           this.changeIsCollectCurrentOffice(false)
         } else {
           this.$router.replace({path:'judgeOtherDepantment'})

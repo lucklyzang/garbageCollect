@@ -129,9 +129,13 @@ export default {
       storageLanyaCz (state,payLoad) {
         state.garColMsg[0].lanyaCz.push(payLoad)
       },
-      //更改蓝牙称重信息
+      //更改蓝牙称重信息1
       changeStorageLanyaCz (state,payLoad) {
         state.garColMsg[0].lanyaCz = payLoad
+      },
+      //更改蓝牙称重信息2
+      changeStorageLanyaCzOther (state,payLoad) {
+        state.garColMsg[0].lanyaCz.push(payLoad)
       },
       //清除存储垃圾袋信息
        initStorageLajiCode (state) {

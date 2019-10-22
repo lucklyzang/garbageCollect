@@ -47,6 +47,7 @@ export default {
       'changeManualWeighShow',
       'changeIsCollectCurrentOffice'
     ]),
+
     showDialog () {
       this.$dialog.confirm({
         message: '是否其它科室收集?',
@@ -70,10 +71,7 @@ export default {
         this.clearTrashStore();
         this.changeCurrentLajicodeState(false);
         this.changeBackoutBtn(true);
-        removeStore('currentCollectMsg');
-        removeStore('currentStep');
-        removeStore('weightMethods');
-        removeStore('continueCurrentCollect')
+        this.clearPartStorage()
       }).catch(() => {
         this.$router.push({path:'medicalInStorage'});
         this.changeTitleTxt({tit: '医废入库'});
@@ -82,6 +80,7 @@ export default {
         this.changeFlowState(-1);
         this.changeClickBackoutBtn(false);
         this.changePrintBtn(false);
+        // 根据此状态来决定撤销时的操作逻辑
         this.changeCurrentLajicodeState(false);
         this.changeBagCodeShow(false);
         this.changeAstOfficeShow(false);
@@ -93,11 +92,16 @@ export default {
         this.changeSureBtn(false);
         this.changeBackoutBtn(true);
         this.changeOtherBtn(false);
-        removeStore('currentCollectMsg');
-        removeStore('currentStep');
-        removeStore('weightMethods');
-        removeStore('continueCurrentCollect')
+        this.clearPartStorage()
       });
+    },
+
+    //清除部分存储信息
+    clearPartStorage () {
+      removeStore('currentCollectMsg');
+      removeStore('currentStep');
+      removeStore('weightMethods');
+      removeStore('continueCurrentCollect') 
     }
   }
 }

@@ -252,6 +252,7 @@ export default {
         p {
           color:#87dfee;
           letter-spacing: 1px;
+          font-size: 12px;  /* px */
           &:first-child {
             float: left
           }

@@ -52,7 +52,7 @@
             <van-button type="info" @click="backOut"  size="normal">撤销</van-button>
           </span>
           <span class="showCollectButton" v-show="showCollectButton">
-            <van-button type="info" @click="startTask" size="normal">医废收集</van-button>
+            <van-button type="info" @click="sweepAstoffice" size="normal">医废收集</van-button>
           </span>
           <span class="showSureButton" v-show="showSureButton" >
             <van-button type="info" @click="sureCurrentCodeMsg" size="normal">确定</van-button>
@@ -66,6 +66,34 @@
         </div>
       </div>
       <!-- <FooterBottom></FooterBottom> -->
+        <!-- 收集数据提交成功弹框 -->
+        <van-dialog
+          v-model="chooseBackoutShow"
+          title="医废选择撤销"
+          :show-cancel-button="false"
+          :close-on-popstate="true"
+          @confirm="chooseBackout"
+          :close-on-click-overlay="true"
+        >
+          <div class="changeBtn">
+            <van-checkbox v-model="checkedAll" @click="toggleCheckedAll">全选</van-checkbox>
+          </div>
+          <div class="content-middle-list">
+            <div class="content-middle-list-item" v-for="(item, index) in barMessageList">
+              <div class="change-btn-position">
+                <van-checkbox v-model="item.check"  @change="oneChecked(item.check)"></van-checkbox>
+              </div>
+              <div class="list-item">
+                <div class="list-strip">
+                  <p>科室: {{item['depName']}}</p>
+                  <p class="list-sign">条码标识: {{item['barCode']}}</p>
+                  <p class="list-times">医废类型: {{item['wasteName']}}</p>
+                  <p class="list-code">重量: {{item['barWeight']}}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </van-dialog>
     </div>
 </template>
 
@@ -74,7 +102,7 @@ import HeaderTop from '../components/HeaderTop'
 import FooterBottom from '../components/FooterBottom'
 import CommonProgress from '../components/CommonProgress'
 import {judgeStagingPoint,judgeMedicalPerson} from '../api/rubbishCollect.js'
-import { formatTime, setStore, getStore, removeStore } from '@/common/js/utils'
+import { formatTime, setStore, getStore, removeStore, IsPC } from '@/common/js/utils'
 import { mapGetters, mapMutations } from 'vuex'
 export default {
    components:{
@@ -88,7 +116,10 @@ export default {
       progressTitleList: ['扫描科室','扫描医废','医废称重','扫描医护'],
       currentPercentage: 0,
       temporaryActive: -1,
-      barCodeList: []
+      barCodeList: [],
+      checkedAll: false,
+      chooseBackoutShow: false,
+      barMessageList: []
     };
   },
   computed: {
@@ -157,7 +188,7 @@ export default {
     },
     showBluetoothWeighShow () {
       return this.bluetoothWeighShow
-    },
+    }
   },
 
   mounted () {
@@ -173,14 +204,11 @@ export default {
         this.$router.push({path: 'home'});  //输入要返回的上一级路由地址
         this.changeTitleTxt({tit: '医废监测'});
         this.initSweepCodeInfo();
-        removeStore('currentCollectMsg');
-        removeStore('currentStep');
-        removeStore('weightMethods');
-        removeStore('continueCurrentCollect') 
+        this.clearPartStorage()
       })
       .catch(() => {
       })
-    })
+    });
 
     // 判断流程从哪步开始
     this.judgeFlowPosition();
@@ -259,7 +287,8 @@ export default {
       'changeManualWeighShow',
       'changeIsBlueWeight',
       'changeIsCollectCurrentOffice',
-      'changeIsStoreWeight'
+      'changeIsStoreWeight',
+      'changeStorageLanyaCzOther'
     ]),
 
 
@@ -274,10 +303,7 @@ export default {
         this.changeTitleTxt({tit:'医废监测'});
         //清除当前流程的扫码信息
         this.initSweepCodeInfo();
-        removeStore('currentCollectMsg');
-        removeStore('currentStep');
-        removeStore('weightMethods'); 
-        removeStore('continueCurrentCollect')
+        this.clearPartStorage()
       })
       .catch(() => {
       })
@@ -293,21 +319,10 @@ export default {
         this.changeTitleTxt({tit:'我的'});
         //清除当前流程的扫码信息
         this.initSweepCodeInfo();
-        removeStore('currentCollectMsg');
-        removeStore('currentStep');
-        removeStore('weightMethods');
-        removeStore('continueCurrentCollect') 
+        this.clearPartStorage()
       })
       .catch(() => {
       })
-    },
-    startTask () {
-      this.sweepAstoffice()
-    },
-
-    // 扫码验证网络异常弹窗
-    abnormalSweepCode () {
-      this.sweepAstoffice()
     },
 
     // 判断流程从哪步开始(当前科室与其它科室收集开始流程不同)
@@ -317,7 +332,8 @@ export default {
         this.temporaryActive = -1;
         // 此时确定按钮还未出现,让进度进到0，可以获取到科室的扫描回调
         this.changeCodeStep(0);
-        this.changeIsCollectCurrentOffice(true)
+        this.changeIsCollectCurrentOffice(true);
+        this.changeCurrentLajicodeState(false);
       } else if (this.judgeFlowValue == 0) {
         this.changeCurrentActive(0);
         this.temporaryActive = 0;
@@ -325,7 +341,7 @@ export default {
         this.changeAstOfficeShow(true);
         this.changeIsPlus(true)
       } else if (this.judgeFlowValue == 1) {
-        this.changeCurrentLajicodeState(false);
+        this.changeCurrentLajicodeState(true);
         this.changeCollectBtn(false);
         this.changeBackoutBtn(true);
         this.changeSureBtn(true);
@@ -381,8 +397,11 @@ export default {
     // 撤销操作
     backOut () {
       this.$dialog.confirm({
-        message: '确定撤销该次医废收集?',
-        closeOnPopstate: true
+        message: '请选择撤销方式',
+        closeOnPopstate: true,
+        confirmButtonText: '科室撤销',
+        cancelButtonText: '医废选择撤销',
+        closeOnClickOverlay: true
       }).then(() => {
         this.changeClickBackoutBtn(true);
         if (this.lajiCode.length == 0) {
@@ -390,27 +409,53 @@ export default {
           // 清空撤销前存储的数据
           this.clearTrashStore()   
         } else if (this.lajiCode.length > 0) {
-          if (this.clearCurrentLajicode) {
-            let lajiCodeMsg = this.lajiCode;
-            let lanyaCzMsg = this.lanyaCz;
-            if (this.lajiCode.length == this.lanyaCz.length) {
-              //保留之前存储的信息,删除此次存储的信息
-              lajiCodeMsg.splice(this.lajiCode.length-1,1);
-              lanyaCzMsg.splice(this.lanyaCz.length-1,1);
-            } else {
-              lajiCodeMsg.splice(this.lajiCode.length-1,1);
-            };
-            this.initStorageLajiCode();
-            this.initStorageLanyaCz();
-            this.changeStorageLajiCode(lajiCodeMsg);
-            this.changeStorageLanyaCz(lanyaCzMsg);
-          };
+          this.initStorageLajiCode();
+          this.initStorageLanyaCz();
           this.$router.push({path:'judgeCurrentDepantment'});
           this.changeCurrentLajicodeState(false)
         }
       }).catch(() => {
-        this.changeClickBackoutBtn(false);
-      });
+        if (this.lajiCode.length == 0) {
+          this.$router.replace({path:'judgeOtherDepantment'});
+          // 清空撤销前存储的数据
+          this.clearTrashStore()   
+        } else {
+          this.barMessageList = [];
+          let lajiCodeMsg;
+          // 当前一次垃圾垃圾收集如果没有存入重量，则删除store中该次医废收集
+          if (this.lajiCode.length > this.lanyaCz.length) {
+            lajiCodeMsg = this.lajiCode;
+            lajiCodeMsg.splice(lajiCodeMsg.length-1,1);
+            this.initStorageLajiCode();
+            this.changeStorageLajiCode(lajiCodeMsg);
+            // 退回到该次收集的第一步
+            this.changeCurrentActive(0);
+            this.temporaryActive = 0;
+            this.changeCodeStep(0);
+            this.manualWeight = '';
+            this.changeExtraLyczMsg('');
+            this.changeAstOfficeShow(true);
+            this.changeIsPlus(true);
+            this.changebluetoothWeighShow(false);
+            this.changeManualWeighShow(false);
+            this.changeBagCodeShow(false);
+          };
+          if (this.lajiCode.length == 0) {
+            this.$router.push({path:'judgeCurrentDepantment'});
+            return
+          }; 
+          for (let i = 0; i < this.lajiCode.length; i++) {
+            this.barMessageList.push({
+              depName: this.lajiCode[i].depName,
+              barCode: this.lajiCode[i].barCode,
+              wasteName: this.lajiCode[i].wasteName,
+              barWeight: this.lanyaCz[i] ? this.lanyaCz[i] : '无',
+              check: false
+            })
+          };
+          this.chooseBackoutShow = true
+        }
+      })
     },
 
     // 打印方法
@@ -436,7 +481,8 @@ export default {
       this.changebluetoothWeighShow(false);
       this.changeManualWeighShow(false);
       this.changeIsCollectCurrentOffice(true);
-      this.clearTrashStore()
+      this.clearTrashStore();
+      this.changeCurrentLajicodeState(false)
     },
 
     // 扫描二维码方法
@@ -486,7 +532,7 @@ export default {
                   message: `${err.message}`,
                   closeOnPopstate: true
                 }).then(() => {
-                  this.abnormalSweepCode();
+                  this.sweepAstoffice();
                 });
               })
             } else {
@@ -548,7 +594,7 @@ export default {
                   message: `${err.message}`,
                   closeOnPopstate: true
                 }).then(() => {
-                  this.abnormalSweepCode();
+                  this.sweepAstoffice();
                 }); 
               })
             } else {
@@ -682,10 +728,10 @@ export default {
       if (this.lajiCode.length == 1) {
         let flag = true;
         this.printProof(this.lajiCode[0].barCode,this.keshiCode[0].depName,this.lajiCode[0].wasteName,
-          this.lanyaCz[0],this.userInfo.workerName,this.yihuCode[0].workerName);
+          this.lanyaCz[0],this.userInfo.workerName,this.yihuCode[this.yihuCode.length-1].workerName);
         if (flag) {
           this.printProof(this.lajiCode[0].barCode,this.keshiCode[0].depName,this.lajiCode[0].wasteName,
-            this.lanyaCz[0],this.userInfo.workerName,this.yihuCode[0].workerName);
+            this.lanyaCz[0],this.userInfo.workerName,this.yihuCode[this.yihuCode.length-1].workerName);
         }
       } else if (this.lajiCode.length > 1) {
         let map = {};
@@ -708,7 +754,7 @@ export default {
         for (var i = 0, len = this.lajiCode.length; i<len; i++) {
           if (i == Object.values(map).length) {return};
           this.printProof(this.lajiCode[i].barCode,this.keshiCode[0].depName,Object.keys(map)[i],
-          Object.values(map)[i],this.userInfo.workerName,this.yihuCode[0].workerName);
+          Object.values(map)[i],this.userInfo.workerName,this.yihuCode[this.yihuCode.length-1].workerName);
           // 打印两联
           if (timeNum < 2) { 
             if (i == Object.values(map).length-1) {
@@ -851,6 +897,91 @@ export default {
     //其它科室收集
     collectSure () {
       this.$router.replace({path:'judgeOtherDepantment'})
+    },
+
+    // 医废选择撤销
+    chooseBackout () {
+      // 被选中的医废编码
+      let checkBarList = [];
+      let filterMsg = {};
+      for (let item of this.barMessageList) {
+        if (item.check) {
+          checkBarList.push(item.barCode)
+        }
+      };
+      if (checkBarList.length == 0) {
+        this.$dialog.alert({
+          message: '请选择要撤销的医废',
+          closeOnPopstate: true
+        }).then(() => {
+          this.chooseBackoutShow = true
+        });
+        return
+      };
+      // 根据用户勾选来删除store中储存的医废数据
+      filterMsg = this.resetBarArray(this.lajiCode, this.lanyaCz, checkBarList);
+      // 重新存储store里的收集垃圾信息
+      this.initStorageLajiCode();
+      this.initStorageLanyaCz();
+      this.changeStorageLajiCode(filterMsg['one']);
+      this.changeStorageLanyaCz(filterMsg['two']);
+      this.$router.push({path:'judgeCurrentDepantment'});
+      this.changeCurrentLajicodeState(false);
+      this.changeClickBackoutBtn(true);
+      this.chooseBackoutShow = false
+    },
+
+    // 全选操作
+    toggleCheckedAll(){
+       if(this.checkedAll){
+          this.barMessageList.forEach((item)=>{
+            item.check = false  
+          })
+          this.checkedAll = false
+       }else{
+          this.barMessageList.forEach((item)=>{
+            item.check = true  
+          })
+          this.checkedAll = true
+      }
+    },
+
+    // 单选操作
+     oneChecked(cart){
+       if(!cart){
+        this.checkedAll = false
+       }
+       let isExitCheckedNo = this.barMessageList.every(item=>{
+          return item.check == true     
+       });
+       if(isExitCheckedNo){
+          this.checkedAll = true    
+       }else{
+          this.checkedAll = false
+      }
+    },
+
+    // 根据给出的医废编码，来删除存储中存在的医废编码
+    // arrOne: 医废信息,arrTwo: 医废重量,clearArr: 要删除的医废编码
+     resetBarArray (arrOne,arrTwo,clearArr) {
+			for (var i = 0; i < clearArr.length; i++) {
+				for (var j = 0; j < arrOne.length; j++) {
+					if (arrOne[j]['barCode'] == clearArr[i]) {
+						arrOne.splice(j,1);
+						arrTwo.splice(j,1);
+						j--
+					}
+				}
+			};
+			return {'one':arrOne,'two':arrTwo}
+		},
+
+    //清除部分存储信息
+    clearPartStorage () {
+      removeStore('currentCollectMsg');
+      removeStore('currentStep');
+      removeStore('weightMethods');
+      removeStore('continueCurrentCollect') 
     }
   }
 }
@@ -983,5 +1114,66 @@ export default {
         }
       }
     }
+    // 撤销医废弹框样式
+     .changeBtn {
+          height: 40px;
+          background: #fbfbfb;
+          line-height: 40px;
+          padding-left: 10px;
+          padding-top: 11px;
+          box-sizing: border-box;
+          /deep/ .van-icon {
+            background: @color-theme;
+            border-color: @color-theme
+          }
+      }
+      .content-middle-list {
+        height: 30vh;
+        overflow: auto;
+        .content-middle-list-item {
+          position: relative;
+          box-sizing: border-box;
+          padding: 0 10px 10px 40px;
+          height: 140px;
+          .bottom-border-1px(#d3d3d3);
+          .change-btn-position {
+            position: absolute;
+            top: 30px;
+            left: 10px;
+            /deep/ .van-icon {
+              background: @color-theme;
+              border-color: @color-theme
+            }
+          }
+          .list-item {
+            position: relative;
+            height: 100%;
+            .list-strip {
+              position: absolute;
+              top: 20px;
+              left: 0;
+              color: #707070;
+              font-size: 12px;
+              margin-top: 12px;
+              p {
+                margin-top: 12px;
+                &:first-child {
+                  margin-top: 0
+                }
+              }
+            }
+            .list-item-bottom {
+              position: absolute;
+              bottom: 0;
+              right: 0;
+              color: #bdbdbd;
+              font-size: 12px;
+              span {
+                color: #5d5d5d
+              }
+            }
+          }
+        }
+      }
   }
 </style>

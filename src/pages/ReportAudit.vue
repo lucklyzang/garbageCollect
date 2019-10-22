@@ -241,6 +241,7 @@ export default {
 <style lang='less' scoped>
 @import "../common/stylus/variable.less";
 @import "../common/stylus/modifyUi.less";
+@import "../common/stylus/index.less";
   .content-wrapper {
     margin-top: 100px;
     .content-middle {
@@ -284,8 +285,8 @@ export default {
         }
       }
       #content-middle-dayData,#content-middle-weekData,#content-middle-monthData,#content-middle-yearData {
-        width: 97%;
-        margin: 0 auto;
+        display: inline-block;
+        vertical-align: middle;
         margin-top: 14px;
         height: 28vh;
         box-shadow: 0 0 5px #c1bcbc

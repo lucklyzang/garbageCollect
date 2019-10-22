@@ -46,6 +46,7 @@ import HeaderTop from '../components/HeaderTop'
 import FooterBottom from '../components/FooterBottom'
 import { mapGetters, mapMutations } from 'vuex'
 import {removeStore} from '@/common/js/utils.js'
+import {exitLogIn} from '@/api/login.js'
 import defaultPortrait from '@/common/images/default-portrait.png'
 export default {
    components:{
@@ -109,11 +110,13 @@ export default {
       'initBatchs',
       'changeRouterFlag'
     ]),
+
     // 返回上一页
     backTo () {
       this.$router.push({name:'home'});
       this.changeTitleTxt({tit:'医废监测'})
     },
+
     // 判断身份类别
     judgeCardType (type) {
       switch (type) {
@@ -140,6 +143,7 @@ export default {
           break;
       }
     },
+
     // 判断身份类别
     judgeRubbishType (type) {
       switch (type) {
@@ -166,26 +170,45 @@ export default {
           break;
       }
     },
+
     // 退出登录
     loginOut () {
        this.$dialog.confirm({
         message: '确定注销账号?'
       })
       .then(() => {
-        // 清除localStorage存储的用户信息
-        removeStore('userName');
-        removeStore('userPassword');
-        removeStore('userInfo');
-        removeStore('isLogin');
-        // 清除其它用户h5存储的流程信息
-        removeStore('currentCollectMsg');
-        removeStore('currentStep');
-        removeStore('weightMethods');
-        removeStore('continueCurrentCollect');
-        this.$router.replace({name:'login'})
+        exitLogIn(this.userInfo.id).then((res) => {
+          if (res.data.code == 200) {
+            this.clearPartStorage();
+            this.$router.replace({name:'login'})
+          } else {
+          }
+        })
+        .catch((err) => {
+          this.$dialog.alert({
+            message: `${err}`,
+            closeOnPopstate: true
+          }).then(() => {
+          })
+        })
       })
       .catch(() => {})
+    },
+
+    //清除部分存储信息
+    clearPartStorage () {
+      // 清除localStorage存储的用户信息
+      removeStore('userName');
+      removeStore('userPassword');
+      removeStore('userInfo');
+      removeStore('isLogin');
+      // 清除其它用户h5存储的流程信息
+      removeStore('currentCollectMsg');
+      removeStore('currentStep');
+      removeStore('weightMethods');
+      removeStore('continueCurrentCollect');
     }
+
   }
 }
 

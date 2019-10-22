@@ -106,10 +106,12 @@
         'changeBagCodeShow',
         'changebluetoothWeighShow',
         'changeCodeStep',
-        'changeFlowState',
         'changeManualWeighShow',
         'changeIsCollectCurrentOffice',
-        'changeIsStoreWeight'
+        'changeIsStoreWeight',
+        'changeIsPlus',
+        'changeCurrentActive',
+        'clearTrashStore'
       ]),
       // 返回上一页
       backTo () {
@@ -165,7 +167,7 @@
         }
       },
 
-      // 判断上次流程有没有收集完毕
+      // 进入首页后判断上次流程有没有收集完毕
       judgeCodeFinish () {
         // 获取上次收集流程进行到哪一步
         if (getStore('currentStep')) {
@@ -185,7 +187,7 @@
             this.changeBackoutBtn(true);
           } else if (getStore('currentStep') == '1') {
             this.changeFlowState(1);
-            this.changeCurrentLajicodeState(false);
+            this.changeCurrentLajicodeState(true);
             this.changeCollectBtn(false);
             this.changeBackoutBtn(true);
             this.changeSureBtn(true);
@@ -204,7 +206,7 @@
             } else if(getStore('continueCurrentCollect') == 'true') {
               this.changeIsCollectCurrentOffice(true);
             };
-            this.changeCurrentLajicodeState(false);
+            this.changeCurrentLajicodeState(true);
             this.changeIsStoreWeight(true);
             this.changeFlowState(2);
             this.changeCollectBtn(false);
@@ -218,7 +220,7 @@
             this.changeStaffCodeShow(false);
           } else if (getStore('currentStep') == '3') {
             this.changeFlowState(3);
-            this.changeCurrentLajicodeState(false);
+            this.changeCurrentLajicodeState(true);
             this.changeCollectBtn(false);
             this.changeBackoutBtn(true);
             this.changeSureBtn(true);
@@ -229,13 +231,38 @@
             this.changeAstOfficeShow(false);
             this.changeStaffCodeShow(true)  
           }
+        } else {
+          this.initSweepCodeInfo()
         };
 
         // 给store收集相关的字段重新赋值
         if (getStore('currentCollectMsg')) {
           let collectMsg = JSON.parse(getStore('currentCollectMsg')).currentMsg;
           this.changeGarColMsg(collectMsg)
+        } else {
+          this.initSweepCodeInfo()
         }
+      },
+
+      // 初始化扫码信息
+      initSweepCodeInfo () {
+        this.changeCodeStep(0);
+        this.changeFlowState(-1);
+        this.changeIsPlus(false);
+        this.changeCurrentActive(-1);
+        this.changeCollectBtn(true);
+        this.changeBackoutBtn(true);
+        this.changeSureBtn(false);
+        this.changePrintBtn(false);
+        this.changeOtherBtn(false);
+        this.changeBagCodeShow(false);
+        this.changeAstOfficeShow(false);
+        this.changeStaffCodeShow(false);
+        this.changebluetoothWeighShow(false);
+        this.changeManualWeighShow(false);
+        this.changeIsCollectCurrentOffice(true);
+        this.changeCurrentLajicodeState(false);
+        this.clearTrashStore()
       }
     }
   }
@@ -251,7 +278,7 @@
     background: #fff;
     .content-header {
       width: 100%;
-      height: 200px;
+      height: auto;
       margin-top: 60px;
       img {
         width: 100%;
@@ -263,24 +290,38 @@
       display: flex;
       flex-direction: row;
       flex-wrap: wrap;
+      margin-top: 10px;
       .content-list {
-        flex-direction: column;
-        width: 25%;
+        // flex-direction: column;
+        width: 22%;
         height: 100px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        padding-top: 20px;
+        text-align: center;
+        box-sizing: border-box;
+        margin: 4px 4px;
+        box-shadow:   /*上边阴影  红色*/
+
+                -1px 0px 0px 0px #aeaeae,   /*左边阴影  绿色*/
+
+                1px 0px 0px 0px #aeaeae,    /*右边阴影  蓝色*/
+
+                0px 1px 0px 0px #aeaeae;    /*下边阴影  黄色*/
+        // display: flex;
+        // align-items: center;
+        // justify-content: center;
         .title-img {
           width: 30px;
           height: 31px;
+          display: inline-block;
           img {
             width: 100%;
             height: 100%
           }
         }
         .title-content {
+          width: 100%;
           margin-top: 7px;
-          font-size: 14px;
+          display: inline-block;
           color: #515151;
         }
       }
