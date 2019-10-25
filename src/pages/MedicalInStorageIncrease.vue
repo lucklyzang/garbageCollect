@@ -308,7 +308,6 @@ export default {
             margin: 0 auto;
             /deep/ .van-button {
             width: 100%;
-            margin-top: 35px;
             background: @color-theme;
             color: #fff;
             border-radius: 0;

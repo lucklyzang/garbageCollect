@@ -6,25 +6,32 @@
     </HeaderTop>
     <div class="content-middle">
       <loading :isShow="showLoadingHint"></loading>
-      <div class="content-middle-top">
-        <van-field v-model="startTime" placeholder="开始日期" readonly="readonly" @click="startTimePop = true"/>
+      <div class="content-middle-top content-middle-top-outStorage">
+        <div class="content-middle-top-content">
+          <span class="time-between-outstorage">至</span>
+          <div class="left-time">
+            <van-field v-model="startTime" placeholder="开始日期" readonly="readonly" @click="startTimePop = true" right-icon="newspaper-o"/>
+          </div>
+          <div class="right-time">
+            <van-field v-model="endTime" placeholder="结束日期" readonly="readonly" @click="endTimePop = true" right-icon="newspaper-o"/>
+          </div>
+          <p class="middle-top-search middle-top-search-outStorage">
+            <van-button type="info" size="small" @click="searchOutStorage(startTime,endTime)">搜索</van-button>
+          </p>
+        </div>
         <van-popup v-model="startTimePop" label="离开时间" position="bottom" :overlay="true"> 
           <van-datetime-picker  v-model="currentDateStart"  type="date"  :min-date="minDateStart"
           @cancel="startTimePop = false"  @confirm="startTimePop = false"  @change="startTimeChange"/>
         </van-popup>
-        <van-field v-model="endTime" placeholder="结束日期" readonly="readonly" @click="endTimePop = true"/>
         <van-popup v-model="endTimePop" label="离开时间" position="bottom" :overlay="true"> 
           <van-datetime-picker  v-model="currentDateEnd"  type="date"  :min-date="minDateEnd"
           @cancel="endTimePop = false"  @confirm="endTimePop = false"  @change="endTimeChange"/>
         </van-popup>
-        <p class="middle-top-search">
-          <van-button type="info" size="small" @click="searchOutStorage(startTime,endTime)">搜索</van-button>
-        </p>
       </div>
       <div class="changeBtn">
         <van-checkbox v-model="checkedAll" @click="toggleCheckedAll">全选</van-checkbox>
       </div>
-      <div class="content-middle-list">
+      <div class="content-middle-list content-middle-list-outStorage">
         <div class="content-middle-list-item" v-for="item in classList">
           <div class="change-btn-position">
             <van-checkbox v-model="item.check"  @change="oneChecked(item.check)"></van-checkbox>
@@ -259,18 +266,40 @@ export default {
     .content-middle {
      .content-middle();
       .content-middle-top {
-        position: relative;
+        background: #fff;
+        margin-top: 3%;
+        height: 52px;
+        box-shadow: 0px 1px 3px 1px #e4e4e4,  /*下边阴影*/
+          0px -1px 3px 0px #e4e4e4;   /*上边阴影*/
         /deep/ .van-cell {
-          width: 40%;
-          display: inline-block
+          width: 100%;
+          display: inline-block;
+          padding: 10px 24px;
+          border: 1px solid #d8d5d5;
+          border-radius: 4px;
+          line-height: 0;
         }
         .middle-top-search {
           position: absolute;
-          top: 7px;
-          right: 6px;
+          top: 10px;
           button {
             background: @color-theme;
             border-color: @color-theme
+          }
+        }
+        .content-middle-top-content {
+          position: relative;
+          height: 100%;
+          width: 98%;
+          margin: 0 auto;
+          .time-between-outstorage {
+            color: black;
+            position: absolute;
+            top: 30.4%;
+          }
+          > div {
+            position: absolute;
+            top: 14%;
           }
         }
       }
@@ -287,18 +316,24 @@ export default {
         }
       }
       .content-middle-list {
-        height: 68vh;
         overflow: auto;
         .content-middle-list-item {
           position: relative;
           box-sizing: border-box;
-          padding: 10px 10px;
-          height: 140px;
+          padding: 20px 10px;
+          height: auto;
+          margin: 0 auto;
+          height: 150px;
+          background: #fff;
+          margin-bottom: 20px;
+          border-radius: 8px;
+          box-shadow: 0 2.5px 12px 4px #d1d1d1;
           .bottom-border-1px(#d3d3d3);
           .change-btn-position {
             position: absolute;
-            top: 30px;
-            left: 10px;
+            top: 80px;
+            right: 10px;
+            z-index: 1000;
             /deep/ .van-icon {
               background: @color-theme;
               border-color: @color-theme
@@ -307,7 +342,6 @@ export default {
           .list-item {
             position: relative;
             height: 100%;
-            margin-left: 30px;
             .list-item-left {
               position: absolute;
               top: 0;
@@ -335,6 +369,7 @@ export default {
               margin-top: 12px;
               p {
                 margin-top: 12px;
+                text-align: left;
                 &:first-child {
                   margin-top: 0
                 }

@@ -7,19 +7,26 @@
     <div class="content-middle">
       <loading :isShow="showLoadingHint"></loading>
       <div class="content-middle-top">
-        <van-field v-model="startTime" placeholder="开始日期" readonly="readonly" @click="startTimePop = true"/>
+        <div class="content-middle-top-content">
+          <span class="time-between">至</span>
+          <div style="left:0">
+            <van-field v-model="startTime" placeholder="开始日期" readonly="readonly" @click="startTimePop = true" right-icon="newspaper-o"/>
+          </div>
+          <div style="right:0">
+            <van-field v-model="endTime" placeholder="结束日期" readonly="readonly" @click="endTimePop = true" right-icon="newspaper-o"/>
+          </div>
+          <p class="middle-top-search" v-show="false">
+            <van-button type="info" size="small">搜索</van-button>
+          </p>
+        </div>
         <van-popup v-model="startTimePop" label="离开时间" position="bottom" :overlay="true"> 
           <van-datetime-picker  v-model="currentDateStart"  type="date"  :min-date="minDateStart"
           @cancel="startTimePop = false"  @confirm="startTimePop = false"  @change="startTimeChange"/>
         </van-popup>
-        <van-field v-model="endTime" placeholder="结束日期" readonly="readonly" @click="endTimePop = true"/>
         <van-popup v-model="endTimePop" label="离开时间" position="bottom" :overlay="true"> 
           <van-datetime-picker  v-model="currentDateEnd"  type="date"  :min-date="minDateEnd"
           @cancel="endTimePop = false"  @confirm="endTimePop = false"  @change="endTimeChange"/>
         </van-popup>
-        <p class="middle-top-search" v-show="false">
-          <van-button type="info" size="small">搜索</van-button>
-        </p>
       </div>
       <van-tabs v-model="activeName" @click="onClickTab">
         <van-tab name="0">
@@ -27,7 +34,7 @@
             <span class="title">未入库</span>
             <span class="right-sign sign-not-in" v-show="currentIndex == 0">{{signNotIn == '' ? 0 : signNotIn}}</span>
           </div>
-          <div class="content-middle-list">
+          <div class="content-middle-list content-middle-list-warning">
             <div class="content-middle-list-item not-inStorage" v-for="item in notInStorageList" @click="skipDetail(item)">
               <div class="list-item">
                 <p class="list-item-left">批次: {{item.batchNumber}}</p>
@@ -47,7 +54,7 @@
             <span class="title">已入库</span>
             <span class="right-sign sign-in" v-show="currentIndex == 1">{{signIn == '' ? 0 : signIn}}</span>
           </div>
-          <div class="content-middle-list">
+          <div class="content-middle-list content-middle-list-warning">
             <div class="content-middle-list-item inStorage" v-for="item in inStorageList" @click="skipDetail(item)">
               <div class="list-item">
                 <p class="list-item-left">批次: {{item.batchNumber}}</p>
@@ -68,7 +75,7 @@
             <span class="title">已出库</span>
             <span class="right-sign sign-out" v-show="currentIndex == 2">{{signOut == '' ? 0 : signOut}}</span>
           </div>
-           <div class="content-middle-list">
+           <div class="content-middle-list content-middle-list-warning">
             <div class="content-middle-list-item out-storage" v-for="item in outStorageList" @click="skipDetail(item)">
               <div class="list-item">
                 <p class="list-item-left">批次: {{item.batchNumber}}</p>
@@ -94,7 +101,7 @@
             <span class="title">已完成</span>
             <span class="right-sign sign-finish" v-show="currentIndex == 3">{{signFinish == '' ? 0 : signFinish}}</span>
           </div>
-          <div class="content-middle-list">
+          <div class="content-middle-list content-middle-list-warning">
             <div class="content-middle-list-item in-finished" v-for="item in finishList" @click="skipDetail(item)">
               <div class="list-item">
                 <p class="list-item-left">批次: {{item.batchNumber}}</p>
@@ -452,11 +459,18 @@ export default {
         }
       }
       .content-middle-top {
-        position: relative;
+        background: #fff;
+        margin-top: 3%;
+        height: 52px;
+        box-shadow: 0px 1px 3px 1px #e4e4e4,  /*下边阴影*/
+          0px -1px 3px 0px #e4e4e4;   /*上边阴影*/
         /deep/ .van-cell {
-          width: 48%;
+          width: 100%;
           display: inline-block;
-          padding: 10px 24px
+          padding: 10px 24px;
+          border: 1px solid #d8d5d5;
+          border-radius: 4px;
+          line-height: 0;
         }
         .middle-top-search {
           position: absolute;
@@ -467,6 +481,22 @@ export default {
             border-color: @color-theme
           }
         }
+        .content-middle-top-content {
+          position: relative;
+          height: 100%;
+          width: 98%;
+          margin: 0 auto;
+          .time-between {
+            color: black;
+            position: absolute;
+            top: 30.4%;
+          }
+          > div {
+            width: 44%;
+            position: absolute;
+            top: 14%;
+          }
+        }
       }
       /deep/ .van-tabs {
         .right-sign {
@@ -474,14 +504,22 @@ export default {
         }
       }
       .content-middle-list {
-        height: 76vh;
         overflow: auto;
+        margin-top: 10px;
         .content-middle-list-item {
           position: relative;
           box-sizing: border-box;
-          padding: 10px 10px;
+          padding: 20px 10px;
           height: 140px;
+          margin: 0 auto;
+          background: #fff;
+          margin-bottom: 20px;
+          border-radius: 8px;
+          box-shadow: 0 2.5px 12px 4px #d1d1d1;
           .bottom-border-1px(#d3d3d3);
+          &:last-child {
+            // margin-bottom: 0
+          }
            .list-item {
             position: relative;
             height: 100%;
@@ -512,6 +550,7 @@ export default {
               margin-top: 12px;
               p {
                 margin-top: 12px;
+                text-align: left;
                 &:first-child {
                   margin-top: 0
                 }
@@ -530,25 +569,25 @@ export default {
           }
         }
         .not-inStorage {
-          height: 110px;
+          height: 130px;
           .list-item-right {
             top: 74px !important
           }
         }
         .inStorage {
-          height: 136px;
+          height: 156px;
           .list-item-right {
             top: 98px !important
           }
         }
         .out-storage {
-          height: 184px;
+          height: 204px;
           .list-item-bottom {
             bottom: 5px !important
           }
         }
         .in-finished {
-          height: 164px;
+          height: 184px;
            .list-item-right {
             top: 126px !important
           }

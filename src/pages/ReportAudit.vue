@@ -7,10 +7,22 @@
     <div class="content-middle">
      <loading :isShow="showLoadingHint"></loading>
       <div class="content-middle-title">
-        <p class="day-height">今日医废总重量: {{dayTotalWeight}}kg</p>
-        <p class="week-height">一周医废总重量: {{weekTotalWeight}}kg</p>
-        <p class="month-height">一月医废总重量: {{monthTotalWeight}}kg</p>
-        <p class="year-height">一年医废总重量: {{yearTotalWeight}}kg</p>
+        <div class="day-height">
+          <p>今日医废总重量:</p>
+          <p>{{dayTotalWeight}}kg</p>
+        </div>
+        <div class="week-height">
+          <p>一周医废总重量: </p>
+          <p>{{weekTotalWeight}}kg</p>
+        </div>
+        <div class="month-height">
+         <p>一月医废总重量:</p> 
+         <p>{{monthTotalWeight}}kg</p>
+        </div>
+        <div class="year-height">
+          <p>一年医废总重量: </p>
+          <p>{{yearTotalWeight}}kg</p>
+        </div>
       </div>
       <div id="content-middle-dayData"></div>
       <div id="content-middle-weekData"></div>
@@ -122,27 +134,39 @@ export default {
         legend: {
           orient: 'vertical',
           left: 'left',
-          y: '22%',
+          y: '18%',
           data: ['感染性','损伤性','药物性','病理性','化学性','其它'],
           textStyle: {
             fontSize: 10
           }
         },
-        color: ['#7ff7eb','#3c94c2','#399ad1','#b06c83','#efd5a2','#afd6dd'], 
-        series : [
-          {
-            name: '医废类型',
-            type: 'pie',
-            radius : '55%',
-            center: ['67%', '58%'],
-            data: data,
-            itemStyle: {
-              emphasis: {
-                shadowBlur: 0,
-                shadowOffsetX: 0,
-                shadowColor: 'rgba(0, 0, 0, 0.5)'
+        color: ['#2b3fa2','#42c2c3','#277b9d','#f6b37f','#52ba87','#7890f0'], 
+        series: [
+        {
+          name:'医废类型',
+          type:'pie',
+          radius: ['67%', '50%'],
+          center: ['70%', '55%'],
+          avoidLabelOverlap: false,
+          label: {
+            normal: {
+              show: false,
+              position: 'center'
+            },
+            emphasis: {
+              show: true,
+              textStyle: {
+                fontSize: '30',
+                fontWeight: 'bold'
               }
             }
+          },
+          labelLine: {
+            normal: {
+              show: false
+            }
+          },
+          data: data
           }
         ]
       })
@@ -250,46 +274,40 @@ export default {
       overflow: auto;
       position: relative !important;
       .content-middle-title {
-        height: 15vh;
+        height: auto;
         padding-top: 14px;
         width: 97%;
         margin: 0 auto;
         text-align: center;
-        p {
+       > div {
           display: inline-block;
           vertical-align: middle;
-          width: 48%;
           border-radius: 4px;
-          background: green;
-          height: 6vh;
+          background: #fff;
+          height: 12vh;
           color: #fff;
           text-align: center;
           line-height: 6vh;
-          font-size: 12px
-        }
-        .day-height {
-          margin-right: 10px;
-          background: #f25858
-        }
-        .week-height {
-          background: #f2e189
-        }
-        .month-height {
-          margin-top: 10px;
-          margin-right: 10px;
-          background: #3ad675
-        }
-        .year-height {
-          margin-top: 10px;
-          background: #4096c9
+          font-size: 12px;
+          margin-bottom: 4%;
+          color: #333333;
+          box-shadow: 0 2.5px 12px 4px #d1d1d1;
+          p {
+            text-align: left;
+            padding-left:14px;
+            &:last-child {
+              font-weight: bold
+            }
+          }
         }
       }
       #content-middle-dayData,#content-middle-weekData,#content-middle-monthData,#content-middle-yearData {
         display: inline-block;
         vertical-align: middle;
         margin-top: 14px;
+        box-sizing: border-box;
         height: 28vh;
-        box-shadow: 0 0 5px #c1bcbc
+        box-shadow: 0 2.5px 12px 4px #d1d1d1;
       }
     }
   }

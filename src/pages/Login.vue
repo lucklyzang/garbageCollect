@@ -1,5 +1,6 @@
 <template>
   <div id="LoginBox">
+    <loading :isShow="showLoadingHint" textContent="登录中,请稍候····" textColor="rgb(29, 102, 113)"></loading>
     <div class="bg-box">
       <img :src="LoginBg" alt="">
     </div>
@@ -10,8 +11,8 @@
     </div>
     <div class="input-box" v-show="showAccountLogin" ref="inputBox">
       <van-cell-group>
-        <van-field left-icon="manager" label="用户名" placeholder="请输入用户名" type="text" v-model="username"></van-field>
-        <van-field left-icon="lock" label="密码" placeholder="请输入密码" type="password" v-model="password"></van-field>
+        <van-field label="用户名" placeholder="请输入用户名" type="text" v-model="username"></van-field>
+        <van-field label="密码" placeholder="请输入密码" type="password" v-model="password"></van-field>
       </van-cell-group>
       <van-cell-group>
         <van-button  @click.native="login">登录</van-button>
@@ -29,6 +30,16 @@
         </p>
       </div>
     </div>
+    <!-- pc端提示扫码枪扫码弹框 -->
+      <van-dialog
+      v-model="barCodeScannerShow"
+      title="请用扫码枪扫描对应二维码"
+      :close-on-click-overlay="true"
+      :close-on-popstate="true"
+      @confirm=""
+      @cancel=""
+      >
+    </van-dialog>
   </div>
 </template>
 
@@ -37,8 +48,12 @@ import {logIn} from '@/api/login.js'
 import { mapGetters, mapMutations } from 'vuex'
 import BgIcon from '@/components/images/bg-icon.png'
 import LoginBg from '@/components/images/login-bg.png'
-import { setStore, getStore } from '@/common/js/utils'
+import Loading from '../components/Loading'
+import { setStore, getStore, IsPC, scanCode} from '@/common/js/utils'
 export default {
+  components: {
+    Loading
+  },
   data () {
     return {
       username: this.loginName,
@@ -46,9 +61,12 @@ export default {
       BgIcon: BgIcon,
       LoginBg: LoginBg,
       showAccountLogin: true,
+      isPcCallBack: false,
       showSweepLogin: false,
+      showLoadingHint: false,
       sweepMsg: null,
       currentIndex: 0,
+      barCodeScannerShow: false,
       checkList: ['账号密码登录','扫码登录']
     };
   },
@@ -103,6 +121,9 @@ export default {
         this.$refs['bgIconWrapper'].style.cssText='top:10%' 
       }
     };
+
+    // 判断是否执行扫码枪方法
+    this.isExecute();
   },
 
   methods: {
@@ -115,16 +136,48 @@ export default {
 
     // 登录方式切换点击事件
     checkClick (item, index) {
-      this.currentIndex = index
+      this.currentIndex = index;
+      if (index == 0) {
+        this.isPcCallBack = false
+      }
+    },
+
+    // 是否执行扫码枪的绑定方法
+    isExecute () {
+      if (IsPC()) {
+        scanCode(this.barcodeScanner)
+      }
     },
 
     // 扫描二维码方法
     sweepPersonCode () {
-      window.android.scanQRcode()
+      if (IsPC()) {
+        this.isPcCallBack = true;
+        if (this.isPcCallBack) {
+          this.barCodeScannerShow = true;
+        }
+      } else {
+        window.android.scanQRcode()
+      }
     },
-    
-    // 扫码后的回调
+
+    // 摄像头扫码后的回调
     scanQRcodeCallback(code) {
+      // var code = decodeURIComponent(code);
+      this.processMethods (code)
+    },
+
+    //扫码枪扫码回调方法
+    barcodeScanner (code) {
+      var code = JSON.parse(code);
+      this.barCodeScannerShow = false;
+      if (this.isPcCallBack) {
+        this.processMethods (code)
+      }
+    },
+
+    // 扫码流程公共方法
+    processMethods (code) {
       if(code && Object.keys(code).length > 0) {
         if (code.hasOwnProperty('msg')) {
           if (code.msg) {
@@ -137,7 +190,8 @@ export default {
             }).then(() => {
               this.sweepPersonCode() 
             })
-          }
+          };
+          this.barCodeScannerShow = false
         } else {
           this.$dialog.alert({
           message: '请扫描正确的二维码',
@@ -145,7 +199,8 @@ export default {
           }).then(() => {
             this.sweepPersonCode() 
           })
-        }
+        };
+        this.barCodeScannerShow = false
       } else {
         this.$dialog.alert({
           message: '没有扫描到任何个人信息,请重新扫描',
@@ -154,11 +209,13 @@ export default {
           this.sweepPersonCode() 
         })
       }
+      this.barCodeScannerShow = false
     },
 
     // 账号密码登录方法
     login () {
       let loginMessage;
+      this.showLoadingHint = true;
       if (this.showAccountLogin) {
         loginMessage = {
           username: this.username,
@@ -192,6 +249,7 @@ export default {
             this.storeUserInfo(JSON.parse(getStore('userInfo')));
             this.$router.push({path:'/home'});
             this.changeTitleTxt({tit:'医废监测'});
+            this.isPcCallBack = false
           } else {
              this.$dialog.alert({
               message: `${res.data.msg}`,
@@ -199,9 +257,11 @@ export default {
             }).then(() => {
             });
           }
-        }
+        };
+        this.showLoadingHint = false
       })
       .catch((err) => {
+        this.showLoadingHint = false;
         this.$dialog.alert({
           message: `${err.message}`,
           closeOnPopstate: true
@@ -244,15 +304,13 @@ export default {
     .check-box {
       width: 100%;
       position: absolute;
-      top: 69%;
       .check-box-content {
-        width: 86%;
         margin: 0 auto;
         height: 20px;
         p {
-          color:#87dfee;
+          color: #434646;
           letter-spacing: 1px;
-          font-size: 12px;  /* px */
+          font-size: 12px;
           &:first-child {
             float: left
           }
@@ -302,12 +360,12 @@ export default {
         }
       }
       /deep/ .van-field:last-child {
-        margin-top: 20px
+        margin-top: 30px
       }
       /deep/ .van-cell {
-        border: 2px solid #87dfee;
-        background: transparent;
-        border-radius: 60px;
+        box-shadow: 0 1px 8px 1px #27b092;
+        background: #33dfb9;
+        border-radius: 6px;
         ::-webkit-input-placeholder {
           color: #fff;
         }
@@ -323,7 +381,8 @@ export default {
         .van-field__label {
           font-size: 12px;
           color: #fff;
-          padding-left: 6px
+          padding-left: 6px;
+          font-weight: bold;
         }
         /deep/ .van-field__left-icon {
           i {
@@ -334,10 +393,10 @@ export default {
       }
     }
     .van-cell-group {
-      width: 90%;
       margin: 0 auto;
       /deep/ .van-button {
         width: 100%;
+        box-shadow: 0 1px 8px 1px #27b092;
         margin-top: 35px;
         background: #fff;
         color: black;
@@ -347,6 +406,7 @@ export default {
         height: 46px;
         border: none;
         line-height: 35px;
+        font-weight: bold
       }
     }
     .bottom-title {
@@ -356,6 +416,14 @@ export default {
       text-align: center;
       font-size: 12px;
       color: #fff
+    }
+    .loading-hint {
+      /deep/.van-loading {
+        top: 90%;
+        .van-loading__text {
+          color: #198c87
+        }
+      } 
     }
   }
 </style>

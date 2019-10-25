@@ -9,27 +9,13 @@
         <span>{{this.getWorkerName}}</span>
       </div>
       <div class="content-middle-medail">
-        <van-panel title="联系方式">
-          <div>{{this.getWorkerPhone ? this.getWorkerPhone: '无'}}</div>
-        </van-panel>
-         <van-panel title="所属医院">
-          <div>{{this.getHospitial ? this.getHospitial: '无'}}</div>
-        </van-panel>
-         <van-panel title="车辆编号">
-          <div>{{this.getCarNum ? this.getCarNum: '无'}}</div>
-        </van-panel>
-         <van-panel title="身份类别">
-          <div>{{this.getCardType}}</div>
-        </van-panel>
-         <van-panel title="可收集垃圾类别">
-          <div>{{this.getRubbishType ? judgeRubbishType(this.getRubbishType) : '无'}}</div>
-        </van-panel>
-         <van-panel title="性别">
-          <div>{{this.getGender == 0 ? '男' : '女'}}</div>
-        </van-panel>
-         <van-panel title="生日">
-          <div>{{this.getBirthday ? this.getBirthday: '无'}}</div>
-        </van-panel>
+        <div>联系方式: {{this.getWorkerPhone ? this.getWorkerPhone: '无'}}</div>
+        <div>所属医院: {{this.getHospitial ? this.getHospitial: '无'}}</div>
+        <div>车辆编号: {{this.getCarNum ? this.getCarNum: '无'}}</div>
+        <div>身份类别: {{this.getCardType}}</div>
+        <div>可收集垃圾类别: {{this.getRubbishType ? judgeRubbishType(this.getRubbishType) : '无'}}</div>
+        <div>性别: {{this.getGender == 0 ? '男' : '女'}}</div>
+        <div>生日: {{this.getBirthday ? this.getBirthday: '无'}}</div>
       </div>
       <div class="content-bottom">
         <van-cell-group>
@@ -221,13 +207,13 @@ export default {
       .content-middle();
       .content-middle-top {
         margin-top: 10px;
+        text-align: left;
         padding: 10px;
-        background: #fff;
         span {
           display: inline-block;
           &:first-child {
-            width: 80px;
-            height: 80px;
+            width: 90px;
+            height: 90px;
             img {
               width: 100%;
               height: 100%;
@@ -236,8 +222,9 @@ export default {
           }
           &:last-child {
             margin-left: 10px;
-            font-size: 18px;
-            color: #797373
+            font-size: 19px;
+            color: #090909;
+            font-weight: bold;
           }
         }
       }
@@ -264,17 +251,17 @@ export default {
         }
       }
       .content-middle-medail {
-        height: 65vh;
+        height: 60vh;
         overflow: auto;
-        /deep/ .van-panel__header {
-          color: black;
-        }
-        /deep/ .van-panel__content {
-          padding-left: 14px;
-          font-size: 16px;
-          color: #38bdd0;
-          height: 30px;
-          line-height: 30px
+        padding: 10px;
+        div {
+          height: 40px;
+          color: #2f2f2f;
+          font-weight: bold;
+          line-height: 40px;
+          font-size: 13px;
+          text-align: left;
+          .bottom-border-1px(#dadbdd)
         }
       }
     }

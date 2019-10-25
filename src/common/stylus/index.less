@@ -10,44 +10,462 @@
 
 @media screen and (min-width: 1280px){
 
-  // 报表页面样式
+  // 报表页面可视化样式
   #content-middle-dayData,#content-middle-weekData,#content-middle-monthData,#content-middle-yearData {
-    width: 49%;
-    margin-right: 2px
+    width: 44%;
+    margin-right: 4%;
+    margin-bottom: 4%;
+    padding: 20px;
+    &:nth-of-type(2n) {
+      margin-right: 0
+    }
   };
 
+  // 报表页面标题样式
+  .content-middle-title {
+    > div {
+      width: 23%;
+      margin-right: 2%;
+      &:last-child {
+        margin-right:0
+      }
+    }
+  }
+
   // 首页菜单栏字体颜色
-  .content .content-middle .content-list .title-content {
-    font-size: 20px
+  .content .content-middle .content-list {
+    box-shadow: 0 2.5px 12px 4px #d1d1d1;
+    .title-content {
+      font-size: 15px;
+      width: auto;
+      margin-left: 8px;
+    }
+    .title-img {
+      margin-top: 8%;
+      width: 35px;
+      height: auto;
+      img {
+        vertical-align: middle;
+      }
+    }
+  }
+
+  //列表页页面样式
+  .content-middle-list {
+    height: 42vh;
+    overflow: auto;
+    padding-top: 8px;
+    .content-middle-list-item {
+      width: 46%;
+      display: inline-block;
+      margin-right: 20px !important;
+      &:nth-of-type(2n) {
+        margin-right: 0 !important;
+      }
+    }
+  }
+
+  //出库页样式
+  .content-middle-list-outStorage {
+    height: 53vh !important
+  }
+
+  //出库也顶部搜索按钮样式
+  .middle-top-search-outStorage {
+    right: -30px !important
+  }
+
+  //入库页面样式
+  .content-middle-list-inStorage {
+    height: 43vh !important
+  }
+
+  //打印页面
+  .content-middle-list-print {
+    height: 42vh !important
+  }
+
+  //搜集预警审核页面样式
+  .content-middle-list-warning {
+    height: 60vh !important;
+  }
+
+
+  .content-middle-top-content {
+    .time-between {
+      left: 48.7%;
+      font-size: 14px
+    }
+  }
+
+  // 出库页面'至'的位置
+  .content-middle-top-content {
+    .time-between-outstorage  {
+      left: 42.7%;
+      font-size: 14px
+    }
+    .left-time {
+      left: 0;
+      width: 40%;
+    }
+    .right-time {
+      right: 12%;
+      width: 40%;
+    }
+  }
+
+  .content-middle {
+    /deep/ .van-tabs {
+      .right-sign {
+        .repeat-sign(0)
+      }
+    }
+  }
+
+  // 审核页面数字说明样式
+   .content-middle {
+    /deep/ .van-tabs {
+      .sign-not-check {
+        .repeat-sign(-18px);
+        right: 18px !important
+      }
+      .sign-checked {
+        .repeat-sign(-18px);
+        right: 18px !important
+      }
+    }
+  }
+
+  // 登录页登录切换位置
+  .check-box {
+    top: 80% !important;
+    .check-box-content {
+      width: 40% !important
+    }
+  }
+
+  // 登录页输入按钮框宽度样式 
+  .van-cell-group {
+    width: 40% !important;
+  }
+
+  // 页面弹框样式
+  .van-dialog {
+    width: 40% !important
+  }
+
+   // 我的页面个人信息框高度样式
+  .content-middle-medail {
+    height: 46vh !important
+  }
+
+  // 部分页面头部日历栏宽度样式
+  .content-middle-top-content {
+    width: 58% !important;
   }
 };
 
 @media screen and (min-width: 813px) and (max-width: 1280px) {
 
-  // 报表页面样式
+  // 报表页面可视化样式
   #content-middle-dayData,#content-middle-weekData,#content-middle-monthData,#content-middle-yearData {
-    width: 49%;
-    margin-right: 2px
+    width: 44%;
+    margin-right: 4%;
+    margin-bottom: 4%;
+    padding: 20px;
+    &:nth-of-type(2n) {
+      margin-right: 0
+    }
   };
 
+  // 报表页面标题样式
+  .content-middle-title {
+    > div {
+      width: 23%;
+      margin-right: 2%;
+      &:last-child {
+        margin-right:0
+      }
+    }
+  }
+
   // 首页菜单栏字体颜色
-  .content .content-middle .content-list .title-content {
-    font-size: 20px
+  .content .content-middle .content-list {
+    border-radius: 4px;
+    box-shadow: 0 2.5px 12px 4px #d1d1d1;
+    .title-content {
+      font-size: 15px;
+      width: auto;
+      margin-left: 8px;
+    }
+    .title-img {
+      margin-top: 8%;
+      width: 35px;
+      height: auto;
+      img {
+        vertical-align: middle
+      }
+    }
+  }
+
+  // 列表页面样式
+  .content-middle-list {
+    height: 42vh;
+    overflow: auto;
+    padding-top: 8px;
+    .content-middle-list-item {
+      width: 46%;
+      display: inline-block;
+      margin-right: 20px !important;
+      &:nth-of-type(2n) {
+        margin-right: 0 !important;
+      }
+    }
+  }
+
+  //出库页样式
+  .content-middle-list-outStorage {
+    height: 53vh !important
+  }
+
+  //出库也顶部搜索按钮样式
+   .middle-top-search-outStorage {
+    right: -30px !important
+  }
+
+  //入库页面样式
+  .content-middle-list-inStorage {
+    height: 43vh !important
+  }
+
+  //打印页面
+  .content-middle-list-print {
+    height: 42vh !important
+  }
+
+  //搜集预警审核页面样式
+  .content-middle-list-warning {
+    height: 60vh !important;
+  }
+
+  .content-middle-top-content {
+    .time-between {
+      left: 48.7%;
+      font-size: 14px
+    }
+  }
+
+  // 出库页面'至'的位置
+  .content-middle-top-content {
+    .time-between-outstorage  {
+      left: 42.7%;
+      font-size: 14px
+    }
+    .left-time {
+      left: 0;
+      width: 40%
+    }
+    .right-time {
+      right: 12%;
+      width: 40%
+    }
+  }
+
+  .content-middle {
+    /deep/ .van-tabs {
+      .right-sign {
+       .repeat-sign(0)
+      }
+    }
+  }
+
+   // 审核页面数字说明样式
+   .content-middle {
+    /deep/ .van-tabs {
+      .sign-not-check {
+        .repeat-sign(-18px);
+        right: 18px !important
+      }
+      .sign-checked {
+        .repeat-sign(-18px);
+        right: 18px !important
+      }
+    }
+  }
+
+  // 登录页登录切换位置
+   .check-box {
+    top: 80% !important;
+    .check-box-content {
+      width: 40% !important
+    }
+  }
+
+  // 登录页输入按钮框宽度样式 
+  .van-cell-group {
+    width: 40% !important;
+  }
+
+  // 页面弹框样式
+   .van-dialog {
+    width: 40% !important
+  }
+
+  // 我的页面个人信息框高度样式
+  .content-middle-medail {
+    height: 46vh !important
+  }
+
+  // 部分页面头部日历栏宽度样式
+  .content-middle-top-content {
+    width: 58% !important;
   }
 };
 
 /** 
- * pc端样式
+ * 移动端端样式
 */ 
 @media screen and (max-width: 813px) {
 
-  // 报表页面样式
+  // 报表页面可视化样式
   #content-middle-dayData,#content-middle-weekData,#content-middle-monthData,#content-middle-yearData {
     width: 97%;
+    padding: 0;
   };
 
+  // 报表页面标题样式
+  .content-middle-title {
+    > div {
+      width: 46%;
+      margin-right: 4%;
+      &:nth-of-type(2n) {
+        margin-right: 0
+      }
+    }
+  }
+
   // 首页菜单栏字体颜色
-  .content .content-middle .content-list .title-content {
-    font-size: 14px
+  .content .content-middle .content-list {
+    box-shadow: 0 1.5px 6px 2px #d1d1d1;
+    .title-content {
+      font-size: 14px;
+      width: 100%;
+      margin-top: 10px;
+    }
+    .title-img {
+      width: 30px;
+      height: 31px;
+    }
+  }
+
+  // 列表页面样式
+  .content-middle-list {
+    height: 73vh;
+    overflow: auto;
+    padding-top: 8px;
+    .content-middle-list-item {
+      width: 96%;
+    }
+  }
+
+  //出库页样式
+  .content-middle-list-outStorage {
+    height: 65vh !important
+  }
+
+  // 出库界面时间框调整
+  .content-middle-top-outStorage {
+    /deep/ .van-cell {
+      padding: 10px 12px !important;
+    }
+  }
+
+  //出库也顶部搜索按钮样式
+  .middle-top-search-outStorage {
+    right: 0 !important
+  }
+
+  //入库页面样式
+  .content-middle-list-inStorage {
+    height: 55vh !important
+  }
+
+  //打印页面
+  .content-middle-list-print {
+    height: 58vh !important
+  }
+
+  //搜集预警审核页面样式
+  .content-middle-list-warning {
+    height: 73vh !important;
+  }
+
+  .content-middle-top-content {
+    .time-between {
+      left: 48.5%;
+      font-size: 14px
+    }
+  }
+
+  // 出库页面'至'的位置
+  .content-middle-top-content {
+    .time-between-outstorage  {
+      left: 38.4%;
+      font-size: 14px
+    }
+    .left-time {
+      left: 0;
+      width: 36%;
+    }
+    .right-time {
+      left: 45%;
+      width: 36%;
+    }
+  }
+
+  .content-middle {
+    /deep/ .van-tabs {
+      .right-sign {
+        .repeat-sign(-18px);
+        right: -18px !important
+      }
+    }
+  }
+
+  // 审核页面数字说明样式
+  .content-middle {
+    /deep/ .van-tabs {
+      .sign-not-check {
+        .repeat-sign(-18px);
+        right: 0 !important
+      }
+      .sign-checked {
+        .repeat-sign(-18px);
+        right: 0 !important
+      }
+    }
+  }
+
+  // 登录页登录切换位置
+  .check-box {
+    top: 70%;
+    .check-box-content {
+      width: 86% !important;
+    }
+  }
+
+  // 登录页输入按钮框宽度样式 
+  .van-cell-group {
+    width: 90%;
+  }
+
+  // 我的页面个人信息框高度样式
+  .content-middle-medail {
+    height: 60vh !important
+  }
+
+  // 部分页面头部日历栏宽度样式
+  .content-middle-top-content {
+    width: 98% !important;
   }
 }

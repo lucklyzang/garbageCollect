@@ -3,7 +3,7 @@
 
 // 颜色定义规范
 @color-background: #f4f4f4;  //背景色
-@color-theme: #38bdd0;  //主题颜色
+@color-theme: #33dfb7;  //主题颜色
 
 //字体定义规范
 @font-size-small-s: 10px;
@@ -22,20 +22,19 @@
 @card-theme-margin: 10px;
 
 //重复的样式
-.repeat-sign (@left: 70px) {
+.repeat-sign (@left:0) {
   transform: scale(.5);
   transform-origin: 0% top;
-  background: #38bdd0;
+  background: #33dfb7;
   color: #fff;
   width: 40px;
   height: 40px;
   display: inline-block;
   position: absolute;
   top: 4px;
-  left: @left;
+  right: @left;
   border-radius: 50%;
   font-size: 20px;
-  text-align: center;
   line-height: 40px;
   text-align: center;
   .no-wrap()
@@ -47,6 +46,6 @@
   width: 100%;
   height: @height;
   margin-top: @margin-top;
-  background: #fff;
+  background: #f8f9fd;
   text-align: center
 }

@@ -138,6 +138,12 @@ export default {
         margin-top: 80px;
         height: 80vh;
         overflow: auto;
+        /deep/ .van-cell-group {
+          background: none;
+          .van-cell {
+            background: none;
+          }
+        }
       }
       .content-middle-bottom {
          width: 100%;

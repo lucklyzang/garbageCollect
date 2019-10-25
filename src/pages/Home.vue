@@ -17,7 +17,7 @@
         </div>
       </div>
     </div>
-    <!-- <FooterBottom></FooterBottom> -->
+    <!-- <FooterBottom></FooterBottom>-->
   </div>
 </template>
 <script>
@@ -276,6 +276,7 @@
     width: 100%;
     height: 100%;
     background: #fff;
+    overflow: auto;
     .content-header {
       width: 100%;
       height: auto;
@@ -286,32 +287,19 @@
       }
     }
     .content-middle {
-      width: 100%;
-      display: flex;
-      flex-direction: row;
-      flex-wrap: wrap;
-      margin-top: 10px;
+      width: 96%;
+      margin: 0 auto;
+      margin-top: 20px;
       .content-list {
-        // flex-direction: column;
         width: 22%;
-        height: 100px;
-        padding-top: 20px;
+        height: 80px;
+        padding-top: 10px;
         text-align: center;
         box-sizing: border-box;
-        margin: 4px 4px;
-        box-shadow:   /*上边阴影  红色*/
-
-                -1px 0px 0px 0px #aeaeae,   /*左边阴影  绿色*/
-
-                1px 0px 0px 0px #aeaeae,    /*右边阴影  蓝色*/
-
-                0px 1px 0px 0px #aeaeae;    /*下边阴影  黄色*/
-        // display: flex;
-        // align-items: center;
-        // justify-content: center;
+        margin-right: 4%;
+        margin-bottom: 4%;
+        display: inline-block;
         .title-img {
-          width: 30px;
-          height: 31px;
           display: inline-block;
           img {
             width: 100%;
@@ -319,10 +307,18 @@
           }
         }
         .title-content {
-          width: 100%;
-          margin-top: 7px;
           display: inline-block;
-          color: #515151;
+          color: black;
+        }
+      }
+      div {
+        &:nth-of-type(4n) {
+          margin-right: 0;
+          vertical-align: top;
+        }
+        &:last-child {
+          margin-right: 0;
+          vertical-align: top;
         }
       }
     }

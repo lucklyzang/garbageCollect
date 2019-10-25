@@ -7,12 +7,19 @@
     <div class="content-middle">
       <loading :isShow="showLoadingHint"></loading>
       <div class="content-middle-top">
-        <van-field v-model="startTime" placeholder="开始日期" readonly="readonly" @click="startTimePop = true"/>
+        <div class="content-middle-top-content">
+          <span class="time-between">至</span>
+          <div style="left:0">
+            <van-field v-model="startTime" placeholder="开始日期" readonly="readonly" @click="startTimePop = true" right-icon="newspaper-o"/>
+          </div>
+          <div style="right:0">
+            <van-field v-model="endTime" placeholder="结束日期" readonly="readonly" @click="endTimePop = true" right-icon="newspaper-o"/>
+          </div>
+        </div>
         <van-popup v-model="startTimePop" label="离开时间" position="bottom" :overlay="true"> 
           <van-datetime-picker  v-model="currentDateStart"  type="date"  :min-date="minDateStart"
           @cancel="startTimePop = false"  @confirm="startTimePop = false"  @change="startTimeChange"/>
         </van-popup>
-        <van-field v-model="endTime" placeholder="结束日期" readonly="readonly" @click="endTimePop = true"/>
         <van-popup v-model="endTimePop" label="离开时间" position="bottom" :overlay="true"> 
           <van-datetime-picker  v-model="currentDateEnd"  type="date"  :min-date="minDateEnd"
           @cancel="endTimePop = false"  @confirm="endTimePop = false"  @change="endTimeChange"/>
@@ -25,7 +32,7 @@
             <span class="title">全部</span>
             <span class="right-sign sign-all" v-show="currentIndex == 0">{{signAll == '' ? 0 : signAll}}</span>
           </div>
-          <div class="content-middle-list">
+          <div class="content-middle-list content-middle-list-warning">
             <div class="content-middle-list-item all-type" v-for="item in overtimeList">
               <div class="list-item">
                 <p class="list-item-left">
@@ -51,7 +58,7 @@
             <span class="title">待处理</span>
             <span class="right-sign sign-deal" v-show="currentIndex == 1">{{signDeal =='' ? 0 : signDeal}}</span>
           </div>
-          <div class="content-middle-list">
+          <div class="content-middle-list content-middle-list-warning">
             <div class="content-middle-list-item await-conduct" v-for="item in notExamineList" @click="skipHandlePage(item)">
               <div class="list-item">
                 <p class="list-item-left">
@@ -77,7 +84,7 @@
             <span class="title">待审核</span>
             <span class="right-sign sign-check" v-show="currentIndex == 2">{{signCheck == '' ? 0 : signCheck}}</span>
           </div>
-          <div class="content-middle-list">
+          <div class="content-middle-list content-middle-list-warning">
             <div class="content-middle-list-item await-check" v-for="item in finishList">
               <div class="list-item">
                 <p class="list-item-left">
@@ -106,7 +113,7 @@
             <span class="title">已完成</span>
             <span class="right-sign sign-finish" v-show="currentIndex == 3">{{signFinish == '' ? 0 : signFinish}}</span>
           </div>
-          <div class="content-middle-list">
+          <div class="content-middle-list content-middle-list-warning">
             <div class="content-middle-list-item finished" v-for="item in unFinishList">
               <div class="list-item">
                 <p class="list-item-left">
@@ -462,10 +469,18 @@ export default {
         }
       }
       .content-middle-top {
-        position: relative;
+        background: #fff;
+        margin-top: 3%;
+        height: 52px;
+        box-shadow: 0px 1px 3px 1px #e4e4e4,  /*下边阴影*/
+          0px -1px 3px 0px #e4e4e4;   /*上边阴影*/
         /deep/ .van-cell {
-          width: 40%;
-          display: inline-block
+          width: 100%;
+          display: inline-block;
+          padding: 10px 24px;
+          border: 1px solid #d8d5d5;
+          border-radius: 4px;
+          line-height: 0;
         }
         .middle-top-search {
           position: absolute;
@@ -476,13 +491,26 @@ export default {
             border-color: @color-theme
           }
         }
+        .content-middle-top-content {
+          position: relative;
+          height: 100%;
+          width: 98%;
+          margin: 0 auto;
+          .time-between {
+            color: black;
+            position: absolute;
+            top: 30.4%;
+          }
+          > div {
+            width: 44%;
+            position: absolute;
+            top: 14%;
+          }
+        }
       }
       /deep/ .van-tabs {
         .right-sign {
          .repeat-sign
-        }
-        .sign-all {
-          left: 64px
         }
       }
       .changeBtn {
@@ -496,11 +524,17 @@ export default {
         }
       }
       .content-middle-list {
-        height: 76vh;
         overflow: auto;
        .content-middle-list-item {
-          padding: 14px;
-          height: 140px;
+          position: relative;
+          box-sizing: border-box;
+          padding: 20px 10px;
+          height: auto;
+          margin: 0 auto;
+          background: #fff;
+          margin-bottom: 20px;
+          border-radius: 8px;
+          box-shadow: 0 2.5px 12px 4px #d1d1d1;
           .bottom-border-1px(#d3d3d3);
           .list-item {
             position: relative;
@@ -515,7 +549,7 @@ export default {
             }
             .list-item-right {
               position: absolute;
-              top: 4px;
+              top: 18px;
               right: 0;
               color: #bdbdbd;
               font-size: 12px;
@@ -532,6 +566,7 @@ export default {
               margin-top: 12px;
               p {
                 margin-top: 12px;
+                text-align: left;
                 &:first-child {
                   margin-top: 0
                 }
@@ -550,16 +585,16 @@ export default {
           }
         }
         .await-check {
-          height: 156px
+          height: 176px
         }
         .await-conduct {
-          height: 90px
+          height: 110px
         }
         .finished {
-          height: 156px
+          height: 176px
         }
         .all-type {
-          height: 90px
+          height: 110px
         }
       }
       .btn-group {

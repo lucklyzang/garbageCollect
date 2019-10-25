@@ -23,7 +23,7 @@ export default {
     },
     textColor : {
       type: String,
-      default: '#38bdd0'
+      default: '#33dfb7'
     },
     isShow: {
       type: Boolean,

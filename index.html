@@ -29,8 +29,53 @@
           url: ''
         };
         window.history.pushState(state,state.title,state.url);
-      }
-      pushHistory()
+      };
+
+      function scanCode(callback){
+        var code = '';
+        var lastTime, nextTime;
+        var lastCode, nextCode;
+        var that = this;
+        window.document.onkeypress = function(event) {
+          if (window.event) { // IE
+              nextCode = event.key;
+          } else if (event.which) { // Netscape/Firefox/Opera
+              nextCode = event.which
+          }
+          if (event.which === 13) {
+            if (code.length < 3) {// 手动输入的时间不会让code的长度大于2，所以这里只会对扫码枪有
+                return
+            }
+            code = decodeURIComponent(code);
+            console.log('扫码结束: ' + code);
+            callback(code);
+            //TODO
+            code = '';
+            lastCode = '';
+            lastTime = '';
+            return
+          }
+          nextTime = new Date().getTime();
+          if (!lastTime && !lastCode) {
+            console.log('扫码开始。。。');
+            code += event.key;
+          }
+
+          if (lastCode && lastTime && nextTime - lastTime > 500) { // 当扫码前有keypress事件时,防止首字缺失
+            console.log('防止首字缺失。。。');
+            code = event.key
+          } else if (lastCode && lastTime) {
+            console.log('扫码中。。。');
+            code += event.key
+          }
+          lastCode = nextCode;
+          lastTime = nextTime;
+        }
+      };
+      pushHistory();
+      // window.onload = function (){
+      //   scanCode()
+      // }
     </script>      
   </head>
   <body>

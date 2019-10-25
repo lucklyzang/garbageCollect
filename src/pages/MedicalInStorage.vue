@@ -10,7 +10,7 @@
         <span class="text-left">{{hospitalName}}</span>
         <span class="text-right"></span>
       </p>
-      <div class="content-middle-list">
+      <div class="content-middle-list content-middle-list-inStorage">
         <div class="content-middle-list-item" v-for="item in classList">
           <div class="list-item">
             <p class="list-item-left">医废类型: {{item.wasteName}}</p>
@@ -30,18 +30,13 @@
         </div>
       </div>
       <!-- stageMsg -->
-      <div class="stage-point">
-        <van-panel v-show="stageMsg" title="暂存点信息" desc="" status="">
-          <div>
-            <!-- <p>{{stagingMsg.number}}</p> -->
-            <!-- <p>{{stagingMsg.proId}}</p> -->
-            <p>名称: {{stagingMsg.name}}</p>
-            <!-- <p>{{stagingMsg.id}}</p> -->
-            <p>医院: {{stagingMsg.proName}}</p>
-            <!-- <p>{{stagingMsg.type}}</p> -->
-            <p>房间号: {{stagingMsg.depName}}</p>
-          </div>
-        </van-panel>
+      <div class="stage-point" v-show="stageMsg">
+        <div>
+          <p>暂存点信息: </p>
+          <p>名称: {{stagingMsg.name}}</p>
+          <p>医院: {{stagingMsg.proName}}</p>
+          <p>房间号: {{stagingMsg.depName}}</p>
+        </div>
       </div>
       <div class="btn-group">
         <p v-show="inStoageBtn" class="inStoageBtn">
@@ -53,6 +48,16 @@
       </div>
     </div>
     <!-- <FooterBottom></FooterBottom> -->
+    <!-- pc端提示扫码枪扫码弹框 -->
+    <van-dialog
+      v-model="barCodeScannerShow"
+      title="请用扫码枪扫描对应二维码"
+      :close-on-click-overlay="true"
+      :close-on-popstate="true"
+      @confirm=""
+      @cancel=""
+      >
+    </van-dialog>
   </div>
 </template>
 
@@ -62,6 +67,7 @@ import FooterBottom from '../components/FooterBottom'
 import Loading from '../components/Loading'
 import { mapGetters, mapMutations } from 'vuex'
 import {queryBatch,judgeSummaryPoint,inStorageAdd} from '../api/rubbishCollect.js'
+import {IsPC, scanCode} from '@/common/js/utils'
 export default {
    components:{
     HeaderTop,
@@ -75,7 +81,9 @@ export default {
       classList: [],
       hospitalName: '',
       sureBtnShow: false,
+      barCodeScannerShow: false,
       inStoageBtn: true,
+      isPcCallBack: false,
       stageMsg: false,
       showLoadingHint: false,
       storeId: 0, 
@@ -109,14 +117,25 @@ export default {
     window['scanQRcodeCallback'] = (code) => {
       me.scanQRcodeCallback(code);
     };
+
+    // 判断是否执行扫码枪方法
+    this.isExecute();
   },
+
   methods: {
     ...mapMutations([
       'changeTitleTxt', 
     ]),
     // 扫描二维码方法
     sweepStage () {
-      window.android.scanQRcode()
+      if (IsPC()) {
+        this.isPcCallBack = true;
+        if (this.isPcCallBack) {
+          this.barCodeScannerShow = true
+        }
+      } else {
+        window.android.scanQRcode()
+      }
     },
     // 返回上一页
     backTo () {
@@ -128,16 +147,39 @@ export default {
       this.$router.push({path: 'myInfo'});
       this.changeTitleTxt({tit:'我的'})
     },
-    
-    // 扫码后的回调
-    scanQRcodeCallback (code) {
-      if (code && Object.keys(code).length > 0) {
+
+    // 是否执行扫码枪的绑定方法
+    isExecute () {
+      if (IsPC()) {
+        scanCode(this.barcodeScanner)
+      }
+    },
+
+     // 摄像头扫码后的回调
+    scanQRcodeCallback(code) {
+      // var code = decodeURIComponent(code);
+      this.processMethods (code)
+    },
+
+    //扫码枪扫码回调方法
+    barcodeScanner (code) {
+      var code = JSON.parse(code);
+      this.barCodeScannerShow = false;
+      if (this.isPcCallBack) {
+        this.processMethods (code)
+      }
+    },
+
+    // 扫码逻辑公共方法
+    processMethods (code) {
+       if (code && Object.keys(code).length > 0) {
         if (code.name && code.proName && code.depName && code.type && code.proId && code.number) {
           judgeSummaryPoint(code.type,code.number).then((res) => {
             if (res && res.data.code == 200) {
               this.stageMsg = true;
               this.sureBtnShow = true;
               this.inStoageBtn = false;
+              this.isPcCallBack = false;
               this.stagingMsg = code;
               this.storeId = code.id;
               this.storeNumber = code.number;
@@ -150,9 +192,11 @@ export default {
                 }).then(() => {
                 this.medicalInStoragr()
               });
-            }
+            };
+            this.barCodeScannerShow = false
           })
           .catch((err)=>{
+            this.barCodeScannerShow = false;
             this.$dialog.alert({
               message: `${err.message}`,
               closeOnPopstate: true
@@ -162,12 +206,13 @@ export default {
           })
         } else {
           this.$dialog.alert({
-            message: '当前扫描收集信息不全,请重试',
+            message: '当前扫描流程与预期不符,请扫码正确的二维码',
             closeOnPopstate: true
           }).then(() => {
             this.medicalInStoragr();
           })
-        }
+        };
+        this.barCodeScannerShow = false
       } else {
         this.$dialog.alert({
           message: '当前扫描没有收集到任何暂存点信息,请重新扫描',
@@ -175,8 +220,10 @@ export default {
         }).then(() => {
           this.medicalInStoragr();
         })
-      }
+      };
+      this.barCodeScannerShow = false
     },
+
     //扫描医废入库暂存点二维码
     medicalInStoragr () {
       // if (!this.batchNumber && !this.userInfo.batchNumber) {
@@ -283,9 +330,9 @@ export default {
     .content-middle {
       .content-middle();
       .content-middle-top {
-        background: #7ad0e4;
+        background: #7ae4cc;
         height: 26px;
-        color: #bafbf5;
+        color: #bafbd8;
         position: relative;
         .text-left {
           position: absolute;
@@ -299,11 +346,18 @@ export default {
         }
       }
       .content-middle-list {
-        height: 55vh;
         overflow: auto;
         .content-middle-list-item {
-          padding: 14px;
-          height: 140px;
+          position: relative;
+          box-sizing: border-box;
+          padding: 20px 10px;
+          height: auto;
+          margin: 0 auto;
+          height: 180px;
+          background: #fff;
+          margin-bottom: 20px;
+          border-radius: 8px;
+          box-shadow: 0 2.5px 12px 4px #d1d1d1;
           .bottom-border-1px(#d3d3d3);
           .list-item {
             position: relative;
@@ -335,6 +389,7 @@ export default {
               margin-top: 12px;
               p {
                 margin-top: 12px;
+                text-align: left;
                 &:first-child {
                   margin-top: 0
                 }
@@ -357,16 +412,29 @@ export default {
         position: fixed;
         width: 100%;
         left: 0;
-        bottom: 80px;
-        div {
+        bottom: 60px;
+         > div {
+          height: auto;
+          margin: 0 auto;
+          width: 90%;
+          background: #fff;
+          padding: 8px;
+          box-shadow: 0 2.5px 12px 4px #d1d1d1;
+          border-radius: 8px;
           p {
-            line-height: 20px;
-            padding-left: 14px;
-            font-size: 12px;
-            color: @color-theme;
+            line-height: 30px;
+            text-align: left;
+            font-size: 14px;
+            color: #646464;
+            height: auto
+          }
+          p:first-child {
+              color: #313131;
+              font-weight: bold;
+              letter-spacing: 2px
+            }
           }
         }
-      }
       .btn-group {
         width: 100%;
         position: fixed;

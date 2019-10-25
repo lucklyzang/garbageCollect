@@ -6,46 +6,33 @@
       </HeaderTop>
       <div class="content">
         <div class="content-header">
-          <div class="progress-title">
-            <span v-for="item in progressTitleList">
-              {{item}}
-            </span>
-          </div>
-          <common-progress :percentage="currentPercentage" class="progress-style"></common-progress>
+          <ProgressStyle :percentage="currentPercentage"></ProgressStyle>
         </div>
         <div class="content-middle">
-          <van-panel v-if="showAstOfficeShow" title="科室信息" desc="" status="">
-            <div class="ast-office">
-                <p>科室: {{judgeFlowValue == 0 ? keshiCode[keshiCode.length-1].name : extraKeshiMsg.name ? extraKeshiMsg.name : ''}}</p>
-                <p>医院: {{judgeFlowValue == 0 ? keshiCode[keshiCode.length-1].proName : extraKeshiMsg.proName ? extraKeshiMsg.proName : ''}}</p>
-                <p>房间: {{judgeFlowValue == 0 ? keshiCode[keshiCode.length-1].depName : extraKeshiMsg.depName ? extraKeshiMsg.depName : ''}}</p>
-            </div>
-          </van-panel>
-          <van-panel v-if="showBagCodeShow" title="医废信息" desc="" status="">
-            <div class="bag-code">
-              <p>医废类型: {{judgeFlowValue == 1 ? lajiCode[lajiCode.length-1].wasteName : extraLajiMsg ? extraLajiMsg.wasteName : ''}}</p>
-              <p>医院: {{judgeFlowValue == 1 ? lajiCode[lajiCode.length-1].proName : extraLajiMsg ? extraLajiMsg.proName : ''}}</p>
-              <p>房间: {{judgeFlowValue == 1 ? lajiCode[lajiCode.length-1].depName : extraLajiMsg ? extraLajiMsg.depName : ''}}</p>
-              <p>医废编号: {{judgeFlowValue == 1 ? lajiCode[lajiCode.length-1].barCode : extraLajiMsg ? extraLajiMsg.barCode : ''}}</p>
-            </div>
-          </van-panel>
-          <van-panel v-if="showBluetoothWeighShow" title="医废重量" desc="" status="">
-            <div class="bluetooth-weigh">
-              <p>重量: {{judgeFlowValue == 2 ? lanyaCz[lanyaCz.length-1] ? lanyaCz[lanyaCz.length-1]: '' : extraLyczMsg}}</p>
-            </div>
-          </van-panel>
-          <van-panel v-if="manualWeighShow" title="医废重量" desc="" status="">
+          <div class="ast-office" v-if="showAstOfficeShow">
+            <p>科室: {{judgeFlowValue == 0 ? keshiCode[keshiCode.length-1].name : extraKeshiMsg.name ? extraKeshiMsg.name : ''}}</p>
+            <p>医院: {{judgeFlowValue == 0 ? keshiCode[keshiCode.length-1].proName : extraKeshiMsg.proName ? extraKeshiMsg.proName : ''}}</p>
+            <p>房间: {{judgeFlowValue == 0 ? keshiCode[keshiCode.length-1].depName : extraKeshiMsg.depName ? extraKeshiMsg.depName : ''}}</p>
+          </div>
+          <div class="bag-code" v-if="showBagCodeShow">
+            <p>医废类型: {{judgeFlowValue == 1 ? lajiCode[lajiCode.length-1].wasteName : extraLajiMsg ? extraLajiMsg.wasteName : ''}}</p>
+            <p>医院: {{judgeFlowValue == 1 ? lajiCode[lajiCode.length-1].proName : extraLajiMsg ? extraLajiMsg.proName : ''}}</p>
+            <p>房间: {{judgeFlowValue == 1 ? lajiCode[lajiCode.length-1].depName : extraLajiMsg ? extraLajiMsg.depName : ''}}</p>
+            <p>医废编号: {{judgeFlowValue == 1 ? lajiCode[lajiCode.length-1].barCode : extraLajiMsg ? extraLajiMsg.barCode : ''}}</p>
+          </div>
+          <div class="bluetooth-weigh" v-if="showBluetoothWeighShow">
+            <p>重量: {{judgeFlowValue == 2 ? lanyaCz[lanyaCz.length-1] ? lanyaCz[lanyaCz.length-1]: '' : extraLyczMsg}}kg</p>
+          </div>
+          <div v-if="manualWeighShow">
             <van-cell-group>
               <van-field v-model="manualWeight"  label="医废重量(kg)" placeholder="请输入医废重量" />
             </van-cell-group>
-          </van-panel>
-          <van-panel v-if="showStaffCodeShow" title="医护人员信息" desc="" status="">
-            <div class="staff-code">
-              <p>医院: {{judgeFlowValue == 3 ? yihuCode[yihuCode.length-1].proName : extraYihuMsg ? extraYihuMsg.proName : ''}}</p>
-              <p>姓名: {{judgeFlowValue == 3 ? yihuCode[yihuCode.length-1].workerName : extraYihuMsg ? extraYihuMsg.workerName : ''}}</p>
-              <p>房间: {{judgeFlowValue == 3 ? yihuCode[yihuCode.length-1].depName : extraYihuMsg ? extraYihuMsg.depName : ''}}</p>
-            </div>
-           </van-panel>
+          </div>
+          <div class="staff-code" v-if="showStaffCodeShow">
+            <p>医院: {{judgeFlowValue == 3 ? yihuCode[yihuCode.length-1].proName : extraYihuMsg ? extraYihuMsg.proName : ''}}</p>
+            <p>姓名: {{judgeFlowValue == 3 ? yihuCode[yihuCode.length-1].workerName : extraYihuMsg ? extraYihuMsg.workerName : ''}}</p>
+            <p>房间: {{judgeFlowValue == 3 ? yihuCode[yihuCode.length-1].depName : extraYihuMsg ? extraYihuMsg.depName : ''}}</p>
+          </div>
         </div>
         <div class="content-footer">
           <span class="showBackoutButton" v-show="showBackoutButton">
@@ -88,11 +75,21 @@
                   <p>科室: {{item['depName']}}</p>
                   <p class="list-sign">条码标识: {{item['barCode']}}</p>
                   <p class="list-times">医废类型: {{item['wasteName']}}</p>
-                  <p class="list-code">重量: {{item['barWeight']}}</p>
+                  <p class="list-code">重量: {{item['barWeight']}}kg</p>
                 </div>
               </div>
             </div>
           </div>
+        </van-dialog>
+        <!-- pc端提示扫码枪扫码弹框 -->
+         <van-dialog
+          v-model="barCodeScannerShow"
+          title="请用扫码枪扫描对应二维码"
+          :close-on-click-overlay="true"
+          :close-on-popstate="true"
+          @confirm=""
+          @cancel=""
+          >
         </van-dialog>
     </div>
 </template>
@@ -101,24 +98,28 @@
 import HeaderTop from '../components/HeaderTop'
 import FooterBottom from '../components/FooterBottom'
 import CommonProgress from '../components/CommonProgress'
+import ProgressStyle from '../components/ProgressStyle'
 import {judgeStagingPoint,judgeMedicalPerson} from '../api/rubbishCollect.js'
-import { formatTime, setStore, getStore, removeStore, IsPC } from '@/common/js/utils'
+import { formatTime, setStore, getStore, removeStore, IsPC, scanCode} from '@/common/js/utils'
 import { mapGetters, mapMutations } from 'vuex'
 export default {
    components:{
       HeaderTop,
       FooterBottom,
-      CommonProgress
+      CommonProgress,
+      ProgressStyle
     },
   data () {
     return {
       manualWeight: '',
       progressTitleList: ['扫描科室','扫描医废','医废称重','扫描医护'],
-      currentPercentage: 0,
+      currentPercentage: '0',
       temporaryActive: -1,
       barCodeList: [],
       checkedAll: false,
       chooseBackoutShow: false,
+      barCodeScannerShow: false,
+      isPcCallBack: false,
       barMessageList: []
     };
   },
@@ -194,7 +195,7 @@ export default {
   mounted () {
     // 控制设备物理返回按键
     let that = this;
-    pushHistory()
+    pushHistory();
     that.gotoURL(() => { 
       pushHistory()
       this.$dialog.confirm({
@@ -212,7 +213,8 @@ export default {
 
     // 判断流程从哪步开始
     this.judgeFlowPosition();
-   
+    // 判断是否执行扫码枪方法
+    this.isExecute();
     // 二维码回调方法绑定到window下面,提供给外部调用
     let me = this;
     window['scanQRcodeCallback'] = (code) => {
@@ -487,16 +489,33 @@ export default {
 
     // 扫描二维码方法
     sweepAstoffice () {
-      window.android.scanQRcode()
+      if (IsPC()) {
+        this.isPcCallBack = true;
+        if (this.isPcCallBack) {
+          this.barCodeScannerShow = true
+        }
+      } else {
+        window.android.scanQRcode()
+      }
     },
 
-    // 获取完重量后断开蓝牙秤
-    breakScales () {
-      window.android.disconnectScales()
-    },
-
-    // 扫码后的回调
+    // 摄像头扫码后的回调
     scanQRcodeCallback(code) {
+      // var code = decodeURIComponent(code);
+      this.processMethods (code)
+    },
+
+    //扫码枪扫码回调方法
+    barcodeScanner (code) {
+      var code = JSON.parse(code);
+      this.barCodeScannerShow = false;
+      if (this.isPcCallBack) {
+        this.processMethods (code)
+      }
+    },
+
+    // 扫描流程封装公共方法 
+    processMethods (code) {
       // 扫码的科室信息存入store
       if (this.codeStep == 0) {
         // 二维码是否扫描正确判断
@@ -507,6 +526,7 @@ export default {
                 if (res && res.data.code == 200) {
                   this.changeCurrentActive(this.codeStep);
                   this.changeCodeStep(this.codeStep);
+                  this.isPcCallBack = false;
                   this.temporaryActive = 0;
                   this.changeIsPlus(true);
                   this.changeCollectBtn(false);
@@ -525,9 +545,11 @@ export default {
                   }).then(() => {
                     this.sweepAstoffice()
                   });
-                }
+                };
+                this.barCodeScannerShow = false
               })
               .catch((err) => {
+                this.barCodeScannerShow = false;
                 this.$dialog.alert({
                   message: `${err.message}`,
                   closeOnPopstate: true
@@ -542,7 +564,8 @@ export default {
               }).then(() => {
                 this.sweepAstoffice();
               })
-            }
+            };
+            this.barCodeScannerShow = false
           } else {
             this.$dialog.alert({
               message: '当前流程与预期流程不符,请重新扫描',
@@ -550,7 +573,8 @@ export default {
             }).then(() => {
               this.sweepAstoffice();
             })
-          }
+          };
+          this.barCodeScannerShow = false
         } else {
           this.$dialog.alert({
             message: '当前扫描没有收集到任何科室信息,请重新扫描',
@@ -559,6 +583,7 @@ export default {
             this.sweepAstoffice();
           })
         }
+        this.barCodeScannerShow = false
       };
       // 扫码的医护人员信息存入store
       if (this.codeStep == 3) {
@@ -570,6 +595,7 @@ export default {
                     this.changeCurrentActive(this.codeStep);
                     this.temporaryActive = 3;
                     this.changeCodeStep(this.codeStep);
+                    this.isPcCallBack = false;
                     this.changeIsPlus(true);
                     this.storageYihuCode(code);
                     this.changeExtraYihuMsg(code);
@@ -587,9 +613,11 @@ export default {
                   }).then(() => {
                     this.sweepAstoffice()
                   });
-                }
+                };
+                this.barCodeScannerShow = false;
               })
               .catch((err) => {
+                this.barCodeScannerShow = false;
                 this.$dialog.alert({
                   message: `${err.message}`,
                   closeOnPopstate: true
@@ -604,7 +632,8 @@ export default {
               }).then(() => {
                 this.sweepAstoffice();
               })
-            }
+            };
+            this.barCodeScannerShow = false;
           } else {
             this.$dialog.alert({
               message: '当前流程与预期流程不符,请重新扫描',
@@ -612,7 +641,8 @@ export default {
             }).then(() => {
               this.sweepAstoffice();
             })
-          }
+          };
+          this.barCodeScannerShow = false;
         } else {
           this.$dialog.alert({
             message: '当前扫描没有收集到任何医护人员信息,请重新扫描',
@@ -620,7 +650,8 @@ export default {
           }).then(() => {
             this.sweepAstoffice();
           })
-        }
+        };
+        this.barCodeScannerShow = false;
       };
       // 扫码的垃圾袋信息存入store
       if (this.codeStep == 1) {
@@ -640,6 +671,7 @@ export default {
                 this.changeCurrentActive(this.codeStep);
                 this.temporaryActive = 1;
                 this.changeCodeStep(this.codeStep);
+                this.isPcCallBack = false;
                 this.changeIsPlus(true);
                 this.storageLajiCode(code);
                 this.changeExtraLajiMsg(code);
@@ -658,7 +690,8 @@ export default {
                 }).then(() => {
                   this.sweepAstoffice();
                 })
-              }
+              };
+              this.barCodeScannerShow = false;
             } else {
               this.$dialog.alert({
                 message: '扫描的医废信息不全,请重新扫描',
@@ -666,7 +699,8 @@ export default {
               }).then(() => {
                 this.sweepAstoffice();
               })
-            }
+            };
+            this.barCodeScannerShow = false;
           } else {
             this.$dialog.alert({
             message: '当前流程与预期流程不符,请重新扫描',
@@ -674,7 +708,8 @@ export default {
             }).then(() => {
               this.sweepAstoffice();
             })
-          }
+          };
+          this.barCodeScannerShow = false;
         } else {
           this.$dialog.alert({
             message: '当前扫描没有收集到任何医废信息,请重新扫描',
@@ -682,13 +717,19 @@ export default {
           }).then(() => {
             this.sweepAstoffice();
           })
-        }
-      };
+        };
+        this.barCodeScannerShow = false;
+      }
     },
 
     // 连接蓝牙秤
     weightRubbish () {
       window.android.getWeight()
+    },
+
+    // 获取完重量后断开蓝牙秤
+    breakScales () {
+      window.android.disconnectScales()
     },
 
     // 连接蓝牙秤后的回调
@@ -974,7 +1015,14 @@ export default {
 				}
 			};
 			return {'one':arrOne,'two':arrTwo}
-		},
+    },
+    
+    // 是否执行扫码枪的绑定方法
+    isExecute () {
+      if (IsPC()) {
+        scanCode(this.barcodeScanner)
+      }
+    },
 
     //清除部分存储信息
     clearPartStorage () {
@@ -998,37 +1046,29 @@ export default {
       width: 100%;
       height: 100%;
       margin-top: 60px;
-      background: #fff;
+      background: #f8f9fd;
       .content-middle {
-        height: 70vh;
         width: 100%;
         > div {
-          height: 100%;
-          /deep/ .van-cell__title {
-            span {
-              font-size: 18px
-            }
-          }
-          /deep/ .van-panel__content {
-            div {
-              p {
-                font-size: 16px
-              }
-            }
-            .van-cell-group {
-              .van-field {
-                span {
-                  font-size: 14px
-                }
-              }
-            }
-          }
+          height: auto;
+          width: 70%;
+          background: #fff;
+          margin-left: 4%;
+          margin-top: 8%;
+          padding: 20px 10px 20px 20px;
+          box-shadow: 0 2.5px 12px 4px #d1d1d1;
+          border-radius: 8px;
           p {
             line-height: 30px;
-            padding-left: 14px;
-            font-size: 12px;
-            color: @color-theme;
+            font-size: 14px;
+            color: #646464;
+            height: auto
           }
+          p:first-child {
+              color: #313131;
+              font-weight: bold;
+              letter-spacing: 2px
+            }
         }
         .new-summary {
           height: 100%;
@@ -1036,39 +1076,9 @@ export default {
         }
       };
       .content-header {
-        width: 94%;
+        width: 100%;
         margin: 0 auto;
-        margin-top: 16px;
-        .progress-title {
-          width: 100%;
-          position: relative;
-          span {
-            display: inline-block;
-            width: 25%;
-            text-align: center;
-            font-size: 13px;
-            color: black;
-            &:first-child {
-              text-align: left
-            }
-            &:last-child {
-              text-align: right
-            }
-          }
-        }
-        // /deep/ .van-progress {
-        //   margin-top: 14px;
-        //   margin-bottom: 14px;
-        //   .van-progress__portion {
-        //     .van-progress__pivot {
-        //       transform: scale(.5);
-        //       transform-origin: 0% -15px;
-        //       min-width: 28px;
-        //       min-height: 28px;
-        //       border-radius: 50%;
-        //     }
-        //   }
-        // }
+        margin-top: 10px;
         .progress-style {
           margin-top: 14px;
           margin-bottom: 14px;

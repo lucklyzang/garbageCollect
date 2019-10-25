@@ -7,12 +7,22 @@
     <div class="content-middle">
      <loading :isShow="showLoadingHint"></loading>
       <div class="content-middle-top">
-        <van-field v-model="startTime" placeholder="开始日期" readonly="readonly" @click="startTimePop = true"/>
+        <div class="content-middle-top-content">
+          <span class="time-between">至</span>
+          <div style="left:0">
+            <van-field v-model="startTime" placeholder="开始日期" readonly="readonly" @click="startTimePop = true" right-icon="newspaper-o"/>
+          </div>
+          <div style="right:0">
+            <van-field v-model="endTime" placeholder="结束日期" readonly="readonly" @click="endTimePop = true" right-icon="newspaper-o"/>
+          </div>
+          <p class="middle-top-search" v-show="false">
+            <van-button type="info" size="small">搜索</van-button>
+          </p>
+        </div>
         <van-popup v-model="startTimePop" label="离开时间" position="bottom" :overlay="true"> 
           <van-datetime-picker  v-model="currentDateStart"  type="date"  :min-date="minDateStart"
           @cancel="startTimePop = false"  @confirm="startTimePop = false"  @change="startTimeChange"/>
         </van-popup>
-        <van-field v-model="endTime" placeholder="结束日期" readonly="readonly" @click="endTimePop = true"/>
         <van-popup v-model="endTimePop" label="离开时间" position="bottom" :overlay="true"> 
           <van-datetime-picker  v-model="currentDateEnd"  type="date"  :min-date="minDateEnd"
           @cancel="endTimePop = false"  @confirm="endTimePop = false"  @change="endTimeChange"/>
@@ -26,7 +36,7 @@
             <span class="right-sign sign-not-check" v-show="currentIndex == 0">{{signNotCheck == '' ? 0 : signNotCheck}}</span>
           </div>
           <div class="content-middle-list">
-            <div class="content-middle-list-item" v-for="item in notCheckList" @click="addRecordCheck(item)">
+            <div class="content-middle-list-item content-middle-list-warning" v-for="item in notCheckList" @click="addRecordCheck(item)">
               <div class="list-item">
                 <p class="list-item-left">
                   补录批次: {{item. batchNumber}}
@@ -52,7 +62,7 @@
             <span class="title">已审核</span>
             <span class="right-sign sign-checked" v-show="currentIndex == 1">{{signChecked == '' ? 0 : signChecked}}</span>
           </div>
-          <div class="content-middle-list">
+          <div class="content-middle-list content-middle-list-warning">
             <div class="content-middle-list-item checked" v-for="item in checkedList">
               <div class="list-item">
                 <p class="list-item-left">
@@ -411,10 +421,18 @@ export default {
         }
       }
       .content-middle-top {
-        position: relative;
+        background: #fff;
+        margin-top: 3%;
+        height: 52px;
+        box-shadow: 0px 1px 3px 1px #e4e4e4,  /*下边阴影*/
+          0px -1px 3px 0px #e4e4e4;   /*上边阴影*/
         /deep/ .van-cell {
-          width: 40%;
-          display: inline-block
+          width: 100%;
+          display: inline-block;
+          padding: 10px 24px;
+          border: 1px solid #d8d5d5;
+          border-radius: 4px;
+          line-height: 0;
         }
         .middle-top-search {
           position: absolute;
@@ -423,6 +441,22 @@ export default {
           button {
             background: @color-theme;
             border-color: @color-theme
+          }
+        }
+        .content-middle-top-content {
+          position: relative;
+          height: 100%;
+          width: 98%;
+          margin: 0 auto;
+          .time-between {
+            color: black;
+            position: absolute;
+            top: 30.4%;
+          }
+          > div {
+            width: 44%;
+            position: absolute;
+            top: 14%;
           }
         }
       }
@@ -442,11 +476,17 @@ export default {
         }
       }
       .content-middle-list {
-        height: 76vh;
         overflow: auto;
        .content-middle-list-item {
-          padding: 14px;
-          height: 174px;
+          position: relative;
+          box-sizing: border-box;
+          padding: 20px 10px;
+          height: 228px;
+          margin: 0 auto;
+          background: #fff;
+          margin-bottom: 20px;
+          border-radius: 8px;
+          box-shadow: 0 2.5px 12px 4px #d1d1d1;
           .bottom-border-1px(#d3d3d3);
           .list-item {
             position: relative;
@@ -478,6 +518,7 @@ export default {
               margin-top: 12px;
               p {
                 margin-top: 12px;
+                text-align: left;
                 &:first-child {
                   margin-top: 0
                 }
@@ -496,7 +537,7 @@ export default {
           }
         }
         .checked {
-          height: 228px
+          height: 248px
         }
       }
       .btn-group {
