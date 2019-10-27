@@ -5,7 +5,7 @@
 
 
 /** 
- * pc端样式
+ * pc端样式 
 */ 
 
 @media screen and (min-width: 1280px){
@@ -72,7 +72,7 @@
 
   //出库也顶部搜索按钮样式
   .middle-top-search-outStorage {
-    right: -30px !important
+    right: 4px !important
   }
 
   //入库页面样式
@@ -90,27 +90,38 @@
     height: 60vh !important;
   }
 
-
-  .content-middle-top-content {
-    .time-between {
-      left: 48.7%;
-      font-size: 14px
-    }
+  .time-between {
+    width: 100%;
+    text-align: center;
+    font-size: 14px;
+    left: 0;
+    top: 15px;
+    color: black;
+    position: absolute;
+    display: inline-block;
   }
+
+  .time-between-outstorage  {
+    width: 100%;
+    text-align: center;
+    font-size: 14px;
+    left: 0;
+    top: 15px;
+    color: black;
+    position: absolute;
+    display: inline-block;
+  }
+
 
   // 出库页面'至'的位置
   .content-middle-top-content {
-    .time-between-outstorage  {
-      left: 42.7%;
-      font-size: 14px
-    }
     .left-time {
       left: 0;
-      width: 40%;
+      width: 45%;
     }
     .right-time {
-      right: 12%;
-      width: 40%;
+      right: 0;
+      width: 45%;
     }
   }
 
@@ -230,7 +241,7 @@
 
   //出库也顶部搜索按钮样式
    .middle-top-search-outStorage {
-    right: -30px !important
+    right: 4px !important
   }
 
   //入库页面样式
@@ -248,27 +259,40 @@
     height: 60vh !important;
   }
 
-  .content-middle-top-content {
-    .time-between {
-      left: 48.7%;
-      font-size: 14px
-    }
+ 
+  .time-between {
+    width: 100%;
+    text-align: center;
+    font-size: 14px;
+    left: 0;
+    top: 15px;
+    color: black;
+    position: absolute;
+    display: inline-block;
   }
+  
 
   // 出库页面'至'的位置
   .content-middle-top-content {
-    .time-between-outstorage  {
-      left: 42.7%;
-      font-size: 14px
-    }
     .left-time {
       left: 0;
-      width: 40%
+      width: 45%;
     }
     .right-time {
-      right: 12%;
-      width: 40%
+      right: 0;
+      width: 45%;
     }
+  }
+
+  .time-between-outstorage  {
+    width: 100%;
+    text-align: center;
+    font-size: 14px;
+    left: 0;
+    top: 15px;
+    color: black;
+    position: absolute;
+    display: inline-block;
   }
 
   .content-middle {
@@ -347,6 +371,7 @@
   // 首页菜单栏字体颜色
   .content .content-middle .content-list {
     box-shadow: 0 1.5px 6px 2px #d1d1d1;
+    border-radius: 4px;
     .title-content {
       font-size: 14px;
       width: 100%;
@@ -382,7 +407,7 @@
 
   //出库也顶部搜索按钮样式
   .middle-top-search-outStorage {
-    right: 0 !important
+    right: 4px !important
   }
 
   //入库页面样式
@@ -400,27 +425,45 @@
     height: 73vh !important;
   }
 
-  .content-middle-top-content {
-    .time-between {
-      left: 48.5%;
-      font-size: 14px
-    }
+  .time-between {
+    width: 100%;
+    text-align: center;
+    font-size: 14px;
+    left: 0;
+    top: 15px;
+    color: black;
+    position: absolute;
+    display: inline-block;
   }
 
   // 出库页面'至'的位置
   .content-middle-top-content {
-    .time-between-outstorage  {
-      left: 38.4%;
-      font-size: 14px
-    }
     .left-time {
       left: 0;
-      width: 36%;
+      width: 45%;
     }
     .right-time {
-      left: 45%;
-      width: 36%;
+      right: 0;
+      width: 45%;
     }
+  }
+
+  // 出库页面时间框的宽度
+  .content-middle-top-content-outstorage {
+    width: 81% !important;
+    margin: 0 !important;
+    margin-left: 4px !important;
+  }
+
+  .time-between-outstorage  {
+    width: 81%;
+    text-align: center;
+    font-size: 14px;
+    left: 4px !important;
+    color: black;
+    position: absolute;
+    display: inline-block;
+    top: 15px
   }
 
   .content-middle {
@@ -462,10 +505,5 @@
   // 我的页面个人信息框高度样式
   .content-middle-medail {
     height: 60vh !important
-  }
-
-  // 部分页面头部日历栏宽度样式
-  .content-middle-top-content {
-    width: 98% !important;
   }
 }

@@ -35,7 +35,9 @@ export default {
       successInfo: false,
       submitDataAbnormalShow: false,
       abnormalInfo: false,
-      abnormalMsg: ''
+      abnormalMsg: '',
+      isMoreStrip: false,
+      abnormalCodeList: []
     };
   },
 
@@ -116,7 +118,10 @@ export default {
       'changeRepeatSubmit',
       'changeManualWeighShow',
       'changeStorageLajiCode',
-      'changeStorageLanyaCz'
+      'changeStorageLanyaCz',
+      'initStorageLajiCode',
+      'initStorageLanyaCz'
+
     ]),
     showDialog () {
       this.$dialog.confirm({
@@ -210,23 +215,6 @@ export default {
             this.submitDataAbnormalShow = true;
             this.abnormalInfo = true;
             this.abnormalMsg = res.data.msg
-            // this.$dialog.alert({
-            //   message: `${res.data.msg}`,
-            //   closeOnPopstate: true
-            // })
-            // .then(() => {
-            //   this.changeRepeatSubmit(true);
-            //   this.changeBackoutBtn(false);
-            //   this.changeFlowState(3);
-            //   this.$router.push({path: 'medicalCollect'});
-            //   this.changeCollectBtn(false);
-            //   this.changeSureBtn(true);
-            //   this.changebluetoothWeighShow(false);
-            //   this.changeManualWeighShow(false);
-            //   this.changeBagCodeShow(false);
-            //   this.changeAstOfficeShow(false);
-            //   this.changeStaffCodeShow(true)
-            // })
           }
         }
       })
@@ -289,28 +277,17 @@ export default {
             this.submitDataSuccessShow = true;
             this.successInfo = true
           } else {
-            // 提交医废编码异常时的处理
+            if (res.data.code == 400) {
+              this.abnormalCodeList = [];
+              this.isMoreStrip = true;
+              this.abnormalCodeList = res.data.data.fail;
+              this.abnormalMsg = `${res.data.msg}${res.data.data.fail}异常,确认后将剔除本次收集中的异常医废条码,可以再次提交`
+            } else {
+              this.abnormalMsg = res.data.msg
+            }
             this.showLoading = false;
             this.submitDataAbnormalShow = true;
             this.abnormalInfo = true;
-            this.abnormalMsg = res.data.msg
-            // this.$dialog.alert({
-            //   message: `${res.data.msg}`,
-            //   closeOnPopstate: true
-            // })
-            // .then(() => {
-            //   this.changeRepeatSubmit(true);
-            //   this.changeBackoutBtn(false);
-            //   this.changeFlowState(3);
-            //   this.$router.push({path: 'medicalCollect'});
-            //   this.changeCollectBtn(false);
-            //   this.changeSureBtn(true);
-            //   this.changebluetoothWeighShow(false);
-            //   this.changeManualWeighShow(false);
-            //   this.changeBagCodeShow(false);
-            //   this.changeAstOfficeShow(false);
-            //   this.changeStaffCodeShow(true)
-            // })
           }
         }
       })
@@ -355,6 +332,18 @@ export default {
 
     // 数据提交状态码异常时弹框确定按钮的回调事件
     abnormalSure () {
+      let filterMsg = {};
+      if (this.isMoreStrip) {
+        if (this.abnormalCodeList.length > 0) {
+          filterMsg = this.resetBarArray(this.lajiCode, this.lanyaCz,this.abnormalCodeList)
+        };
+        this.isMoreStrip = false
+      };
+      // 重新存储store里的收集垃圾信息
+      this.initStorageLajiCode();
+      this.initStorageLanyaCz();
+      this.changeStorageLajiCode(filterMsg['one']);
+      this.changeStorageLanyaCz(filterMsg['two']);
       this.changeRepeatSubmit(true);
       this.changeBackoutBtn(false);
       this.changeFlowState(3);
@@ -366,6 +355,21 @@ export default {
       this.changeBagCodeShow(false);
       this.changeAstOfficeShow(false);
       this.changeStaffCodeShow(true)
+    },
+
+    // 根据给出的医废编码，来删除存储中存在的医废编码
+    // arrOne: 医废信息,arrTwo: 医废重量,clearArr: 要删除的医废编码
+     resetBarArray (arrOne,arrTwo,clearArr) {
+			for (var i = 0; i < clearArr.length; i++) {
+				for (var j = 0; j < arrOne.length; j++) {
+					if (arrOne[j]['barCode'] == clearArr[i]) {
+						arrOne.splice(j,1);
+						arrTwo.splice(j,1);
+						j--
+					}
+				}
+			};
+			return {'one':arrOne,'two':arrTwo}
     },
 
     //清除部分存储信息

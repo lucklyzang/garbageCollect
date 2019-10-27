@@ -62,7 +62,7 @@ import HeaderTop from '../components/HeaderTop'
 import FooterBottom from '../components/FooterBottom'
 import VanFieldSelectPicker from '../components/VanFieldSelectPicker'
 import {operateOutStorage, queryCompany} from '../api/rubbishCollect.js'
-import { formatTime } from '@/common/js/utils'
+import { formatTime, setStore } from '@/common/js/utils'
 import { mapGetters, mapMutations } from 'vuex'
 export default {
   components:{
@@ -111,7 +111,9 @@ export default {
     that.gotoURL(() => { 
       pushHistory()
       this.$router.push({path: 'medicalOutStorage'});  //输入要返回的上一级路由地址
-      this.changeTitleTxt({tit: '医废出库'})
+      this.changeTitleTxt({tit: '医废出库'});
+      setStore('currentTitle','医废出库');
+      
     });
     // 键盘弹起时不会遮住输入框
     let originalHeight = document.documentElement.clientHeight || document.body.clientHeight;
@@ -183,12 +185,14 @@ export default {
     // 返回上一页
     backTo () {
       this.$router.push({name:'medicalOutStorage'});
-      this.changeTitleTxt({tit:'医废出库'})
+      this.changeTitleTxt({tit:'医废出库'});
+      setStore('currentTitle','医废出库');
     },
     // 跳转到我的页面
     skipMyInfo () {
       this.$router.push({path: 'myInfo'});
-      this.changeTitleTxt({tit:'我的'})
+      this.changeTitleTxt({tit:'我的'});
+      setStore('currentTitle','我的');
     },
     // 新增出库
     increase () {
@@ -211,7 +215,8 @@ export default {
               closeOnPopstate: true
             }).then(() => {
               this.$router.push({path: 'home'});
-              this.changeTitleTxt({tit: '医废监测'})
+              this.changeTitleTxt({tit: '医废监测'});
+              setStore('currentTitle','医废监测');
               this.initFormContent()
             });
           } else {
@@ -221,7 +226,8 @@ export default {
             }).then(() => {
               this.initFormContent();
               this.$router.push({path: 'medicalOutStorage'});
-              this.changeTitleTxt({tit: '医废出库'})
+              this.changeTitleTxt({tit: '医废出库'});
+              setStore('currentTitle','医废出库');
               this.initBatchs()
             });
           }
@@ -234,7 +240,8 @@ export default {
         }).then(() => {
           this.initFormContent();
           this.$router.push({path: 'medicalOutStorage'});
-          this.changeTitleTxt({tit: '医废出库'})
+          this.changeTitleTxt({tit: '医废出库'});
+          setStore('currentTitle','医废出库');
           this.initBatchs()
         });
         console.log(err)

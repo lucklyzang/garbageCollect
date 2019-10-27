@@ -33,6 +33,13 @@ Vue.use(Vant);
 Vue.config.productionTip = false;
 // 页面刷新时重新存入用户信息
 store.commit('storeUserInfo',JSON.parse(getStore('userInfo')));
+// 页面刷新后重新存入当前标题
+store.commit('refreshChangeTitleTxt', getStore('currentTitle'));
+// 页面刷新后重新存入收集历史详情信息
+store.commit('refreshStoreCollectInfo',JSON.parse(getStore('currentItem')));
+store.commit('refreshStoreCurrentName',JSON.parse(getStore('refreshCurrentItem')));
+// 页面刷新后重新存入收集批次号
+store.commit('createBatchNumber', getStore('currentBatchNumber'))
 new Vue({
   el: '#app',
   router,

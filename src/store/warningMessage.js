@@ -21,10 +21,16 @@ export default {
     storeCollectInfo (state, playLoad) {
       state.collectInfo = playLoad
     },
+    refreshStoreCollectInfo (state, playLoad) {
+      state.collectInfo = playLoad
+    },
     initCollectInfo (state) {
       state.collectInfo = null
     },
     storeCurrentName (state, playLoad) {
+      state.currentName = playLoad
+    },
+    refreshStoreCurrentName (state, playLoad) {
       state.currentName = playLoad
     },
     initCurrentName (state) {

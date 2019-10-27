@@ -7,18 +7,18 @@
     <div class="content-middle">
       <loading :isShow="showLoadingHint"></loading>
       <div class="content-middle-top content-middle-top-outStorage">
-        <div class="content-middle-top-content">
-          <span class="time-between-outstorage">至</span>
+        <span class="time-between-outstorage">至</span>
+        <div class="content-middle-top-content content-middle-top-content-outstorage">
           <div class="left-time">
             <van-field v-model="startTime" placeholder="开始日期" readonly="readonly" @click="startTimePop = true" right-icon="newspaper-o"/>
           </div>
           <div class="right-time">
             <van-field v-model="endTime" placeholder="结束日期" readonly="readonly" @click="endTimePop = true" right-icon="newspaper-o"/>
           </div>
-          <p class="middle-top-search middle-top-search-outStorage">
-            <van-button type="info" size="small" @click="searchOutStorage(startTime,endTime)">搜索</van-button>
-          </p>
         </div>
+        <p class="middle-top-search middle-top-search-outStorage">
+          <van-button type="info" size="small" @click="searchOutStorage(startTime,endTime)">搜索</van-button>
+        </p>
         <van-popup v-model="startTimePop" label="离开时间" position="bottom" :overlay="true"> 
           <van-datetime-picker  v-model="currentDateStart"  type="date"  :min-date="minDateStart"
           @cancel="startTimePop = false"  @confirm="startTimePop = false"  @change="startTimeChange"/>
@@ -65,7 +65,7 @@ import FooterBottom from '../components/FooterBottom'
 import Loading from '../components/Loading'
 import { mapGetters, mapMutations } from 'vuex'
 import {queryOutStorage} from '../api/rubbishCollect.js'
-import { formatTime } from '@/common/js/utils'
+import { formatTime, setStore } from '@/common/js/utils'
 export default {
    components:{
     HeaderTop,
@@ -105,7 +105,8 @@ export default {
     that.gotoURL(() => { 
       pushHistory()
       this.$router.push({path: 'home'});  //输入要返回的上一级路由地址
-      this.changeTitleTxt({tit: '医废监测'})
+      this.changeTitleTxt({tit: '医废监测'});
+      setStore('currentTitle','医废监测');
     });
     this.initDate();
     this.queryNotInStorage();
@@ -130,7 +131,8 @@ export default {
     // 返回上一页
     backTo () {
       this.$router.push({name:'home'});
-      this.changeTitleTxt({tit:'医废监测'})
+      this.changeTitleTxt({tit:'医废监测'});
+      setStore('currentTitle','医废监测');
     },
     searchOutStorage (startTime,endTime) {
       if (this.startTime == '' || this.endTime == '') {
@@ -147,7 +149,8 @@ export default {
     // 跳转到我的页面
     skipMyInfo () {
       this.$router.push({path: 'myInfo'});
-      this.changeTitleTxt({tit:'我的'})
+      this.changeTitleTxt({tit:'我的'});
+      setStore('currentTitle','我的');
     },
     //确定入库
     sureInStorage () {
@@ -170,7 +173,8 @@ export default {
         this.changeTotalWeight(this.totalWeight);
         this.changeBatchs(this.batchsArray);
         this.$router.push({path:'medicalInStorageIncrease'});
-        this.changeTitleTxt({tit: '医废入库新增'});
+        this.changeTitleTxt({tit: '医废出库新增'});
+        setStore('currentTitle','医废入出新增');
       }
     },
     // 全选操作
@@ -267,6 +271,7 @@ export default {
      .content-middle();
       .content-middle-top {
         background: #fff;
+        position: relative;
         margin-top: 3%;
         height: 52px;
         box-shadow: 0px 1px 3px 1px #e4e4e4,  /*下边阴影*/
@@ -282,6 +287,8 @@ export default {
         .middle-top-search {
           position: absolute;
           top: 10px;
+          display: inline-block;
+          right: 10px;
           button {
             background: @color-theme;
             border-color: @color-theme
@@ -289,14 +296,8 @@ export default {
         }
         .content-middle-top-content {
           position: relative;
-          height: 100%;
-          width: 98%;
           margin: 0 auto;
-          .time-between-outstorage {
-            color: black;
-            position: absolute;
-            top: 30.4%;
-          }
+          height: 100%;
           > div {
             position: absolute;
             top: 14%;

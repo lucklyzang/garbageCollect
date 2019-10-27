@@ -30,7 +30,7 @@
 import HeaderTop from '../components/HeaderTop'
 import FooterBottom from '../components/FooterBottom'
 import { mapGetters, mapMutations } from 'vuex'
-import { formatTime } from '@/common/js/utils'
+import { formatTime, setStore } from '@/common/js/utils'
 import {warningDispose} from '../api/rubbishCollect.js'
 import {queryCollectHistory} from '../api/rubbishCollect.js'
 export default {
@@ -61,7 +61,8 @@ export default {
     that.gotoURL(() => { 
       pushHistory()
       this.$router.push({path: 'abnormalWarning'});  //输入要返回的上一级路由地址
-      this.changeTitleTxt({tit: '医废预警'})
+      this.changeTitleTxt({tit: '医废预警'});
+      setStore('currentTitle','医废预警');
     });
     this.handleMessage = '';
   },
@@ -75,6 +76,7 @@ export default {
     backTo () {
       this.$router.push({path: 'abnormalWarning'});
       this.changeTitleTxt({tit: '医废预警'});
+      setStore('currentTitle','医废预警');
       this.initWaningInfo()
     },
     // 提交处理意见
@@ -104,7 +106,8 @@ export default {
             this.initWaningInfo();
             this.handleMessage = '';
             this.$router.push({path: 'abnormalWarning'})
-            this.changeTitleTxt({tit:'医废预警'})
+            this.changeTitleTxt({tit:'医废预警'});
+            setStore('currentTitle','医废预警');
           });
         } else {
           this.$dialog.alert({

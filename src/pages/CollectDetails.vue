@@ -195,6 +195,7 @@
 import HeaderTop from '../components/HeaderTop'
 import FooterBottom from '../components/FooterBottom'
 import { mapGetters, mapMutations } from 'vuex'
+import { formatTime, setStore } from '@/common/js/utils'
 export default {
   components: {
     HeaderTop,
@@ -242,6 +243,7 @@ export default {
     backTo () {
       this.$router.push({path: 'collectHistory'});
       this.changeTitleTxt({tit: '收集历史'});
+      setStore('currentTitle','收集历史');
       this.initCurrentName();
       this.changeIsCall(false)
     }, 
@@ -254,6 +256,7 @@ export default {
         pushHistory()
         this.$router.push({path: 'collectHistory'});  //输入要返回的上一级路由地址
         this.changeTitleTxt({tit: '收集历史'});
+        setStore('currentTitle','收集历史');
         this.changeIsCall(false)
       })
     }

@@ -4,7 +4,7 @@ import store from '@/store'
 // http://39.100.111.20:8080/blink
 // http://47.108.27.209:8080/blink
 const service = axios.create({
-  baseURL: 'http://47.108.27.209:8080/blink',
+  baseURL: 'http://39.100.111.20:8080/blink',
   retry: 4,
   retryDelay: 1000,
   shouldRetry: (err) => true

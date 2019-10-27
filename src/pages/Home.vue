@@ -67,7 +67,8 @@
       this.gotoURL(() => { 
         pushHistory();
         this.$router.push({path: 'home'});  //输入要返回的上一级路由地址
-        this.changeTitleTxt({tit: '医废监测'})
+        this.changeTitleTxt({tit: '医废监测'});
+        setStore('currentTitle','医废监测')
       });
       this.initItemList ();
       this.judgeCodeFinish()
@@ -130,7 +131,8 @@
       // 跳转到我的页面
       skipMyInfo () {
         this.$router.push({path: 'myInfo'});
-        this.changeTitleTxt({tit:'我的'})
+        this.changeTitleTxt({tit:'我的'});
+        setStore('currentTitle','我的')
       },
       //路由跳转
       routerSkip (name, text) {
@@ -142,7 +144,8 @@
               getBatchNumber(this.userInfo.id).then((res) => {
                 if (res && res.data.code == 200) {
                   // 批次号存入store
-                  this.createBatchNumber(res.data.data.batchNumber)
+                  this.createBatchNumber(res.data.data.batchNumber);
+                  setStore('currentBatchNumber',res.data.data.batchNumber)
                 }
               }).catch((err) => {
                 this.$dialog.alert({
@@ -163,7 +166,8 @@
             this.changeIsCall(true)
           };
           this.$router.push({path:name});
-          this.changeTitleTxt({tit:text})
+          this.changeTitleTxt({tit:text});
+          setStore('currentTitle',text)
         }
       },
 

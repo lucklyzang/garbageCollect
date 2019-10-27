@@ -7,18 +7,18 @@
     <div class="content-middle">
       <loading :isShow="showLoadingHint"></loading>
       <div class="content-middle-top">
+        <span class="time-between">至</span>
         <div class="content-middle-top-content">
-          <span class="time-between">至</span>
           <div style="left:0">
             <van-field v-model="startTime" placeholder="开始日期" readonly="readonly" @click="startTimePop = true" right-icon="newspaper-o"/>
           </div>
           <div style="right:0">
             <van-field v-model="endTime" placeholder="结束日期" readonly="readonly" @click="endTimePop = true" right-icon="newspaper-o"/>
           </div>
-          <p class="middle-top-search" v-show="false">
-            <van-button type="info" size="small">搜索</van-button>
-          </p>
         </div>
+        <p class="middle-top-search" v-show="false">
+          <van-button type="info" size="small">搜索</van-button>
+        </p>
         <van-popup v-model="startTimePop" position="bottom" :overlay="true">
           <van-datetime-picker  v-model="currentDateStart"  type="date"  :min-date="minDateStart"
           @cancel="startTimePop = false"  @confirm="startTimePop = false"  @change="startTimeChange"/>
@@ -80,7 +80,7 @@ import FooterBottom from '../components/FooterBottom'
 import { mapGetters, mapMutations } from 'vuex'
 import Loading from '../components/Loading'
 import {queryPrintInfo, queryOffice, queryCollectPerson, postReplenishPrintData} from '../api/rubbishCollect.js'
-import { formatTime } from '@/common/js/utils'
+import { formatTime, setStore } from '@/common/js/utils'
 export default {
    components:{
     HeaderTop,
@@ -149,7 +149,8 @@ export default {
     that.gotoURL(() => { 
       pushHistory()
       this.$router.push({path: 'home'});  //输入要返回的上一级路由地址
-      this.changeTitleTxt({tit: '医废监测'})
+      this.changeTitleTxt({tit: '医废监测'});
+      setStore('currentTitle','医废监测')
     });
     this.queryAllBatch();
     this.initDate();
@@ -181,13 +182,15 @@ export default {
     // 返回上一页
     backTo () {
       this.$router.push({name:'home'});
-      this.changeTitleTxt({tit:'医废监测'})
+      this.changeTitleTxt({tit:'医废监测'});
+      setStore('currentTitle','医废监测')
     },
 
     // 跳转到我的页面
     skipMyInfo () {
       this.$router.push({path: 'myInfo'});
-      this.changeTitleTxt({tit:'我的'})
+      this.changeTitleTxt({tit:'我的'});
+      setStore('currentTitle','我的')
     },
     // 查询科室与部门信息
     querySelectInfo () {
@@ -250,10 +253,10 @@ export default {
       this.rawInfoList = [];
       queryPrintInfo({ 
         proId: this.userInfo.proId, //项目ID
-        workerId: '', //当前收集人this.collectPerson
-        depId: '', //部门IDthis.office
-        startDate: this.startTime,   //起始日期 格式 yyyy-MM-dd 必输
-        endDate: this.endTime,      //终止日期 格式 yyyy-MM-dd 必输		
+        workerId: this.userInfo.workerName, //当前收集人
+        depId: this.userInfo.depId, //部门ID
+        startDate: this.startTime ? this.startTime : formatTime('YYYY-MM-DD'),   //起始日期 格式 yyyy-MM-dd 必输
+        endDate: this.endTime ? this.endTime : formatTime('YYYY-MM-DD'),      //终止日期 格式 yyyy-MM-dd 必输		
         currentPage: 1, //当前页
         pageSize: 20, //每页显示条数
         isPage: 0
@@ -275,13 +278,19 @@ export default {
               })
             }
           } else {
-             this.$dialog.alert({
+            this.$dialog.alert({
               message: '当前没有查询到收集的医废信息',
               closeOnPopstate: true
             }).then(() => {
             });
           }
-        };
+        } else {
+          this.$dialog.alert({
+            message: `${res.data.msg}`,
+            closeOnPopstate: true
+          }).then(() => {
+          });
+        }
         this.showLoadingHint = false
       })
       .catch((err)=> {
@@ -475,6 +484,7 @@ export default {
        .content-middle-top {
         background: #fff;
         margin-top: 3%;
+        position: relative;
         height: 52px;
         box-shadow: 0px 1px 3px 1px #e4e4e4,  /*下边阴影*/
           0px -1px 3px 0px #e4e4e4;   /*上边阴影*/
@@ -486,16 +496,15 @@ export default {
           border-radius: 4px;
           line-height: 0;
         }
+        .time-between {
+          color: black;
+          position: absolute;
+        }
         .content-middle-top-content {
           position: relative;
           height: 100%;
           width: 98%;
           margin: 0 auto;
-          .time-between {
-            color: black;
-            position: absolute;
-            top: 30.4%;
-          }
           > div {
             width: 44%;
             position: absolute;

@@ -1,3 +1,5 @@
+ import { setStore, getStore, removeStore } from '@/common/js/utils'
+
 export default {
   state:{
     navTitle: '医废监测',
@@ -101,8 +103,13 @@ export default {
     isStoreWeight: state => state.isStoreWeight,
   },
   mutations:{
+    // 改变页面标题
     changeTitleTxt (state,payLoad) {
       state.navTitle = payLoad.tit
+    },
+    // 页面刷新后改变页面标题
+    refreshChangeTitleTxt (state,payLoad) {
+      state.navTitle = payLoad
     },
     // 改变流程节点状态
     changeCurrentActive (state, payLoad) {

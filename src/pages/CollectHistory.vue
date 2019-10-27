@@ -7,8 +7,8 @@
     <div class="content-middle">
       <loading :isShow="showLoadingHint"></loading>
       <div class="content-middle-top">
+        <span class="time-between">至</span>
         <div class="content-middle-top-content">
-          <span class="time-between">至</span>
           <div style="left:0">
             <van-field v-model="startTime" placeholder="开始日期" readonly="readonly" @click="startTimePop = true" right-icon="newspaper-o"/>
           </div>
@@ -129,7 +129,7 @@ import HeaderTop from '../components/HeaderTop'
 import FooterBottom from '../components/FooterBottom'
 import { mapGetters, mapMutations } from 'vuex'
 import Loading from '../components/Loading'
-import { formatTime } from '@/common/js/utils'
+import { formatTime, setStore } from '@/common/js/utils'
 import {queryCollectHistory} from '../api/rubbishCollect.js'
 export default {
   components: {
@@ -198,12 +198,14 @@ export default {
     // 返回上一页
     backTo () {
       this.$router.push({name:'home'});
-      this.changeTitleTxt({tit:'医废监测'})
+      this.changeTitleTxt({tit:'医废监测'});
+      setStore('currentTitle','医废监测');
     },
     // 跳转到我的页面
     skipMyInfo () {
       this.$router.push({path: 'myInfo'});
-      this.changeTitleTxt({tit:'我的'})
+      this.changeTitleTxt({tit:'我的'});
+      setStore('currentTitle','我的');
     },
     startTimeChange(e) { 
       let startTimeArr = e.getValues();//["2019", "03", "22", "17", "28"] 
@@ -223,9 +225,12 @@ export default {
     skipDetail (item) {
       this.initCollectInfo();
       this.storeCollectInfo(item);
-      this.storeCurrentName(this.currentName)
+      this.storeCurrentName(this.currentName);
+      setStore('currentItem',item);
+      setStore('refreshCurrentItem',this.currentName);
       this.$router.push({path:'CollectDetails'});
-      this.changeTitleTxt({tit:'收集历史详情'})
+      this.changeTitleTxt({tit:'收集历史详情'});
+      setStore('currentTitle','收集历史详情');
     },
     // 点击标签按钮事件
     onClickTab (name, title) {
@@ -462,6 +467,7 @@ export default {
         background: #fff;
         margin-top: 3%;
         height: 52px;
+        position: relative;
         box-shadow: 0px 1px 3px 1px #e4e4e4,  /*下边阴影*/
           0px -1px 3px 0px #e4e4e4;   /*上边阴影*/
         /deep/ .van-cell {
@@ -481,16 +487,15 @@ export default {
             border-color: @color-theme
           }
         }
+        .time-between {
+          color: black;
+          position: absolute;
+        }
         .content-middle-top-content {
           position: relative;
           height: 100%;
           width: 98%;
           margin: 0 auto;
-          .time-between {
-            color: black;
-            position: absolute;
-            top: 30.4%;
-          }
           > div {
             width: 44%;
             position: absolute;

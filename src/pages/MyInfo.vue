@@ -31,7 +31,7 @@
 import HeaderTop from '../components/HeaderTop'
 import FooterBottom from '../components/FooterBottom'
 import { mapGetters, mapMutations } from 'vuex'
-import {removeStore} from '@/common/js/utils.js'
+import { formatTime, setStore, removeStore } from '@/common/js/utils'
 import {exitLogIn} from '@/api/login.js'
 import defaultPortrait from '@/common/images/default-portrait.png'
 export default {
@@ -83,7 +83,8 @@ export default {
     that.gotoURL(() => { 
       pushHistory()
       this.$router.push({path: 'home'});  //输入要返回的上一级路由地址
-      this.changeTitleTxt({tit: '医废监测'})
+      this.changeTitleTxt({tit: '医废监测'});
+      setStore('currentTitle','医废监测');
     });
     this.changeRouterFlag(true)
   },
@@ -100,7 +101,8 @@ export default {
     // 返回上一页
     backTo () {
       this.$router.push({name:'home'});
-      this.changeTitleTxt({tit:'医废监测'})
+      this.changeTitleTxt({tit:'医废监测'});
+      setStore('currentTitle','医废监测');
     },
 
     // 判断身份类别

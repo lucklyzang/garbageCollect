@@ -37,7 +37,9 @@
 import HeaderTop from '../components/HeaderTop'
 import FooterBottom from '../components/FooterBottom'
 import { mapGetters, mapMutations } from 'vuex'
+import { formatTime, setStore, removeStore } from '@/common/js/utils'
 import Loading from '../components/Loading'
+
 import {statisticsData} from '../api/rubbishCollect.js'
 export default {
    components:{
@@ -75,7 +77,8 @@ export default {
     that.gotoURL(() => { 
       pushHistory()
       this.$router.push({path: 'home'});
-      this.changeTitleTxt({tit: '医废监测'})
+      this.changeTitleTxt({tit: '医废监测'});
+      setStore('currentTitle','医废监测');
     });
    
     let vesselEleDay = this.$echarts.init(
@@ -108,12 +111,14 @@ export default {
     // 返回上一页
     backTo () {
       this.$router.push({name:'home'});
-      this.changeTitleTxt({tit:'医废监测'})
+      this.changeTitleTxt({tit:'医废监测'});
+      setStore('currentTitle','医废监测');
     },
     // 跳转到我的页面
     skipMyInfo () {
       this.$router.push({path: 'myInfo'});
-      this.changeTitleTxt({tit:'我的'})
+      this.changeTitleTxt({tit:'我的'});
+      setStore('currentTitle','我的');
     },
     // 绘制图表
     drawLine (name,text,data) {

@@ -67,7 +67,7 @@ import FooterBottom from '../components/FooterBottom'
 import Loading from '../components/Loading'
 import { mapGetters, mapMutations } from 'vuex'
 import {queryBatch,judgeSummaryPoint,inStorageAdd} from '../api/rubbishCollect.js'
-import {IsPC, scanCode} from '@/common/js/utils'
+import {formatTime, setStore, IsPC, scanCode} from '@/common/js/utils'
 export default {
    components:{
     HeaderTop,
@@ -109,7 +109,8 @@ export default {
     that.gotoURL(() => { 
       pushHistory()
       this.$router.push({path: 'home'});  //输入要返回的上一级路由地址
-      this.changeTitleTxt({tit: '医废监测'})
+      this.changeTitleTxt({tit: '医废监测'});
+      setStore('currentTitle','医废监测');
     });
     this.queryAllBatch();
     // 二维码回调方法绑定到window下面,提供给外部调用
@@ -140,12 +141,14 @@ export default {
     // 返回上一页
     backTo () {
       this.$router.push({name:'home'});
-      this.changeTitleTxt({tit:'医废监测'})
+      this.changeTitleTxt({tit:'医废监测'});
+      setStore('currentTitle','医废监测');
     },
     // 跳转到我的页面
     skipMyInfo () {
       this.$router.push({path: 'myInfo'});
-      this.changeTitleTxt({tit:'我的'})
+      this.changeTitleTxt({tit:'我的'});
+      setStore('currentTitle','我的');
     },
 
     // 是否执行扫码枪的绑定方法
@@ -303,7 +306,8 @@ export default {
               closeOnPopstate: true
             }).then(() => {
               this.$router.push({path: 'medicalOutStorage'});
-              this.changeTitleTxt({tit: '医废出库'})
+              this.changeTitleTxt({tit: '医废出库'});
+              setStore('currentTitle','医废出库');
             });
           } else {
             this.$dialog.alert({
@@ -332,6 +336,7 @@ export default {
       .content-middle-top {
         background: #7ae4cc;
         height: 26px;
+        position: relative;
         color: #bafbd8;
         position: relative;
         .text-left {
