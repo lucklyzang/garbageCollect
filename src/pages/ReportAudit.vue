@@ -37,7 +37,7 @@
 import HeaderTop from '../components/HeaderTop'
 import FooterBottom from '../components/FooterBottom'
 import { mapGetters, mapMutations } from 'vuex'
-import { formatTime, setStore, removeStore } from '@/common/js/utils'
+import { formatTime, setStore, removeStore, IsPC } from '@/common/js/utils'
 import Loading from '../components/Loading'
 
 import {statisticsData} from '../api/rubbishCollect.js'
@@ -72,14 +72,16 @@ export default {
 
   mounted() {
     // 控制设备物理返回按键
-    let that = this;
-    pushHistory()
-    that.gotoURL(() => { 
-      pushHistory()
-      this.$router.push({path: 'home'});
-      this.changeTitleTxt({tit: '医废监测'});
-      setStore('currentTitle','医废监测');
-    });
+    if (!IsPC()) {
+      let that = this;
+      pushHistory();
+      that.gotoURL(() => { 
+        pushHistory()
+        this.$router.push({path: 'home'});
+        this.changeTitleTxt({tit: '医废监测'});
+        setStore('currentTitle','医废监测');
+      })
+    };
    
     let vesselEleDay = this.$echarts.init(
       document.getElementById("content-middle-dayData")

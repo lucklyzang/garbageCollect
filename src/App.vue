@@ -9,7 +9,16 @@
 </template>
 <script>
   export default {
-
+    // mounted () {
+    //    if (!!window.ActiveXObject || 'ActiveXObject' in window) {
+    //   window.addEventListener('hashchange', () => {
+    //       let currentPath = window.location.hash.slice(1)
+    //       if (this.$route.path !== currentPath) {
+    //           this.$router.push(currentPath);// 主动更改路由界面
+    //       }
+    //   }, false);
+    // }
+    // }
   }
   //App接口
   window['setAppInfo'] =function (uid,os) {
@@ -25,6 +34,6 @@
     }
   },false)
 </script>
-<style lang="stylus" rel="stylesheet/stylus" scoped>
+<style lang="less" scoped>
 
 </style>

@@ -8,7 +8,7 @@
       <div class="content-header">
         <img :src="bannerUrl" alt="">
       </div>
-      <div class="content-middle">
+      <div class="content-middle content-middle-home">
         <div class="content-list" v-for="item in itemList" @click="routerSkip(item.name, item.itemText)">
           <p class="title-img">
             <img :src="item.imgUrl" alt="">
@@ -34,11 +34,11 @@
   import medicalOut from '@/common/images/home/medical-out.png'
   import testStatistics from '@/common/images/home/test-statistics.png'
   import videoSurveillance from '@/common/images/home/video-surveillance.png'
-  import homeBanner from '@/common/images/home/home-banner.png'
+  import homeBanner from '@/common/images/home/home-banner.jpg'
   import rePrint from '@/common/images/home/re-print.png'
   import addCheck from '@/common/images/home/add-check.png'
   import warningCheck from '@/common/images/home/warning-check.png'
-  import { formatTime, setStore, getStore, removeStore } from '@/common/js/utils'
+  import { formatTime, setStore, getStore, removeStore, IsPC } from '@/common/js/utils'
   export default {
     components:{
       HeaderTop,
@@ -63,13 +63,15 @@
     
     mounted(){
       // 控制设备物理返回按键
-      pushHistory();
-      this.gotoURL(() => { 
+      if (!IsPC()) {
         pushHistory();
-        this.$router.push({path: 'home'});  //输入要返回的上一级路由地址
-        this.changeTitleTxt({tit: '医废监测'});
-        setStore('currentTitle','医废监测')
-      });
+        this.gotoURL(() => { 
+          pushHistory();
+          this.$router.push({path: 'home'});  //输入要返回的上一级路由地址
+          this.changeTitleTxt({tit: '医废监测'});
+          setStore('currentTitle','医废监测')
+        })
+      };
       this.initItemList ();
       this.judgeCodeFinish()
     },
@@ -98,7 +100,6 @@
         'changeTotalWeight',
         'changeStorageLajiCode',
         'changeStorageLanyaCz',
-        'changeCurrentLajicodeState',
         'changeClickBackoutBtn',
         'changeStaffCodeShow',
         'changePrintBtn',
@@ -187,31 +188,21 @@
             this.changeStaffCodeShow(false);
             this.changebluetoothWeighShow(false);
             this.changeManualWeighShow(false);
-            this.changeCurrentLajicodeState(false);
             this.changeBackoutBtn(true);
           } else if (getStore('currentStep') == '1') {
             this.changeFlowState(1);
-            this.changeCurrentLajicodeState(true);
             this.changeCollectBtn(false);
             this.changeBackoutBtn(true);
             this.changeSureBtn(true);
             this.changePrintBtn(false);
             this.changeOtherBtn(false);
             this.changeClickBackoutBtn(false);
-            this.changeBagCodeShow(true);
-            this.changeStaffCodeShow(false);
+            this.changeBagCodeShow(false);
+            this.changeStaffCodeShow(true);
             this.changebluetoothWeighShow(false);
             this.changeManualWeighShow(false);
             this.changeAstOfficeShow(false)
           } else if (getStore('currentStep') == '2') {
-            this.changeIsCollectCurrentOffice(true);   
-            if (getStore('continueCurrentCollect') == 'false') {
-              this.changeIsCollectCurrentOffice(false);
-            } else if(getStore('continueCurrentCollect') == 'true') {
-              this.changeIsCollectCurrentOffice(true);
-            };
-            this.changeCurrentLajicodeState(true);
-            this.changeIsStoreWeight(true);
             this.changeFlowState(2);
             this.changeCollectBtn(false);
             this.changeBackoutBtn(true);
@@ -219,12 +210,12 @@
             this.changePrintBtn(false);
             this.changeOtherBtn(false);
             this.changeClickBackoutBtn(false);
-            this.changeBagCodeShow(false);
+            this.changeBagCodeShow(true);
             this.changeAstOfficeShow(false);
             this.changeStaffCodeShow(false);
           } else if (getStore('currentStep') == '3') {
             this.changeFlowState(3);
-            this.changeCurrentLajicodeState(true);
+            this.changeIsStoreWeight(true);
             this.changeCollectBtn(false);
             this.changeBackoutBtn(true);
             this.changeSureBtn(true);
@@ -233,7 +224,7 @@
             this.changeClickBackoutBtn(false);
             this.changeBagCodeShow(false);
             this.changeAstOfficeShow(false);
-            this.changeStaffCodeShow(true)  
+            this.changeStaffCodeShow(false)  
           }
         } else {
           this.initSweepCodeInfo()
@@ -264,8 +255,6 @@
         this.changeStaffCodeShow(false);
         this.changebluetoothWeighShow(false);
         this.changeManualWeighShow(false);
-        this.changeIsCollectCurrentOffice(true);
-        this.changeCurrentLajicodeState(false);
         this.clearTrashStore()
       }
     }
@@ -291,17 +280,16 @@
       }
     }
     .content-middle {
-      width: 96%;
       margin: 0 auto;
       margin-top: 20px;
       .content-list {
         width: 22%;
-        height: 80px;
-        padding-top: 10px;
+        height: 70px;
+        padding-top: 4px;
         text-align: center;
         box-sizing: border-box;
         margin-right: 4%;
-        margin-bottom: 4%;
+        margin-bottom: 2%;
         display: inline-block;
         .title-img {
           display: inline-block;

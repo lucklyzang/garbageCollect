@@ -129,7 +129,7 @@ import HeaderTop from '../components/HeaderTop'
 import FooterBottom from '../components/FooterBottom'
 import { mapGetters, mapMutations } from 'vuex'
 import Loading from '../components/Loading'
-import { formatTime, setStore } from '@/common/js/utils'
+import { formatTime, setStore, IsPC } from '@/common/js/utils'
 import {queryCollectHistory} from '../api/rubbishCollect.js'
 export default {
   components: {
@@ -174,15 +174,19 @@ export default {
   },
 
   mounted () {
-   // 控制设备物理返回按键
-    this.monitorBack();
+    // 控制设备物理返回按键
+    if (!IsPC()) {
+      this.monitorBack()
+    };
     this.initMethod()
   },
 
   // 由于该页面被缓存,调用activated钩子函数保证每次组件切换时,监听物理返回按键的方法都会执行
   activated () {
     // 控制设备物理返回按键
-    this.monitorBack();
+    if (!IsPC()) {
+      this.monitorBack()
+    };
     if (this.isCall) {
       this.initMethod()
     }

@@ -4,7 +4,7 @@
 
 <script>
 import { mapMutations } from 'vuex'
-import { formatTime, setStore, getStore, removeStore } from '@/common/js/utils'
+import { formatTime, setStore, getStore, removeStore, IsPC } from '@/common/js/utils'
 export default {
   data () {
     return {
@@ -14,16 +14,18 @@ export default {
   mounted() {
     this.showDialog();
     // 控制设备物理返回按键
-    pushHistory();
-    this.gotoURL(() => { 
+    if (!IsPC()) {
       pushHistory();
-      this.$dialog.alert({
-        message: '请先处理是否其它科室搜集弹框',
-        closeOnPopstate: true
-      }).then(() => {
-        this.showDialog()
-      });
-    });
+      this.gotoURL(() => { 
+        pushHistory();
+        this.$dialog.alert({
+          message: '请先处理是否其它科室搜集弹框',
+          closeOnPopstate: true
+        }).then(() => {
+          this.showDialog()
+        });
+      })
+    }
   },
 
   methods: {
@@ -35,7 +37,6 @@ export default {
       'changeOtherBtn',
       'changeCollectBtn',
       'changeSureBtn',
-      'changeCurrentLajicodeState',
       'changeBackoutBtn',
       'changeClickBackoutBtn',
       'changeCurrentActive',
@@ -66,10 +67,8 @@ export default {
         this.changeStaffCodeShow(false);
         this.changebluetoothWeighShow(false);
         this.changeManualWeighShow(false);
-        this.changeIsCollectCurrentOffice(true);
         // 清空上个科室存储的数据
         this.clearTrashStore();
-        this.changeCurrentLajicodeState(false);
         this.changeBackoutBtn(true);
         this.clearPartStorage()
       }).catch(() => {
@@ -80,14 +79,11 @@ export default {
         this.changeFlowState(-1);
         this.changeClickBackoutBtn(false);
         this.changePrintBtn(false);
-        // 根据此状态来决定撤销时的操作逻辑
-        this.changeCurrentLajicodeState(false);
         this.changeBagCodeShow(false);
         this.changeAstOfficeShow(false);
         this.changeStaffCodeShow(false);
         this.changebluetoothWeighShow(false);
         this.changeManualWeighShow(false);
-        this.changeIsCollectCurrentOffice(true);
         this.changeCollectBtn(true);
         this.changeSureBtn(false);
         this.changeBackoutBtn(true);
@@ -100,8 +96,7 @@ export default {
     clearPartStorage () {
       removeStore('currentCollectMsg');
       removeStore('currentStep');
-      removeStore('weightMethods');
-      removeStore('continueCurrentCollect') 
+      removeStore('weightMethods')
     }
   }
 }

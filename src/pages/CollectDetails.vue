@@ -195,7 +195,7 @@
 import HeaderTop from '../components/HeaderTop'
 import FooterBottom from '../components/FooterBottom'
 import { mapGetters, mapMutations } from 'vuex'
-import { formatTime, setStore } from '@/common/js/utils'
+import { formatTime, setStore, IsPC } from '@/common/js/utils'
 export default {
   components: {
     HeaderTop,
@@ -223,14 +223,18 @@ export default {
 
   mounted () {
     // 控制设备物理返回按键
-    this.monitorBack();
+    if (!IsPC()) {
+      this.monitorBack()
+    };
     this.handleMessage = '';
   },
 
   // 由于该页面被缓存,调用activated钩子函数保证每次组件切换时,监听物理返回按键的方法都会执行
   activated () {
     // 控制设备物理返回按键
-    this.monitorBack()
+    if (!IsPC()) {
+      this.monitorBack()
+    }
   },
 
   methods: {

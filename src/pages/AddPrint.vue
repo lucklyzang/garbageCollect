@@ -70,7 +70,87 @@
         </p>
       </div>
     </div>
-    <!-- <FooterBottom></FooterBottom> -->
+    <!-- 打印内容 -->
+      <section class="bills-data" v-if="pcPrintShow" ref="print"
+        style="position:fixed;
+        top:0;
+        left:0;
+        width:100%;
+        height:85vh;
+        padding:10px 4px 10px 10px;
+        overflow: auto;
+        background: #fff;
+        z-index:1000"
+      >
+        <div v-if="lajiBarCode.length == 1">
+          <!-- 第一联 -->
+          <div v-for="(item, index) in lajiBarCode"
+            style="height:240px;
+            width:80%;
+            border-bottom:1px dashed #333;
+            background:transparent;
+            margin-bottom:40px;"
+          >
+            <p style="text-align:center;margin-bottom:20px;font-size:21px;font-weight:bold">医废回收小票</p>
+            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">科室: {{keshiCode[index]}}</p>
+            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">垃圾类型: {{lajiCodeName[index]}}</p>
+            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">垃圾重量: {{lanyaCz[index]}}kg</p>
+            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">收集人: {{collectWorkerName[index]}}</p>
+            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">交接人: {{yihuCode[index]}}</p>
+            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">时间: {{pcCreatimeList[0]}}</p>
+          </div>
+          <!-- 第二联 -->
+          <div v-for="(item, index) in lajiBarCode"
+            style="height:240px;
+            width:80%;
+            border-bottom:1px dashed #333;
+            background:transparent;
+            margin-bottom:40px;"
+          >
+            <p style="text-align:center;margin-bottom:20px;font-size:21px;font-weight:bold">医废回收小票</p>
+            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">科室: {{keshiCode[index]}}</p>
+            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">垃圾类型: {{lajiCodeName[index]}}</p>
+            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">垃圾重量: {{lanyaCz[index]}}kg</p>
+            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">收集人: {{collectWorkerName[index]}}</p>
+            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">交接人: {{yihuCode[index]}}</p>
+            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">时间: {{pcCreatimeList[0]}}</p>
+          </div>
+        </div>
+        <div v-else>
+          <!-- 第一联 -->
+          <div v-for="(item, index) in pcMapList"
+            style="height:240px;
+            width:80%;
+            border-bottom:1px dashed #333;
+            background:transparent;
+            margin-bottom:40px;"
+          >
+            <p style="text-align:center;margin-bottom:20px;font-size:21px;font-weight:bold">医废回收小票</p>
+            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">科室: {{keshiCode[0]}}</p>
+            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">垃圾类型: {{pcMapList[index]['type']}}</p>
+            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">垃圾重量: {{pcMapList[index]['weight']}}kg</p>
+            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">收集人: {{collectWorkerName[0]}}</p>
+            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">交接人: {{yihuCode[0]}}</p>
+            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">时间: {{pcCreatimeList[0]}}</p>
+          </div>
+          <!-- 第二联 -->
+          <div v-for="(item, index) in pcMapList"
+            style="height:240px;
+            width:80%;
+            border-bottom:1px dashed #333;
+            background:transparent;
+            margin-bottom:40px;"
+          >
+            <p style="text-align:center;margin-bottom:20px;font-size:21px;font-weight:bold">医废回收小票</p>
+            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">科室: {{keshiCode[0]}}</p>
+            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">垃圾类型: {{pcMapList[index]['type']}}</p>
+            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">垃圾重量: {{pcMapList[index]['weight']}}kg</p>
+            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">收集人: {{collectWorkerName[0]}}</p>
+            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">交接人: {{yihuCode[0]}}</p>
+            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">时间: {{pcCreatimeList[0]}}</p>
+          </div>
+        </div>
+      </section>
   </div>
 </template>
 
@@ -80,7 +160,10 @@ import FooterBottom from '../components/FooterBottom'
 import { mapGetters, mapMutations } from 'vuex'
 import Loading from '../components/Loading'
 import {queryPrintInfo, queryOffice, queryCollectPerson, postReplenishPrintData} from '../api/rubbishCollect.js'
-import { formatTime, setStore } from '@/common/js/utils'
+import { formatTime, setStore, IsPC } from '@/common/js/utils'
+import Vue from 'vue'
+import Print from '@/plugs/print'
+Vue.use(Print) 
 export default {
    components:{
     HeaderTop,
@@ -90,9 +173,13 @@ export default {
   data () {
     return {
       rawInfoList: [],
+      pcMapList: [],
       printData: [],
       endTimePop: false,
       startTimePop: false,
+      pcPrintShow: false,
+      contentMiddleShow: true,
+      pcCreatimeList: [],
       showLoadingHint: false,
       checkedAll: false,
       minDateStart: new Date(2018, 0, 1),
@@ -101,9 +188,9 @@ export default {
       currentDateEnd: '',
       startTime: '',
       endTime: '',
-      office: 13,
+      office: 38,
       officeList: [],
-      collectPerson: 83,
+      collectPerson: JSON.parse(localStorage.getItem('userInfo')).id,
       collectPersonList: [],
       reprint: 0,
       reprintList: [
@@ -139,20 +226,28 @@ export default {
     ]),
     getUserInfo () {
       return this.userInfo.proId
+    },
+    getUserId () {
+      return this.userInfo.id
+    },
+    getDepId () {
+      return this.userInfo.depId
     }
   },
 
   mounted() {
     // 控制设备物理返回按键
-    let that = this;
-    pushHistory()
-    that.gotoURL(() => { 
+    if (!IsPC()) {
+      let that = this;
       pushHistory()
-      this.$router.push({path: 'home'});  //输入要返回的上一级路由地址
-      this.changeTitleTxt({tit: '医废监测'});
-      setStore('currentTitle','医废监测')
-    });
-    this.queryAllBatch();
+      that.gotoURL(() => { 
+        pushHistory()
+        this.$router.push({path: 'home'});  //输入要返回的上一级路由地址
+        this.changeTitleTxt({tit: '医废监测'});
+        setStore('currentTitle','医废监测')
+      })
+    };
+    this.queryAllBatch(this.userInfo.proId,this.userInfo.id,this.userInfo.depId);
     this.initDate();
     this.querySelectInfo();
     this.initWasteInfo()
@@ -240,7 +335,7 @@ export default {
       })
     },
     // 查询收集的医废信息
-    queryAllBatch () {
+    queryAllBatch (proId,workerId,depId) {
       if (this.endTime !== this.startTime) {
         this.$dialog.alert({
           message: '起始日期与结束日期必需相同',
@@ -252,9 +347,9 @@ export default {
       this.showLoadingHint = true;
       this.rawInfoList = [];
       queryPrintInfo({ 
-        proId: this.userInfo.proId, //项目ID
-        workerId: this.userInfo.workerName, //当前收集人
-        depId: this.userInfo.depId, //部门ID
+        proId,//项目ID
+        workerId, //当前收集人
+        depId, //部门ID
         startDate: this.startTime ? this.startTime : formatTime('YYYY-MM-DD'),   //起始日期 格式 yyyy-MM-dd 必输
         endDate: this.endTime ? this.endTime : formatTime('YYYY-MM-DD'),      //终止日期 格式 yyyy-MM-dd 必输		
         currentPage: 1, //当前页
@@ -306,7 +401,7 @@ export default {
     // 搜索按钮
     queryPrintMessage () {
       this.checkedAll = false;
-      this.queryAllBatch()
+      this.queryAllBatch(this.userInfo.proId,this.collectPerson,this.office);
     },
 
     // 全选操作
@@ -413,6 +508,7 @@ export default {
     // 打印凭条
     printSlip () {
       this.printData = [];
+      this.pcCreatimeList = [];
       this.initWasteInfo();
       this.printData = this.rawInfoList.filter((item) => {
         return item.check == true
@@ -423,7 +519,8 @@ export default {
         this.lajiCodeName.push(item.wasteName),
         this.lanyaCz.push(item.weight),
         this.yihuCode.push(item.careName),
-        this.collectWorkerName.push(item.workerName)
+        this.collectWorkerName.push(item.workerName);
+        this.pcCreatimeList.push(item.createTime)
       };
       // num,dep,category,weight,collector,handover
       // this.lajiCode[0].wasteName,
@@ -436,37 +533,47 @@ export default {
         });
         return
       };
-      if (this.lajiBarCode.length == 1) {
-        let flag = true;
-        this.printProof(this.lajiBarCode[0],this.keshiCode[0],this.lajiCodeName[0],
-          this.lanyaCz[0],this.collectWorkerName[0],this.yihuCode[0]);
-        if (flag) {
-           this.printProof(this.lajiBarCode[0],this.keshiCode[0],this.lajiCodeName[0],
-          this.lanyaCz[0],this.collectWorkerName[0],this.yihuCode[0]);
-        }
-      } else if (this.lajiBarCode.length > 1) {
-        let map = {};
-        // 记录打印次数
-        let timeNum = 1;
-        // 合并重复的垃圾类型及其重量
-        this.lajiCodeName.forEach((value, index) => {
-          Object.prototype.hasOwnProperty.call(map, value) || (map[value] = 0);
-          map[value] += Number(this.lanyaCz[index]);
-        });
-        // 循环调用打印接口
-        for (var i = 0, len = this.lajiBarCode.length; i<len; i++) {
-          if (i == Object.values(map).length) {return};
-          this.printProof(this.lajiBarCode[i],this.keshiCode[0],Object.keys(map)[i],
-          Object.values(map)[i],this.collectWorkerName[0],this.yihuCode[i]);
-          // 打印两联
-          if (timeNum < 2) { 
-            if (i == Object.values(map).length-1) {
-              i = -1;
-              timeNum++
+      let map = {};
+      this.pcMapList = [];
+      // 合并重复的垃圾类型及其重量
+      this.lajiCodeName.forEach((value, index) => {
+        Object.prototype.hasOwnProperty.call(map, value) || (map[value] = 0);
+        map[value] += Number(this.lanyaCz[index]);
+      });
+      for (let item in map ) {
+        this.pcMapList.push({type:item, weight: map[item]})
+      };
+      if (!IsPC()) {
+        if (this.lajiBarCode.length == 1) {
+          let flag = true;
+          this.printProof(this.lajiBarCode[0],this.keshiCode[0],this.lajiCodeName[0],
+            this.lanyaCz[0],this.collectWorkerName[0],this.yihuCode[0])
+          if (flag) {
+          this.printProof(this.lajiBarCode[0],this.keshiCode[0],this.lajiCodeName[0],
+            this.lanyaCz[0],this.collectWorkerName[0],this.yihuCode[0])
+          }
+        } else if (this.lajiBarCode.length > 1) {
+          // 记录打印次数
+          let timeNum = 1;
+          // 循环调用打印接口
+          for (var i = 0, len = this.lajiBarCode.length; i<len; i++) {
+            if (i == Object.values(map).length) {return};
+            this.printProof(this.lajiBarCode[i],this.keshiCode[0],Object.keys(map)[i],
+            Object.values(map)[i],this.collectWorkerName[0],this.yihuCode[i]);
+            // 打印两联
+            if (timeNum < 2) { 
+              if (i == Object.values(map).length-1) {
+                i = -1;
+                timeNum++
+              }
             }
           }
         }
-      };
+      } else {
+        this.pcPrintShow = true;
+        this.$print(this.$refs.print);
+        this.pcPrintShow = false
+      }
       // 提交打印数据到服务端
       this.postPrintData()
     }
@@ -481,7 +588,22 @@ export default {
   .content-wrapper {
     .content-middle {
       .content-middle();
-       .content-middle-top {
+       .btn-group {
+        position: fixed;
+        left: 0;
+        bottom: 6px;
+        width: 100%;
+        text-align: center;
+        p {
+          button {
+            background: @color-theme;
+            border-color: @color-theme;
+            letter-spacing: 2px;
+            padding: 0 120px
+          }
+        }
+      }
+      .content-middle-top {
         background: #fff;
         margin-top: 3%;
         position: relative;
@@ -614,21 +736,35 @@ export default {
           }
         }
       }
-      .btn-group {
-        position: fixed;
-        left: 0;
-        bottom: 6px;
-        width: 100%;
-        text-align: center;
-        p {
-          button {
-            background: @color-theme;
-            border-color: @color-theme;
-            letter-spacing: 2px;
-            padding: 0 120px
-          }
-        }
-      }
     }
+    //  .bills-data {
+    //     position:fixed;
+    //     bottom:100px;
+    //     left:0;
+    //     width:100%;
+    //     height:50vh;
+    //     padding:10px 4px 10px 10px;
+    //     overflow: auto;
+    //     background: #fff;
+    //     div {
+    //       height:230px;
+    //       width:100%;
+    //       border-bottom:1px dashed #333;
+    //       background:transparent;
+    //       margin-bottom:40px;
+    //       p {
+    //         font-size:18px;
+    //         width:100%;
+    //         min-height:24px;
+    //         word-wrap: break-word
+    //       }
+    //       p:first-child {
+    //         text-align:center;
+    //         margin-bottom:20px;
+    //         font-size:22px;
+    //         font-weight:bolder
+    //       }
+    //     }
+    //   }
   }
 </style>

@@ -26,7 +26,7 @@
 import {trashCollectOne,trashCollectMore} from '../../api/rubbishCollect.js'
 import Loading from '@/components/Loading'
 import { mapGetters, mapMutations } from 'vuex'
-import { setStore, getStore, removeStore } from '@/common/js/utils'
+import { setStore, getStore, removeStore, IsPC } from '@/common/js/utils'
 export default {
   data () {
     return {
@@ -66,34 +66,36 @@ export default {
   mounted() {
     this.showDialog();
     // 控制设备物理返回按键
-    pushHistory();
-    this.gotoURL(() => { 
+    if (!IsPC()) {
       pushHistory();
-      if (this.successInfo) {
-        this.$dialog.alert({
-          message: '请先处理收集数据提交成功弹框',
+      this.gotoURL(() => { 
+        pushHistory();
+        if (this.successInfo) {
+          this.$dialog.alert({
+            message: '请先处理收集数据提交成功弹框',
+            closeOnPopstate: false
+          }).then(() => {
+            this.submitDataSuccessShow = true;
+            this.successInfo = true
+          })
+        } else if (this.abnormalInfo) {
+          this.$dialog.alert({
+            message: '请先处理收集数据提交医废编码异常弹框',
+            closeOnPopstate: false
+          }).then(() => {
+            this.submitDataAbnormalShow = true;
+            this.abnormalInfo = true
+          })
+        } else {
+          this.$dialog.alert({
+          message: '请先处理此科室收集是否已完成弹框',
           closeOnPopstate: false
-        }).then(() => {
-          this.submitDataSuccessShow = true;
-          this.successInfo = true
-        })
-      } else if (this.abnormalInfo) {
-         this.$dialog.alert({
-          message: '请先处理收集数据提交医废编码异常弹框',
-          closeOnPopstate: false
-        }).then(() => {
-          this.submitDataAbnormalShow = true;
-          this.abnormalInfo = true
-        })
-      } else {
-        this.$dialog.alert({
-        message: '请先处理此科室收集是否已完成弹框',
-        closeOnPopstate: false
-        }).then(() => {
-          this.showDialog()
-        });
-      }
-    });
+          }).then(() => {
+            this.showDialog()
+          });
+        }
+      })
+    }
   },
 
   methods: {
@@ -106,7 +108,6 @@ export default {
       'clearTrashStore',
       'changeBackoutBtn',
       'changeTotalWeight',
-      'changeCurrentLajicodeState',
       'changeClickBackoutBtn',
       'changeTitleTxt',
       'changeCurrentActive',
@@ -151,7 +152,6 @@ export default {
               this.changeAstOfficeShow(false);
               this.changebluetoothWeighShow(false);
               this.changeManualWeighShow(false);
-              this.changeIsCollectCurrentOffice(true);
               this.clearTrashStore()
             })
           };
@@ -171,7 +171,6 @@ export default {
                 this.postTrashMore();
              });
         };
-        this.changeCurrentLajicodeState(false);
         this.changeClickBackoutBtn(false);
       })
       .catch(() => {
@@ -236,7 +235,7 @@ export default {
           this.changeManualWeighShow(false);
           this.changeBagCodeShow(false);
           this.changeAstOfficeShow(false);
-          this.changeStaffCodeShow(true)
+          this.changeStaffCodeShow(false)
         })
       })
     },
@@ -284,10 +283,10 @@ export default {
               this.abnormalMsg = `${res.data.msg}${res.data.data.fail}异常,确认后将剔除本次收集中的异常医废条码,可以再次提交`
             } else {
               this.abnormalMsg = res.data.msg
-            }
+            };
             this.showLoading = false;
             this.submitDataAbnormalShow = true;
-            this.abnormalInfo = true;
+            this.abnormalInfo = true
           }
         }
       })
@@ -308,7 +307,7 @@ export default {
           this.changeManualWeighShow(false);
           this.changeBagCodeShow(false);
           this.changeAstOfficeShow(false);
-          this.changeStaffCodeShow(true)
+          this.changeStaffCodeShow(false)
         })
       })
     },
@@ -332,18 +331,36 @@ export default {
 
     // 数据提交状态码异常时弹框确定按钮的回调事件
     abnormalSure () {
-      let filterMsg = {};
-      if (this.isMoreStrip) {
-        if (this.abnormalCodeList.length > 0) {
-          filterMsg = this.resetBarArray(this.lajiCode, this.lanyaCz,this.abnormalCodeList)
+      if (this.lajiCode.length > 1) {
+        let filterMsg = {};
+        if (this.isMoreStrip) {
+          if (this.abnormalCodeList.length > 0) {
+            filterMsg = this.resetBarArray(this.lajiCode, this.lanyaCz,this.abnormalCodeList)
+          };
+          this.isMoreStrip = false
         };
-        this.isMoreStrip = false
+        // 重新存储store里的收集垃圾信息
+        this.initStorageLajiCode();
+        this.initStorageLanyaCz();
+        this.changeStorageLajiCode(filterMsg['one']);
+        this.changeStorageLanyaCz(filterMsg['two']);
+        if (this.lajiCode.length == 0) {
+          this.changeRepeatSubmit(false);
+          this.changeBackoutBtn(true);
+          this.changeFlowState(1);
+          this.$router.push({path: 'medicalCollect'});
+          this.changeCollectBtn(false);
+          this.changeSureBtn(true);
+          this.changebluetoothWeighShow(false);
+          this.changeManualWeighShow(false);
+          this.changeBagCodeShow(false);
+          this.changeAstOfficeShow(false);
+          this.changeStaffCodeShow(true);
+          return
+        } else {
+          this.changeRepeatSubmit(true)
+        }
       };
-      // 重新存储store里的收集垃圾信息
-      this.initStorageLajiCode();
-      this.initStorageLanyaCz();
-      this.changeStorageLajiCode(filterMsg['one']);
-      this.changeStorageLanyaCz(filterMsg['two']);
       this.changeRepeatSubmit(true);
       this.changeBackoutBtn(false);
       this.changeFlowState(3);
@@ -354,7 +371,7 @@ export default {
       this.changeManualWeighShow(false);
       this.changeBagCodeShow(false);
       this.changeAstOfficeShow(false);
-      this.changeStaffCodeShow(true)
+      this.changeStaffCodeShow(false)
     },
 
     // 根据给出的医废编码，来删除存储中存在的医废编码
@@ -376,8 +393,7 @@ export default {
     clearPartStorage () {
       removeStore('currentCollectMsg');
       removeStore('currentStep');
-      removeStore('weightMethods');
-      removeStore('continueCurrentCollect') 
+      removeStore('weightMethods')
     }
 
     // 提交数据失败时的处理
@@ -402,4 +418,10 @@ export default {
 }
 </script>
 <style lang='less' scoped>
+  div {
+    /deep/ .van-dialog__header {
+      height: auto;
+      word-wrap: break-word;
+    }
+  }
 </style>

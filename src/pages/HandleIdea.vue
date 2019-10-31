@@ -30,7 +30,7 @@
 import HeaderTop from '../components/HeaderTop'
 import FooterBottom from '../components/FooterBottom'
 import { mapGetters, mapMutations } from 'vuex'
-import { formatTime, setStore } from '@/common/js/utils'
+import { formatTime, setStore, IsPC } from '@/common/js/utils'
 import {warningDispose} from '../api/rubbishCollect.js'
 import {queryCollectHistory} from '../api/rubbishCollect.js'
 export default {
@@ -56,14 +56,16 @@ export default {
 
   mounted () {
     // 控制设备物理返回按键
-    let that = this;
-    pushHistory()
-    that.gotoURL(() => { 
+    if (!IsPC()) {
+      let that = this;
       pushHistory()
-      this.$router.push({path: 'abnormalWarning'});  //输入要返回的上一级路由地址
-      this.changeTitleTxt({tit: '医废预警'});
-      setStore('currentTitle','医废预警');
-    });
+      that.gotoURL(() => { 
+        pushHistory()
+        this.$router.push({path: 'abnormalWarning'});  //输入要返回的上一级路由地址
+        this.changeTitleTxt({tit: '医废预警'});
+        setStore('currentTitle','医废预警');
+      })
+    };
     this.handleMessage = '';
   },
 

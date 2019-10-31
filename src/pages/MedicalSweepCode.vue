@@ -1,3 +1,4 @@
+
 <template>
     <div class="content-wrapper">
       <HeaderTop :title="navTopTitle">
@@ -15,13 +16,13 @@
             <p>房间: {{judgeFlowValue == 0 ? keshiCode[keshiCode.length-1].depName : extraKeshiMsg.depName ? extraKeshiMsg.depName : ''}}</p>
           </div>
           <div class="bag-code" v-if="showBagCodeShow">
-            <p>医废类型: {{judgeFlowValue == 1 ? lajiCode[lajiCode.length-1].wasteName : extraLajiMsg ? extraLajiMsg.wasteName : ''}}</p>
-            <p>医院: {{judgeFlowValue == 1 ? lajiCode[lajiCode.length-1].proName : extraLajiMsg ? extraLajiMsg.proName : ''}}</p>
-            <p>房间: {{judgeFlowValue == 1 ? lajiCode[lajiCode.length-1].depName : extraLajiMsg ? extraLajiMsg.depName : ''}}</p>
-            <p>医废编号: {{judgeFlowValue == 1 ? lajiCode[lajiCode.length-1].barCode : extraLajiMsg ? extraLajiMsg.barCode : ''}}</p>
+            <p>医废类型: {{judgeFlowValue == 2 ? lajiCode[lajiCode.length-1].wasteName : extraLajiMsg ? extraLajiMsg.wasteName : ''}}</p>
+            <p>医院: {{judgeFlowValue == 2 ? lajiCode[lajiCode.length-1].proName : extraLajiMsg ? extraLajiMsg.proName : ''}}</p>
+            <p>房间: {{judgeFlowValue == 2 ? lajiCode[lajiCode.length-1].depName : extraLajiMsg ? extraLajiMsg.depName : ''}}</p>
+            <p>医废编号: {{judgeFlowValue == 2 ? lajiCode[lajiCode.length-1].barCode : extraLajiMsg ? extraLajiMsg.barCode : ''}}</p>
           </div>
           <div class="bluetooth-weigh" v-if="showBluetoothWeighShow">
-            <p>重量: {{judgeFlowValue == 2 ? lanyaCz[lanyaCz.length-1] ? lanyaCz[lanyaCz.length-1]: '' : extraLyczMsg}}kg</p>
+            <p>重量: {{judgeFlowValue == 3 ? lanyaCz[lanyaCz.length-1] ? lanyaCz[lanyaCz.length-1]: '' : extraLyczMsg}}kg</p>
           </div>
           <div v-if="manualWeighShow">
             <van-cell-group>
@@ -29,9 +30,9 @@
             </van-cell-group>
           </div>
           <div class="staff-code" v-if="showStaffCodeShow">
-            <p>医院: {{judgeFlowValue == 3 ? yihuCode[yihuCode.length-1].proName : extraYihuMsg ? extraYihuMsg.proName : ''}}</p>
-            <p>姓名: {{judgeFlowValue == 3 ? yihuCode[yihuCode.length-1].workerName : extraYihuMsg ? extraYihuMsg.workerName : ''}}</p>
-            <p>房间: {{judgeFlowValue == 3 ? yihuCode[yihuCode.length-1].depName : extraYihuMsg ? extraYihuMsg.depName : ''}}</p>
+            <p>医院: {{judgeFlowValue == 1 ? yihuCode[yihuCode.length-1].proName : extraYihuMsg ? extraYihuMsg.proName : ''}}</p>
+            <p>姓名: {{judgeFlowValue == 1 ? yihuCode[yihuCode.length-1].workerName : extraYihuMsg ? extraYihuMsg.workerName : ''}}</p>
+            <p>房间: {{judgeFlowValue == 1 ? yihuCode[yihuCode.length-1].depName : extraYihuMsg ? extraYihuMsg.depName : ''}}</p>
           </div>
         </div>
         <div class="content-footer">
@@ -91,6 +92,86 @@
           @cancel=""
           >
         </van-dialog>
+       <!-- 打印内容 -->
+      <section class="bills-data" v-if="pcPrintShow" ref="printCode"
+        style="position:fixed;
+        top:0;
+        left:0;
+        width:100%;
+        height:85vh;
+        padding:10px 4px 10px 10px;
+        overflow: auto;
+        background: #fff;
+        z-index:1000"
+      >
+        <div v-if="lajiCode.length == 1">
+          <!-- 第一联 -->
+          <div class="div-wrapper" v-for="(item, index) in lajiCode"
+            style="height:240px;
+            width:80%;
+            border-bottom:1px dashed #333;
+            background:transparent;
+            margin-bottom:40px;"
+          >
+            <p style="text-align:center;margin-bottom:20px;font-size:21px;font-weight:bold">医废回收小票</p>
+            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">科室: {{keshiCode[0].depName}}</p>
+            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">垃圾类型: {{lajiCode[index].wasteName}}</p>
+            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">垃圾重量: {{lanyaCz[index]}}kg</p>
+            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">收集人: {{userInfo.workerName}}</p>
+            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">交接人: {{yihuCode[0].workerName}}</p>
+            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">时间: {{collectTime}}</p>
+          </div>
+          <!-- 第二联 -->
+          <div class="div-wrapper" v-for="(item, index) in lajiCode"
+            style="height:240px;
+            width:80%;
+            border-bottom:1px dashed #333;
+            background:transparent;
+            margin-bottom:40px;"
+          >
+            <p style="text-align:center;margin-bottom:20px;font-size:21px;font-weight:bold">医废回收小票</p>
+            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">科室: {{keshiCode[0].depName}}</p>
+            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">垃圾类型: {{lajiCode[index].wasteName}}</p>
+            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">垃圾重量: {{lanyaCz[index]}}kg</p>
+            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">收集人: {{userInfo.workerName}}</p>
+            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">交接人: {{yihuCode[index].workerName}}</p>
+            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">时间: {{collectTime}}</p>
+          </div>
+        </div>
+        <div v-else>
+          <!-- 第一联 -->
+          <div class="div-wrapper" v-for="(item, index) in pcMapList"
+            style="height:240px;
+            width:80%;
+            border-bottom:1px dashed #333;
+            background:transparent;
+            margin-bottom:40px;"
+          >
+            <p style="text-align:center;margin-bottom:20px;font-size:21px;font-weight:bold">医废回收小票</p>
+            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">科室: {{keshiCode[0].depName}}</p>
+            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">垃圾类型: {{pcMapList[index]['type']}}</p>
+            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">垃圾重量: {{pcMapList[index]['weight']}}kg</p>
+            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">收集人: {{userInfo.workerName}}</p>
+            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">交接人: {{yihuCode[yihuCode.length-1].workerName}}</p>
+            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">时间: {{collectTime}}</p>
+          </div>
+          <!-- 第二联 -->
+          <div class="div-wrapper" v-for="(item, index) in pcMapList"  
+            style="height:240px;
+            width:80%;
+            border-bottom:1px dashed #333;
+            background:transparent;
+            margin-bottom:40px;">
+            <p style="text-align:center;margin-bottom:20px;font-size:21px;font-weight:bold">医废回收小票</p>
+            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">科室: {{keshiCode[0].depName}}</p>
+            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">垃圾类型: {{pcMapList[index]['type']}}</p>
+            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">垃圾重量: {{pcMapList[index]['weight']}}kg</p>
+            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">收集人: {{userInfo.workerName}}</p>
+            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">交接人: {{yihuCode[yihuCode.length-1].workerName}}</p>
+            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">时间: {{collectTime}}</p>
+          </div>
+        </div>
+      </section>
     </div>
 </template>
 
@@ -102,6 +183,9 @@ import ProgressStyle from '../components/ProgressStyle'
 import {judgeStagingPoint,judgeMedicalPerson} from '../api/rubbishCollect.js'
 import { formatTime, setStore, getStore, removeStore, IsPC, scanCode} from '@/common/js/utils'
 import { mapGetters, mapMutations } from 'vuex'
+import Vue from 'vue'
+import Print from '@/plugs/print'
+Vue.use(Print) 
 export default {
    components:{
       HeaderTop,
@@ -116,6 +200,9 @@ export default {
       currentPercentage: '0',
       temporaryActive: -1,
       barCodeList: [],
+      pcMapList: [],
+      pcPrintShow: false,
+      contentMiddleShow: true,
       checkedAll: false,
       chooseBackoutShow: false,
       barCodeScannerShow: false,
@@ -140,7 +227,6 @@ export default {
       'showCollectBtn',
       'showSureBtn',
       'showBackoutBtn',
-      'clearCurrentLajicode',
       'astOfficeShow',
       'staffCodeShow',
       'bagCodeShow',
@@ -189,28 +275,33 @@ export default {
     },
     showBluetoothWeighShow () {
       return this.bluetoothWeighShow
+    },
+    collectTime () {
+     return  formatTime('YYYY-MM-DD HH:mm:ss')  
     }
   },
 
   mounted () {
     // 控制设备物理返回按键
-    let that = this;
-    pushHistory();
-    that.gotoURL(() => { 
-      pushHistory()
-      this.$dialog.confirm({
-        message: '返回上一级后,将清空本次收集的医废数据'
+    if (!IsPC()) {
+      let that = this;
+      pushHistory();
+      that.gotoURL(() => { 
+        pushHistory()
+        this.$dialog.confirm({
+          message: '返回上一级后,将清空本次收集的医废数据'
+        })
+        .then(() => {
+          this.$router.push({path: 'home'});  //输入要返回的上一级路由地址
+          this.changeTitleTxt({tit: '医废监测'});
+          this.initSweepCodeInfo();
+          this.clearPartStorage()
+        })
+        .catch(() => {
+        })
       })
-      .then(() => {
-        this.$router.push({path: 'home'});  //输入要返回的上一级路由地址
-        this.changeTitleTxt({tit: '医废监测'});
-        this.initSweepCodeInfo();
-        this.clearPartStorage()
-      })
-      .catch(() => {
-      })
-    });
-
+    };
+    // this.ShowCotentMIddle();
     // 判断流程从哪步开始
     this.judgeFlowPosition();
     // 判断是否执行扫码枪方法
@@ -268,7 +359,6 @@ export default {
       'changeTotalWeight',
       'changeStorageLajiCode',
       'changeStorageLanyaCz',
-      'changeCurrentLajicodeState',
       'changeClickBackoutBtn',
       'changeStaffCodeShow',
       'changePrintBtn',
@@ -310,6 +400,7 @@ export default {
       .catch(() => {
       })
     },
+
     // 跳转到我的页面
     skipMyInfo () {
       this.$dialog.confirm({
@@ -333,9 +424,7 @@ export default {
         this.changeCurrentActive(0);
         this.temporaryActive = -1;
         // 此时确定按钮还未出现,让进度进到0，可以获取到科室的扫描回调
-        this.changeCodeStep(0);
-        this.changeIsCollectCurrentOffice(true);
-        this.changeCurrentLajicodeState(false);
+        this.changeCodeStep(0)
       } else if (this.judgeFlowValue == 0) {
         this.changeCurrentActive(0);
         this.temporaryActive = 0;
@@ -343,15 +432,14 @@ export default {
         this.changeAstOfficeShow(true);
         this.changeIsPlus(true)
       } else if (this.judgeFlowValue == 1) {
-        this.changeCurrentLajicodeState(true);
         this.changeCollectBtn(false);
         this.changeBackoutBtn(true);
         this.changeSureBtn(true);
         this.changePrintBtn(false);
         this.changeOtherBtn(false);
         this.changeClickBackoutBtn(false);
-        this.changeBagCodeShow(true);
-        this.changeStaffCodeShow(false);
+        this.changeBagCodeShow(false);
+        this.changeStaffCodeShow(true);
         this.changebluetoothWeighShow(false);
         this.changeManualWeighShow(false);
         this.changeAstOfficeShow(false);
@@ -359,12 +447,12 @@ export default {
         this.temporaryActive = 1;
         this.changeCodeStep(1);
         this.changeIsPlus(true)
-      } else if (this.judgeFlowValue == 3) {
-        this.changeCurrentActive(3);
-        this.temporaryActive = 3;
-        this.changeCodeStep(3);
-        this.changeIsPlus(true);
       } else if (this.judgeFlowValue == 2) {
+        this.changeCurrentActive(2);
+        this.temporaryActive = 2;
+        this.changeCodeStep(2);
+        this.changeIsPlus(true);
+      } else if (this.judgeFlowValue == 3) {
         if (!getStore('weightMethods')) {
           if (this.isBlueWeight) {
             this.changebluetoothWeighShow(true);
@@ -383,14 +471,14 @@ export default {
             this.changebluetoothWeighShow(true);
             this.changeManualWeighShow(false);
           };
-          this.changeCurrentActive(2);
-          this.temporaryActive = 2;
-          this.changeCodeStep(2);
+          this.changeCurrentActive(3);
+          this.temporaryActive = 3;
+          this.changeCodeStep(3);
           this.changeIsPlus(true);
         };
-        this.changeCurrentActive(2);
-        this.temporaryActive = 2;
-        this.changeCodeStep(2);
+        this.changeCurrentActive(3);
+        this.temporaryActive = 3;
+        this.changeCodeStep(3);
         this.changeIsPlus(true);
       } else {
         this.initSweepCodeInfo()
@@ -413,8 +501,7 @@ export default {
         } else if (this.lajiCode.length > 0) {
           this.initStorageLajiCode();
           this.initStorageLanyaCz();
-          this.$router.push({path:'judgeCurrentDepantment'});
-          this.changeCurrentLajicodeState(false)
+          this.$router.push({path:'judgeCurrentDepantment'})
         }
       }).catch(() => {
         if (this.lajiCode.length == 0) {
@@ -430,13 +517,14 @@ export default {
             lajiCodeMsg.splice(lajiCodeMsg.length-1,1);
             this.initStorageLajiCode();
             this.changeStorageLajiCode(lajiCodeMsg);
-            // 退回到该次收集的第一步
-            this.changeCurrentActive(0);
-            this.temporaryActive = 0;
-            this.changeCodeStep(0);
+            // 退回到该科室收集流程的第二步
+            this.changeCurrentActive(1);
+            this.temporaryActive = 1;
+            this.changeCodeStep(1);
+            this.changeStaffCodeShow(true);
             this.manualWeight = '';
             this.changeExtraLyczMsg('');
-            this.changeAstOfficeShow(true);
+            this.changeAstOfficeShow(false);
             this.changeIsPlus(true);
             this.changebluetoothWeighShow(false);
             this.changeManualWeighShow(false);
@@ -482,9 +570,7 @@ export default {
       this.changeStaffCodeShow(false);
       this.changebluetoothWeighShow(false);
       this.changeManualWeighShow(false);
-      this.changeIsCollectCurrentOffice(true);
-      this.clearTrashStore();
-      this.changeCurrentLajicodeState(false)
+      this.clearTrashStore()
     },
 
     // 扫描二维码方法
@@ -510,7 +596,7 @@ export default {
       var code = JSON.parse(code);
       this.barCodeScannerShow = false;
       if (this.isPcCallBack) {
-        this.processMethods (code)
+        this.processMethods(code)
       }
     },
 
@@ -522,7 +608,7 @@ export default {
         if (code && Object.keys(code).length > 0) {
           if (code.hasOwnProperty('type') && code.hasOwnProperty('number')) {
             if (code.type && code.number) {
-              judgeStagingPoint(code.type,code.number).then((res) => {
+              judgeStagingPoint(this.batchNumber,code.number).then((res) => {
                 if (res && res.data.code == 200) {
                   this.changeCurrentActive(this.codeStep);
                   this.changeCodeStep(this.codeStep);
@@ -586,26 +672,26 @@ export default {
         this.barCodeScannerShow = false
       };
       // 扫码的医护人员信息存入store
-      if (this.codeStep == 3) {
+      if (this.codeStep == 1) {
         if (code && Object.keys(code).length > 0) {
           if (code.hasOwnProperty('workerName')) {
             if (code.workerName) {
               judgeMedicalPerson(code.workerNumber,this.batchNumber).then((res) => {
                   if (res && res.data.code == 200) {
                     this.changeCurrentActive(this.codeStep);
-                    this.temporaryActive = 3;
+                    this.temporaryActive = 1;
                     this.changeCodeStep(this.codeStep);
                     this.isPcCallBack = false;
                     this.changeIsPlus(true);
+                    this.changeAstOfficeShow(false);
                     this.storageYihuCode(code);
                     this.changeExtraYihuMsg(code);
                     this.changeStaffCodeShow(true);
                     this.changebluetoothWeighShow(false);
                     this.changeManualWeighShow(false);
-                    this.changeIsCollectCurrentOffice(true);
                     // h5存储每步的收集信息和流程
                     setStore('currentCollectMsg',{currentMsg:this.garColMsg});
-                    setStore('currentStep',3); 
+                    setStore('currentStep',1); 
                   } else {
                     this.$dialog.alert({
                     message: `${res.data.msg}`,
@@ -654,7 +740,7 @@ export default {
         this.barCodeScannerShow = false;
       };
       // 扫码的垃圾袋信息存入store
-      if (this.codeStep == 1) {
+      if (this.codeStep == 2) {
         // 扫码回调中没有信息提示重新扫描
         if (code && Object.keys(code).length > 0) {
           if (code.hasOwnProperty('wasteName') && code.hasOwnProperty('proName') && code.hasOwnProperty('depName') && code.hasOwnProperty('barCode')) {
@@ -669,7 +755,7 @@ export default {
               };
               if (this.barCodeList.indexOf(`${code.barCode}`) == -1) {
                 this.changeCurrentActive(this.codeStep);
-                this.temporaryActive = 1;
+                this.temporaryActive = 2;
                 this.changeCodeStep(this.codeStep);
                 this.isPcCallBack = false;
                 this.changeIsPlus(true);
@@ -677,12 +763,12 @@ export default {
                 this.changeExtraLajiMsg(code);
                 this.changeBagCodeShow(true);
                 this.changeAstOfficeShow(false);
-                this.changeCurrentLajicodeState(true);
+                this.changeStaffCodeShow(false);
                 this.changeManualWeighShow(false);
                 this.changebluetoothWeighShow(false);
                 // h5存储每步的收集信息和流程
                 setStore('currentCollectMsg',{currentMsg:this.garColMsg});
-                setStore('currentStep',1);
+                setStore('currentStep',2);
               } else {
                 this.$dialog.alert({
                   message: '扫描的医废重复,请重新扫描',
@@ -734,10 +820,10 @@ export default {
 
     // 连接蓝牙秤后的回调
     getWeightCallback(str) {
-      if (this.codeStep == 2) {
+      if (this.codeStep == 3) {
         if (str) {
           this.changeCurrentActive(this.codeStep);
-          this.temporaryActive = 2;
+          this.temporaryActive = 3;
           this.changeManualWeighShow(false);
           this.changeCodeStep(this.codeStep);
           this.changebluetoothWeighShow(true);
@@ -763,47 +849,59 @@ export default {
         });
         return
       };
-      this.changePrintBtn(false);
+      if (!IsPC()) {
+        this.changePrintBtn(false);
+      };
       this.changeOtherBtn(true);
       this.changeBackoutBtn(false);
-      if (this.lajiCode.length == 1) {
-        let flag = true;
-        this.printProof(this.lajiCode[0].barCode,this.keshiCode[0].depName,this.lajiCode[0].wasteName,
-          this.lanyaCz[0],this.userInfo.workerName,this.yihuCode[this.yihuCode.length-1].workerName);
-        if (flag) {
+      let map = {};
+      let momentTypeList = [];
+      this.pcMapList = [];
+      for (let item of this.lajiCode) {
+        for (let itemList in item) {
+          if (itemList == 'wasteName') {
+            momentTypeList.push(item[itemList])
+          }
+        }
+      };
+      // 合并重复的垃圾类型及其重量
+      momentTypeList.forEach((value, index) => {
+        Object.prototype.hasOwnProperty.call(map, value) || (map[value] = 0);
+        map[value] += Number(this.lanyaCz[index]);
+      });
+      for (let item in map ) {
+        this.pcMapList.push({type:item, weight: map[item]})
+      };
+      if (!IsPC()) {
+        if (this.lajiCode.length == 1) {
+          let flag = true;
           this.printProof(this.lajiCode[0].barCode,this.keshiCode[0].depName,this.lajiCode[0].wasteName,
             this.lanyaCz[0],this.userInfo.workerName,this.yihuCode[this.yihuCode.length-1].workerName);
-        }
-      } else if (this.lajiCode.length > 1) {
-        let map = {};
-        let momentTypeList = [];
-        // 记录打印次数
-        let timeNum = 1;
-        for (let item of this.lajiCode) {
-          for (let itemList in item) {
-            if (itemList == 'wasteName') {
-              momentTypeList.push(item[itemList])
-            }
+          if (flag) {
+            this.printProof(this.lajiCode[0].barCode,this.keshiCode[0].depName,this.lajiCode[0].wasteName,
+              this.lanyaCz[0],this.userInfo.workerName,this.yihuCode[this.yihuCode.length-1].workerName);
           }
-        };
-        // 合并重复的垃圾类型及其重量
-        momentTypeList.forEach((value, index) => {
-          Object.prototype.hasOwnProperty.call(map, value) || (map[value] = 0);
-          map[value] += Number(this.lanyaCz[index]);
-        });
-        // 循环调用打印接口
-        for (var i = 0, len = this.lajiCode.length; i<len; i++) {
-          if (i == Object.values(map).length) {return};
-          this.printProof(this.lajiCode[i].barCode,this.keshiCode[0].depName,Object.keys(map)[i],
-          Object.values(map)[i],this.userInfo.workerName,this.yihuCode[this.yihuCode.length-1].workerName);
-          // 打印两联
-          if (timeNum < 2) { 
-            if (i == Object.values(map).length-1) {
-              i = -1;
-              timeNum++
+        } else if (this.lajiCode.length > 1) {
+          // 记录打印次数
+          let timeNum = 1;
+          // 循环调用打印接口
+          for (var i = 0, len = this.lajiCode.length; i<len; i++) {
+            if (i == Object.values(map).length) {return};
+            this.printProof(this.lajiCode[i].barCode,this.keshiCode[0].depName,Object.keys(map)[i],
+            Object.values(map)[i],this.userInfo.workerName,this.yihuCode[this.yihuCode.length-1].workerName);
+            // 打印两联
+            if (timeNum < 2) { 
+              if (i == Object.values(map).length-1) {
+                i = -1;
+                timeNum++
+              }
             }
           }
         }
+      } else {
+        this.pcPrintShow = true;
+        this.$print(this.$refs.printCode);
+        this.pcPrintShow = false;
       }
     },
 
@@ -818,95 +916,93 @@ export default {
       this.changeIsPlus(false);
       if (middleCurrentActive > 4) {return};
       if (middleCurrentActive == 3) {
-        if (!this.isCollectCurrentOffice) {
-          this.sweepAstoffice()
-        } else {
+        this.chooseWeightMethod();
+        this.changeRepeatSubmit(false)
+      } else if (middleCurrentActive == 4) {
+        if (!this.isRepeatSubmit) {
           if (this.manualWeighShow) {
-            let re = /^[+]{0,1}(\d+)$|^[+]{0,1}(\d+\.\d+)$/;
-            if (this.manualWeight) {
-              if (this.manualWeight <= 0) {
-                this.$dialog.alert({
-                  message: '输入重量不能小于等于0,请重新输入',
-                  closeOnPopstate: true
-                  }).then(() => {
-                  });
-              } else {
-                if (!re.test(this.manualWeight.toString())) {
+              let re = /^[+]{0,1}(\d+)$|^[+]{0,1}(\d+\.\d+)$/;
+              if (this.manualWeight) {
+                if (this.manualWeight <= 0) {
                   this.$dialog.alert({
-                    message: '输入重量不合法,请重新输入',
+                    message: '输入重量不能小于等于0,请重新输入',
                     closeOnPopstate: true
                     }).then(() => {
                     });
                 } else {
-                  if (!this.isStoreWeight) {
-                    // 手动输入重量存入store的重量数组
-                    this.changeCurrentActive(this.codeStep);
-                    this.temporaryActive = 2;
-                    this.storageLanyaCz(this.manualWeight);
-                    this.$router.push({path:'judgeCurrentDepantment'});
-                    // h5存储每步的收集信息和流程
-                    setStore('currentCollectMsg',{currentMsg:this.garColMsg});
-                    setStore('currentStep',2);
-                    // h5存储当前的称重方式
-                    setStore('weightMethods','manual')
+                  if (!re.test(this.manualWeight.toString())) {
+                    this.$dialog.alert({
+                      message: '输入重量不合法,请重新输入',
+                      closeOnPopstate: true
+                      }).then(() => {
+                      });
                   } else {
-                    this.changeCurrentActive(this.codeStep);
-                    this.temporaryActive = 2;
-                    this.$router.push({path:'judgeCurrentDepantment'})
+                    if (!this.isStoreWeight) {
+                      // 手动输入重量存入store的重量数组
+                      this.changeCurrentActive(this.codeStep);
+                      this.temporaryActive = 3;
+                      this.storageLanyaCz(this.manualWeight);
+                      this.$router.push({path:'judgeCurrentDepantment'});
+                      // h5存储每步的收集信息和流程
+                      setStore('currentCollectMsg',{currentMsg:this.garColMsg});
+                      setStore('currentStep',3);
+                      // h5存储当前的称重方式
+                      setStore('weightMethods','manual')
+                    } else {
+                      this.changeCurrentActive(this.codeStep);
+                      this.temporaryActive = 3;
+                      this.$router.push({path:'judgeCurrentDepantment'})
+                    }
                   }
                 }
-              }
-            } else {
-              this.$dialog.alert({
-                message: '重量不能为空,请重新输入',
-                closeOnPopstate: true
-                }).then(() => {
-              });
-            }
-          } else {
-            // 断开蓝牙秤连接
-            // this.breakScales();
-            if (this.extraLyczMsg == 0.0) {
-              this.$dialog.confirm({
-                message: '收集医废重量不能为0,再次称重?',
-                closeOnPopstate: true
-              }).then(() => {
-                this.changeCodeStep(2);
-                this.changeExtraLyczMsg(null);
-                this.weightRubbish()
-              })
-              .catch(() => {
-                let lajiCodeAgent = this.lajiCode;
-                lajiCodeAgent.splice(this.lajiCode.length-1,1);
-                this.initStorageLajiCode();
-                this.changeStorageLajiCode(lajiCodeAgent);
-                this.changebluetoothWeighShow(false);
-                this.$router.push({path:'judgeCurrentDepantment'});
-              })
-            } else {
-              if (!this.isStoreWeight) {
-                // 最终的回调重量存store的重量数组
-                this.storageLanyaCz(this.extraLyczMsg);
-                this.changeExtraLyczMsg(null);
-                this.$router.push({path:'judgeCurrentDepantment'});
-                // h5存储每步的收集信息和流程
-                setStore('currentCollectMsg',{currentMsg:this.garColMsg});
-                setStore('currentStep',2);
-                // h5存储当前的称重方式
-                setStore('weightMethods','bluetooth')
               } else {
-                this.changeExtraLyczMsg(null);
-                this.$router.push({path:'judgeCurrentDepantment'})
+                this.$dialog.alert({
+                  message: '重量不能为空,请重新输入',
+                  closeOnPopstate: true
+                  }).then(() => {
+                });
+              }
+            } else {
+              // 断开蓝牙秤连接
+              // this.breakScales();
+              if (this.extraLyczMsg == 0.0) {
+                this.$dialog.confirm({
+                  message: '收集医废重量不能为0,再次称重?',
+                  closeOnPopstate: true
+                }).then(() => {
+                  this.changeCodeStep(3);
+                  this.changeExtraLyczMsg(null);
+                  this.weightRubbish()
+                })
+                .catch(() => {
+                  let lajiCodeAgent = this.lajiCode;
+                  lajiCodeAgent.splice(this.lajiCode.length-1,1);
+                  this.initStorageLajiCode();
+                  this.changeStorageLajiCode(lajiCodeAgent);
+                  this.changebluetoothWeighShow(false);
+                  this.$router.push({path:'judgeCurrentDepantment'});
+                })
+              } else {
+                if (!this.isStoreWeight) {
+                  // 最终的回调重量存store的重量数组
+                  this.storageLanyaCz(this.extraLyczMsg);
+                  this.changeExtraLyczMsg(null);
+                  this.$router.push({path:'judgeCurrentDepantment'});
+                  // h5存储每步的收集信息和流程
+                  setStore('currentCollectMsg',{currentMsg:this.garColMsg});
+                  setStore('currentStep',3);
+                  // h5存储当前的称重方式
+                  setStore('weightMethods','bluetooth')
+                } else {
+                  this.changeExtraLyczMsg(null);
+                  this.$router.push({path:'judgeCurrentDepantment'})
+                }
               }
             }
-          }
-        }
-      } else if (middleCurrentActive == 2) {
-        this.chooseWeightMethod()
-      } else if (middleCurrentActive == 4) {
-        this.$router.replace({path:'judgeCurrentCollectFinish'});
+        } else {
+          this.$router.push({path:'judgeCurrentCollectFinish'});
+        };
         this.changeRepeatSubmit(false);
-        this.changeCurrentLajicodeState(false);
       }
       else {
         this.sweepAstoffice()
@@ -967,7 +1063,6 @@ export default {
       this.changeStorageLajiCode(filterMsg['one']);
       this.changeStorageLanyaCz(filterMsg['two']);
       this.$router.push({path:'judgeCurrentDepantment'});
-      this.changeCurrentLajicodeState(false);
       this.changeClickBackoutBtn(true);
       this.chooseBackoutShow = false
     },
@@ -1028,8 +1123,7 @@ export default {
     clearPartStorage () {
       removeStore('currentCollectMsg');
       removeStore('currentStep');
-      removeStore('weightMethods');
-      removeStore('continueCurrentCollect') 
+      removeStore('weightMethods') 
     }
   }
 }
@@ -1128,7 +1222,7 @@ export default {
       }
     }
     // 撤销医废弹框样式
-     .changeBtn {
+    .changeBtn {
           height: 40px;
           background: #fbfbfb;
           line-height: 40px;
@@ -1188,5 +1282,34 @@ export default {
           }
         }
       }
+      // .bills-data {
+      //   position:fixed;
+      //   bottom:100px;
+      //   left:0;
+      //   width:100%;
+      //   height:50vh;
+      //   padding:10px 4px 10px 10px;
+      //   overflow: auto;
+      //   background: #fff;
+      //   .div-wrapper {
+      //     height:230px;
+      //     width:100%;
+      //     border-bottom:1px dashed #333;
+      //     background:transparent;
+      //     margin-bottom:40px;
+      //     p {
+      //       font-size:18px;
+      //       width:100%;
+      //       min-height:24px;
+      //       word-wrap: break-word
+      //     }
+      //     p:first-child {
+      //       text-align:center;
+      //       margin-bottom:20px;
+      //       font-size:22px;
+      //       font-weight:bolder
+      //     }
+      //   }
+      // }
   }
 </style>

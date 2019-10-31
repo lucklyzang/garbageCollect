@@ -49,7 +49,7 @@ import { mapGetters, mapMutations } from 'vuex'
 import BgIcon from '@/components/images/bg-icon.png'
 import LoginBg from '@/components/images/login-bg.png'
 import Loading from '../components/Loading'
-import { setStore, getStore, IsPC, scanCode} from '@/common/js/utils'
+import { setStore, getStore, IsPC, scanCode } from '@/common/js/utils'
 export default {
   components: {
     Loading
@@ -96,14 +96,16 @@ export default {
     window['scanQRcodeCallback'] = (code) => {
       me.scanQRcodeCallback(code);
     };
-     // 控制设备物理返回按键
-    let that = this;
-    pushHistory()
-    that.gotoURL(() => { 
+    // 控制设备物理返回按键
+    if (!IsPC()) {
+      let that = this;
       pushHistory()
+      that.gotoURL(() => { 
+        pushHistory();
         this.$router.push({path: '/'});  //输入要返回的上一级路由地址
-    });
-    this.changeRouterFlag(false);
+      });
+      this.changeRouterFlag(false)
+    };
 
     // 监控键盘弹起
     let originalHeight = document.documentElement.clientHeight || document.body.clientHeight;

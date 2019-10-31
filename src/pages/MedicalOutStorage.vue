@@ -65,7 +65,7 @@ import FooterBottom from '../components/FooterBottom'
 import Loading from '../components/Loading'
 import { mapGetters, mapMutations } from 'vuex'
 import {queryOutStorage} from '../api/rubbishCollect.js'
-import { formatTime, setStore } from '@/common/js/utils'
+import { formatTime, setStore, IsPC } from '@/common/js/utils'
 export default {
    components:{
     HeaderTop,
@@ -99,17 +99,19 @@ export default {
   },
 
   mounted() {
-   // 控制设备物理返回按键
-    let that = this;
-    pushHistory()
-    that.gotoURL(() => { 
-      pushHistory()
-      this.$router.push({path: 'home'});  //输入要返回的上一级路由地址
-      this.changeTitleTxt({tit: '医废监测'});
-      setStore('currentTitle','医废监测');
-    });
+    // 控制设备物理返回按键
+    if (!IsPC()) {
+      let that = this;
+      pushHistory();
+      that.gotoURL(() => { 
+        pushHistory()
+        this.$router.push({path: 'home'});  //输入要返回的上一级路由地址
+        this.changeTitleTxt({tit: '医废监测'});
+        setStore('currentTitle','医废监测');
+      });
+    };
     this.initDate();
-    this.queryNotInStorage();
+    this.queryNotInStorage()
   },
   methods: {
     ...mapMutations([

@@ -16,7 +16,7 @@
 export default {
   data () {
     return {
-      progressTitleList: ['扫描科室','扫描医废','医废称重','扫描医护'],
+      progressTitleList: ['扫描科室','扫描医护','扫描医废','医废称重'],
       currentItem: -1
     };
   },

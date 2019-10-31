@@ -104,14 +104,16 @@ export default {
 
   mounted() {
     // 控制设备物理返回按键
-    let that = this;
-    pushHistory()
-    that.gotoURL(() => { 
+    if (!IsPC()) {
+      let that = this;
       pushHistory()
-      this.$router.push({path: 'home'});  //输入要返回的上一级路由地址
-      this.changeTitleTxt({tit: '医废监测'});
-      setStore('currentTitle','医废监测');
-    });
+      that.gotoURL(() => { 
+        pushHistory()
+        this.$router.push({path: 'home'});  //输入要返回的上一级路由地址
+        this.changeTitleTxt({tit: '医废监测'});
+        setStore('currentTitle','医废监测');
+      })
+    };
     this.queryAllBatch();
     // 二维码回调方法绑定到window下面,提供给外部调用
     let me = this;
@@ -177,7 +179,7 @@ export default {
     processMethods (code) {
        if (code && Object.keys(code).length > 0) {
         if (code.name && code.proName && code.depName && code.type && code.proId && code.number) {
-          judgeSummaryPoint(code.type,code.number).then((res) => {
+          judgeSummaryPoint(this.batchNumber,code.number).then((res) => {
             if (res && res.data.code == 200) {
               this.stageMsg = true;
               this.sureBtnShow = true;

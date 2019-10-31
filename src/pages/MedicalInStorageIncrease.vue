@@ -62,7 +62,7 @@ import HeaderTop from '../components/HeaderTop'
 import FooterBottom from '../components/FooterBottom'
 import VanFieldSelectPicker from '../components/VanFieldSelectPicker'
 import {operateOutStorage, queryCompany} from '../api/rubbishCollect.js'
-import { formatTime, setStore } from '@/common/js/utils'
+import { formatTime, setStore, IsPC } from '@/common/js/utils'
 import { mapGetters, mapMutations } from 'vuex'
 export default {
   components:{
@@ -106,15 +106,16 @@ export default {
 
   mounted () {
     // 控制设备物理返回按键
-    let that = this;
-    pushHistory()
-    that.gotoURL(() => { 
+    if (!IsPC()) {
+      let that = this;
       pushHistory()
-      this.$router.push({path: 'medicalOutStorage'});  //输入要返回的上一级路由地址
-      this.changeTitleTxt({tit: '医废出库'});
-      setStore('currentTitle','医废出库');
-      
-    });
+      that.gotoURL(() => { 
+        pushHistory()
+        this.$router.push({path: 'medicalOutStorage'});  //输入要返回的上一级路由地址
+        this.changeTitleTxt({tit: '医废出库'});
+        setStore('currentTitle','医废出库')
+      })
+    };
     // 键盘弹起时不会遮住输入框
     let originalHeight = document.documentElement.clientHeight || document.body.clientHeight;
     window.onresize = () => {
@@ -201,7 +202,7 @@ export default {
         company: this.company, //收集公司
         companyId: '', //交接人员编号this.companyIdList[this.companyNameList.indexOf(this.companyName)]
         companyName: this.companyName, //交接人姓名
-        outTime: formatTime('YYYY-MM-DD'), //出库时间  格式 yyyy-MM-dd HH:mm:ss
+        outTime: formatTime('YYYY-MM-DD HH:mm:ss'), //出库时间  格式 yyyy-MM-dd HH:mm:ss
         outTotalWeight: this.calculate,  //出库重量
         batchs: this.batchs, //出库的批次
       };
