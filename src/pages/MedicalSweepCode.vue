@@ -588,7 +588,7 @@ export default {
     // 摄像头扫码后的回调
     scanQRcodeCallback(code) {
       var code = decodeURIComponent(JSON.stringify(code));
-      this.processMethods (JSON.parse(code))
+      this.processMethods(JSON.parse(code))
     },
 
     //扫码枪扫码回调方法
@@ -1014,6 +1014,7 @@ export default {
       this.$dialog.confirm({
         message: '请选择称重方式',
         closeOnPopstate: true,
+        closeOnClickOverlay: true,
         cancelButtonText: '手动输入',
         confirmButtonText: '蓝牙称重'
       })

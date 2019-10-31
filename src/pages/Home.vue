@@ -281,38 +281,7 @@
     }
     .content-middle {
       margin: 0 auto;
-      margin-top: 20px;
-      .content-list {
-        width: 22%;
-        height: 70px;
-        padding-top: 4px;
-        text-align: center;
-        box-sizing: border-box;
-        margin-right: 4%;
-        margin-bottom: 2%;
-        display: inline-block;
-        .title-img {
-          display: inline-block;
-          img {
-            width: 100%;
-            height: 100%
-          }
-        }
-        .title-content {
-          display: inline-block;
-          color: black;
-        }
-      }
-      div {
-        &:nth-of-type(4n) {
-          margin-right: 0;
-          vertical-align: top;
-        }
-        &:last-child {
-          margin-right: 0;
-          vertical-align: top;
-        }
-      }
+      margin-top: 15px;
     }
   }   
   

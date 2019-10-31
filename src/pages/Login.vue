@@ -165,8 +165,8 @@ export default {
 
     // 摄像头扫码后的回调
     scanQRcodeCallback(code) {
-      // var code = decodeURIComponent(code);
-      this.processMethods (code)
+      var code = decodeURIComponent(JSON.stringify(code));
+      this.processMethods(JSON.parse(code))
     },
 
     //扫码枪扫码回调方法

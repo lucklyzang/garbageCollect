@@ -142,6 +142,7 @@ export default {
               this.changeBackoutBtn(true);
               this.$router.push({path: 'medicalCollect'});
               this.changeTitleTxt({tit: '医废收集'});
+              setStore('currentTitle','医废收集');
               this.changeFlowState(-1);
               this.changeCollectBtn(false);
               this.changeSureBtn(true);
@@ -279,8 +280,8 @@ export default {
             if (res.data.code == 400) {
               this.abnormalCodeList = [];
               this.isMoreStrip = true;
-              this.abnormalCodeList = res.data.data.fail;
-              this.abnormalMsg = `${res.data.msg}${res.data.data.fail}异常,确认后将剔除本次收集中的异常医废条码,可以再次提交`
+              this.abnormalCodeList = res.data.data;
+              this.abnormalMsg = `${res.data.msg},编号${res.data.data}医废异常,确认后将剔除本次收集中的异常医废数据,可以重新提交`
             } else {
               this.abnormalMsg = res.data.msg
             };
@@ -334,20 +335,32 @@ export default {
       if (this.lajiCode.length > 1) {
         let filterMsg = {};
         if (this.isMoreStrip) {
-          if (this.abnormalCodeList.length > 0) {
+          if (this.abnormalCodeList) {
             filterMsg = this.resetBarArray(this.lajiCode, this.lanyaCz,this.abnormalCodeList)
           };
           this.isMoreStrip = false
-        };
-        // 重新存储store里的收集垃圾信息
-        this.initStorageLajiCode();
-        this.initStorageLanyaCz();
-        this.changeStorageLajiCode(filterMsg['one']);
-        this.changeStorageLanyaCz(filterMsg['two']);
-        if (this.lajiCode.length == 0) {
-          this.changeRepeatSubmit(false);
-          this.changeBackoutBtn(true);
-          this.changeFlowState(1);
+          // 重新存储store里的收集垃圾信息
+          this.initStorageLajiCode();
+          this.initStorageLanyaCz();
+          this.changeStorageLajiCode(filterMsg['one']);
+          this.changeStorageLanyaCz(filterMsg['two']);
+          if (this.lajiCode.length == 0) {
+            this.changeRepeatSubmit(false);
+            this.changeBackoutBtn(true);
+            this.changeFlowState(1);
+            this.$router.push({path: 'medicalCollect'});
+            this.changeCollectBtn(false);
+            this.changeSureBtn(true);
+            this.changebluetoothWeighShow(false);
+            this.changeManualWeighShow(false);
+            this.changeBagCodeShow(false);
+            this.changeAstOfficeShow(false);
+            this.changeStaffCodeShow(true);
+            return
+          };
+          this.changeRepeatSubmit(true);
+          this.changeBackoutBtn(false);
+          this.changeFlowState(3);
           this.$router.push({path: 'medicalCollect'});
           this.changeCollectBtn(false);
           this.changeSureBtn(true);
@@ -355,23 +368,35 @@ export default {
           this.changeManualWeighShow(false);
           this.changeBagCodeShow(false);
           this.changeAstOfficeShow(false);
-          this.changeStaffCodeShow(true);
-          return
+          this.changeStaffCodeShow(false)
         } else {
-          this.changeRepeatSubmit(true)
+          this.changeRepeatSubmit(true);
+          this.changeBackoutBtn(false);
+          this.changeFlowState(3);
+          this.$router.push({path: 'medicalCollect'});
+          this.changeCollectBtn(false);
+          this.changeSureBtn(true);
+          this.changebluetoothWeighShow(false);
+          this.changeManualWeighShow(false);
+          this.changeBagCodeShow(false);
+          this.changeAstOfficeShow(false);
+          this.changeStaffCodeShow(false)
         }
-      };
-      this.changeRepeatSubmit(true);
-      this.changeBackoutBtn(false);
-      this.changeFlowState(3);
-      this.$router.push({path: 'medicalCollect'});
-      this.changeCollectBtn(false);
-      this.changeSureBtn(true);
-      this.changebluetoothWeighShow(false);
-      this.changeManualWeighShow(false);
-      this.changeBagCodeShow(false);
-      this.changeAstOfficeShow(false);
-      this.changeStaffCodeShow(false)
+      } else {
+        this.initStorageLajiCode();
+        this.initStorageLanyaCz();
+        this.changeRepeatSubmit(false);
+        this.changeBackoutBtn(true);
+        this.changeFlowState(1);
+        this.$router.push({path: 'medicalCollect'});
+        this.changeCollectBtn(false);
+        this.changeSureBtn(true);
+        this.changebluetoothWeighShow(false);
+        this.changeManualWeighShow(false);
+        this.changeBagCodeShow(false);
+        this.changeAstOfficeShow(false);
+        this.changeStaffCodeShow(true);
+      }
     },
 
     // 根据给出的医废编码，来删除存储中存在的医废编码

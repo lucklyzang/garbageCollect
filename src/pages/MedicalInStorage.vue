@@ -29,15 +29,6 @@
           </div>
         </div>
       </div>
-      <!-- stageMsg -->
-      <div class="stage-point" v-show="stageMsg">
-        <div>
-          <p>暂存点信息: </p>
-          <p>名称: {{stagingMsg.name}}</p>
-          <p>医院: {{stagingMsg.proName}}</p>
-          <p>房间号: {{stagingMsg.depName}}</p>
-        </div>
-      </div>
       <div class="btn-group">
         <p v-show="inStoageBtn" class="inStoageBtn">
           <van-button type="info" @click="medicalInStoragr" size="normal">医废入库</van-button>
@@ -58,6 +49,26 @@
       @cancel=""
       >
     </van-dialog>
+    
+     <!-- 暂存点信息提示弹框 -->
+    <div class="stage-point-wrapper">
+        <van-dialog
+        v-model="stagePointShow"
+        title="暂存点信息"
+        :show-cancel-button="false"
+        :close-on-popstate="true"
+        :close-on-click-overlay="true"
+        @confirm=""
+      >
+        <div class="stage-point">
+          <div>
+            <p>名称: {{stagingMsg.name}}</p>
+            <p>医院: {{stagingMsg.proName}}</p>
+            <!-- <p>房间号: {{stagingMsg.depName}}</p> -->
+          </div>
+        </div>
+      </van-dialog>
+    </div>
   </div>
 </template>
 
@@ -84,7 +95,7 @@ export default {
       barCodeScannerShow: false,
       inStoageBtn: true,
       isPcCallBack: false,
-      stageMsg: false,
+      stagePointShow: false,
       showLoadingHint: false,
       storeId: 0, 
       storeNumber:'',
@@ -162,8 +173,8 @@ export default {
 
      // 摄像头扫码后的回调
     scanQRcodeCallback(code) {
-      // var code = decodeURIComponent(code);
-      this.processMethods (code)
+      var code = decodeURIComponent(JSON.stringify(code));
+      this.processMethods(JSON.parse(code))
     },
 
     //扫码枪扫码回调方法
@@ -178,12 +189,13 @@ export default {
     // 扫码逻辑公共方法
     processMethods (code) {
        if (code && Object.keys(code).length > 0) {
-        if (code.name && code.proName && code.depName && code.type && code.proId && code.number) {
+        if (code.name && code.proName && code.type && code.proId && code.number) {
           judgeSummaryPoint(this.batchNumber,code.number).then((res) => {
             if (res && res.data.code == 200) {
-              this.stageMsg = true;
+              this.stagePointShow = true;
               this.sureBtnShow = true;
               this.inStoageBtn = false;
+              this.barCodeScannerShow = false;
               this.isPcCallBack = false;
               this.stagingMsg = code;
               this.storeId = code.id;
@@ -269,7 +281,8 @@ export default {
               closeOnPopstate: true
             }).then(() => {
               this.$router.push({path: 'home'});
-              this.changeTitleTxt({tit: '医废监测'})
+              this.changeTitleTxt({tit: '医废监测'});
+              setStore('currentTitle','医废监测');
             });
           }
         } else {
@@ -307,9 +320,9 @@ export default {
               message: '医废入库成功',
               closeOnPopstate: true
             }).then(() => {
-              this.$router.push({path: 'medicalOutStorage'});
-              this.changeTitleTxt({tit: '医废出库'});
-              setStore('currentTitle','医废出库');
+              this.$router.push({path: 'home'});
+              this.changeTitleTxt({tit: '医废监测'});
+              setStore('currentTitle','医废监测');
             });
           } else {
             this.$dialog.alert({
@@ -415,33 +428,6 @@ export default {
           }
         }
       }
-      .stage-point {
-        position: fixed;
-        width: 100%;
-        left: 0;
-        bottom: 60px;
-         > div {
-          height: auto;
-          margin: 0 auto;
-          width: 90%;
-          background: #fff;
-          padding: 8px;
-          box-shadow: 0 2.5px 12px 4px #d1d1d1;
-          border-radius: 8px;
-          p {
-            line-height: 30px;
-            text-align: left;
-            font-size: 14px;
-            color: #646464;
-            height: auto
-          }
-          p:first-child {
-              color: #313131;
-              font-weight: bold;
-              letter-spacing: 2px
-            }
-          }
-        }
       .btn-group {
         width: 100%;
         position: fixed;
@@ -464,5 +450,32 @@ export default {
         }
       }
     }
+    .stage-point {
+      width: 100%;
+      margin-top: 10px;
+        > div {
+        height: auto;
+        margin: 0 auto;
+        width: 90%;
+        background: #fff;
+        padding: 8px;
+        box-shadow: 0 2.5px 12px 4px #d1d1d1;
+        border-radius: 8px;
+          p {
+            line-height: 30px;
+            text-align: left;
+            font-size: 14px;
+            color: #646464;
+            height: auto;
+            word-break: break-all
+          }
+        }
+      }
+      .stage-point-wrapper {
+        /deep/ .van-dialog {
+          .van-dialog__content {
+          }
+        }
+      }
   }
 </style>

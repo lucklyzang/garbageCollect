@@ -57,6 +57,7 @@ export default {
         this.changeFlowState(-1);
         this.$router.push({path: 'medicalCollect'});
         this.changeTitleTxt({tit: '医废收集'});
+        setStore('currentTitle','医废收集');
         this.changeCollectBtn(true);
         this.changeSureBtn(false);
         this.changePrintBtn(false);
@@ -72,8 +73,9 @@ export default {
         this.changeBackoutBtn(true);
         this.clearPartStorage()
       }).catch(() => {
-        this.$router.push({path:'medicalInStorage'});
-        this.changeTitleTxt({tit: '医废入库'});
+        this.$router.push({path:'home'});
+        this.changeTitleTxt({tit: '医废监测'});
+        setStore('currentTitle','医废监测');
         // 清空上个科室存储的数据
         this.clearTrashStore();
         this.changeFlowState(-1);

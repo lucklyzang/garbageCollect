@@ -2,8 +2,8 @@
   <div>
     <div class="progress-wrapper">
       <div class="inner-content" v-for="(item,index) in progressTitleList">
-        <div class="inner-circle" :class="{'inner-circle-style': currentItem == index}">{{index + 1}}</div>
-        <div class="inner-line" :class="{'inner-line-style': currentItem == index}" v-if="index == 0 || index == 1 || index == 2"></div>
+        <div class="inner-circle" :class="{'inner-circle-style': currentItem >= index}">{{index + 1}}</div>
+        <div class="inner-line" :class="{'inner-line-style': currentItem >= index}" v-if="index == 0 || index == 1 || index == 2"></div>
       </div>
     </div>
     <div class="text-wrapper">
