@@ -120,7 +120,6 @@ export default {
       'changeBatchs',
       'initTotalWeight',
       'initBatchs'
-
     ]),
     startTimeChange(e) { 
       let startTimeArr = e.getValues();//["2019", "03", "22", "17", "28"] 
