@@ -440,6 +440,7 @@ export default {
         pushHistory()
         this.$router.push({path: 'home'});  //输入要返回的上一级路由地址
         this.changeTitleTxt({tit: '医废监测'})
+        setStore('currentTitle','医废监测');
       })
     },
 

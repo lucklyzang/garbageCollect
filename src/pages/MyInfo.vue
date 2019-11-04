@@ -259,12 +259,12 @@ export default {
         overflow: auto;
         padding: 10px;
         div {
-          height: 40px;
           color: #2f2f2f;
           font-weight: bold;
           line-height: 40px;
           font-size: 13px;
           text-align: left;
+          word-wrap: break-word;
           .bottom-border-1px(#dadbdd)
         }
       }

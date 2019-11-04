@@ -49,7 +49,8 @@ export default {
       'changeBackoutBtn',
       'changeAstOfficeShow',
       'changeManualWeighShow',
-      'changeIsCollectCurrentOffice'
+      'changeIsCollectCurrentOffice',
+      'changeTitleTxt'
     ]),
     showDialog () {
       this.$dialog.confirm({
@@ -57,18 +58,9 @@ export default {
         closeOnPopstate: true
       }).then(() => {
         this.$router.push({path: 'medicalCollect'});
-        this.changeFlowState(1);
-        // 根据此状态来决定撤销时的操作逻辑
-        this.changeCollectBtn(false);
-        this.changeBackoutBtn(true);
-        this.changeSureBtn(true);
-        this.changePrintBtn(false);
-        this.changeOtherBtn(false);
-        this.changeClickBackoutBtn(false);
-        this.changeBagCodeShow(false);
-        this.changeStaffCodeShow(false);
-        this.changebluetoothWeighShow(false);
-        this.changeManualWeighShow(false);
+        this.changeTitleTxt({tit: '医废收集'});
+        setStore('currentTitle','医废收集');
+        this.changeFlowState(1)
       }).catch(() => {
         if (this.lajiCode.length !== 0) {
           this.$router.replace({path:'judgeCurrentCollectFinish'})

@@ -1,10 +1,9 @@
 import axios from 'axios'
 import store from '@/store'
-//'http://192.168.8.100:8080/blink'
 // http://39.100.111.20:8080/blink
 // http://47.108.27.209:8080/blink
 const service = axios.create({
-  baseURL: 'http://47.108.27.209:8080/blink', //接口基础地址
+  baseURL: 'http://39.100.111.20:8080/blink', //接口基础地址
   retry: 4, // 网络请求异常后，重试次数
   retryDelay: 1000, // 每次重试间隔时间
   shouldRetry: (err) => true // 重试条件

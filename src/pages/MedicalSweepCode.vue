@@ -172,6 +172,33 @@
           </div>
         </div>
       </section>
+      <!-- 选择称重方式弹框 -->
+      <van-dialog
+      v-model="chooseWightMethodsShow"
+      title="请选择称重方式"
+      show-cancel-button
+      confirmButtonText="蓝牙称重"
+      cancelButtonText="手动输入"
+      :close-on-popstate="true"
+      :close-on-click-overlay="true"
+      @confirm="chooseWightSure"
+      @cancel="chooseWightCancle"
+      >
+    </van-dialog>
+
+    <!-- 选择医废撤销方式弹框 -->
+    <van-dialog
+    v-model="chooseBackoutMethodsShow"
+    title="请选择撤销方式"
+    show-cancel-button
+    confirmButtonText="科室撤销"
+    cancelButtonText="医废选择撤销"
+    :close-on-popstate="true"
+    :close-on-click-overlay="true"
+    @confirm="chooseBackoutSure"
+    @cancel="chooseBackoutCancle"
+    >
+  </van-dialog>
     </div>
 </template>
 
@@ -202,6 +229,8 @@ export default {
       barCodeList: [],
       pcMapList: [],
       pcPrintShow: false,
+      chooseWightMethodsShow: false,
+      chooseBackoutMethodsShow: false,
       contentMiddleShow: true,
       checkedAll: false,
       chooseBackoutShow: false,
@@ -288,17 +317,26 @@ export default {
       pushHistory();
       that.gotoURL(() => { 
         pushHistory()
-        this.$dialog.confirm({
-          message: '返回上一级后,将清空本次收集的医废数据'
-        })
-        .then(() => {
+        if (this.keshiCode && this.keshiCode.length > 0) {
+          this.$dialog.confirm({
+            message: '返回上一级后,将清空本次收集的医废数据'
+          })
+          .then(() => {
+            this.$router.push({path: 'home'});  //输入要返回的上一级路由地址
+            this.changeTitleTxt({tit: '医废监测'});
+            setStore('currentTitle','医废监测');
+            this.initSweepCodeInfo();
+            this.clearPartStorage()
+          })
+          .catch(() => {
+          })
+        } else {
           this.$router.push({path: 'home'});  //输入要返回的上一级路由地址
           this.changeTitleTxt({tit: '医废监测'});
+          setStore('currentTitle','医废监测');
           this.initSweepCodeInfo();
           this.clearPartStorage()
-        })
-        .catch(() => {
-        })
+        }
       })
     };
     // this.ShowCotentMIddle();
@@ -386,36 +424,56 @@ export default {
 
     // 返回上一页
     backTo () {
-      this.$dialog.confirm({
-        message: '返回上一级后,将清空本次收集的医废数据',
-        closeOnPopstate: true
-      })
-      .then(() => {
+      if (this.keshiCode && this.keshiCode.length > 0) {
+        this.$dialog.confirm({
+          message: '返回上一级后,将清空本次收集的医废数据',
+          closeOnPopstate: true
+        })
+        .then(() => {
+          this.$router.push({path: 'home'});
+          this.changeTitleTxt({tit:'医废监测'});
+          setStore('currentTitle','医废监测');
+          //清除当前流程的扫码信息
+          this.initSweepCodeInfo();
+          this.clearPartStorage()
+        })
+        .catch(() => {
+        })
+      } else {
         this.$router.push({path: 'home'});
         this.changeTitleTxt({tit:'医废监测'});
+        setStore('currentTitle','医废监测');
         //清除当前流程的扫码信息
         this.initSweepCodeInfo();
         this.clearPartStorage()
-      })
-      .catch(() => {
-      })
+      }
     },
 
     // 跳转到我的页面
     skipMyInfo () {
-      this.$dialog.confirm({
-        message: '跳转到我的页面后,将清空本次收集的医废数据',
-        closeOnPopstate: true
-      })
-      .then(() => {
+      if (this.keshiCode && this.keshiCode.length > 0) {
+        this.$dialog.confirm({
+          message: '跳转到我的页面后,将清空本次收集的医废数据',
+          closeOnPopstate: true
+        })
+        .then(() => {
+          this.$router.push({path: 'myInfo'});
+          this.changeTitleTxt({tit:'我的'});
+          setStore('currentTitle','我的');
+          //清除当前流程的扫码信息
+          this.initSweepCodeInfo();
+          this.clearPartStorage()
+        })
+        .catch(() => {
+        })
+      } else {
         this.$router.push({path: 'myInfo'});
         this.changeTitleTxt({tit:'我的'});
+        setStore('currentTitle','我的');
         //清除当前流程的扫码信息
         this.initSweepCodeInfo();
         this.clearPartStorage()
-      })
-      .catch(() => {
-      })
+      }
     },
 
     // 判断流程从哪步开始(当前科室与其它科室收集开始流程不同)
@@ -484,71 +542,75 @@ export default {
         this.initSweepCodeInfo()
       }
     },
+    
     // 撤销操作
     backOut () {
-      this.$dialog.confirm({
-        message: '请选择撤销方式',
-        closeOnPopstate: true,
-        confirmButtonText: '科室撤销',
-        cancelButtonText: '医废选择撤销',
-        closeOnClickOverlay: true
-      }).then(() => {
-        this.changeClickBackoutBtn(true);
-        if (this.lajiCode.length == 0) {
-          this.$router.replace({path:'judgeOtherDepantment'});
-          // 清空撤销前存储的数据
-          this.clearTrashStore()   
-        } else if (this.lajiCode.length > 0) {
+      this.chooseBackoutMethodsShow = true;
+    },
+
+    // 科室撤销
+    chooseBackoutSure () {
+      this.chooseBackoutMethodsShow = false;
+      this.changeClickBackoutBtn(true);
+      if (this.lajiCode.length == 0) {
+        this.$router.replace({path:'judgeOtherDepantment'});
+        // 清空撤销前存储的数据
+        this.clearTrashStore()   
+      } else if (this.lajiCode.length > 0) {
+        this.initStorageLajiCode();
+        this.initStorageLanyaCz();
+        this.$router.push({path:'judgeCurrentDepantment'})
+      }
+    },
+
+    // 医废选择撤销
+    chooseBackoutCancle () {
+      this.chooseBackoutMethodsShow = false;
+      if (this.lajiCode.length == 0) {
+        this.$router.replace({path:'judgeOtherDepantment'});
+        // 清空撤销前存储的数据
+        this.clearTrashStore()   
+      } else {
+        this.barMessageList = [];
+        let lajiCodeMsg;
+        // 当前一次垃圾垃圾收集如果没有存入重量，则删除store中该次医废收集
+        if (this.lajiCode.length > this.lanyaCz.length) {
+          lajiCodeMsg = this.lajiCode;
+          lajiCodeMsg.splice(lajiCodeMsg.length-1,1);
           this.initStorageLajiCode();
-          this.initStorageLanyaCz();
-          this.$router.push({path:'judgeCurrentDepantment'})
-        }
-      }).catch(() => {
+          this.changeStorageLajiCode(lajiCodeMsg);
+          // 退回到该科室收集流程的第二步
+          this.changeCurrentActive(1);
+          this.temporaryActive = 1;
+          this.changeCodeStep(1);
+          this.changeStaffCodeShow(true);
+          this.manualWeight = '';
+          this.changeExtraLyczMsg('');
+          this.changeAstOfficeShow(false);
+          this.changeIsPlus(true);
+          this.changebluetoothWeighShow(false);
+          this.changeManualWeighShow(false);
+          this.changeBagCodeShow(false);
+        };
         if (this.lajiCode.length == 0) {
-          this.$router.replace({path:'judgeOtherDepantment'});
-          // 清空撤销前存储的数据
-          this.clearTrashStore()   
-        } else {
-          this.barMessageList = [];
-          let lajiCodeMsg;
-          // 当前一次垃圾垃圾收集如果没有存入重量，则删除store中该次医废收集
-          if (this.lajiCode.length > this.lanyaCz.length) {
-            lajiCodeMsg = this.lajiCode;
-            lajiCodeMsg.splice(lajiCodeMsg.length-1,1);
-            this.initStorageLajiCode();
-            this.changeStorageLajiCode(lajiCodeMsg);
-            // 退回到该科室收集流程的第二步
-            this.changeCurrentActive(1);
-            this.temporaryActive = 1;
-            this.changeCodeStep(1);
-            this.changeStaffCodeShow(true);
-            this.manualWeight = '';
-            this.changeExtraLyczMsg('');
-            this.changeAstOfficeShow(false);
-            this.changeIsPlus(true);
-            this.changebluetoothWeighShow(false);
-            this.changeManualWeighShow(false);
-            this.changeBagCodeShow(false);
-          };
-          if (this.lajiCode.length == 0) {
-            this.$router.push({path:'judgeCurrentDepantment'});
-            return
-          }; 
-          for (let i = 0; i < this.lajiCode.length; i++) {
-            this.barMessageList.push({
-              depName: this.lajiCode[i].depName,
-              barCode: this.lajiCode[i].barCode,
-              wasteName: this.lajiCode[i].wasteName,
-              barWeight: this.lanyaCz[i] ? this.lanyaCz[i] : '无',
-              check: false
-            })
-          };
-          this.chooseBackoutShow = true
-        }
-      })
+          this.$router.push({path:'judgeCurrentDepantment'});
+          return
+        }; 
+        for (let i = 0; i < this.lajiCode.length; i++) {
+          this.barMessageList.push({
+            depName: this.lajiCode[i].depName,
+            barCode: this.lajiCode[i].barCode,
+            wasteName: this.lajiCode[i].wasteName,
+            barWeight: this.lanyaCz[i] ? this.lanyaCz[i] : '无',
+            check: false
+          })
+        };
+        this.chooseBackoutShow = true
+      }
     },
 
     // 打印方法
+    // 编号, 科室, 垃圾类型，垃圾重量，收集人，交接人
     printProof (num,dep,category,weight,collector,handover) {
       window.android.printInfo(num,dep,category,weight,collector,handover)
     },
@@ -916,7 +978,8 @@ export default {
       this.changeIsPlus(false);
       if (middleCurrentActive > 4) {return};
       if (middleCurrentActive == 3) {
-        this.chooseWeightMethod();
+        // this.chooseWeightMethod();
+        this.chooseWightMethodsShow = true;
         this.changeRepeatSubmit(false)
       } else if (middleCurrentActive == 4) {
         if (!this.isRepeatSubmit) {
@@ -1009,29 +1072,24 @@ export default {
       }
     },
 
-    // 选择称重方式
-    chooseWeightMethod () {
-      this.$dialog.confirm({
-        message: '请选择称重方式',
-        closeOnPopstate: true,
-        closeOnClickOverlay: true,
-        cancelButtonText: '手动输入',
-        confirmButtonText: '蓝牙称重'
-      })
-      .then(()=>{
-        this.weightRubbish();
-        this.changeIsBlueWeight(true)
-      })
-      .catch(() => {
-        this.changeManualWeighShow(true);
-        this.changebluetoothWeighShow(false);
-        this.changeIsBlueWeight(false);
-        this.changeBagCodeShow(false);
-        this.changeIsPlus(true);
-        this.changeIsStoreWeight(false)
-      })
+    // 蓝牙称重
+    chooseWightSure () {
+      this.chooseWightMethodsShow = false;
+      this.weightRubbish();
+      this.changeIsBlueWeight(true)
     },
 
+    // 手动输入
+    chooseWightCancle () {
+      this.chooseWightMethodsShow = false;
+      this.changeManualWeighShow(true);
+      this.changebluetoothWeighShow(false);
+      this.changeIsBlueWeight(false);
+      this.changeBagCodeShow(false);
+      this.changeIsPlus(true);
+      this.changeIsStoreWeight(false)
+    },
+    
     //其它科室收集
     collectSure () {
       this.$router.replace({path:'judgeOtherDepantment'})

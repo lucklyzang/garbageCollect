@@ -139,12 +139,10 @@ export default {
               closeOnPopstate: true
             })
             .then(() => {
-              this.changeBackoutBtn(true);
-              this.$router.push({path: 'medicalCollect'});
-              this.changeTitleTxt({tit: '医废收集'});
-              setStore('currentTitle','医废收集');
+              this.jumpCollectPage();
               this.changeFlowState(-1);
               this.changeCollectBtn(false);
+              this.changeBackoutBtn(true);
               this.changeSureBtn(true);
               this.changePrintBtn(false);
               this.changeOtherBtn(false);
@@ -226,17 +224,15 @@ export default {
           closeOnPopstate: true
         })
         .then(() => {
-          this.changeRepeatSubmit(true);
-          this.changeBackoutBtn(false);
           this.changeFlowState(3);
-          this.$router.push({path: 'medicalCollect'});
+          this.jumpCollectPage();
           this.changeCollectBtn(false);
           this.changeSureBtn(true);
-          this.changebluetoothWeighShow(false);
-          this.changeManualWeighShow(false);
           this.changeBagCodeShow(false);
           this.changeAstOfficeShow(false);
-          this.changeStaffCodeShow(false)
+          this.changeStaffCodeShow(false);
+          this.changeBackoutBtn(false);
+          this.changeRepeatSubmit(true)
         })
       })
     },
@@ -298,17 +294,15 @@ export default {
           closeOnPopstate: true
         })
         .then(() => {
-          this.changeRepeatSubmit(true);
-          this.changeBackoutBtn(false);
           this.changeFlowState(3);
-          this.$router.push({path: 'medicalCollect'});
+          this.jumpCollectPage();
           this.changeCollectBtn(false);
           this.changeSureBtn(true);
-          this.changebluetoothWeighShow(false);
-          this.changeManualWeighShow(false);
           this.changeBagCodeShow(false);
           this.changeAstOfficeShow(false);
-          this.changeStaffCodeShow(false)
+          this.changeStaffCodeShow(false);
+          this.changeRepeatSubmit(true);
+          this.changeBackoutBtn(false);
         })
       })
     },
@@ -317,8 +311,7 @@ export default {
     successSure () {
       this.submitDataSuccessShow = false;
       this.successInfo = false;
-      this.changeBackoutBtn(false);
-      this.$router.push({path: 'medicalCollect'});
+      this.jumpCollectPage();
       this.changeSureBtn(false);
       this.changePrintBtn(true);
       this.changeOtherBtn(true);
@@ -327,7 +320,8 @@ export default {
       this.changeManualWeighShow(false);
       this.changeBagCodeShow(false);
       this.changeAstOfficeShow(false);
-      this.changeStaffCodeShow(false)
+      this.changeStaffCodeShow(false);
+      this.changeBackoutBtn(false);
     },
 
     // 数据提交状态码异常时弹框确定按钮的回调事件
@@ -345,57 +339,37 @@ export default {
           this.changeStorageLajiCode(filterMsg['one']);
           this.changeStorageLanyaCz(filterMsg['two']);
           if (this.lajiCode.length == 0) {
-            this.changeRepeatSubmit(false);
-            this.changeBackoutBtn(true);
             this.changeFlowState(1);
-            this.$router.push({path: 'medicalCollect'});
-            this.changeCollectBtn(false);
-            this.changeSureBtn(true);
-            this.changebluetoothWeighShow(false);
-            this.changeManualWeighShow(false);
-            this.changeBagCodeShow(false);
-            this.changeAstOfficeShow(false);
-            this.changeStaffCodeShow(true);
+            this.jumpCollectPage();
+            this.changeRepeatSubmit(false);
             return
           };
-          this.changeRepeatSubmit(true);
-          this.changeBackoutBtn(false);
           this.changeFlowState(3);
-          this.$router.push({path: 'medicalCollect'});
+          this.jumpCollectPage();
           this.changeCollectBtn(false);
           this.changeSureBtn(true);
-          this.changebluetoothWeighShow(false);
-          this.changeManualWeighShow(false);
           this.changeBagCodeShow(false);
           this.changeAstOfficeShow(false);
-          this.changeStaffCodeShow(false)
+          this.changeStaffCodeShow(false);
+          this.changeRepeatSubmit(true);
+          this.changeBackoutBtn(false);
         } else {
-          this.changeRepeatSubmit(true);
-          this.changeBackoutBtn(false);
           this.changeFlowState(3);
-          this.$router.push({path: 'medicalCollect'});
+          this.jumpCollectPage();
           this.changeCollectBtn(false);
           this.changeSureBtn(true);
-          this.changebluetoothWeighShow(false);
-          this.changeManualWeighShow(false);
           this.changeBagCodeShow(false);
           this.changeAstOfficeShow(false);
-          this.changeStaffCodeShow(false)
+          this.changeStaffCodeShow(false);
+          this.changeRepeatSubmit(true);
+          this.changeBackoutBtn(false);
         }
       } else {
         this.initStorageLajiCode();
         this.initStorageLanyaCz();
-        this.changeRepeatSubmit(false);
-        this.changeBackoutBtn(true);
         this.changeFlowState(1);
-        this.$router.push({path: 'medicalCollect'});
-        this.changeCollectBtn(false);
-        this.changeSureBtn(true);
-        this.changebluetoothWeighShow(false);
-        this.changeManualWeighShow(false);
-        this.changeBagCodeShow(false);
-        this.changeAstOfficeShow(false);
-        this.changeStaffCodeShow(true);
+        this.jumpCollectPage();
+        this.changeRepeatSubmit(false)
       }
     },
 
@@ -419,6 +393,13 @@ export default {
       removeStore('currentCollectMsg');
       removeStore('currentStep');
       removeStore('weightMethods')
+    },
+
+    // 跳转到收集页面
+    jumpCollectPage () {
+      this.$router.push({path: 'medicalCollect'});
+      this.changeTitleTxt({tit: '医废收集'});
+      setStore('currentTitle','医废收集')
     }
 
     // 提交数据失败时的处理

@@ -54,43 +54,15 @@ export default {
         message: '是否其它科室收集?',
         closeOnPopstate: true
       }).then(() => {
-        this.changeFlowState(-1);
         this.$router.push({path: 'medicalCollect'});
         this.changeTitleTxt({tit: '医废收集'});
         setStore('currentTitle','医废收集');
-        this.changeCollectBtn(true);
-        this.changeSureBtn(false);
-        this.changePrintBtn(false);
-        this.changeOtherBtn(false);
-        this.changeClickBackoutBtn(false);
-        this.changeBagCodeShow(false);
-        this.changeAstOfficeShow(false);
-        this.changeStaffCodeShow(false);
-        this.changebluetoothWeighShow(false);
-        this.changeManualWeighShow(false);
-        // 清空上个科室存储的数据
-        this.clearTrashStore();
-        this.changeBackoutBtn(true);
-        this.clearPartStorage()
+        this.initState()
       }).catch(() => {
         this.$router.push({path:'home'});
         this.changeTitleTxt({tit: '医废监测'});
         setStore('currentTitle','医废监测');
-        // 清空上个科室存储的数据
-        this.clearTrashStore();
-        this.changeFlowState(-1);
-        this.changeClickBackoutBtn(false);
-        this.changePrintBtn(false);
-        this.changeBagCodeShow(false);
-        this.changeAstOfficeShow(false);
-        this.changeStaffCodeShow(false);
-        this.changebluetoothWeighShow(false);
-        this.changeManualWeighShow(false);
-        this.changeCollectBtn(true);
-        this.changeSureBtn(false);
-        this.changeBackoutBtn(true);
-        this.changeOtherBtn(false);
-        this.clearPartStorage()
+        this.initState()
       });
     },
 
@@ -99,6 +71,25 @@ export default {
       removeStore('currentCollectMsg');
       removeStore('currentStep');
       removeStore('weightMethods')
+    },
+
+    // 返回到首页和收集页的状态重置
+    initState () {
+      // 清空上个科室存储的数据
+      this.clearTrashStore();
+      this.changeFlowState(-1);
+      this.changeClickBackoutBtn(false);
+      this.changePrintBtn(false);
+      this.changeBagCodeShow(false);
+      this.changeAstOfficeShow(false);
+      this.changeStaffCodeShow(false);
+      this.changebluetoothWeighShow(false);
+      this.changeManualWeighShow(false);
+      this.changeCollectBtn(true);
+      this.changeSureBtn(false);
+      this.changeBackoutBtn(true);
+      this.changeOtherBtn(false);
+      this.clearPartStorage()
     }
   }
 }
