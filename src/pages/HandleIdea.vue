@@ -16,11 +16,11 @@
           />
         </van-cell-group>
       </div>
-      <div class="content-middle-bottom">
-        <van-cell-group>
-          <van-button  @click="sureInfo" size="normal">确定</van-button>
-        </van-cell-group>
-      </div>
+    </div>
+    <div class="content-middle-bottom">
+      <van-cell-group>
+        <van-button  @click="sureInfo" size="normal">确定</van-button>
+      </van-cell-group>
     </div>
     <!-- <FooterBottom></FooterBottom> -->
   </div>
@@ -137,12 +137,12 @@ export default {
   @import "../common/stylus/variable.less";
   @import "../common/stylus/modifyUi.less";
   .content-wrapper {
+    .content-wrapper();
     .content-middle {
-     .content-middle(0,'');
+      flex:1;
+      overflow: auto;
       .content-middle-top {
-        margin-top: 80px;
-        height: 80vh;
-        overflow: auto;
+        height: 100%;
         /deep/ .van-cell-group {
           background: none;
           .van-cell {
@@ -150,28 +150,24 @@ export default {
           }
         }
       }
-      .content-middle-bottom {
-         width: 100%;
-        position: fixed;
-        bottom: 6px;
-        left: 0;
-          .van-cell-group {
-            width: 80%;
-            margin: 0 auto;
-            background-color: transparent;
-            /deep/ .van-button {
-            width: 100%;
-            margin-top: 35px;
-            background: @color-theme;
-            color: #fff;
-            border-radius: 0;
-            border: none;
-            line-height: 35px;
-            padding: 0 120px
-          }
-          &:after {
-            display: none
-          }
+    }
+    .content-middle-bottom {
+      padding: 4px 0;
+        .van-cell-group {
+          width: 80%;
+          margin: 0 auto;
+          background-color: transparent;
+          /deep/ .van-button {
+          width: 100%;
+          background: @color-theme;
+          color: #fff;
+          border-radius: 0;
+          border: none;
+          line-height: 35px;
+          padding: 0 120px
+        }
+        &:after {
+          display: none
         }
       }
     }

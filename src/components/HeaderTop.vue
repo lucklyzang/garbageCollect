@@ -21,16 +21,16 @@
   @import "../common/stylus/variable.less";
   .header {
     background-color: @color-theme;
-    position: fixed;
-    z-index: 100;
-    left: 0;
-    top: 0;
+    // position: fixed;
+    // z-index: 100;
+    // left: 0;
+    // top: 0;
     width: 100%;
     height: @header-title-height;
     line-height: @header-title-height;
     .header_title {
       position: absolute;
-      top: 52%;
+      top: .8rem;
       left: 50%;
       transform: translate(-50%, -50%);
       width: 50%;

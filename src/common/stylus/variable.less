@@ -39,13 +39,9 @@
   text-align: center;
   .no-wrap()
 }
-.content-middle (@margin-top: 60px, @height: 100%) {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: @height;
-  margin-top: @margin-top;
-  background: #f8f9fd;
-  text-align: center
+.content-wrapper () {
+  display: flex;
+  min-height: 100vh;
+  height: 100%;
+  flex-direction: column;
 }

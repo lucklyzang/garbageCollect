@@ -272,13 +272,12 @@ export default {
   @import "../common/stylus/variable.less";
   @import "../common/stylus/modifyUi.less";
   .content-wrapper {
+   .content-wrapper();
     .content-middle {
-     .content-middle(0);
      background: #f5f5f5;
+     flex:1;
+     overflow: auto;
       .content-middle-top {
-        margin-top: 61px;
-        height: 90vh;
-        overflow: auto;
         padding: 12px;
         .list-item {
           .item-column {

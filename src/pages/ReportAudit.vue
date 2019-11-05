@@ -24,10 +24,12 @@
           <p>{{yearTotalWeight}}kg</p>
         </div>
       </div>
-      <div id="content-middle-dayData"></div>
-      <div id="content-middle-weekData"></div>
-      <div id="content-middle-monthData"></div>
-      <div id="content-middle-yearData"></div>
+      <div class="data-wrapper" style="width: 97%;margin: 0 auto;text-align: center;">
+        <div id="content-middle-dayData"></div>
+        <div id="content-middle-weekData"></div>
+        <div id="content-middle-monthData"></div>
+        <div id="content-middle-yearData"></div>
+      </div>
     </div>
     <!-- <FooterBottom></FooterBottom> -->
   </div>
@@ -274,10 +276,10 @@ export default {
 @import "../common/stylus/modifyUi.less";
 @import "../common/stylus/index.less";
   .content-wrapper {
-    margin-top: 100px;
+    .content-wrapper();
     .content-middle {
-      .content-middle(-40px, 100vh);
       padding-bottom: 14px;
+      flex:1;
       overflow: auto;
       position: relative !important;
       .content-middle-title {

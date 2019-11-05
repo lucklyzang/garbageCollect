@@ -76,7 +76,6 @@ export default {
   @import "../common/stylus/modifyUi.less";
   .content-wrapper {
     .content-middle {
-      .content-middle();
     }
   }
 </style>

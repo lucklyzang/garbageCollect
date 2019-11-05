@@ -17,11 +17,11 @@
         <div>性别: {{this.getGender == 0 ? '男' : '女'}}</div>
         <div>生日: {{this.getBirthday ? this.getBirthday: '无'}}</div>
       </div>
-      <div class="content-bottom">
-        <van-cell-group>
-          <van-button  @click="loginOut" size="normal">注销账号</van-button>
-        </van-cell-group>
-      </div>
+    </div>
+    <div class="content-bottom">
+      <van-cell-group>
+        <van-button  @click="loginOut" size="normal">注销账号</van-button>
+      </van-cell-group>
     </div>
     <!-- <FooterBottom></FooterBottom> -->
   </div>
@@ -207,8 +207,10 @@ export default {
 @import "../common/stylus/variable.less";
 @import "../common/stylus/modifyUi.less";
   .content-wrapper {
+    .content-wrapper();
     .content-middle {
-      .content-middle();
+      flex:1;
+      overflow: auto;
       .content-middle-top {
         margin-top: 10px;
         text-align: left;
@@ -232,28 +234,6 @@ export default {
           }
         }
       }
-      .content-bottom {
-        width: 100%;
-        position: fixed;
-        bottom: 6px;
-        left: 0;
-          .van-cell-group {
-            width: 80%;
-            margin: 0 auto;
-            background-color: transparent;
-            /deep/ .van-button {
-            width: 100%;
-            background: @color-theme;
-            color: #fff;
-            border-radius: 0;
-            border: none;
-            letter-spacing: 2px
-          }
-          &:after {
-            display: none
-          }
-        }
-      }
       .content-middle-medail {
         height: 60vh;
         overflow: auto;
@@ -266,6 +246,25 @@ export default {
           text-align: left;
           word-wrap: break-word;
           .bottom-border-1px(#dadbdd)
+        }
+      }
+    }
+    .content-bottom {
+      padding: 4px 0;
+        .van-cell-group {
+          width: 80%;
+          margin: 0 auto;
+          background-color: transparent;
+          /deep/ .van-button {
+          width: 100%;
+          background: @color-theme;
+          color: #fff;
+          border-radius: 0;
+          border: none;
+          letter-spacing: 2px
+        }
+        &:after {
+          display: none
         }
       }
     }

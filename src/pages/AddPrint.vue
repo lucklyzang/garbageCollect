@@ -4,43 +4,43 @@
       <van-icon name="arrow-left" slot="left" @click="backTo"></van-icon> 
       <van-icon name="manager-o" slot="right" @click="skipMyInfo"></van-icon> 
     </HeaderTop>
-    <div class="content-middle">
-      <loading :isShow="showLoadingHint"></loading>
-      <div class="content-middle-top">
-        <span class="time-between">至</span>
-        <div class="content-middle-top-content">
-          <div style="left:0">
-            <van-field v-model="startTime" placeholder="开始日期" readonly="readonly" @click="startTimePop = true" right-icon="newspaper-o"/>
-          </div>
-          <div style="right:0">
-            <van-field v-model="endTime" placeholder="结束日期" readonly="readonly" @click="endTimePop = true" right-icon="newspaper-o"/>
-          </div>
+    <loading :isShow="showLoadingHint"></loading>
+    <div class="content-middle-top">
+      <span class="time-between">至</span>
+      <div class="content-middle-top-content">
+        <div style="left:0">
+          <van-field v-model="startTime" placeholder="开始日期" readonly="readonly" @click="startTimePop = true" right-icon="newspaper-o"/>
         </div>
-        <p class="middle-top-search" v-show="false">
-          <van-button type="info" size="small">搜索</van-button>
-        </p>
-        <van-popup v-model="startTimePop" position="bottom" :overlay="true">
-          <van-datetime-picker  v-model="currentDateStart"  type="date"  :min-date="minDateStart"
-          @cancel="startTimePop = false"  @confirm="startTimePop = false"  @change="startTimeChange"/>
-        </van-popup>
-        <van-popup v-model="endTimePop" position="bottom" :overlay="true"> 
-          <van-datetime-picker  v-model="currentDateEnd"  type="date"  :min-date="minDateEnd"
-          @cancel="endTimePop = false"  @confirm="endTimePop = false"  @change="endTimeChange"/>
-        </van-popup>
+        <div style="right:0">
+          <van-field v-model="endTime" placeholder="结束日期" readonly="readonly" @click="endTimePop = true" right-icon="newspaper-o"/>
+        </div>
       </div>
-      <div class="middle-top-select">
-        <van-dropdown-menu  active-color="#33dfb7">
-          <van-dropdown-item v-model="office" :options="officeList" />
-          <van-dropdown-item v-model="collectPerson" :options="collectPersonList" />
-          <van-dropdown-item v-model="reprint" :options="reprintList" />
-        </van-dropdown-menu>
-        <p class="middle-top-search">
-          <van-button type="info" size="small" @click="queryPrintMessage">搜索</van-button>
-        </p>
-      </div>
-      <div class="changeBtn">
-        <van-checkbox v-model="checkedAll" @click="toggleCheckedAll">全选</van-checkbox>
-      </div>
+      <p class="middle-top-search" v-show="false">
+        <van-button type="info" size="small">搜索</van-button>
+      </p>
+      <van-popup v-model="startTimePop" position="bottom" :overlay="true">
+        <van-datetime-picker  v-model="currentDateStart"  type="date"  :min-date="minDateStart"
+        @cancel="startTimePop = false"  @confirm="startTimePop = false"  @change="startTimeChange"/>
+      </van-popup>
+      <van-popup v-model="endTimePop" position="bottom" :overlay="true"> 
+        <van-datetime-picker  v-model="currentDateEnd"  type="date"  :min-date="minDateEnd"
+        @cancel="endTimePop = false"  @confirm="endTimePop = false"  @change="endTimeChange"/>
+      </van-popup>
+    </div>
+    <div class="middle-top-select">
+      <van-dropdown-menu  active-color="#33dfb7">
+        <van-dropdown-item v-model="office" :options="officeList" />
+        <van-dropdown-item v-model="collectPerson" :options="collectPersonList" />
+        <van-dropdown-item v-model="reprint" :options="reprintList" />
+      </van-dropdown-menu>
+      <p class="middle-top-search">
+        <van-button type="info" size="small" @click="queryPrintMessage">搜索</van-button>
+      </p>
+    </div>
+    <div class="changeBtn">
+      <van-checkbox v-model="checkedAll" @click="toggleCheckedAll">全选</van-checkbox>
+    </div>
+    <div class="content-middle">
       <div class="content-middle-list content-middle-list-print">
         <div class="content-middle-list-item" v-for="item in rawInfoList">
           <div class="change-btn-position">
@@ -64,11 +64,11 @@
           </div>
         </div>
       </div>
-      <div class="btn-group">
-        <p>
-          <van-button type="info" @click="printSlip" size="normal">打印凭条</van-button>
-        </p>
-      </div>
+    </div>
+    <div class="btn-group">
+      <p>
+        <van-button type="info" @click="printSlip" size="normal">打印凭条</van-button>
+      </p>
     </div>
     <!-- 打印内容 -->
       <section class="bills-data" v-if="pcPrintShow" ref="print"
@@ -184,8 +184,8 @@ export default {
       checkedAll: false,
       minDateStart: new Date(2018, 0, 1),
       minDateEnd: new Date(2018, 0, 1),
-      currentDateStart: '',
-      currentDateEnd: '',
+      currentDateStart: new Date(),
+      currentDateEnd: new Date(),
       startTime: '',
       endTime: '',
       office: 38,
@@ -586,85 +586,11 @@ export default {
 @import "../common/stylus/modifyUi.less";
 @import "../common/stylus/mixin.less";
   .content-wrapper {
+    .content-wrapper();
     .content-middle {
-      .content-middle();
-       .btn-group {
-        position: fixed;
-        left: 0;
-        bottom: 6px;
-        width: 100%;
-        text-align: center;
-        p {
-          button {
-            background: @color-theme;
-            border-color: @color-theme;
-            letter-spacing: 2px;
-            padding: 0 120px
-          }
-        }
-      }
-      .content-middle-top {
-        background: #fff;
-        margin-top: 3%;
-        position: relative;
-        height: 52px;
-        box-shadow: 0px 1px 3px 1px #e4e4e4,  /*下边阴影*/
-          0px -1px 3px 0px #e4e4e4;   /*上边阴影*/
-        /deep/ .van-cell {
-          width: 100%;
-          display: inline-block;
-          padding: 10px 24px;
-          border: 1px solid #d8d5d5;
-          border-radius: 4px;
-          line-height: 0;
-        }
-        .time-between {
-          color: black;
-          position: absolute;
-        }
-        .content-middle-top-content {
-          position: relative;
-          height: 100%;
-          width: 98%;
-          margin: 0 auto;
-          > div {
-            width: 44%;
-            position: absolute;
-            top: 14%;
-          }
-        }
-      }
-      /deep/ .middle-top-select {
-        position: relative;
-        .van-dropdown-menu__item {
-          flex: none;
-          width: 25%;
-          justify-content: center
-        }
-        .middle-top-search {
-          position: absolute;
-          top: 7px;
-          right: 6px;
-          button {
-            background: @color-theme;
-            border-color: @color-theme
-          }
-        }
-      }
-      .changeBtn {
-          height: 40px;
-          background: #fbfbfb;
-          line-height: 40px;
-          padding-left: 10px;
-          padding-top: 11px;
-          box-sizing: border-box;
-          /deep/ .van-icon {
-            background: @color-theme;
-            border-color: @color-theme
-          }
-      }
+      flex:1;
+      overflow: auto;
       .content-middle-list {
-        overflow: auto;
         .content-middle-list-item {
           position: relative;
           box-sizing: border-box;
@@ -737,34 +663,77 @@ export default {
         }
       }
     }
-    //  .bills-data {
-    //     position:fixed;
-    //     bottom:100px;
-    //     left:0;
-    //     width:100%;
-    //     height:50vh;
-    //     padding:10px 4px 10px 10px;
-    //     overflow: auto;
-    //     background: #fff;
-    //     div {
-    //       height:230px;
-    //       width:100%;
-    //       border-bottom:1px dashed #333;
-    //       background:transparent;
-    //       margin-bottom:40px;
-    //       p {
-    //         font-size:18px;
-    //         width:100%;
-    //         min-height:24px;
-    //         word-wrap: break-word
-    //       }
-    //       p:first-child {
-    //         text-align:center;
-    //         margin-bottom:20px;
-    //         font-size:22px;
-    //         font-weight:bolder
-    //       }
-    //     }
-    //   }
+    /deep/ .middle-top-select {
+      position: relative;
+      .van-dropdown-menu__item {
+        flex: none;
+        width: 25%;
+        justify-content: center
+      }
+      .middle-top-search {
+        position: absolute;
+        top: 7px;
+        right: 6px;
+        button {
+          background: @color-theme;
+          border-color: @color-theme
+        }
+      }
+    }
+    .changeBtn {
+      height: 40px;
+      background: #fbfbfb;
+      line-height: 40px;
+      padding-left: 10px;
+      padding-top: 11px;
+      box-sizing: border-box;
+      /deep/ .van-icon {
+        background: @color-theme;
+        border-color: @color-theme
+      }
+    }
+    .content-middle-top {
+      background: #fff;
+      margin-top: 3%;
+      position: relative;
+      height: 52px;
+      box-shadow: 0px 1px 3px 1px #e4e4e4,  /*下边阴影*/
+        0px -1px 3px 0px #e4e4e4;   /*上边阴影*/
+      /deep/ .van-cell {
+        width: 100%;
+        display: inline-block;
+        padding: 10px 24px;
+        border: 1px solid #d8d5d5;
+        border-radius: 4px;
+        line-height: 0;
+      }
+      .time-between {
+        color: black;
+        position: absolute;
+      }
+      .content-middle-top-content {
+        position: relative;
+        height: 100%;
+        width: 98%;
+        margin: 0 auto;
+        > div {
+          width: 44%;
+          position: absolute;
+          top: 14%;
+        }
+      }
+    }
+    .btn-group {
+      padding: 4px 0;
+      text-align: center;
+      p {
+        button {
+          background: @color-theme;
+          border-color: @color-theme;
+          letter-spacing: 2px;
+          padding: 0 120px
+        }
+      }
+    }
   }
 </style>

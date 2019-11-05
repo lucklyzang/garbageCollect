@@ -4,30 +4,30 @@
       <van-icon name="arrow-left" slot="left" @click="backTo"></van-icon> 
       <van-icon name="manager-o" slot="right" @click="skipMyInfo"></van-icon>
     </HeaderTop>
-    <div class="content-middle">
-      <loading :isShow="showLoadingHint"></loading>
-      <div class="content-middle-top">
-        <span class="time-between">至</span>
-        <div class="content-middle-top-content">
-          <div style="left:0">
-            <van-field v-model="startTime" placeholder="开始日期" readonly="readonly" @click="startTimePop = true" right-icon="newspaper-o"/>
-          </div>
-          <div style="right:0">
-            <van-field v-model="endTime" placeholder="结束日期" readonly="readonly" @click="endTimePop = true" right-icon="newspaper-o"/>
-          </div>
-          <p class="middle-top-search" v-show="false">
-            <van-button type="info" size="small">搜索</van-button>
-          </p>
+    <loading :isShow="showLoadingHint"></loading>
+    <div class="content-middle-top">
+      <span class="time-between">至</span>
+      <div class="content-middle-top-content">
+        <div style="left:0">
+          <van-field v-model="startTime" placeholder="开始日期" readonly="readonly" @click="startTimePop = true" right-icon="newspaper-o"/>
         </div>
-        <van-popup v-model="startTimePop" label="离开时间" position="bottom" :overlay="true"> 
-          <van-datetime-picker  v-model="currentDateStart"  type="date"  :min-date="minDateStart"
-          @cancel="startTimePop = false"  @confirm="startTimePop = false"  @change="startTimeChange"/>
-        </van-popup>
-        <van-popup v-model="endTimePop" label="离开时间" position="bottom" :overlay="true"> 
-          <van-datetime-picker  v-model="currentDateEnd"  type="date"  :min-date="minDateEnd"
-          @cancel="endTimePop = false"  @confirm="endTimePop = false"  @change="endTimeChange"/>
-        </van-popup>
+        <div style="right:0">
+          <van-field v-model="endTime" placeholder="结束日期" readonly="readonly" @click="endTimePop = true" right-icon="newspaper-o"/>
+        </div>
+        <p class="middle-top-search" v-show="false">
+          <van-button type="info" size="small">搜索</van-button>
+        </p>
       </div>
+      <van-popup v-model="startTimePop" label="离开时间" position="bottom" :overlay="true"> 
+        <van-datetime-picker  v-model="currentDateStart"  type="date"  :min-date="minDateStart"
+        @cancel="startTimePop = false"  @confirm="startTimePop = false"  @change="startTimeChange"/>
+      </van-popup>
+      <van-popup v-model="endTimePop" label="离开时间" position="bottom" :overlay="true"> 
+        <van-datetime-picker  v-model="currentDateEnd"  type="date"  :min-date="minDateEnd"
+        @cancel="endTimePop = false"  @confirm="endTimePop = false"  @change="endTimeChange"/>
+      </van-popup>
+    </div>
+    <div class="content-middle">
       <van-tabs v-model="activeName" @click="onClickTab">
         <van-tab name="0">
           <div slot="title">
@@ -142,8 +142,8 @@ export default {
       endTimePop: false,
       startTimePop: false,
       showLoadingHint: false,
-      currentDateStart: '',
-      currentDateEnd: '',
+      currentDateStart: new Date(),
+      currentDateEnd: new Date(),
       startTime: '',
       endTime: '',
       topTitle: '医废收集',
@@ -460,149 +460,152 @@ export default {
   @import "../common/stylus/variable.less";
   @import "../common/stylus/modifyUi.less";
   @import "../common/stylus/mixin.less";
-    .content-middle {
-      .content-middle();
-      /deep/ .van-tabs--line {
-        margin-top: 4px;
-        .van-tabs__line {
-          background-color: @color-theme;
-        }
+  .content-wrapper {
+    .content-wrapper();
+  }
+  .content-middle {
+    flex:1;
+    overflow: auto;
+    /deep/ .van-tabs--line {
+      margin-top: 4px;
+      .van-tabs__line {
+        background-color: @color-theme;
       }
-      .content-middle-top {
-        background: #fff;
-        margin-top: 3%;
-        height: 52px;
+    }
+    /deep/ .van-tabs {
+      .right-sign {
+        .repeat-sign
+      }
+    }
+    .content-middle-list {
+      margin-top: 10px;
+      .content-middle-list-item {
         position: relative;
-        box-shadow: 0px 1px 3px 1px #e4e4e4,  /*下边阴影*/
-          0px -1px 3px 0px #e4e4e4;   /*上边阴影*/
-        /deep/ .van-cell {
-          width: 100%;
-          display: inline-block;
-          padding: 10px 24px;
-          border: 1px solid #d8d5d5;
-          border-radius: 4px;
-          line-height: 0;
+        box-sizing: border-box;
+        padding: 20px 10px;
+        height: 140px;
+        margin: 0 auto;
+        background: #fff;
+        margin-bottom: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2.5px 12px 4px #d1d1d1;
+        .bottom-border-1px(#d3d3d3);
+        &:last-child {
+          // margin-bottom: 0
         }
-        .middle-top-search {
-          position: absolute;
-          top: 7px;
-          right: 6px;
-          button {
-            background: @color-theme;
-            border-color: @color-theme
-          }
-        }
-        .time-between {
-          color: black;
-          position: absolute;
-        }
-        .content-middle-top-content {
+          .list-item {
           position: relative;
           height: 100%;
-          width: 98%;
-          margin: 0 auto;
-          > div {
-            width: 44%;
+          .list-item-left {
             position: absolute;
-            top: 14%;
+            top: 0;
+            left: 0;
+            color: black;
+            font-size: 14px;
+            font-weight: bold;
           }
-        }
-      }
-      /deep/ .van-tabs {
-        .right-sign {
-         .repeat-sign
-        }
-      }
-      .content-middle-list {
-        overflow: auto;
-        margin-top: 10px;
-        .content-middle-list-item {
-          position: relative;
-          box-sizing: border-box;
-          padding: 20px 10px;
-          height: 140px;
-          margin: 0 auto;
-          background: #fff;
-          margin-bottom: 20px;
-          border-radius: 8px;
-          box-shadow: 0 2.5px 12px 4px #d1d1d1;
-          .bottom-border-1px(#d3d3d3);
-          &:last-child {
-            // margin-bottom: 0
+          .list-item-right {
+            position: absolute;
+            top: 32px;
+            right: 0;
+            color: #bdbdbd;
+            font-size: 12px;
+            span {
+              color: #c97889
+            }
           }
-           .list-item {
-            position: relative;
-            height: 100%;
-            .list-item-left {
-              position: absolute;
-              top: 0;
-              left: 0;
-              color: black;
-              font-size: 14px;
-              font-weight: bold;
-            }
-            .list-item-right {
-              position: absolute;
-              top: 32px;
-              right: 0;
-              color: #bdbdbd;
-              font-size: 12px;
-              span {
-                color: #c97889
-              }
-            }
-            .list-strip {
-              position: absolute;
-              top: 20px;
-              left: 0;
-              color: #707070;
-              font-size: 12px;
+          .list-strip {
+            position: absolute;
+            top: 20px;
+            left: 0;
+            color: #707070;
+            font-size: 12px;
+            margin-top: 12px;
+            p {
               margin-top: 12px;
-              p {
-                margin-top: 12px;
-                text-align: left;
-                &:first-child {
-                  margin-top: 0
-                }
-              }
-            }
-            .list-item-bottom {
-              position: absolute;
-              bottom: 0;
-              right: 0;
-              color: #bdbdbd;
-              font-size: 12px;
-              span {
-                color: #5d5d5d
+              text-align: left;
+              &:first-child {
+                margin-top: 0
               }
             }
           }
-        }
-        .not-inStorage {
-          height: 130px;
-          .list-item-right {
-            top: 74px !important
-          }
-        }
-        .inStorage {
-          height: 156px;
-          .list-item-right {
-            top: 98px !important
-          }
-        }
-        .out-storage {
-          height: 204px;
           .list-item-bottom {
-            bottom: 5px !important
-          }
-        }
-        .in-finished {
-          height: 184px;
-           .list-item-right {
-            top: 126px !important
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            color: #bdbdbd;
+            font-size: 12px;
+            span {
+              color: #5d5d5d
+            }
           }
         }
       }
+      .not-inStorage {
+        height: 130px;
+        .list-item-right {
+          top: 74px !important
+        }
+      }
+      .inStorage {
+        height: 156px;
+        .list-item-right {
+          top: 98px !important
+        }
+      }
+      .out-storage {
+        height: 204px;
+        .list-item-bottom {
+          bottom: 5px !important
+        }
+      }
+      .in-finished {
+        height: 184px;
+          .list-item-right {
+          top: 126px !important
+        }
+      }
+    }
+  }
+  .content-middle-top {
+    background: #fff;
+    margin-top: 3%;
+    height: 52px;
+    position: relative;
+    box-shadow: 0px 1px 3px 1px #e4e4e4,  /*下边阴影*/
+      0px -1px 3px 0px #e4e4e4;   /*上边阴影*/
+    /deep/ .van-cell {
+      width: 100%;
+      display: inline-block;
+      padding: 10px 24px;
+      border: 1px solid #d8d5d5;
+      border-radius: 4px;
+      line-height: 0;
+    }
+    .middle-top-search {
+      position: absolute;
+      top: 7px;
+      right: 6px;
+      button {
+        background: @color-theme;
+        border-color: @color-theme
+      }
+    }
+    .time-between {
+      color: black;
+      position: absolute;
+    }
+    .content-middle-top-content {
+      position: relative;
+      height: 100%;
+      width: 98%;
+      margin: 0 auto;
+      > div {
+        width: 44%;
+        position: absolute;
+        top: 14%;
+      }
+    }
   }
   
 </style>

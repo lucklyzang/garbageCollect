@@ -4,31 +4,31 @@
       <van-icon name="arrow-left" slot="left" @click="backTo"></van-icon> 
       <van-icon name="manager-o" slot="right" @click="skipMyInfo"></van-icon> 
     </HeaderTop>
-    <div class="content-middle">
-      <loading :isShow="showLoadingHint"></loading>
-      <div class="content-middle-top">
-        <span class="time-between">至</span>
-        <div class="content-middle-top-content">
-          <div style="left:0">
-            <van-field v-model="startTime" placeholder="开始日期" readonly="readonly" @click="startTimePop = true" right-icon="newspaper-o"/>
-          </div>
-          <div style="right:0">
-            <van-field v-model="endTime" placeholder="结束日期" readonly="readonly" @click="endTimePop = true" right-icon="newspaper-o"/>
-          </div>
-          <p class="middle-top-search" v-show="false">
-            <van-button type="info" size="small">搜索</van-button>
-          </p>
+    <loading :isShow="showLoadingHint"></loading>
+    <div class="content-middle-top">
+      <span class="time-between">至</span>
+      <div class="content-middle-top-content">
+        <div style="left:0">
+          <van-field v-model="startTime" placeholder="开始日期" readonly="readonly" @click="startTimePop = true" right-icon="newspaper-o"/>
         </div>
-        <van-popup v-model="startTimePop" label="离开时间" position="bottom" :overlay="true"> 
-          <van-datetime-picker  v-model="currentDateStart"  type="date"  :min-date="minDateStart"
-          @cancel="startTimePop = false"  @confirm="startTimePop = false"  @change="startTimeChange"/>
-        </van-popup>
-        <van-popup v-model="endTimePop" label="离开时间" position="bottom" :overlay="true"> 
-          <van-datetime-picker  v-model="currentDateEnd"  type="date"  :min-date="minDateEnd"
-          @cancel="endTimePop = false"  @confirm="endTimePop = false"  @change="endTimeChange"/>
-        </van-popup>
-        <p></p>
+        <div style="right:0">
+          <van-field v-model="endTime" placeholder="结束日期" readonly="readonly" @click="endTimePop = true" right-icon="newspaper-o"/>
+        </div>
+        <p class="middle-top-search" v-show="false">
+          <van-button type="info" size="small">搜索</van-button>
+        </p>
       </div>
+      <van-popup v-model="startTimePop" label="离开时间" position="bottom" :overlay="true"> 
+        <van-datetime-picker  v-model="currentDateStart"  type="date"  :min-date="minDateStart"
+        @cancel="startTimePop = false"  @confirm="startTimePop = false"  @change="startTimeChange"/>
+      </van-popup>
+      <van-popup v-model="endTimePop" label="离开时间" position="bottom" :overlay="true"> 
+        <van-datetime-picker  v-model="currentDateEnd"  type="date"  :min-date="minDateEnd"
+        @cancel="endTimePop = false"  @confirm="endTimePop = false"  @change="endTimeChange"/>
+      </van-popup>
+      <p></p>
+    </div>
+    <div class="content-middle">
       <van-tabs v-model="activeName"  @click="onClickTab">
         <van-tab name="0">
           <div slot="title">
@@ -134,9 +134,9 @@ export default {
     return {
       endTimePop: false,
       startTimePop: false,
-      currentDateStart: '',
+      currentDateStart: new Date(),
       currentId: '',
-      currentDateEnd: '',
+      currentDateEnd: new Date(),
       startTime: '',
       endTime: '',
       topTitle: '医废收集',
@@ -423,6 +423,7 @@ export default {
 @import "../common/stylus/modifyUi.less";
 @import "../common/stylus/mixin.less";
   .content-wrapper {
+    .content-wrapper();
      /deep/ .van-dialog {
       .van-dialog__content{
         margin-top: 10px !important
@@ -434,51 +435,12 @@ export default {
       }
     };
     .content-middle {
-     .content-middle();
+      flex:1;
+      overflow: auto;
       /deep/ .van-tabs--line {
         margin-top: 4px;
         .van-tabs__line {
           background-color: @color-theme;
-        }
-      }
-      .content-middle-top {
-        background: #fff;
-        margin-top: 3%;
-        height: 52px;
-        position: relative;
-        box-shadow: 0px 1px 3px 1px #e4e4e4,  /*下边阴影*/
-          0px -1px 3px 0px #e4e4e4;   /*上边阴影*/
-        /deep/ .van-cell {
-          width: 100%;
-          display: inline-block;
-          padding: 10px 24px;
-          border: 1px solid #d8d5d5;
-          border-radius: 4px;
-          line-height: 0;
-        }
-        .middle-top-search {
-          position: absolute;
-          top: 7px;
-          right: 6px;
-          button {
-            background: @color-theme;
-            border-color: @color-theme
-          }
-        }
-         .time-between {
-          color: black;
-          position: absolute;
-        }
-        .content-middle-top-content {
-          position: relative;
-          height: 100%;
-          width: 98%;
-          margin: 0 auto;
-          > div {
-            width: 44%;
-            position: absolute;
-            top: 14%;
-          }
         }
       }
       /deep/ .van-tabs {
@@ -579,6 +541,46 @@ export default {
             border-color: @color-theme;
             padding: 0 120px;
           }
+        }
+      }
+    }
+    .content-middle-top {
+      background: #fff;
+      margin-top: 3%;
+      height: 52px;
+      position: relative;
+      box-shadow: 0px 1px 3px 1px #e4e4e4,  /*下边阴影*/
+        0px -1px 3px 0px #e4e4e4;   /*上边阴影*/
+      /deep/ .van-cell {
+        width: 100%;
+        display: inline-block;
+        padding: 10px 24px;
+        border: 1px solid #d8d5d5;
+        border-radius: 4px;
+        line-height: 0;
+      }
+      .middle-top-search {
+        position: absolute;
+        top: 7px;
+        right: 6px;
+        button {
+          background: @color-theme;
+          border-color: @color-theme
+        }
+      }
+        .time-between {
+        color: black;
+        position: absolute;
+      }
+      .content-middle-top-content {
+        position: relative;
+        height: 100%;
+        width: 98%;
+        margin: 0 auto;
+        > div {
+          width: 44%;
+          position: absolute;
+          top: 14%;
         }
       }
     }

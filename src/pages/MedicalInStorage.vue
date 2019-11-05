@@ -4,12 +4,12 @@
       <van-icon name="arrow-left" slot="left" @click="backTo"></van-icon> 
       <van-icon name="manager-o" slot="right" @click="skipMyInfo"></van-icon> 
     </HeaderTop>
+    <loading :isShow="showLoadingHint"></loading>
+    <p class="content-middle-top">
+      <span class="text-left">{{hospitalName}}</span>
+      <span class="text-right"></span>
+    </p>
     <div class="content-middle">
-      <loading :isShow="showLoadingHint"></loading>
-      <p class="content-middle-top">
-        <span class="text-left">{{hospitalName}}</span>
-        <span class="text-right"></span>
-      </p>
       <div class="content-middle-list content-middle-list-inStorage">
         <div class="content-middle-list-item" v-for="item in classList">
           <div class="list-item">
@@ -29,14 +29,14 @@
           </div>
         </div>
       </div>
-      <div class="btn-group">
-        <p v-show="inStoageBtn" class="inStoageBtn">
-          <van-button type="info" @click="medicalInStoragr" size="normal">医废入库</van-button>
-        </p>
-        <p v-show="sureBtnShow" class="sureBtnShow">
-          <van-button type="info" @click="sureInStorage" size="normal">确定</van-button>
-        </p>
-      </div>
+    </div>
+    <div class="btn-group">
+      <p v-show="inStoageBtn" class="inStoageBtn">
+        <van-button type="info" @click="medicalInStoragr" size="normal">医废入库</van-button>
+      </p>
+      <p v-show="sureBtnShow" class="sureBtnShow">
+        <van-button type="info" @click="sureInStorage" size="normal">确定</van-button>
+      </p>
     </div>
     <!-- <FooterBottom></FooterBottom> -->
     <!-- pc端提示扫码枪扫码弹框 -->
@@ -346,26 +346,12 @@ export default {
 @import "../common/stylus/modifyUi.less";
 @import "../common/stylus/mixin.less";
   .content-wrapper {
+    .content-wrapper();
     .content-middle {
-      .content-middle();
-      .content-middle-top {
-        background: #7ae4cc;
-        height: 26px;
-        position: relative;
-        color: #bafbd8;
-        position: relative;
-        .text-left {
-          position: absolute;
-          top: 7px;
-          left: 14px
-        }
-        .text-right {
-          position: absolute;
-          top: 7px;
-          right: 14px
-        }
-      }
+      flex:1;
+      overflow: auto;
       .content-middle-list {
+        height: 100%;
         overflow: auto;
         .content-middle-list-item {
           position: relative;
@@ -428,25 +414,40 @@ export default {
           }
         }
       }
-      .btn-group {
-        width: 100%;
-        position: fixed;
-        bottom: 6px;
-        text-align: center;
+    }
+    .content-middle-top {
+      background: #7ae4cc;
+      height: 26px;
+      position: relative;
+      color: #bafbd8;
+      position: relative;
+      .text-left {
+        position: absolute;
+        top: 7px;
+        left: 14px
+      }
+      .text-right {
+        position: absolute;
+        top: 7px;
+        right: 14px
+      }
+    }
+    .btn-group {
+      padding: 4px 0;
+      text-align: center;
+      button {
+        background: @color-theme;
+        border-color: @color-theme;
+        letter-spacing: 2px
+      }
+      .inStoageBtn {
         button {
-          background: @color-theme;
-          border-color: @color-theme;
-          letter-spacing: 2px
+          padding: 0 120px;
         }
-        .inStoageBtn {
-          button {
-            padding: 0 120px;
-          }
-        }
-        .sureBtnShow {
-          button {
-            padding: 0 140px;
-          }
+      }
+      .sureBtnShow {
+        button {
+          padding: 0 140px;
         }
       }
     }

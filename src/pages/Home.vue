@@ -273,7 +273,6 @@
     .content-header {
       width: 100%;
       height: auto;
-      margin-top: 60px;
       img {
         width: 100%;
         height: 100%

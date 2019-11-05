@@ -285,7 +285,6 @@ export default {
 @import "../common/stylus/modifyUi.less";
   .content-wrapper {
     .content-middle {
-      .content-middle();
       .select-wrapper {
         width: 92%;
         margin: 0 auto;
