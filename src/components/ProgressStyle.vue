@@ -101,7 +101,7 @@ export default {
         position: absolute;
         height: 5px;
         border-radius: 1px;
-        background: #bcf1e9;
+        background: #97f695;
         top: 12px;
         right: 0;
         font-weight: bold
@@ -110,10 +110,11 @@ export default {
     .inner-circle-style {
       border: none !important;
       color: #fff !important;
-      background: #33dfb7 !important
+      background: #05dc00 !important;
+      border: none
     }
     .inner-line-style {
-      background: #31e0b9  !important
+      background: #05dc00  !important
     }
   }
   .text-wrapper {

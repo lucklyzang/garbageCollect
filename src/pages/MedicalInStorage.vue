@@ -140,6 +140,7 @@ export default {
     ...mapMutations([
       'changeTitleTxt', 
     ]),
+    
     // 扫描二维码方法
     sweepStage () {
       if (IsPC()) {
@@ -352,7 +353,6 @@ export default {
       overflow: auto;
       .content-middle-list {
         height: 100%;
-        overflow: auto;
         .content-middle-list-item {
           position: relative;
           box-sizing: border-box;
@@ -416,10 +416,10 @@ export default {
       }
     }
     .content-middle-top {
-      background: #7ae4cc;
+      background: #49e347;
       height: 26px;
       position: relative;
-      color: #bafbd8;
+      color: #fff;
       position: relative;
       .text-left {
         position: absolute;

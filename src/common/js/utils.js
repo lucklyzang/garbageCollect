@@ -61,7 +61,7 @@ export const IsPC = () => {
   　　system.mac = p.indexOf("Mac") == 0;
   　　system.x11 = (p == "X11") || (p.indexOf("Linux") == 0);
   　　system.ipad = (navigator.userAgent.match(/iPad/i) != null) ? true : false;
-　if (system.win || system.mac || system.xll||system.ipad) {
+　if (system.win || system.mac || system.xll || system.ipad) {
     flag = true
 　} else {
     flag = false

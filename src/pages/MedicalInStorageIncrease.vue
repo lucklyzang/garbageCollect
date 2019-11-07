@@ -5,7 +5,7 @@
       <van-icon name="manager-o" slot="right" @click="skipMyInfo"></van-icon> 
     </HeaderTop>
     <div class="content-middle">
-      <p class="select-wrapper" ref="selectWrapper">
+      <div class="select-wrapper" ref="selectWrapper">
         <van-field
           label="监测区域"
           placeholder="请输入"
@@ -46,13 +46,13 @@
           v-model="cardNumber"
           :columns="cardNumberList"
         />
-      </p>
-      <p class="increaseBtn">
-        <van-cell-group>
-          <van-button  @click="increase" size="normal">新增</van-button>
-        </van-cell-group>
-      </p>
+      </div>
     </div>
+    <p class="increaseBtn">
+      <van-cell-group>
+        <van-button  @click="increase" size="normal">新增</van-button>
+      </van-cell-group>
+    </p>
     <!-- <FooterBottom></FooterBottom> -->
   </div>
 </template>
@@ -117,17 +117,20 @@ export default {
       })
     };
     // 键盘弹起时不会遮住输入框
-    let originalHeight = document.documentElement.clientHeight || document.body.clientHeight;
-    window.onresize = () => {
-      let resizeHeight = document.documentElement.clientHeight || document.body.clientHeight;
-      if (resizeHeight < originalHeight) {
-        return (()=>{
-          this.$refs['selectWrapper'].style.cssText='height:200px;overflow:auto' 
-        })()
-      } else {
-        this.$refs['selectWrapper'].style.cssText='height:auto' 
-      }
-    };
+    // if (IsPC()) {
+    //   debugger;
+    //   let originalHeight = document.documentElement.clientHeight || document.body.clientHeight;
+    //   window.onresize = () => {
+    //     let resizeHeight = document.documentElement.clientHeight || document.body.clientHeight;
+    //     if (resizeHeight < originalHeight) {
+    //       return (()=>{
+    //         this.$refs['selectWrapper'].style.cssText='height:200px;overflow:auto' 
+    //       })()
+    //     } else {
+    //       this.$refs['selectWrapper'].style.cssText='height:auto' 
+    //     }
+    //   }
+    // };
     // 查询出库公司
     this.queryCompanyInfo()
   },
@@ -283,12 +286,18 @@ export default {
 <style lang='less' scoped>
 @import "../common/stylus/variable.less";
 @import "../common/stylus/modifyUi.less";
+@import "../common/stylus/mixin.less";
   .content-wrapper {
+    .content-wrapper();
     .content-middle {
+      flex:1;
+      overflow: auto;
       .select-wrapper {
         width: 92%;
+        height: 100%;
         margin: 0 auto;
         padding-top: 10px;
+        box-sizing: border-box;
         /deep/ .van-cell {
           border-bottom: 1px solid #dcdcdc;
           .van-cell__title {
@@ -305,23 +314,20 @@ export default {
           }
         }
       }
-      .increaseBtn {
-        width: 100%;
-        position: fixed;
-        bottom: 6px;
-        left: 0;
-          .van-cell-group {
-            width: 80%;
-            margin: 0 auto;
-            /deep/ .van-button {
-            width: 100%;
-            background: @color-theme;
-            color: #fff;
-            border-radius: 0;
-            border: none;
-            padding: 0 120px;
-            letter-spacing: 2px
-          }
+    }
+    .increaseBtn {
+      padding: 4px 0;
+      text-align: center;
+        .van-cell-group {
+          width: 80%;
+          margin: 0 auto;
+          /deep/ .van-button {
+          width: 100%;
+          background: @color-theme;
+          color: #fff;
+          border-radius: 0;
+          border: none;
+          letter-spacing: 2px
         }
       }
     }

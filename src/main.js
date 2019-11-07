@@ -5,8 +5,10 @@ import store from './store'
 import Vant from 'vant';
 import 'vant/lib/index.css';
 import moment from 'moment'
-import {setStore, getStore} from '@/common/js/utils.js'
+import {setStore, getStore, IsPC} from '@/common/js/utils.js'
 import echarts from 'echarts'
+// import SocketIO from 'socket.io-client';
+import VueSocketIO from 'vue-socket.io';
 
 Vue.prototype.$echarts = echarts
 // 全局挂载时间格式化方法
@@ -37,7 +39,15 @@ store.commit('refreshChangeTitleTxt', getStore('currentTitle'));
 store.commit('refreshStoreCollectInfo',JSON.parse(getStore('currentItem')));
 store.commit('refreshStoreCurrentName',JSON.parse(getStore('refreshCurrentItem')));
 // 页面刷新后重新存入收集批次号
-store.commit('createBatchNumber', getStore('currentBatchNumber'))
+store.commit('createBatchNumber', getStore('currentBatchNumber'));
+
+if (IsPC()) {
+  Vue.use(new VueSocketIO({
+     debug: true,
+     connection: 'http://localhost:10001'
+  }))
+};
+
 new Vue({
   el: '#app',
   router,

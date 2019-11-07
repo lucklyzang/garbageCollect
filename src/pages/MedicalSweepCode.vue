@@ -177,7 +177,7 @@
       v-model="chooseWightMethodsShow"
       title="请选择称重方式"
       show-cancel-button
-      confirmButtonText="蓝牙称重"
+      :confirmButtonText="weightMethodsText()"
       cancelButtonText="手动输入"
       :close-on-popstate="true"
       :close-on-click-overlay="true"
@@ -236,7 +236,8 @@ export default {
       chooseBackoutShow: false,
       barCodeScannerShow: false,
       isPcCallBack: false,
-      barMessageList: []
+      barMessageList: [],
+      id: '',
     };
   },
   computed: {
@@ -338,8 +339,10 @@ export default {
           this.clearPartStorage()
         }
       })
+    } else {
+      //触发socket连接
+      this.$socket.emit('connect')
     };
-    // this.ShowCotentMIddle();
     // 判断流程从哪步开始
     this.judgeFlowPosition();
     // 判断是否执行扫码枪方法
@@ -353,6 +356,28 @@ export default {
       me.getWeightCallback(code);
     }
   },
+
+  sockets: {
+    connect () {
+      console.log('建立链接');
+      this.id = this.$socket.id;
+      // 监听connect事件
+      this.$socket.emit('weight', 'getweight')
+    },
+    disconnect () {
+      console.log('断开链接')
+    },
+    reconnect () {
+      console.log('重新链接')
+    },
+    message (data) {
+      if (IsPC()) {
+        this.changeExtraLyczMsg('');
+        this.changeExtraLyczMsg(data.replace('kg', ''))
+      }     
+      console.log('秤的物体重量', data.replace('kg', ''));
+    }
+  },
 
   watch: {
     temporaryActive : {
@@ -421,6 +446,26 @@ export default {
       'changeStorageLanyaCzOther'
     ]),
 
+    weightMethodsText () {
+      let currentText;
+      IsPC() ?  currentText = '连接电子秤' : currentText = '蓝牙称重';
+      return currentText
+    },
+
+    //添加按钮事件向服务端发送数据
+    clickButton (data) {                      
+       this.$socket.emit('weight', 'getweight')
+    },
+
+    // 断开socket连接
+    sendDisconnect () {
+			this.$socket.disconnect()
+    },
+    
+    // 重连socket
+    againConnect () {
+      this.$socket.connect()
+    },
 
     // 返回上一页
     backTo () {
@@ -1028,14 +1073,25 @@ export default {
             } else {
               // 断开蓝牙秤连接
               // this.breakScales();
-              if (this.extraLyczMsg == 0.0) {
+              if (this.extraLyczMsg == 0.0 || !this.extraLyczMsg) {
                 this.$dialog.confirm({
                   message: '收集医废重量不能为0,再次称重?',
                   closeOnPopstate: true
                 }).then(() => {
                   this.changeCodeStep(3);
                   this.changeExtraLyczMsg(null);
-                  this.weightRubbish()
+                  if (!IsPC) {
+                    this.weightRubbish()
+                  } else {
+                    this.changeCurrentActive(this.codeStep);
+                    this.temporaryActive = 3;
+                    this.changeManualWeighShow(false);
+                    this.changeCodeStep(this.codeStep);
+                    this.changebluetoothWeighShow(true);
+                    this.changeIsPlus(true);
+                    this.changeBagCodeShow(false);
+                    this.changeIsStoreWeight(false)
+                  }
                 })
                 .catch(() => {
                   let lajiCodeAgent = this.lajiCode;
@@ -1075,7 +1131,20 @@ export default {
     // 蓝牙称重
     chooseWightSure () {
       this.chooseWightMethodsShow = false;
-      this.weightRubbish();
+      if (!IsPC()) { 
+        this.weightRubbish()
+      } else {
+        if (this.codeStep == 3) {
+          this.changeCurrentActive(this.codeStep);
+          this.temporaryActive = 3;
+          this.changeManualWeighShow(false);
+          this.changeCodeStep(this.codeStep);
+          this.changebluetoothWeighShow(true);
+          this.changeIsPlus(true);
+          this.changeBagCodeShow(false);
+          this.changeIsStoreWeight(false)
+        }
+      }
       this.changeIsBlueWeight(true)
     },
 
@@ -1321,6 +1390,8 @@ export default {
               color: #707070;
               font-size: 12px;
               margin-top: 12px;
+              width: 100%;
+              text-align: left;
               p {
                 margin-top: 12px;
                 &:first-child {

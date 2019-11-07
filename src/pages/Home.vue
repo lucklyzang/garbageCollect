@@ -5,9 +5,9 @@
       <van-icon name="manager-o" slot="right" @click="skipMyInfo"></van-icon> 
     </HeaderTop>
     <div class="content">
-      <div class="content-header">
+      <!-- <div class="content-header">
         <img :src="bannerUrl" alt="">
-      </div>
+      </div> -->
       <div class="content-middle content-middle-home">
         <div class="content-list" v-for="item in itemList" @click="routerSkip(item.name, item.itemText)">
           <p class="title-img">
@@ -270,17 +270,17 @@
     height: 100%;
     background: #fff;
     overflow: auto;
-    .content-header {
-      width: 100%;
-      height: auto;
-      img {
-        width: 100%;
-        height: 100%
-      }
-    }
+    // .content-header {
+    //   width: 100%;
+    //   height: auto;
+    //   img {
+    //     width: 100%;
+    //     height: 100%
+    //   }
+    // }
     .content-middle {
       margin: 0 auto;
-      margin-top: 15px;
+      margin-top: 30px;
     }
   }   
   

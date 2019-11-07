@@ -21,9 +21,9 @@ export default {
       type: String,
       default: '16px'
     },
-    textColor : {
+    textColor : {  
       type: String,
-      default: '#33dfb7'
+      default: '#05dc00'
     },
     isShow: {
       type: Boolean,
