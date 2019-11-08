@@ -61,7 +61,7 @@
       }
     },
     
-    mounted(){
+    mounted() {
       // 控制设备物理返回按键
       if (!IsPC()) {
         pushHistory();
@@ -72,7 +72,8 @@
           setStore('currentTitle','医废监测')
         })
       };
-      this.initItemList ();
+      this.changeTitleTxt({tit: '医废监测'});
+      this.initItemList();
       this.judgeCodeFinish()
     },
     

@@ -43,7 +43,7 @@
                 </p>
                 <div class="list-strip">
                   <p>医院: {{item.proName}}</p>
-                  <p class="list-sign">入库人: {{item.inWorkerName}}</p>
+                  <p class="list-sign">收集人: {{item.inWorkerName}}</p>
                 </div>
               </div>
             </div>

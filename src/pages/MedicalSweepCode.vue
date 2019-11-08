@@ -238,6 +238,7 @@ export default {
       isPcCallBack: false,
       barMessageList: [],
       id: '',
+      recordCount: 0
     };
   },
   computed: {
@@ -340,8 +341,8 @@ export default {
         }
       })
     } else {
-      //触发socket连接
-      this.$socket.emit('connect')
+      //断开socket连接
+      this.sendDisconnect()
     };
     // 判断流程从哪步开始
     this.judgeFlowPosition();
@@ -555,11 +556,14 @@ export default {
         this.temporaryActive = 2;
         this.changeCodeStep(2);
         this.changeIsPlus(true);
+        //链接socket
+        this.againConnect()
       } else if (this.judgeFlowValue == 3) {
         if (!getStore('weightMethods')) {
           if (this.isBlueWeight) {
             this.changebluetoothWeighShow(true);
             this.changeManualWeighShow(false);
+            this.changeExtraLyczMsg(this.lanyaCz[this.lanyaCz.length-1])
           } else {
             this.changeManualWeighShow(true);
             this.changebluetoothWeighShow(false);
@@ -573,6 +577,7 @@ export default {
           } else if (getStore('weightMethods') == 'bluetooth') {
             this.changebluetoothWeighShow(true);
             this.changeManualWeighShow(false);
+            this.changeExtraLyczMsg(this.lanyaCz[this.lanyaCz.length-1])
           };
           this.changeCurrentActive(3);
           this.temporaryActive = 3;
@@ -582,7 +587,7 @@ export default {
         this.changeCurrentActive(3);
         this.temporaryActive = 3;
         this.changeCodeStep(3);
-        this.changeIsPlus(true);
+        this.changeIsPlus(true)
       } else {
         this.initSweepCodeInfo()
       }
@@ -682,10 +687,14 @@ export default {
 
     // 扫描二维码方法
     sweepAstoffice () {
+      this.recordCount++;
       if (IsPC()) {
         this.isPcCallBack = true;
         if (this.isPcCallBack) {
           this.barCodeScannerShow = true
+        };
+        if (this.recordCount == 1) {
+          this.againConnect()
         }
       } else {
         window.android.scanQRcode()
@@ -1023,7 +1032,6 @@ export default {
       this.changeIsPlus(false);
       if (middleCurrentActive > 4) {return};
       if (middleCurrentActive == 3) {
-        // this.chooseWeightMethod();
         this.chooseWightMethodsShow = true;
         this.changeRepeatSubmit(false)
       } else if (middleCurrentActive == 4) {

@@ -49,6 +49,11 @@ export default {
       'changeIsCollectCurrentOffice'
     ]),
 
+    // 断开socket连接
+    sendDisconnect () {
+			this.$socket.disconnect()
+    },
+
     showDialog () {
       this.$dialog.confirm({
         message: '是否其它科室收集?',
@@ -60,6 +65,7 @@ export default {
         this.initState()
       }).catch(() => {
         this.$router.push({path:'home'});
+        this.sendDisconnect();
         this.changeTitleTxt({tit: '医废监测'});
         setStore('currentTitle','医废监测');
         this.initState()
