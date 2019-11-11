@@ -154,7 +154,6 @@ export default {
     .content-middle-bottom {
       padding: 4px 0;
         .van-cell-group {
-          width: 80%;
           margin: 0 auto;
           background-color: transparent;
           /deep/ .van-button {
@@ -163,8 +162,8 @@ export default {
           color: #fff;
           border-radius: 0;
           border: none;
-          line-height: 35px;
-          padding: 0 120px
+          letter-spacing: 6px;
+          text-indent:6px
         }
         &:after {
           display: none

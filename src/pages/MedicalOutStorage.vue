@@ -392,6 +392,7 @@ export default {
           background: @color-theme;
           border-color: @color-theme;
           letter-spacing: 2px;
+          text-indent: 2px;
           padding: 0 120px
         }
       }

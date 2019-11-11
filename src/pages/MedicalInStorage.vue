@@ -438,7 +438,8 @@ export default {
       button {
         background: @color-theme;
         border-color: @color-theme;
-        letter-spacing: 2px
+        letter-spacing: 2px;
+        text-indent: 2px
       }
       .inStoageBtn {
         button {

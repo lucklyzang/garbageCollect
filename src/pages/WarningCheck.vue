@@ -459,7 +459,6 @@ export default {
         }
       }
       .content-middle-list {
-        overflow: auto;
         margin-top: 10px;
        .content-middle-list-item {
           position: relative;

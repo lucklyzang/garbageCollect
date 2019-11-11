@@ -1073,7 +1073,7 @@ export default {
                 }
               } else {
                 this.$dialog.alert({
-                  message: '重量不能为空,请重新输入',
+                  message: '输入重量不能为空,请重新输入',
                   closeOnPopstate: true
                   }).then(() => {
                 });
@@ -1083,7 +1083,7 @@ export default {
               // this.breakScales();
               if (this.extraLyczMsg == 0.0 || !this.extraLyczMsg) {
                 this.$dialog.confirm({
-                  message: '收集医废重量不能为0,再次称重?',
+                  message: '称重重量不能为0或空,请重新称重',
                   closeOnPopstate: true
                 }).then(() => {
                   this.changeCodeStep(3);
@@ -1110,19 +1110,42 @@ export default {
                   this.$router.push({path:'judgeCurrentDepantment'});
                 })
               } else {
-                if (!this.isStoreWeight) {
-                  // 最终的回调重量存store的重量数组
-                  this.storageLanyaCz(this.extraLyczMsg);
-                  this.changeExtraLyczMsg(null);
-                  this.$router.push({path:'judgeCurrentDepantment'});
-                  // h5存储每步的收集信息和流程
-                  setStore('currentCollectMsg',{currentMsg:this.garColMsg});
-                  setStore('currentStep',3);
-                  // h5存储当前的称重方式
-                  setStore('weightMethods','bluetooth')
+                let reCz = /^[+]{0,1}(\d+)$|^[+]{0,1}(\d+\.\d+)$/;
+                if (reCz.test(this.Trim(this.extraLyczMsg))) {
+                  if (!this.isStoreWeight) {
+                    // 最终的回调重量存store的重量数组
+                    this.storageLanyaCz(this.extraLyczMsg);
+                    this.changeExtraLyczMsg(null);
+                    this.$router.push({path:'judgeCurrentDepantment'});
+                    // h5存储每步的收集信息和流程
+                    setStore('currentCollectMsg',{currentMsg:this.garColMsg});
+                    setStore('currentStep',3);
+                    // h5存储当前的称重方式
+                    setStore('weightMethods','bluetooth')
+                  } else {
+                    this.changeExtraLyczMsg(null);
+                    this.$router.push({path:'judgeCurrentDepantment'})
+                  }
                 } else {
-                  this.changeExtraLyczMsg(null);
-                  this.$router.push({path:'judgeCurrentDepantment'})
+                  this.$dialog.alert({
+                    message: '称重重量不合法,请重新称重',
+                    closeOnPopstate: true
+                  }).then(() => {
+                    this.changeCodeStep(3);
+                    this.changeExtraLyczMsg(null);
+                    if (!IsPC) {
+                      this.weightRubbish()
+                    } else {
+                      this.changeCurrentActive(this.codeStep);
+                      this.temporaryActive = 3;
+                      this.changeManualWeighShow(false);
+                      this.changeCodeStep(this.codeStep);
+                      this.changebluetoothWeighShow(true);
+                      this.changeIsPlus(true);
+                      this.changeBagCodeShow(false);
+                      this.changeIsStoreWeight(false)
+                    }
+                  })
                 }
               }
             }
@@ -1255,6 +1278,11 @@ export default {
       }
     },
 
+    // 去除字符串前后空格
+    Trim(str) { 
+      return str.replace(/(^\s*)|(\s*$)/g, ""); 
+    },
+
     //清除部分存储信息
     clearPartStorage () {
       removeStore('currentCollectMsg');
@@ -1334,6 +1362,7 @@ export default {
             border-color: @color-theme;
             text-align: center;
             letter-spacing: 2px;
+            text-indent: 2px;
             border: none;
             height: 58px;
             font-size: 18px

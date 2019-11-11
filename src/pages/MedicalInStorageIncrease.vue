@@ -319,7 +319,6 @@ export default {
       padding: 4px 0;
       text-align: center;
         .van-cell-group {
-          width: 80%;
           margin: 0 auto;
           /deep/ .van-button {
           width: 100%;
@@ -327,7 +326,8 @@ export default {
           color: #fff;
           border-radius: 0;
           border: none;
-          letter-spacing: 2px
+          letter-spacing: 2px;
+          text-indent: 2px
         }
       }
     }

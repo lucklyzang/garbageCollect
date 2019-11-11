@@ -492,7 +492,6 @@ export default {
         }
       }
       .content-middle-list {
-        overflow: auto;
        .content-middle-list-item {
           position: relative;
           box-sizing: border-box;
