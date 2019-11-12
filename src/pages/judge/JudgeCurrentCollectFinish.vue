@@ -224,15 +224,7 @@ export default {
           closeOnPopstate: true
         })
         .then(() => {
-          this.changeFlowState(3);
-          this.jumpCollectPage();
-          this.changeCollectBtn(false);
-          this.changeSureBtn(true);
-          this.changeBagCodeShow(false);
-          this.changeAstOfficeShow(false);
-          this.changeStaffCodeShow(false);
-          this.changeBackoutBtn(false);
-          this.changeRepeatSubmit(true)
+          this.initStepThree();
         })
       })
     },
@@ -294,15 +286,7 @@ export default {
           closeOnPopstate: true
         })
         .then(() => {
-          this.changeFlowState(3);
-          this.jumpCollectPage();
-          this.changeCollectBtn(false);
-          this.changeSureBtn(true);
-          this.changeBagCodeShow(false);
-          this.changeAstOfficeShow(false);
-          this.changeStaffCodeShow(false);
-          this.changeRepeatSubmit(true);
-          this.changeBackoutBtn(false);
+          this.initStepThree()
         })
       })
     },
@@ -321,7 +305,7 @@ export default {
       this.changeBagCodeShow(false);
       this.changeAstOfficeShow(false);
       this.changeStaffCodeShow(false);
-      this.changeBackoutBtn(false);
+      this.changeBackoutBtn(false)
     },
 
     // 数据提交状态码异常时弹框确定按钮的回调事件
@@ -344,25 +328,9 @@ export default {
             this.changeRepeatSubmit(false);
             return
           };
-          this.changeFlowState(3);
-          this.jumpCollectPage();
-          this.changeCollectBtn(false);
-          this.changeSureBtn(true);
-          this.changeBagCodeShow(false);
-          this.changeAstOfficeShow(false);
-          this.changeStaffCodeShow(false);
-          this.changeRepeatSubmit(true);
-          this.changeBackoutBtn(false);
+          this.initStepThree()
         } else {
-          this.changeFlowState(3);
-          this.jumpCollectPage();
-          this.changeCollectBtn(false);
-          this.changeSureBtn(true);
-          this.changeBagCodeShow(false);
-          this.changeAstOfficeShow(false);
-          this.changeStaffCodeShow(false);
-          this.changeRepeatSubmit(true);
-          this.changeBackoutBtn(false);
+          this.initStepThree()
         }
       } else {
         this.initStorageLajiCode();
@@ -388,6 +356,19 @@ export default {
 			return {'one':arrOne,'two':arrTwo}
     },
 
+    // 初始首页第三步状态
+    initStepThree () {
+      this.changeFlowState(3);
+      this.jumpCollectPage();
+      this.changeCollectBtn(false);
+      this.changeSureBtn(true);
+      this.changeBagCodeShow(false);
+      this.changeAstOfficeShow(false);
+      this.changeStaffCodeShow(false);
+      this.changeRepeatSubmit(true);
+      this.changeBackoutBtn(false)
+    },
+
     //清除部分存储信息
     clearPartStorage () {
       removeStore('currentCollectMsg');
@@ -402,24 +383,7 @@ export default {
       setStore('currentTitle','医废收集')
     }
 
-    // 提交数据失败时的处理
-    // this.changeBackoutBtn(true);
-    // this.changeFlowState(-1);
-    // this.$router.push({path: 'medicalCollect'});
-    // // 清空存储的数据
-    // this.clearTrashStore();
-    // this.changeCollectBtn(true);
-    // this.changeSureBtn(false);
-    // this.changebluetoothWeighShow(false);
-    // this.changeManualWeighShow(false);
-    // this.changeBagCodeShow(false);
-    // this.changeAstOfficeShow(false);
-    // this.changeStaffCodeShow(false);
-    // // 数据提交服务端成功过后删除h5存储每步的收集信息和流程和称重方式
-    // removeStore('currentCollectMsg');
-    // removeStore('currentStep');
-    // removeStore('weightMethods');
-    // removeStore('continueCurrentCollect')
+    
   }
 }
 </script>

@@ -235,8 +235,6 @@ export default {
         }
       }
       .content-middle-medail {
-        height: 60vh;
-        overflow: auto;
         padding: 10px;
         div {
           color: #2f2f2f;
@@ -252,7 +250,6 @@ export default {
     .content-bottom {
       padding: 4px 0;
         .van-cell-group {
-          width: 80%;
           margin: 0 auto;
           background-color: transparent;
           /deep/ .van-button {
@@ -261,7 +258,8 @@ export default {
           color: #fff;
           border-radius: 0;
           border: none;
-          letter-spacing: 2px
+          letter-spacing: 2px;
+          text-indent: 2px
         }
         &:after {
           display: none

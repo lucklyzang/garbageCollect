@@ -113,3 +113,8 @@ export const scanCode = (callback) => {
     lastTime = nextTime;
   }
 }
+
+/** 
+ * 验证输入重量是否合法正则
+*/
+export const testWeight = /^[+]{0,1}(\d+)$|^[+]{0,1}(\d+\.\d+)$/ 

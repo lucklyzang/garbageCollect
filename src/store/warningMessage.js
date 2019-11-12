@@ -3,13 +3,15 @@ export default {
     warningInfo: null,
     collectInfo: null,
     currentName: null,
-    isCall: true
+    isCall: true,
+    isExecuteActivated: false
   },
   getters:{
     warningInfo : state => state.warningInfo,
     collectInfo : state => state.collectInfo,
     currentName : state => state.currentName,
-    isCall : state => state.isCall
+    isCall : state => state.isCall,
+    isExecuteActivated: state => state.isExecuteActivated
   },
   mutations:{
     storeWarningInfo (state, playLoad) {
@@ -38,6 +40,9 @@ export default {
     },
     changeIsCall (state, playLoad) {
       state.isCall = playLoad
+    },
+    changeIsExecuteActivated (state, playLoad) {
+      state.isExecuteActivated = playLoad
     }
   },
   actions:{}

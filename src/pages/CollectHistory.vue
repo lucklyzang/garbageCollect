@@ -166,7 +166,8 @@ export default {
     ...mapGetters([
       'navTopTitle',
       'userInfo',
-      'isCall'
+      'isCall',
+      'isExecuteActivated'
     ]),
     getUserInfo () {
       return this.userInfo.proId
@@ -183,12 +184,14 @@ export default {
 
   // 由于该页面被缓存,调用activated钩子函数保证每次组件切换时,监听物理返回按键的方法都会执行
   activated () {
-    // 控制设备物理返回按键
-    if (!IsPC()) {
-      this.monitorBack()
-    };
-    if (this.isCall) {
-      this.initMethod()
+    if (this.isExecuteActivated) {
+      // 控制设备物理返回按键
+      if (!IsPC()) {
+        this.monitorBack()
+      };
+      if (this.isCall) {
+        this.initMethod()
+      }
     }
   },
 
@@ -197,7 +200,8 @@ export default {
       'changeTitleTxt',
       'storeCollectInfo',
       'storeCurrentName',
-      'initCollectInfo'
+      'initCollectInfo',
+      'changeIsExecuteActivated'
     ]),
     // 返回上一页
     backTo () {
@@ -436,11 +440,18 @@ export default {
     monitorBack () {
       let that = this;
       pushHistory()
-      that.gotoURL(() => { 
-        pushHistory()
-        this.$router.push({path: 'home'});  //输入要返回的上一级路由地址
-        this.changeTitleTxt({tit: '医废监测'})
-        setStore('currentTitle','医废监测');
+      that.gotoURL(() => {
+        pushHistory();
+        if (this.isExecuteActivated) {
+          this.$router.push({path: 'collectHistory'});  //输入要返回的上一级路由地址
+          this.changeTitleTxt({tit: '收集历史'});
+          setStore('currentTitle','收集历史');
+          this.changeIsExecuteActivated(false)
+        } else {
+          this.$router.push({path: 'home'});  //输入要返回的上一级路由地址
+          this.changeTitleTxt({tit: '医废监测'})
+          setStore('currentTitle','医废监测')
+        }
       })
     },
 

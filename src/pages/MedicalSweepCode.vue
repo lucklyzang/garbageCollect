@@ -208,7 +208,7 @@ import FooterBottom from '../components/FooterBottom'
 import CommonProgress from '../components/CommonProgress'
 import ProgressStyle from '../components/ProgressStyle'
 import {judgeStagingPoint,judgeMedicalPerson} from '../api/rubbishCollect.js'
-import { formatTime, setStore, getStore, removeStore, IsPC, scanCode} from '@/common/js/utils'
+import { formatTime, setStore, getStore, removeStore, IsPC, scanCode, testWeight} from '@/common/js/utils'
 import { mapGetters, mapMutations } from 'vuex'
 import Vue from 'vue'
 import Print from '@/plugs/print'
@@ -595,68 +595,64 @@ export default {
     
     // 撤销操作
     backOut () {
-      this.chooseBackoutMethodsShow = true;
+      if (this.lajiCode.length == 0) {
+        this.$dialog.alert({
+          message: '当前没有要撤销的医废',
+          closeOnPopstate: true
+        })
+        .then(()=>{})
+      } else {
+        this.chooseBackoutMethodsShow = true;
+      }
     },
 
     // 科室撤销
     chooseBackoutSure () {
       this.chooseBackoutMethodsShow = false;
       this.changeClickBackoutBtn(true);
-      if (this.lajiCode.length == 0) {
-        this.$router.replace({path:'judgeOtherDepantment'});
-        // 清空撤销前存储的数据
-        this.clearTrashStore()   
-      } else if (this.lajiCode.length > 0) {
-        this.initStorageLajiCode();
-        this.initStorageLanyaCz();
-        this.$router.push({path:'judgeCurrentDepantment'})
-      }
+      this.initStorageLajiCode();
+      this.initStorageLanyaCz();
+      this.$router.push({path:'judgeCurrentDepantment'})
     },
 
     // 医废选择撤销
     chooseBackoutCancle () {
       this.chooseBackoutMethodsShow = false;
+      this.barMessageList = [];
+      let lajiCodeMsg;
+      // 当前一次垃圾垃圾收集如果没有存入重量，则删除store中该次医废收集
+      if (this.lajiCode.length > this.lanyaCz.length) {
+        lajiCodeMsg = this.lajiCode;
+        lajiCodeMsg.splice(lajiCodeMsg.length-1,1);
+        this.initStorageLajiCode();
+        this.changeStorageLajiCode(lajiCodeMsg);
+        // 退回到该科室收集流程的第二步
+        this.changeCurrentActive(1);
+        this.temporaryActive = 1;
+        this.changeCodeStep(1);
+        this.changeStaffCodeShow(true);
+        this.manualWeight = '';
+        this.changeExtraLyczMsg('');
+        this.changeAstOfficeShow(false);
+        this.changeIsPlus(true);
+        this.changebluetoothWeighShow(false);
+        this.changeManualWeighShow(false);
+        this.changeBagCodeShow(false);
+      };
       if (this.lajiCode.length == 0) {
-        this.$router.replace({path:'judgeOtherDepantment'});
-        // 清空撤销前存储的数据
-        this.clearTrashStore()   
-      } else {
-        this.barMessageList = [];
-        let lajiCodeMsg;
-        // 当前一次垃圾垃圾收集如果没有存入重量，则删除store中该次医废收集
-        if (this.lajiCode.length > this.lanyaCz.length) {
-          lajiCodeMsg = this.lajiCode;
-          lajiCodeMsg.splice(lajiCodeMsg.length-1,1);
-          this.initStorageLajiCode();
-          this.changeStorageLajiCode(lajiCodeMsg);
-          // 退回到该科室收集流程的第二步
-          this.changeCurrentActive(1);
-          this.temporaryActive = 1;
-          this.changeCodeStep(1);
-          this.changeStaffCodeShow(true);
-          this.manualWeight = '';
-          this.changeExtraLyczMsg('');
-          this.changeAstOfficeShow(false);
-          this.changeIsPlus(true);
-          this.changebluetoothWeighShow(false);
-          this.changeManualWeighShow(false);
-          this.changeBagCodeShow(false);
-        };
-        if (this.lajiCode.length == 0) {
-          this.$router.push({path:'judgeCurrentDepantment'});
-          return
-        }; 
-        for (let i = 0; i < this.lajiCode.length; i++) {
-          this.barMessageList.push({
-            depName: this.lajiCode[i].depName,
-            barCode: this.lajiCode[i].barCode,
-            wasteName: this.lajiCode[i].wasteName,
-            barWeight: this.lanyaCz[i] ? this.lanyaCz[i] : '无',
-            check: false
-          })
-        };
-        this.chooseBackoutShow = true
-      }
+        this.$router.push({path:'judgeCurrentDepantment'});
+        return
+      }; 
+      for (let i = 0; i < this.lajiCode.length; i++) {
+        this.barMessageList.push({
+          depName: this.lajiCode[i].depName,
+          barCode: this.lajiCode[i].barCode,
+          wasteName: this.lajiCode[i].wasteName,
+          barWeight: this.lanyaCz[i] ? this.lanyaCz[i] : '无',
+          check: false
+        })
+      };
+      this.chooseBackoutShow = true
     },
 
     // 打印方法
@@ -1037,7 +1033,6 @@ export default {
       } else if (middleCurrentActive == 4) {
         if (!this.isRepeatSubmit) {
           if (this.manualWeighShow) {
-              let re = /^[+]{0,1}(\d+)$|^[+]{0,1}(\d+\.\d+)$/;
               if (this.manualWeight) {
                 if (this.manualWeight <= 0) {
                   this.$dialog.alert({
@@ -1046,7 +1041,7 @@ export default {
                     }).then(() => {
                     });
                 } else {
-                  if (!re.test(this.manualWeight.toString())) {
+                  if (!testWeight.test(this.manualWeight.toString())) {
                     this.$dialog.alert({
                       message: '输入重量不合法,请重新输入',
                       closeOnPopstate: true
@@ -1083,22 +1078,16 @@ export default {
               // this.breakScales();
               if (this.extraLyczMsg == 0.0 || !this.extraLyczMsg) {
                 this.$dialog.confirm({
-                  message: '称重重量不能为0或空,请重新称重',
+                  message: '称重重量不能为0或空,是否重新称重?',
                   closeOnPopstate: true
-                }).then(() => {
+                })
+                .then(() => {
                   this.changeCodeStep(3);
                   this.changeExtraLyczMsg(null);
                   if (!IsPC) {
                     this.weightRubbish()
                   } else {
-                    this.changeCurrentActive(this.codeStep);
-                    this.temporaryActive = 3;
-                    this.changeManualWeighShow(false);
-                    this.changeCodeStep(this.codeStep);
-                    this.changebluetoothWeighShow(true);
-                    this.changeIsPlus(true);
-                    this.changeBagCodeShow(false);
-                    this.changeIsStoreWeight(false)
+                    this.initWeight()
                   }
                 })
                 .catch(() => {
@@ -1110,8 +1099,7 @@ export default {
                   this.$router.push({path:'judgeCurrentDepantment'});
                 })
               } else {
-                let reCz = /^[+]{0,1}(\d+)$|^[+]{0,1}(\d+\.\d+)$/;
-                if (reCz.test(this.Trim(this.extraLyczMsg))) {
+                if (testWeight.test(this.Trim(this.extraLyczMsg))) {
                   if (!this.isStoreWeight) {
                     // 最终的回调重量存store的重量数组
                     this.storageLanyaCz(this.extraLyczMsg);
@@ -1136,14 +1124,7 @@ export default {
                     if (!IsPC) {
                       this.weightRubbish()
                     } else {
-                      this.changeCurrentActive(this.codeStep);
-                      this.temporaryActive = 3;
-                      this.changeManualWeighShow(false);
-                      this.changeCodeStep(this.codeStep);
-                      this.changebluetoothWeighShow(true);
-                      this.changeIsPlus(true);
-                      this.changeBagCodeShow(false);
-                      this.changeIsStoreWeight(false)
+                      this.initWeight()
                     }
                   })
                 }
@@ -1159,7 +1140,19 @@ export default {
       }
     },
 
-    // 蓝牙称重
+    //初始化重新称重
+    initWeight () {
+      this.changeCurrentActive(this.codeStep);
+      this.temporaryActive = 3;
+      this.changeManualWeighShow(false);
+      this.changeCodeStep(this.codeStep);
+      this.changebluetoothWeighShow(true);
+      this.changeIsPlus(true);
+      this.changeBagCodeShow(false);
+      this.changeIsStoreWeight(false)
+    },
+
+    // 蓝牙或usb称重
     chooseWightSure () {
       this.chooseWightMethodsShow = false;
       if (!IsPC()) { 

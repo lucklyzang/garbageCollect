@@ -241,7 +241,8 @@ export default {
     ...mapMutations([
       'changeTitleTxt',
       'initCurrentName',
-      'changeIsCall'
+      'changeIsCall',
+      'changeIsExecuteActivated'
     ]),
     // 返回上一页
     backTo () {
@@ -249,7 +250,8 @@ export default {
       this.changeTitleTxt({tit: '收集历史'});
       setStore('currentTitle','收集历史');
       this.initCurrentName();
-      this.changeIsCall(false)
+      this.changeIsCall(false);
+      this.changeIsExecuteActivated(true)
     }, 
 
     // 控制设备物理返回按键
@@ -261,7 +263,8 @@ export default {
         this.$router.push({path: 'collectHistory'});  //输入要返回的上一级路由地址
         this.changeTitleTxt({tit: '收集历史'});
         setStore('currentTitle','收集历史');
-        this.changeIsCall(false)
+        this.changeIsCall(false);
+        this.changeIsExecuteActivated(true)
       })
     }
   }
