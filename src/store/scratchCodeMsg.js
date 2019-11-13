@@ -1,9 +1,9 @@
 export default {
   state:{
-    extraKeshiMsg: null,
-    extraYihuMsg: null,
-    extraLajiMsg: null,
-    extraLyczMsg: null
+    extraKeshiMsg: null, //科室信息暂存
+    extraYihuMsg: null, //医护信息暂存
+    extraLajiMsg: null, //医废信息暂存
+    extraLyczMsg: null //医废重量信息暂存
   },
   getters:{
     extraKeshiMsg: state => state.extraKeshiMsg,

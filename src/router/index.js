@@ -90,16 +90,13 @@ let baseRoute  = [
     name: 'collectHistory',
     component: CollectHistory,
     meta: {
-      keepAlive: true
+      keepAlive: false
     }
   },
   {
     path: '/collectDetails',
     name: 'collectDetails',
     component: CollectDetails,
-    meta: {
-      keepAlive: true
-    }
   },
   {
     path: '/myInfo',

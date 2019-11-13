@@ -86,16 +86,16 @@ export default {
     };
    
     let vesselEleDay = this.$echarts.init(
-      document.getElementById("content-middle-dayData")
+      document.getElementById("content-middle-dayData"), '', {'height': '190px'}
     );
     let vesselEleWeek = this.$echarts.init(
-      document.getElementById("content-middle-weekData")
+      document.getElementById("content-middle-weekData"), '', {'height': '190px'}
     );
     let vesselEleMonth = this.$echarts.init(
-      document.getElementById("content-middle-monthData")
+      document.getElementById("content-middle-monthData"), '', {'height': '190px'}
     );
     let vesselEleYear = this.$echarts.init(
-      document.getElementById("content-middle-yearData")
+      document.getElementById("content-middle-yearData"), '', {'height': '190px'}
     );
     
     // 自适应不同尺寸的屏幕
@@ -313,7 +313,6 @@ export default {
       #content-middle-dayData,#content-middle-weekData,#content-middle-monthData,#content-middle-yearData {
         display: inline-block;
         vertical-align: middle;
-        margin-top: 14px;
         box-sizing: border-box;
         height: 28vh;
         box-shadow: 0 2.5px 12px 4px #d1d1d1;

@@ -72,9 +72,19 @@
           setStore('currentTitle','医废监测')
         })
       };
+      this.$router.push({path: 'home'});  //输入要返回的上一级路由地址
       this.changeTitleTxt({tit: '医废监测'});
+      setStore('currentTitle','医废监测')
       this.initItemList();
       this.judgeCodeFinish()
+    },
+
+    beforeRouteLeave(to, from, next) {
+      //跳转到页面为收集历史时,目标页面不缓存
+      if(to.name == 'collectHistory') {
+        to.meta.keepAlive = false; 
+      };
+      next();
     },
     
     computed:{
@@ -164,8 +174,6 @@
                 this.$router.push({name: 'login'})
               });
             }
-          } else if (text === '收集历史') {
-            this.changeIsCall(true)
           };
           this.$router.push({path:name});
           this.changeTitleTxt({tit:text});

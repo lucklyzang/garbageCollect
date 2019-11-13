@@ -6,15 +6,17 @@
     </HeaderTop>
     <div class="content-middle">
       <div class="select-wrapper" ref="selectWrapper">
-        <van-field
+        <VanFieldSelectPicker
           label="监测区域"
           placeholder="请输入"
           v-model="monitorArea"
+          :columns="monitorAreaList"
         />
-        <van-field
+        <VanFieldSelectPicker
           label="监测点"
           placeholder="请输入"
           v-model="monitorDot"
+          :columns="monitorDotList"
         />
         <van-field
           label="出库人员"
@@ -61,8 +63,8 @@
 import HeaderTop from '../components/HeaderTop'
 import FooterBottom from '../components/FooterBottom'
 import VanFieldSelectPicker from '../components/VanFieldSelectPicker'
-import {operateOutStorage, queryCompany} from '../api/rubbishCollect.js'
-import { formatTime, setStore, IsPC } from '@/common/js/utils'
+import {operateOutStorage, queryCompany, queryMonitorInfo} from '../api/rubbishCollect.js'
+import { formatTime, setStore, IsPC} from '@/common/js/utils'
 import { mapGetters, mapMutations } from 'vuex'
 export default {
   components:{
@@ -81,6 +83,8 @@ export default {
       companyList: [],
       companyName: '',
       companyNameList: [],
+      monitorAreaList: [],
+      monitorDotList: [],
       companyIdList: [],
       outCompanyMsg: []
     };
@@ -132,7 +136,9 @@ export default {
     //   }
     // };
     // 查询出库公司
-    this.queryCompanyInfo()
+    this.queryCompanyInfo();
+    // 查询监测区域与监测点信息
+    this.queryMonitorMessage()
   },
 
   watch: {
@@ -159,7 +165,8 @@ export default {
                 if (item) {
                   this.cardNumberList.push(item)
                 }
-              })
+              });
+              console.log(this.cardNumberList)
             }
           }
         }
@@ -208,6 +215,8 @@ export default {
         outTime: formatTime('YYYY-MM-DD HH:mm:ss'), //出库时间  格式 yyyy-MM-dd HH:mm:ss
         outTotalWeight: this.calculate,  //出库重量
         batchs: this.batchs, //出库的批次
+        monitorArea: this.monitorArea,  //监测区域
+		    monitorPoint: this.monitorDot   //监测点
       };
       operateOutStorage(outStorageMsg).then((res) => {
         if (res) {
@@ -268,6 +277,33 @@ export default {
                 }
               }
             }
+          }
+        }
+      })
+      .catch((err) => {
+        this.$dialog.alert({
+          message: `${err.message}`,
+          closeOnPopstate: true
+        }).then(() => {
+        });
+      })
+    },
+
+    queryMonitorMessage () {
+      this.monitorDotList = [];
+      this.monitorAreaList = [];
+      queryMonitorInfo(this.userInfo.proId)
+      .then((res) => {
+        if (res) {
+          if (res.data.code == 200) {
+            this.monitorDotList = res.data.data['point'];
+            this.monitorAreaList = res.data.data['area']
+          } else {
+            this.$dialog.alert({
+              message: `${res.data.msg}`,
+              closeOnPopstate: true
+            }).then(() => {
+            })
           }
         }
       })

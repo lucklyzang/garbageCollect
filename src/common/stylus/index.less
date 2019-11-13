@@ -15,9 +15,15 @@
     width: 44%;
     margin-right: 4%;
     margin-bottom: 4%;
-    padding: 20px;
+    padding: 10px 20px;
     &:nth-of-type(2n) {
       margin-right: 0
+    };
+    &:last-child {
+      margin-bottom: 0
+    };
+    &:nth-child(3) {
+      margin-bottom: 0
     }
   };
 
@@ -216,9 +222,15 @@
     width: 44%;
     margin-right: 4%;
     margin-bottom: 4%;
-    padding: 20px;
+    padding: 10px 20px;
     &:nth-of-type(2n) {
       margin-right: 0
+    };
+    &:last-child {
+      margin-bottom: 0
+    };
+    &:nth-child(3) {
+      margin-bottom: 0
     }
   };
 
@@ -418,7 +430,11 @@
   // 报表页面可视化样式
   #content-middle-dayData,#content-middle-weekData,#content-middle-monthData,#content-middle-yearData {
     width: 97%;
-    padding: 0;
+    padding: 6px;
+    margin-bottom: 8px;
+    &:last-child {
+      margin-bottom: 0
+    }
   };
 
   // 报表页面标题样式

@@ -162,4 +162,11 @@ export function postReplenishPrintData (data) {
     method: 'post',
     data
   })
+};
+// 查询监测区域和监测点
+export function queryMonitorInfo (data) {
+  return request({
+    url: `dict/monitorDic/${data}`,
+    method: 'get'
+  })
 }

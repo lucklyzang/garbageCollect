@@ -229,29 +229,26 @@ export default {
     this.handleMessage = '';
   },
 
-  // 由于该页面被缓存,调用activated钩子函数保证每次组件切换时,监听物理返回按键的方法都会执行
-  activated () {
-    // 控制设备物理返回按键
-    if (!IsPC()) {
-      this.monitorBack()
+  beforeRouteLeave(to, from, next) {
+    //跳转到页面为收集历史时,目标页面缓存
+    if(to.name == 'collectHistory') {
+      to.meta.keepAlive = true; 
+      next()
     }
   },
 
   methods: {
     ...mapMutations([
       'changeTitleTxt',
-      'initCurrentName',
-      'changeIsCall',
-      'changeIsExecuteActivated'
+      'initCurrentName'
     ]),
+
     // 返回上一页
     backTo () {
       this.$router.push({path: 'collectHistory'});
       this.changeTitleTxt({tit: '收集历史'});
       setStore('currentTitle','收集历史');
-      this.initCurrentName();
-      this.changeIsCall(false);
-      this.changeIsExecuteActivated(true)
+      this.initCurrentName()
     }, 
 
     // 控制设备物理返回按键
@@ -262,9 +259,7 @@ export default {
         pushHistory()
         this.$router.push({path: 'collectHistory'});  //输入要返回的上一级路由地址
         this.changeTitleTxt({tit: '收集历史'});
-        setStore('currentTitle','收集历史');
-        this.changeIsCall(false);
-        this.changeIsExecuteActivated(true)
+        setStore('currentTitle','收集历史')
       })
     }
   }

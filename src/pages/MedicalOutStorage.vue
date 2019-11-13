@@ -274,7 +274,6 @@ export default {
       overflow: auto;
       .content-middle-list {
         height: 100%;
-        overflow: auto;
         .content-middle-list-item {
           position: relative;
           box-sizing: border-box;

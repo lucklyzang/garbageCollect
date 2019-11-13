@@ -48,10 +48,10 @@ export default {
     // 科室信息汇总
     garColMsg: [
       {
-        keshiCode: [],
-        yihuCode: [],
-        lajiCode: [],
-        lanyaCz: [],
+        keshiCode: [], //科室信息
+        yihuCode: [], //医护人员信息
+        lajiCode: [], //医废信息
+        lanyaCz: [], //医废重量信息
       }
     ],
     // 进入公共扫码页区分调用方法

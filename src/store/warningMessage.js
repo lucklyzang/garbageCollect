@@ -1,17 +1,13 @@
 export default {
   state:{
     warningInfo: null,
-    collectInfo: null,
-    currentName: null,
-    isCall: true,
-    isExecuteActivated: false
+    collectInfo: null, //收集历史当前选中项的详细信息
+    currentName: null //当前收集历史详情要展示的对应项(未入库、已入库、已出库、已完成)
   },
   getters:{
-    warningInfo : state => state.warningInfo,
+    warningInfo : state => state.warningInfo, 
     collectInfo : state => state.collectInfo,
-    currentName : state => state.currentName,
-    isCall : state => state.isCall,
-    isExecuteActivated: state => state.isExecuteActivated
+    currentName : state => state.currentName
   },
   mutations:{
     storeWarningInfo (state, playLoad) {
@@ -37,12 +33,6 @@ export default {
     },
     initCurrentName (state) {
       state.currentName = null
-    },
-    changeIsCall (state, playLoad) {
-      state.isCall = playLoad
-    },
-    changeIsExecuteActivated (state, playLoad) {
-      state.isExecuteActivated = playLoad
     }
   },
   actions:{}
