@@ -195,7 +195,6 @@ export default {
             if (res.data.data.todayList.length > 0 && res.data.data.monthList.length > 0 && res.data.data.sevenDays.length > 0
              && res.data.data.yearList.length > 0) {
               this.dayTotalWeight = res.data.data.today.toFixed(2);
-              this.monthTotalWeight = res.data.data.month.toFixed(2);
               this.yearTotalWeight = res.data.data.year.toFixed(2)
               // 一天的数据
               res.data.data.todayList.forEach((item,index) => {
@@ -222,12 +221,14 @@ export default {
               // 一周的总重量
               this.weekTotalWeight = (res.data.data.sevenDays.reduce((total,current) => {return total + current})).toFixed(2)
               // 一月的数据
-              res.data.data.monthList.forEach((item,index) => {
+              res.data.data.thirtyDays.forEach((item,index) => {
                 this.monthData.push({
                   value: item,
                   name: this.wasteType[index]
                 })
               });
+              // 一月的总量
+              this.monthTotalWeight = (res.data.data.thirtyDays.reduce((total,current) => {return total + current})).toFixed(2);
               this.drawLine(this.$echarts.init(
                 document.getElementById("content-middle-monthData")
               ),'一月医废类型分布情况',this.monthData);

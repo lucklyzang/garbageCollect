@@ -7,9 +7,9 @@ export function getBatchNumber(id) {
   })
 };
 // 判断暂存点
-export function judgeStagingPoint(type,number) {
+export function judgeStagingPoint(type,number,id) {
   return request({
-    url: `point/verify/${type}/${number}`,
+    url: `point/verify/${type}/${number}?workerId=${id}`,
     method: 'get',
   })
 };
@@ -45,9 +45,9 @@ export function queryBatch(data) {
   })
 };
 // 汇总点校验
-export function judgeSummaryPoint(type,number) {
+export function judgeSummaryPoint(type,number,id) {
   return request({
-    url: `point/verifyFinal/${type}/${number}`,
+    url: `point/verifyFinal/${type}/${number}?workerId=${id}`,
     method: 'get'
   })
 };

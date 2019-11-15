@@ -165,8 +165,7 @@ export default {
                 if (item) {
                   this.cardNumberList.push(item)
                 }
-              });
-              console.log(this.cardNumberList)
+              })
             }
           }
         }

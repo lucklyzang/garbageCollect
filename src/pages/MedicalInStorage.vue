@@ -191,7 +191,8 @@ export default {
     processMethods (code) {
        if (code && Object.keys(code).length > 0) {
         if (code.name && code.proName && code.type && code.proId && code.number) {
-          judgeSummaryPoint(this.batchNumber,code.number).then((res) => {
+          debugger;
+          judgeSummaryPoint(this.batchNumber,code.number,this.userInfo.id).then((res) => {
             if (res && res.data.code == 200) {
               this.stagePointShow = true;
               this.sureBtnShow = true;
@@ -204,12 +205,21 @@ export default {
               this.proId = code.proId;
               this.proName = code.proName;
             } else {
-              this.$dialog.alert({
+              if (res.data.code == 400) {
+                this.$dialog.alert({
                 message: `${res.data.msg}`,
                 closeOnPopstate: true
                 }).then(() => {
-                this.medicalInStoragr()
-              });
+                  this.medicalInStoragr()
+                })
+              } else {
+                this.$dialog.alert({
+                  message: `${res.data.msg}`,
+                  closeOnPopstate: true
+                }).then(() => {
+                  this.medicalInStoragr()
+                })
+              }
             };
             this.barCodeScannerShow = false
           })

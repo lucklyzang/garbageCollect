@@ -99,7 +99,6 @@
         left:0;
         width:100%;
         height:85vh;
-        padding:10px 4px 10px 10px;
         overflow: auto;
         background: #fff;
         z-index:1000"
@@ -108,34 +107,34 @@
           <!-- 第一联 -->
           <div class="div-wrapper" v-for="(item, index) in lajiCode"
             style="height:240px;
-            width:80%;
+            width:100%;
             border-bottom:1px dashed #333;
             background:transparent;
-            margin-bottom:40px;"
+            padding-top:40px;"
           >
-            <p style="text-align:center;margin-bottom:20px;font-size:21px;font-weight:bold">医废回收小票</p>
-            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">科室: {{keshiCode[0].depName}}</p>
-            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">垃圾类型: {{lajiCode[index].wasteName}}</p>
-            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">垃圾重量: {{lanyaCz[index]}}kg</p>
-            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">收集人: {{userInfo.workerName}}</p>
-            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">交接人: {{yihuCode[0].workerName}}</p>
-            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">时间: {{collectTime}}</p>
+            <p style="text-align:center;margin-bottom:20px;font-size:18px">医废回收小票</p>
+            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">科室: {{keshiCode[0].depName}}</p>
+            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">垃圾类型: {{lajiCode[index].wasteName}}</p>
+            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">垃圾重量: {{(lanyaCz[index]).toFixed(2)}}kg</p>
+            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">收集人: {{userInfo.workerName}}</p>
+            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">交接人: {{yihuCode[0].workerName}}</p>
+            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">时间: {{collectTime}}</p>
           </div>
           <!-- 第二联 -->
           <div class="div-wrapper" v-for="(item, index) in lajiCode"
             style="height:240px;
-            width:80%;
+            width:100%;
             border-bottom:1px dashed #333;
             background:transparent;
-            margin-bottom:40px;"
+            padding-top:40px;"
           >
-            <p style="text-align:center;margin-bottom:20px;font-size:21px;font-weight:bold">医废回收小票</p>
-            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">科室: {{keshiCode[0].depName}}</p>
-            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">垃圾类型: {{lajiCode[index].wasteName}}</p>
-            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">垃圾重量: {{lanyaCz[index]}}kg</p>
-            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">收集人: {{userInfo.workerName}}</p>
-            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">交接人: {{yihuCode[index].workerName}}</p>
-            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">时间: {{collectTime}}</p>
+            <p style="text-align:center;margin-bottom:20px;font-size:18px">医废回收小票</p>
+            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">科室: {{keshiCode[0].depName}}</p>
+            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">垃圾类型: {{lajiCode[index].wasteName}}</p>
+            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">垃圾重量: {{(lanyaCz[index]).toFixed(2)}}kg</p>
+            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">收集人: {{userInfo.workerName}}</p>
+            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">交接人: {{yihuCode[index].workerName}}</p>
+            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">时间: {{collectTime}}</p>
           </div>
         </div>
         <div v-else>
@@ -145,15 +144,15 @@
             width:80%;
             border-bottom:1px dashed #333;
             background:transparent;
-            margin-bottom:40px;"
+            padding-top:40px;"
           >
-            <p style="text-align:center;margin-bottom:20px;font-size:21px;font-weight:bold">医废回收小票</p>
-            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">科室: {{keshiCode[0].depName}}</p>
-            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">垃圾类型: {{pcMapList[index]['type']}}</p>
-            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">垃圾重量: {{pcMapList[index]['weight']}}kg</p>
-            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">收集人: {{userInfo.workerName}}</p>
-            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">交接人: {{yihuCode[yihuCode.length-1].workerName}}</p>
-            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">时间: {{collectTime}}</p>
+            <p style="text-align:center;margin-bottom:20px;font-size:18px">医废回收小票</p>
+            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">科室: {{keshiCode[0].depName}}</p>
+            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">垃圾类型: {{pcMapList[index]['type']}}</p>
+            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">垃圾重量: {{(pcMapList[index]['weight']).toFixed(2)}}kg</p>
+            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">收集人: {{userInfo.workerName}}</p>
+            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">交接人: {{yihuCode[yihuCode.length-1].workerName}}</p>
+            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">时间: {{collectTime}}</p>
           </div>
           <!-- 第二联 -->
           <div class="div-wrapper" v-for="(item, index) in pcMapList"  
@@ -161,14 +160,14 @@
             width:80%;
             border-bottom:1px dashed #333;
             background:transparent;
-            margin-bottom:40px;">
-            <p style="text-align:center;margin-bottom:20px;font-size:21px;font-weight:bold">医废回收小票</p>
-            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">科室: {{keshiCode[0].depName}}</p>
-            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">垃圾类型: {{pcMapList[index]['type']}}</p>
-            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">垃圾重量: {{pcMapList[index]['weight']}}kg</p>
-            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">收集人: {{userInfo.workerName}}</p>
-            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">交接人: {{yihuCode[yihuCode.length-1].workerName}}</p>
-            <p style="font-size:17px;width:100%;min-height:24px;word-wrap: break-word">时间: {{collectTime}}</p>
+            padding-top:40px;">
+            <p style="text-align:center;margin-bottom:20px;font-size:18px">医废回收小票</p>
+            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">科室: {{keshiCode[0].depName}}</p>
+            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">垃圾类型: {{pcMapList[index]['type']}}</p>
+            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">垃圾重量: {{(pcMapList[index]['weight']).toFixed(2)}}kg</p>
+            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">收集人: {{userInfo.workerName}}</p>
+            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">交接人: {{yihuCode[yihuCode.length-1].workerName}}</p>
+            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">时间: {{collectTime}}</p>
           </div>
         </div>
       </section>
@@ -638,6 +637,8 @@ export default {
         this.changebluetoothWeighShow(false);
         this.changeManualWeighShow(false);
         this.changeBagCodeShow(false);
+        // 避免平板在扫到中文回到首页在点击进入收集页面,点击医废撤销时,对应医护信息为空
+        this.changeExtraYihuMsg(JSON.parse(getStore('currentCollectMsg')).currentMsg[0]['yihuCode'])
       };
       if (this.lajiCode.length == 0) {
         this.$router.push({path:'judgeCurrentDepantment'});
@@ -720,7 +721,7 @@ export default {
         if (code && Object.keys(code).length > 0) {
           if (code.hasOwnProperty('type') && code.hasOwnProperty('number')) {
             if (code.type && code.number) {
-              judgeStagingPoint(this.batchNumber,code.number).then((res) => {
+              judgeStagingPoint(this.batchNumber,code.number,this.userInfo.id).then((res) => {
                 if (res && res.data.code == 200) {
                   this.changeCurrentActive(this.codeStep);
                   this.changeCodeStep(this.codeStep);
@@ -737,12 +738,21 @@ export default {
                   setStore('currentCollectMsg',{currentMsg:this.garColMsg});
                   setStore('currentStep',0);
                 } else {
-                  this.$dialog.alert({
-                    message: `${res.data.msg}`,
-                    closeOnPopstate: true
-                  }).then(() => {
-                    this.sweepAstoffice()
-                  });
+                  if (res.data.code == 400) {
+                     this.$dialog.alert({
+                      message: `${res.data.msg}`,
+                      closeOnPopstate: true
+                    }).then(() => {
+                      this.sweepAstoffice()
+                    })
+                  } else {
+                    this.$dialog.alert({
+                      message: `${res.data.msg}`,
+                      closeOnPopstate: true
+                    }).then(() => {
+                      this.sweepAstoffice()
+                    })
+                  }
                 };
                 this.barCodeScannerShow = false
               })
