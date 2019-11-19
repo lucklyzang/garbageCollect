@@ -9,10 +9,14 @@
 </template>
 
 <script>
+import { mapGetters, mapMutations } from 'vuex'
+import Loading from '../components/Loading'
+import {queryWarning, warningDispose} from '../api/rubbishCollect.js'
+import { formatTime, setStore, IsPC} from '@/common/js/utils'
   export default {
-      props:{
-        title:String
-      }
+    props:{
+      title:String
+    }
   }
 </script>
 
@@ -21,10 +25,6 @@
   @import "../common/stylus/variable.less";
   .header {
     background-color: @color-theme;
-    // position: fixed;
-    // z-index: 100;
-    // left: 0;
-    // top: 0;
     width: 100%;
     height: @header-title-height;
     line-height: @header-title-height;

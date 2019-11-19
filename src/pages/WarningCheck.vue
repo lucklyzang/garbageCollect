@@ -4,6 +4,9 @@
       <van-icon name="arrow-left" slot="left" @click="backTo"></van-icon> 
       <van-icon name="manager-o" slot="right" @click="skipMyInfo"></van-icon> 
     </HeaderTop>
+    <ul class="left-dropDown" v-show="leftDownShow">
+      <li v-for="(item, index) in leftDropdownDataList" :class="{liStyle:liIndex == index}" @click="leftLiCLick(index)">{{item}}</li>
+    </ul>
     <loading :isShow="showLoadingHint"></loading>
     <div class="content-middle-top">
       <span class="time-between">至</span>
@@ -124,6 +127,7 @@ import { mapGetters, mapMutations } from 'vuex'
 import Loading from '../components/Loading'
 import {queryWarning, warningDispose} from '../api/rubbishCollect.js'
 import { formatTime, setStore, removeStore, IsPC } from '@/common/js/utils'
+import {getDictionaryData} from '@/api/login.js'
 export default {
    components:{
     HeaderTop,
@@ -133,6 +137,9 @@ export default {
   data () {
     return {
       endTimePop: false,
+      leftDownShow: false,
+      liIndex: null,
+      leftDropdownDataList: ['刷新','我的'],
       startTimePop: false,
       currentDateStart: new Date(),
       currentId: '',
@@ -198,12 +205,50 @@ export default {
       this.changeTitleTxt({tit:'医废监测'});
       setStore('currentTitle','医废监测');
     },
+    // 右边下拉框菜单点击
+    leftLiCLick (index) {
+      this.liIndex = index;
+      if (this.liIndex == 1) {
+        this.$router.push({path: 'myInfo'});
+        this.changeTitleTxt({tit:'我的'});
+        setStore('currentTitle','我的')
+      } else {
+        // 清除扫码字典数据
+        removeStore('hospitalData');
+        removeStore('careData');
+        removeStore('departmentData');
+        removeStore('pointData');
+        removeStore('wasteTypeData');
+        // 请求科室字典数据
+        getDictionaryData(this.userInfo.proId).then((res) => {
+          if (res && res.data.code == 200) {
+            this.$dialog.alert({
+              message: '刷新完毕',
+              closeOnPopstate: true
+            })
+            .then(()=>{
+              this.leftDownShow = false;
+            });
+            // 存入医院数据
+            setStore('hospitalData', res.data.data['hospital']);
+            // 存入医护数据
+            setStore('careData', res.data.data['cares']);
+            // 存入科室数据
+            setStore('departmentData', res.data.data['departments'])
+            // 存入暂存点数据
+            setStore('pointData', res.data.data['points'])
+            // 存入医废类型数据
+            setStore('wasteTypeData', res.data.data['wasteType'])
+          }
+        })
+      }
+    },
+
     // 跳转到我的页面
     skipMyInfo () {
-      this.$router.push({path: 'myInfo'});
-      this.changeTitleTxt({tit:'我的'});
-      setStore('currentTitle','我的');
+      this.leftDownShow = !this.leftDownShow;
     },
+    
     // 弹出预警审核弹框
     waringCheck (item) {
       this.currentId = item.id;
@@ -424,7 +469,10 @@ export default {
 @import "../common/stylus/mixin.less";
   .content-wrapper {
     .content-wrapper();
-     /deep/ .van-dialog {
+    .left-dropDown {
+      .rightDropDown
+    }
+    /deep/ .van-dialog {
       .van-dialog__content{
         margin-top: 10px !important
       }

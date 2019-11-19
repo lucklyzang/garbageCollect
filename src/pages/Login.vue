@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import {logIn} from '@/api/login.js'
+import {logIn, getDictionaryData} from '@/api/login.js'
 import { mapGetters, mapMutations } from 'vuex'
 import BgIcon from '@/components/images/bg-icon.png'
 import LoginBg from '@/components/images/login-bg.png'
@@ -244,6 +244,21 @@ export default {
                 setStore('userName', this.sweepMsg)
               }
             };
+            // 请求科室字典数据
+            getDictionaryData(res.data.data['proId']).then((res) => {
+              if (res && res.data.code == 200) {
+                // 存入医院数据
+                setStore('hospitalData', res.data.data['hospital']);
+                // 存入医护数据
+                setStore('careData', res.data.data['cares']);
+                // 存入科室数据
+                setStore('departmentData', res.data.data['departments'])
+                // 存入暂存点数据
+                setStore('pointData', res.data.data['points'])
+                // 存入医废类型数据
+                setStore('wasteTypeData', res.data.data['wasteType'])
+              }
+            });
             // 登录用户名密码及用户信息存入Locastorage
             setStore('userInfo', res.data.data);
             setStore('isLogin', true);

@@ -4,6 +4,9 @@
       <van-icon name="arrow-left" slot="left" @click="backTo"></van-icon> 
       <van-icon name="manager-o" slot="right" @click="skipMyInfo"></van-icon> 
     </HeaderTop>
+    <ul class="left-dropDown" v-show="leftDownShow">
+      <li v-for="(item, index) in leftDropdownDataList" :class="{liStyle:liIndex == index}" @click="leftLiCLick(index)">{{item}}</li>
+    </ul>
     <loading :isShow="showLoadingHint"></loading>
     <p class="content-middle-top">
       <span class="text-left">{{hospitalName}}</span>
@@ -62,9 +65,8 @@
       >
         <div class="stage-point">
           <div>
-            <p>名称: {{stagingMsg.name}}</p>
             <p>医院: {{stagingMsg.proName}}</p>
-            <!-- <p>房间号: {{stagingMsg.depName}}</p> -->
+            <p>名称: {{stagingMsg.name}}</p>
           </div>
         </div>
       </van-dialog>
@@ -78,7 +80,8 @@ import FooterBottom from '../components/FooterBottom'
 import Loading from '../components/Loading'
 import { mapGetters, mapMutations } from 'vuex'
 import {queryBatch,judgeSummaryPoint,inStorageAdd} from '../api/rubbishCollect.js'
-import {formatTime, setStore, IsPC, scanCode} from '@/common/js/utils'
+import {getDictionaryData} from '@/api/login.js'
+import {formatTime, setStore, getStore, removeStore, IsPC, scanCode, Dictionary} from '@/common/js/utils'
 export default {
    components:{
     HeaderTop,
@@ -88,6 +91,9 @@ export default {
   data () {
     return {
       topTitle: '医废收集',
+      leftDownShow: false,
+      liIndex: null,
+      leftDropdownDataList: ['刷新','我的'],
       stagingMsg: '',
       classList: [],
       hospitalName: '',
@@ -158,11 +164,49 @@ export default {
       this.changeTitleTxt({tit:'医废监测'});
       setStore('currentTitle','医废监测');
     },
+
+    // 右边下拉框菜单点击
+    leftLiCLick (index) {
+      this.liIndex = index;
+      if (this.liIndex == 1) {
+        this.$router.push({path: 'myInfo'});
+        this.changeTitleTxt({tit:'我的'});
+        setStore('currentTitle','我的')
+      } else {
+        // 清除扫码字典数据
+        removeStore('hospitalData');
+        removeStore('careData');
+        removeStore('departmentData');
+        removeStore('pointData');
+        removeStore('wasteTypeData');
+        // 请求科室字典数据
+        getDictionaryData(this.userInfo.proId).then((res) => {
+          if (res && res.data.code == 200) {
+            this.$dialog.alert({
+              message: '刷新完毕',
+              closeOnPopstate: true
+            })
+            .then(()=>{
+              this.leftDownShow = false;
+            });
+            // 存入医院数据
+            setStore('hospitalData', res.data.data['hospital']);
+            // 存入医护数据
+            setStore('careData', res.data.data['cares']);
+            // 存入科室数据
+            setStore('departmentData', res.data.data['departments'])
+            // 存入暂存点数据
+            setStore('pointData', res.data.data['points'])
+            // 存入医废类型数据
+            setStore('wasteTypeData', res.data.data['wasteType'])
+          }
+        })
+      }
+    },
+
     // 跳转到我的页面
     skipMyInfo () {
-      this.$router.push({path: 'myInfo'});
-      this.changeTitleTxt({tit:'我的'});
-      setStore('currentTitle','我的');
+      this.leftDownShow = !this.leftDownShow;
     },
 
     // 是否执行扫码枪的绑定方法
@@ -174,8 +218,7 @@ export default {
 
      // 摄像头扫码后的回调
     scanQRcodeCallback(code) {
-      var code = decodeURIComponent(JSON.stringify(code));
-      this.processMethods(JSON.parse(code))
+      this.processMethods(code)
     },
 
     //扫码枪扫码回调方法
@@ -183,27 +226,39 @@ export default {
       var code = JSON.parse(code);
       this.barCodeScannerShow = false;
       if (this.isPcCallBack) {
-        this.processMethods (code)
+        this.processMethods(code)
       }
     },
 
     // 扫码逻辑公共方法
     processMethods (code) {
        if (code && Object.keys(code).length > 0) {
-        if (code.name && code.proName && code.type && code.proId && code.number) {
-          debugger;
+        if (code.type && code.number) {
           judgeSummaryPoint(this.batchNumber,code.number,this.userInfo.id).then((res) => {
             if (res && res.data.code == 200) {
-              this.stagePointShow = true;
-              this.sureBtnShow = true;
-              this.inStoageBtn = false;
-              this.barCodeScannerShow = false;
-              this.isPcCallBack = false;
-              this.stagingMsg = code;
-              this.storeId = code.id;
-              this.storeNumber = code.number;
-              this.proId = code.proId;
-              this.proName = code.proName;
+              if ( getStore('hospitalData')
+                && Dictionary(JSON.parse(getStore('pointData')),code['number'])
+              ) {
+                this.stagePointShow = true;
+                this.sureBtnShow = true;
+                this.inStoageBtn = false;
+                this.barCodeScannerShow = false;
+                this.isPcCallBack = false;
+                code['proName'] = getStore('hospitalData');
+                code['name'] = Dictionary(JSON.parse(getStore('pointData')),code['number']);
+                this.stagingMsg = code;
+                // this.storeId = code.id;
+                this.storeNumber = code.number;
+                // this.proId = code.proId;
+                this.proName = getStore('hospitalData')
+              } else {
+                this.$dialog.alert({
+                  message: '字典中没有匹配的数据或二维码不含有对应的字段',
+                  closeOnPopstate: true
+                }).then(() => {
+                  this.medicalInStoragr()
+                })
+              }
             } else {
               if (res.data.code == 400) {
                 this.$dialog.alert({
@@ -317,11 +372,11 @@ export default {
     //确定入库
     sureInStorage () {
       let inStorageMsg = {
-        storeId: this.storeId, 
+        // storeId: this.storeId, 
         storeNumber: this.storeNumber,
         batchNumber: this.batchNumberLocal,
         inWorkerName: this.inWorkerName,
-        proId: this.proId,  
+        // proId: this.proId,  
         proName: this.proName
       };
       inStorageAdd(inStorageMsg).then((res) => {
@@ -358,6 +413,9 @@ export default {
 @import "../common/stylus/mixin.less";
   .content-wrapper {
     .content-wrapper();
+    .left-dropDown {
+      .rightDropDown
+    }
     .content-middle {
       flex:1;
       overflow: auto;

@@ -197,8 +197,13 @@ export default {
       removeStore('currentStep');
       removeStore('weightMethods');
       removeStore('continueCurrentCollect');
+      // 清除扫码字典数据
+      removeStore('hospitalData');
+      removeStore('careData');
+      removeStore('departmentData');
+      removeStore('pointData');
+      removeStore('wasteTypeData');
     }
-
   }
 }
 

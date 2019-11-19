@@ -192,8 +192,8 @@ export default {
         "workerId":  this.userInfo.id,  //收集人员ID
         "workerName": this.userInfo.workerName,  //收集人员名称
         "careId":  this.yihuCode[this.yihuCode.length-1].id, //护士ID
-        "wasteId": this.lajiCode[0].id, //垃圾类型id
-        "wasteName" : this.lajiCode[0].wasteName,
+        // "wasteId": this.lajiCode[0].id, //垃圾类型id
+        // "wasteName" : this.lajiCode[0].wasteName,
         "careName":  this.yihuCode[this.yihuCode.length-1].workerName, //护士名称
         "weight":  this.lanyaCz[0]  //医废重量
       };
@@ -248,8 +248,8 @@ export default {
           "workerId":  this.userInfo.id,  //收集人员ID
           "workerName": this.userInfo.workerName,  //收集人员名称
           "careId":  this.yihuCode[this.yihuCode.length-1].id, //护士ID
-          "wasteId": this.lajiCode[i].id, //垃圾类型id
-          "wasteName" : this.lajiCode[i].wasteName,
+          // "wasteId": this.lajiCode[i].id, //垃圾类型id
+          // "wasteName" : this.lajiCode[i].wasteName,
           "careName":  this.yihuCode[this.yihuCode.length-1].workerName, //护士名称
           "weight":  this.lanyaCz[i]  //医废重量
         })

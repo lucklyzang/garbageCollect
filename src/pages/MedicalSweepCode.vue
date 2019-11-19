@@ -5,18 +5,21 @@
         <van-icon name="arrow-left" slot="left" @click="backTo"></van-icon> 
         <van-icon name="manager-o" slot="right" @click="skipMyInfo"></van-icon> 
       </HeaderTop>
+      <ul class="left-dropDown" v-show="leftDownShow">
+        <li v-for="(item, index) in leftDropdownDataList" :class="{liStyle:liIndex == index}" @click="leftLiCLick(index)">{{item}}</li>
+      </ul>
       <div class="content">
         <div class="content-header">
           <ProgressStyle :percentage="currentPercentage"></ProgressStyle>
         </div>
         <div class="content-middle">
           <div class="ast-office" v-if="showAstOfficeShow">
-            <p>科室: {{judgeFlowValue == 0 ? keshiCode[keshiCode.length-1].name : extraKeshiMsg.name ? extraKeshiMsg.name : ''}}</p>
+            <p>科室: {{judgeFlowValue == 0 ? keshiCode[keshiCode.length-1].number : extraKeshiMsg.number ? extraKeshiMsg.number : ''}}</p>
             <p>医院: {{judgeFlowValue == 0 ? keshiCode[keshiCode.length-1].proName : extraKeshiMsg.proName ? extraKeshiMsg.proName : ''}}</p>
             <p>房间: {{judgeFlowValue == 0 ? keshiCode[keshiCode.length-1].depName : extraKeshiMsg.depName ? extraKeshiMsg.depName : ''}}</p>
           </div>
           <div class="bag-code" v-if="showBagCodeShow">
-            <p>医废类型: {{judgeFlowValue == 2 ? lajiCode[lajiCode.length-1].wasteName : extraLajiMsg ? extraLajiMsg.wasteName : ''}}</p>
+            <p>医废类型: {{judgeFlowValue == 2 ? lajiCode[lajiCode.length-1].id : extraLajiMsg ? extraLajiMsg.id : ''}}</p>
             <p>医院: {{judgeFlowValue == 2 ? lajiCode[lajiCode.length-1].proName : extraLajiMsg ? extraLajiMsg.proName : ''}}</p>
             <p>房间: {{judgeFlowValue == 2 ? lajiCode[lajiCode.length-1].depName : extraLajiMsg ? extraLajiMsg.depName : ''}}</p>
             <p>医废编号: {{judgeFlowValue == 2 ? lajiCode[lajiCode.length-1].barCode : extraLajiMsg ? extraLajiMsg.barCode : ''}}</p>
@@ -31,7 +34,7 @@
           </div>
           <div class="staff-code" v-if="showStaffCodeShow">
             <p>医院: {{judgeFlowValue == 1 ? yihuCode[yihuCode.length-1].proName : extraYihuMsg ? extraYihuMsg.proName : ''}}</p>
-            <p>姓名: {{judgeFlowValue == 1 ? yihuCode[yihuCode.length-1].workerName : extraYihuMsg ? extraYihuMsg.workerName : ''}}</p>
+            <p>姓名: {{judgeFlowValue == 1 ? yihuCode[yihuCode.length-1].workerNumber : extraYihuMsg ? extraYihuMsg.workerNumber : ''}}</p>
             <p>房间: {{judgeFlowValue == 1 ? yihuCode[yihuCode.length-1].depName : extraYihuMsg ? extraYihuMsg.depName : ''}}</p>
           </div>
         </div>
@@ -207,7 +210,8 @@ import FooterBottom from '../components/FooterBottom'
 import CommonProgress from '../components/CommonProgress'
 import ProgressStyle from '../components/ProgressStyle'
 import {judgeStagingPoint,judgeMedicalPerson} from '../api/rubbishCollect.js'
-import { formatTime, setStore, getStore, removeStore, IsPC, scanCode, testWeight} from '@/common/js/utils'
+import {getDictionaryData} from '@/api/login.js'
+import { formatTime, setStore, getStore, removeStore, IsPC, scanCode, testWeight, Dictionary} from '@/common/js/utils'
 import { mapGetters, mapMutations } from 'vuex'
 import Vue from 'vue'
 import Print from '@/plugs/print'
@@ -222,6 +226,9 @@ export default {
   data () {
     return {
       manualWeight: '',
+      leftDownShow: false,
+      liIndex: null,
+      leftDropdownDataList: ['刷新','我的'],
       progressTitleList: ['扫描科室','扫描医废','医废称重','扫描医护'],
       currentPercentage: '0',
       temporaryActive: -1,
@@ -494,31 +501,68 @@ export default {
       }
     },
 
-    // 跳转到我的页面
-    skipMyInfo () {
-      if (this.keshiCode && this.keshiCode.length > 0) {
-        this.$dialog.confirm({
-          message: '跳转到我的页面后,将清空本次收集的医废数据',
-          closeOnPopstate: true
-        })
-        .then(() => {
+    // 右边下拉框菜单点击
+    leftLiCLick (index) {
+      this.liIndex = index;
+      if (this.liIndex == 1) {
+        if (this.keshiCode && this.keshiCode.length > 0) {
+          this.$dialog.confirm({
+            message: '跳转到我的页面后,将清空本次收集的医废数据',
+            closeOnPopstate: true
+          })
+          .then(() => {
+            this.$router.push({path: 'myInfo'});
+            this.changeTitleTxt({tit:'我的'});
+            setStore('currentTitle','我的');
+            //清除当前流程的扫码信息
+            this.initSweepCodeInfo();
+            this.clearPartStorage()
+          })
+          .catch(() => {
+          })
+        } else {
           this.$router.push({path: 'myInfo'});
           this.changeTitleTxt({tit:'我的'});
           setStore('currentTitle','我的');
           //清除当前流程的扫码信息
           this.initSweepCodeInfo();
           this.clearPartStorage()
-        })
-        .catch(() => {
-        })
+        }
       } else {
-        this.$router.push({path: 'myInfo'});
-        this.changeTitleTxt({tit:'我的'});
-        setStore('currentTitle','我的');
-        //清除当前流程的扫码信息
-        this.initSweepCodeInfo();
-        this.clearPartStorage()
+        // 清除扫码字典数据
+        removeStore('hospitalData');
+        removeStore('careData');
+        removeStore('departmentData');
+        removeStore('pointData');
+        removeStore('wasteTypeData');
+        // 请求科室字典数据
+        getDictionaryData(this.userInfo.proId).then((res) => {
+          if (res && res.data.code == 200) {
+            this.$dialog.alert({
+              message: '刷新完毕',
+              closeOnPopstate: true
+            })
+            .then(()=>{
+              this.leftDownShow = false;
+            });
+            // 存入医院数据
+            setStore('hospitalData', res.data.data['hospital']);
+            // 存入医护数据
+            setStore('careData', res.data.data['cares']);
+            // 存入科室数据
+            setStore('departmentData', res.data.data['departments'])
+            // 存入暂存点数据
+            setStore('pointData', res.data.data['points'])
+            // 存入医废类型数据
+            setStore('wasteTypeData', res.data.data['wasteType'])
+          }
+        })
       }
+    },
+
+    // 跳转到我的页面
+    skipMyInfo () {
+      this.leftDownShow = !this.leftDownShow;
     },
 
     // 判断流程从哪步开始(当前科室与其它科室收集开始流程不同)
@@ -700,8 +744,7 @@ export default {
 
     // 摄像头扫码后的回调
     scanQRcodeCallback(code) {
-      var code = decodeURIComponent(JSON.stringify(code));
-      this.processMethods(JSON.parse(code))
+      this.processMethods(code)
     },
 
     //扫码枪扫码回调方法
@@ -719,24 +762,40 @@ export default {
       if (this.codeStep == 0) {
         // 二维码是否扫描正确判断
         if (code && Object.keys(code).length > 0) {
-          if (code.hasOwnProperty('type') && code.hasOwnProperty('number')) {
-            if (code.type && code.number) {
+          if (code.hasOwnProperty('type') && code.hasOwnProperty('number') && code.hasOwnProperty('depName')) {
+            if (code.type && code.number && code.depName) {
               judgeStagingPoint(this.batchNumber,code.number,this.userInfo.id).then((res) => {
                 if (res && res.data.code == 200) {
-                  this.changeCurrentActive(this.codeStep);
-                  this.changeCodeStep(this.codeStep);
-                  this.isPcCallBack = false;
-                  this.temporaryActive = 0;
-                  this.changeIsPlus(true);
-                  this.changeCollectBtn(false);
-                  this.changeSureBtn(true);
-                  this.storageKeshiCode(code);
-                  this.changeExtraKeshiMsg(code);
-                  this.changeStartCollectTime(formatTime('YYYY-MM-DD'));
-                  this.changeAstOfficeShow(true);
-                  // h5存储每步的收集信息和流程
-                  setStore('currentCollectMsg',{currentMsg:this.garColMsg});
-                  setStore('currentStep',0);
+                  if ( Dictionary(JSON.parse(getStore('pointData')),code['number']) 
+                    && Dictionary(JSON.parse(getStore('departmentData')),code['depName'])
+                    && getStore('hospitalData')
+                  ) {
+                    this.changeCurrentActive(this.codeStep);
+                    this.changeCodeStep(this.codeStep);
+                    this.isPcCallBack = false;
+                    this.temporaryActive = 0;
+                    this.changeIsPlus(true);
+                    this.changeCollectBtn(false);
+                    this.changeSureBtn(true);
+                    // 替换二维码信息中的对应字符编码为中文
+                    code['number'] = Dictionary(JSON.parse(getStore('pointData')),code['number']);
+                    code['depName'] = Dictionary(JSON.parse(getStore('departmentData')),code['depName']);
+                    code['proName'] = getStore('hospitalData');
+                    this.storageKeshiCode(code);
+                    this.changeExtraKeshiMsg(code);
+                    this.changeStartCollectTime(formatTime('YYYY-MM-DD'));
+                    this.changeAstOfficeShow(true);
+                    // h5存储每步的收集信息和流程
+                    setStore('currentCollectMsg',{currentMsg:this.garColMsg});
+                    setStore('currentStep',0)
+                  } else {
+                    this.$dialog.alert({
+                      message: '字典中没有匹配的数据或二维码不含有对应的字段',
+                      closeOnPopstate: true
+                    }).then(() => {
+                      this.sweepAstoffice()
+                    })
+                  }
                 } else {
                   if (res.data.code == 400) {
                      this.$dialog.alert({
@@ -796,24 +855,39 @@ export default {
       // 扫码的医护人员信息存入store
       if (this.codeStep == 1) {
         if (code && Object.keys(code).length > 0) {
-          if (code.hasOwnProperty('workerName')) {
-            if (code.workerName) {
+          if (code.hasOwnProperty('workerNumber') && code.hasOwnProperty('id') && code.hasOwnProperty('depName') && code.hasOwnProperty('depId')) {
+            if (code.workerNumber && code.depName && code.depId && code.id) {
               judgeMedicalPerson(code.workerNumber,this.batchNumber).then((res) => {
                   if (res && res.data.code == 200) {
-                    this.changeCurrentActive(this.codeStep);
-                    this.temporaryActive = 1;
-                    this.changeCodeStep(this.codeStep);
-                    this.isPcCallBack = false;
-                    this.changeIsPlus(true);
-                    this.changeAstOfficeShow(false);
-                    this.storageYihuCode(code);
-                    this.changeExtraYihuMsg(code);
-                    this.changeStaffCodeShow(true);
-                    this.changebluetoothWeighShow(false);
-                    this.changeManualWeighShow(false);
-                    // h5存储每步的收集信息和流程
-                    setStore('currentCollectMsg',{currentMsg:this.garColMsg});
-                    setStore('currentStep',1); 
+                    if ( Dictionary(JSON.parse(getStore('departmentData')),code['depName'])
+                      && Dictionary(JSON.parse(getStore('careData')),code['workerNumber'])
+                      && getStore('hospitalData')
+                    ) {
+                      this.changeCurrentActive(this.codeStep);
+                      this.temporaryActive = 1;
+                      this.changeCodeStep(this.codeStep);
+                      this.isPcCallBack = false;
+                      this.changeIsPlus(true);
+                      this.changeAstOfficeShow(false);
+                      code['depName'] = Dictionary(JSON.parse(getStore('departmentData')),code['depName']);
+                      code['workerNumber'] = Dictionary(JSON.parse(getStore('careData')),code['workerNumber']);
+                      code['proName'] = getStore('hospitalData');
+                      this.storageYihuCode(code);
+                      this.changeExtraYihuMsg(code);
+                      this.changeStaffCodeShow(true);
+                      this.changebluetoothWeighShow(false);
+                      this.changeManualWeighShow(false);
+                      // h5存储每步的收集信息和流程
+                      setStore('currentCollectMsg',{currentMsg:this.garColMsg});
+                      setStore('currentStep',1)
+                    } else {
+                      this.$dialog.alert({
+                        message: '字典中没有匹配的数据或二维码不含有对应的字段',
+                        closeOnPopstate: true
+                      }).then(() => {
+                        this.sweepAstoffice()
+                      })
+                    }
                   } else {
                     this.$dialog.alert({
                     message: `${res.data.msg}`,
@@ -865,8 +939,8 @@ export default {
       if (this.codeStep == 2) {
         // 扫码回调中没有信息提示重新扫描
         if (code && Object.keys(code).length > 0) {
-          if (code.hasOwnProperty('wasteName') && code.hasOwnProperty('proName') && code.hasOwnProperty('depName') && code.hasOwnProperty('barCode')) {
-            if (code.wasteName && code.proName && code.depName && code.barCode) {
+          if (code.hasOwnProperty('id') && code.hasOwnProperty('depName') && code.hasOwnProperty('barCode') && code.hasOwnProperty('depId')) {
+            if (code.id && code.depName && code.barCode && code.depId) {
               this.barCodeList = [];
               for (let item of this.lajiCode) {
                 for (let itemList in item) {
@@ -876,21 +950,36 @@ export default {
                 }
               };
               if (this.barCodeList.indexOf(`${code.barCode}`) == -1) {
-                this.changeCurrentActive(this.codeStep);
-                this.temporaryActive = 2;
-                this.changeCodeStep(this.codeStep);
-                this.isPcCallBack = false;
-                this.changeIsPlus(true);
-                this.storageLajiCode(code);
-                this.changeExtraLajiMsg(code);
-                this.changeBagCodeShow(true);
-                this.changeAstOfficeShow(false);
-                this.changeStaffCodeShow(false);
-                this.changeManualWeighShow(false);
-                this.changebluetoothWeighShow(false);
-                // h5存储每步的收集信息和流程
-                setStore('currentCollectMsg',{currentMsg:this.garColMsg});
-                setStore('currentStep',2);
+                if ( Dictionary(JSON.parse(getStore('departmentData')),code['depName'])
+                  && Dictionary(JSON.parse(getStore('wasteTypeData')),code['id'])
+                  && getStore('hospitalData')
+                ) {
+                  this.changeCurrentActive(this.codeStep);
+                  this.temporaryActive = 2;
+                  this.changeCodeStep(this.codeStep);
+                  this.isPcCallBack = false;
+                  this.changeIsPlus(true);
+                  code['depName'] = Dictionary(JSON.parse(getStore('departmentData')),code['depName']);
+                  code['id'] = Dictionary(JSON.parse(getStore('wasteTypeData')),code['id']);
+                  code['proName'] = getStore('hospitalData');
+                  this.storageLajiCode(code);
+                  this.changeExtraLajiMsg(code);
+                  this.changeBagCodeShow(true);
+                  this.changeAstOfficeShow(false);
+                  this.changeStaffCodeShow(false);
+                  this.changeManualWeighShow(false);
+                  this.changebluetoothWeighShow(false);
+                  // h5存储每步的收集信息和流程
+                  setStore('currentCollectMsg',{currentMsg:this.garColMsg});
+                  setStore('currentStep',2)
+                } else {
+                  this.$dialog.alert({
+                    message: '字典中没有匹配的数据或二维码不含有对应的字段',
+                    closeOnPopstate: true
+                  }).then(() => {
+                    this.sweepAstoffice()
+                  })
+                }
               } else {
                 this.$dialog.alert({
                   message: '扫描的医废重复,请重新扫描',
@@ -1300,6 +1389,9 @@ export default {
 @import "../common/stylus/variable.less";
 @import "../common/stylus/modifyUi.less";
   .content-wrapper {
+    .left-dropDown {
+     .rightDropDown
+    }
     .content {
       position: fixed;
       top: 0;

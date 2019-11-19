@@ -4,6 +4,9 @@
       <van-icon name="arrow-left" slot="left" @click="backTo"></van-icon> 
       <van-icon name="manager-o" slot="right" @click="skipMyInfo"></van-icon> 
     </HeaderTop>
+    <ul class="left-dropDown" v-show="leftDownShow">
+      <li v-for="(item, index) in leftDropdownDataList" :class="{liStyle:liIndex == index}" @click="leftLiCLick(index)">{{item}}</li>
+    </ul>
     <div class="content-middle">
       <div class="select-wrapper" ref="selectWrapper">
         <VanFieldSelectPicker
@@ -64,8 +67,9 @@ import HeaderTop from '../components/HeaderTop'
 import FooterBottom from '../components/FooterBottom'
 import VanFieldSelectPicker from '../components/VanFieldSelectPicker'
 import {operateOutStorage, queryCompany, queryMonitorInfo} from '../api/rubbishCollect.js'
-import { formatTime, setStore, IsPC} from '@/common/js/utils'
+import { formatTime, setStore, IsPC, removeStore} from '@/common/js/utils'
 import { mapGetters, mapMutations } from 'vuex'
+import {getDictionaryData} from '@/api/login.js'
 export default {
   components:{
     HeaderTop,
@@ -75,6 +79,9 @@ export default {
   data () {
     return {
       monitorArea: '',
+      leftDownShow: false,
+      liIndex: null,
+      leftDropdownDataList: ['刷新','我的'],
       monitorDot: '',
       cardNumber: '',
       cardNumberList: [],
@@ -198,12 +205,50 @@ export default {
       this.changeTitleTxt({tit:'医废出库'});
       setStore('currentTitle','医废出库');
     },
+     // 右边下拉框菜单点击
+    leftLiCLick (index) {
+      this.liIndex = index;
+      if (this.liIndex == 1) {
+        this.$router.push({path: 'myInfo'});
+        this.changeTitleTxt({tit:'我的'});
+        setStore('currentTitle','我的')
+      } else {
+        // 清除扫码字典数据
+        removeStore('hospitalData');
+        removeStore('careData');
+        removeStore('departmentData');
+        removeStore('pointData');
+        removeStore('wasteTypeData');
+        // 请求科室字典数据
+        getDictionaryData(this.userInfo.proId).then((res) => {
+          if (res && res.data.code == 200) {
+            this.$dialog.alert({
+              message: '刷新完毕',
+              closeOnPopstate: true
+            })
+            .then(()=>{
+              this.leftDownShow = false;
+            });
+            // 存入医院数据
+            setStore('hospitalData', res.data.data['hospital']);
+            // 存入医护数据
+            setStore('careData', res.data.data['cares']);
+            // 存入科室数据
+            setStore('departmentData', res.data.data['departments'])
+            // 存入暂存点数据
+            setStore('pointData', res.data.data['points'])
+            // 存入医废类型数据
+            setStore('wasteTypeData', res.data.data['wasteType'])
+          }
+        })
+      }
+    },
+
     // 跳转到我的页面
     skipMyInfo () {
-      this.$router.push({path: 'myInfo'});
-      this.changeTitleTxt({tit:'我的'});
-      setStore('currentTitle','我的');
+      this.leftDownShow = !this.leftDownShow;
     },
+
     // 新增出库
     increase () {
       let outStorageMsg = {
@@ -215,7 +260,8 @@ export default {
         outTotalWeight: this.calculate,  //出库重量
         batchs: this.batchs, //出库的批次
         monitorArea: this.monitorArea,  //监测区域
-		    monitorPoint: this.monitorDot   //监测点
+        monitorPoint: this.monitorDot,   //监测点
+        outWorkerName: this.userInfo.workerName
       };
       operateOutStorage(outStorageMsg).then((res) => {
         if (res) {
@@ -324,6 +370,9 @@ export default {
 @import "../common/stylus/mixin.less";
   .content-wrapper {
     .content-wrapper();
+    .left-dropDown {
+      .rightDropDown
+    }
     .content-middle {
       flex:1;
       overflow: auto;

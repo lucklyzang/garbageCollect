@@ -16,3 +16,11 @@ export function exitLogIn(data) {
     method: 'get',
   })
 }
+
+// 获取扫码数据字典
+export function getDictionaryData (id) {
+  return request({
+    url: `dict/queryAll/${id}`,
+    method: 'get'
+  })
+}

@@ -25,7 +25,7 @@
 .repeat-sign (@left:0) {
   transform: scale(.5);
   transform-origin: 0% top;
-  background: #05dc00;
+  background: @color-theme;
   color: #fff;
   width: 40px;
   height: 40px;
@@ -44,4 +44,29 @@
   min-height: 100vh;
   height: 100%;
   flex-direction: column;
+}
+
+// 页面顶部右侧下拉框样式
+.rightDropDown () {
+  position: fixed;
+  top: 60px;
+  right: 0;
+  background: #f6f6f6;
+  width: 80px;
+  z-index: 100;
+  text-align: center;
+  padding: 10px 0;
+  color: #5a5a5a;
+  box-shadow: 0 1px 6px 2px #d1d1d1;
+  li {
+    font-size: 13px;
+    height: 24px;
+    line-height: 24px;
+    letter-spacing: 2px;
+    text-indent: 2px;
+  }
+  .liStyle {
+    background: @color-theme;
+    color: #fff;
+  }
 }

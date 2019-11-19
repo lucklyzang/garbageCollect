@@ -87,7 +87,7 @@ export const scanCode = (callback) => {
       if (code.length < 3) {// 手动输入的时间不会让code的长度大于2，所以这里只会对扫码枪有
           return
       }
-      code = decodeURIComponent(code);
+      // code = decodeURIComponent(code);
       console.log('扫码结束: ' + code);
       callback(code);
       //TODO
@@ -118,3 +118,10 @@ export const scanCode = (callback) => {
  * 验证输入重量是否合法正则
 */
 export const testWeight = /^[+]{0,1}(\d+)$|^[+]{0,1}(\d+\.\d+)$/ 
+
+/** 
+ * 扫码后从字典中取值
+*/
+export const Dictionary = (data, key) => {
+  return data[key] ? data[key] : undefined
+}
