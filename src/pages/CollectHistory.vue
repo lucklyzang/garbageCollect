@@ -47,6 +47,7 @@
                 <div class="list-strip">
                   <p>医院: {{item.proName}}</p>
                   <p class="list-sign">收集人: {{item.inWorkerName}}</p>
+                  <p class="list-sign">收集时间: {{item.inTime}}</p>
                 </div>
               </div>
             </div>
@@ -585,9 +586,9 @@ export default {
         }
       }
       .not-inStorage {
-        height: 130px;
+        height: 150px;
         .list-item-right {
-          top: 74px !important
+          top: 94px !important
         }
       }
       .inStorage {

@@ -81,7 +81,7 @@ import Loading from '../components/Loading'
 import { mapGetters, mapMutations } from 'vuex'
 import {queryBatch,judgeSummaryPoint,inStorageAdd} from '../api/rubbishCollect.js'
 import {getDictionaryData} from '@/api/login.js'
-import {formatTime, setStore, getStore, removeStore, IsPC, scanCode, Dictionary} from '@/common/js/utils'
+import {formatTime, setStore, getStore, removeStore, IsPC, scanCode, Dictionary, judgeDataType} from '@/common/js/utils'
 export default {
    components:{
     HeaderTop,
@@ -218,12 +218,41 @@ export default {
 
      // 摄像头扫码后的回调
     scanQRcodeCallback(code) {
-      this.processMethods(code)
+      if (!code.toString().includes('|')) {
+        if (judgeDataType(code)) {
+          this.processMethods(code)
+        }
+      } else {
+        let codeJson = {};
+        let codeData = code.split('|');
+        if (codeData.length == 3) {
+          if (codeData[2] == "") {
+            codeJson['number'] = codeData[0];
+            codeJson['type'] = codeData[1];
+            code = codeJson
+          }
+        }
+        this.processMethods(code)
+      }
     },
 
     //扫码枪扫码回调方法
     barcodeScanner (code) {
-      var code = JSON.parse(code);
+      if (!code.includes('|')) {
+        if (judgeDataType(JSON.parse(code))) {
+          code = JSON.parse(code)
+        }
+      } else {
+        let codeJson = {};
+        let codeData = code.split('|');
+        if (codeData.length == 3) {
+          if (codeData[2] == "") {
+            codeJson['number'] = codeData[0];
+            codeJson['type'] = codeData[1];
+            code = codeJson
+          }
+        }
+      };
       this.barCodeScannerShow = false;
       if (this.isPcCallBack) {
         this.processMethods(code)

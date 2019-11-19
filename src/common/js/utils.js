@@ -125,3 +125,17 @@ export const testWeight = /^[+]{0,1}(\d+)$|^[+]{0,1}(\d+\.\d+)$/
 export const Dictionary = (data, key) => {
   return data[key] ? data[key] : undefined
 }
+
+/** 
+ * 判断数据是否为JSON类型
+*/
+
+export const judgeDataType = (data) => {
+  var flag;
+  if (typeof(data) == "object" && Object.prototype.toString.call(data) == "[object Object]" && !data.length) {
+    flag = true
+  } else {
+    flag = false
+  }
+  return flag
+}

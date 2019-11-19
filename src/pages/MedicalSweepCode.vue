@@ -211,7 +211,7 @@ import CommonProgress from '../components/CommonProgress'
 import ProgressStyle from '../components/ProgressStyle'
 import {judgeStagingPoint,judgeMedicalPerson} from '../api/rubbishCollect.js'
 import {getDictionaryData} from '@/api/login.js'
-import { formatTime, setStore, getStore, removeStore, IsPC, scanCode, testWeight, Dictionary} from '@/common/js/utils'
+import { formatTime, setStore, getStore, removeStore, IsPC, scanCode, testWeight, Dictionary, judgeDataType} from '@/common/js/utils'
 import { mapGetters, mapMutations } from 'vuex'
 import Vue from 'vue'
 import Print from '@/plugs/print'
@@ -744,12 +744,51 @@ export default {
 
     // 摄像头扫码后的回调
     scanQRcodeCallback(code) {
-      this.processMethods(code)
+      if (!code.toString().includes('|')) {
+        if (judgeDataType(code)) {
+          this.processMethods(code)
+        }
+      } else {
+        let codeJson = {};
+        let codeData = code.split('|');
+        if (codeData.length == 3) {
+          codeJson['number'] = codeData[0];
+          codeJson['type'] = codeData[1];
+          codeJson['depName'] = codeData[2];
+          code = codeJson
+        } else if (codeData.length == 4) {
+          codeJson['workerNumber'] = codeData[0];
+          codeJson['depId'] = codeData[1];
+          codeJson['depName'] = codeData[2];
+          codeJson['id'] = codeData[3];
+          code = codeJson
+        }
+        this.processMethods(code)
+      }
     },
 
     //扫码枪扫码回调方法
     barcodeScanner (code) {
-      var code = JSON.parse(code);
+      if (!code.includes('|')) {
+        if (judgeDataType(JSON.parse(code))) {
+          code = JSON.parse(code)
+        }
+      } else {
+        let codeJson = {};
+        let codeData = code.split('|');
+        if (codeData.length == 3 && codeData[2] != "") {
+          codeJson['number'] = codeData[0];
+          codeJson['type'] = codeData[1];
+          codeJson['depName'] = codeData[2];
+          code = codeJson
+        } else if (codeData.length == 4) {
+          codeJson['workerNumber'] = codeData[0];
+          codeJson['depId'] = codeData[1];
+          codeJson['depName'] = codeData[2];
+          codeJson['id'] = codeData[3];
+          code = codeJson
+        }
+      };
       this.barCodeScannerShow = false;
       if (this.isPcCallBack) {
         this.processMethods(code)
