@@ -187,14 +187,11 @@ export default {
         "depId":  this.yihuCode[0].depId,  //部门ID 在护士返回数据中得到
         "depNumber":  "",   //部门编号 非必输
         "depName":  this.yihuCode[0].depName, //部门名称
-        "proId":  this.yihuCode[0].proId, //项目编号
         "proName":  this.keshiCode[0].proName,  //项目名称
         "workerId":  this.userInfo.id,  //收集人员ID
         "workerName": this.userInfo.workerName,  //收集人员名称
         "careId":  this.yihuCode[this.yihuCode.length-1].id, //护士ID
-        // "wasteId": this.lajiCode[0].id, //垃圾类型id
-        // "wasteName" : this.lajiCode[0].wasteName,
-        "careName":  this.yihuCode[this.yihuCode.length-1].workerName, //护士名称
+        "careName":  this.yihuCode[this.yihuCode.length-1].workerNumber, //护士名称
         "weight":  this.lanyaCz[0]  //医废重量
       };
       this.showLoading = true;
@@ -243,14 +240,11 @@ export default {
           "depId":  this.yihuCode[0].depId,  //部门ID 在护士返回数据中得到
           "depNumber":  "",   //部门编号 非必输
           "depName":  this.yihuCode[0].depName, //部门名称
-          "proId":  this.yihuCode[0].proId, //项目编号
           "proName":  this.keshiCode[0].proName,  //项目名称
           "workerId":  this.userInfo.id,  //收集人员ID
           "workerName": this.userInfo.workerName,  //收集人员名称
           "careId":  this.yihuCode[this.yihuCode.length-1].id, //护士ID
-          // "wasteId": this.lajiCode[i].id, //垃圾类型id
-          // "wasteName" : this.lajiCode[i].wasteName,
-          "careName":  this.yihuCode[this.yihuCode.length-1].workerName, //护士名称
+          "careName":  this.yihuCode[this.yihuCode.length-1].workerNumber, //护士名称
           "weight":  this.lanyaCz[i]  //医废重量
         })
       };

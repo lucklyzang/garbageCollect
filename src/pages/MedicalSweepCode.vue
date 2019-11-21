@@ -116,11 +116,11 @@
             padding-top:40px;"
           >
             <p style="text-align:center;margin-bottom:20px;font-size:18px">医废回收小票</p>
-            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">科室: {{keshiCode[0].depName}}</p>
-            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">垃圾类型: {{lajiCode[index].wasteName}}</p>
-            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">垃圾重量: {{(lanyaCz[index]).toFixed(2)}}kg</p>
+            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">科室: {{keshiCode[index].depName}}</p>
+            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">垃圾类型: {{lajiCode[index].id}}</p>
+            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">垃圾重量: {{Number(lanyaCz[index]).toFixed(2)}}kg</p>
             <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">收集人: {{userInfo.workerName}}</p>
-            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">交接人: {{yihuCode[0].workerName}}</p>
+            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">交接人: {{yihuCode[index].workerNumber}}</p>
             <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">时间: {{collectTime}}</p>
           </div>
           <!-- 第二联 -->
@@ -132,11 +132,11 @@
             padding-top:40px;"
           >
             <p style="text-align:center;margin-bottom:20px;font-size:18px">医废回收小票</p>
-            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">科室: {{keshiCode[0].depName}}</p>
-            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">垃圾类型: {{lajiCode[index].wasteName}}</p>
-            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">垃圾重量: {{(lanyaCz[index]).toFixed(2)}}kg</p>
+            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">科室: {{keshiCode[index].depName}}</p>
+            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">垃圾类型: {{lajiCode[index].id}}</p>
+            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">垃圾重量: {{Number(lanyaCz[index]).toFixed(2)}}kg</p>
             <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">收集人: {{userInfo.workerName}}</p>
-            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">交接人: {{yihuCode[index].workerName}}</p>
+            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">交接人: {{yihuCode[index].workerNumber}}</p>
             <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">时间: {{collectTime}}</p>
           </div>
         </div>
@@ -152,9 +152,9 @@
             <p style="text-align:center;margin-bottom:20px;font-size:18px">医废回收小票</p>
             <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">科室: {{keshiCode[0].depName}}</p>
             <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">垃圾类型: {{pcMapList[index]['type']}}</p>
-            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">垃圾重量: {{(pcMapList[index]['weight']).toFixed(2)}}kg</p>
+            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">垃圾重量: {{Number(pcMapList[index]['weight']).toFixed(2)}}kg</p>
             <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">收集人: {{userInfo.workerName}}</p>
-            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">交接人: {{yihuCode[yihuCode.length-1].workerName}}</p>
+            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">交接人: {{yihuCode[yihuCode.length-1].workerNumber}}</p>
             <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">时间: {{collectTime}}</p>
           </div>
           <!-- 第二联 -->
@@ -167,9 +167,9 @@
             <p style="text-align:center;margin-bottom:20px;font-size:18px">医废回收小票</p>
             <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">科室: {{keshiCode[0].depName}}</p>
             <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">垃圾类型: {{pcMapList[index]['type']}}</p>
-            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">垃圾重量: {{(pcMapList[index]['weight']).toFixed(2)}}kg</p>
+            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">垃圾重量: {{Number(pcMapList[index]['weight']).toFixed(2)}}kg</p>
             <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">收集人: {{userInfo.workerName}}</p>
-            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">交接人: {{yihuCode[yihuCode.length-1].workerName}}</p>
+            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">交接人: {{yihuCode[yihuCode.length-1].workerNumber}}</p>
             <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">时间: {{collectTime}}</p>
           </div>
         </div>
@@ -692,7 +692,7 @@ export default {
         this.barMessageList.push({
           depName: this.lajiCode[i].depName,
           barCode: this.lajiCode[i].barCode,
-          wasteName: this.lajiCode[i].wasteName,
+          wasteName: this.lajiCode[i].id,
           barWeight: this.lanyaCz[i] ? this.lanyaCz[i] : '无',
           check: false
         })
@@ -751,7 +751,7 @@ export default {
       } else {
         let codeJson = {};
         let codeData = code.split('|');
-        if (codeData.length == 3) {
+        if (codeData.length == 3 && codeData[2] != "" ) {
           codeJson['number'] = codeData[0];
           codeJson['type'] = codeData[1];
           codeJson['depName'] = codeData[2];
@@ -1109,7 +1109,7 @@ export default {
       this.pcMapList = [];
       for (let item of this.lajiCode) {
         for (let itemList in item) {
-          if (itemList == 'wasteName') {
+          if (itemList == 'id') {
             momentTypeList.push(item[itemList])
           }
         }
@@ -1125,11 +1125,11 @@ export default {
       if (!IsPC()) {
         if (this.lajiCode.length == 1) {
           let flag = true;
-          this.printProof(this.lajiCode[0].barCode,this.keshiCode[0].depName,this.lajiCode[0].wasteName,
-            this.lanyaCz[0],this.userInfo.workerName,this.yihuCode[this.yihuCode.length-1].workerName);
+          this.printProof(this.lajiCode[0].barCode,this.keshiCode[0].depName,this.lajiCode[0].id,
+            this.lanyaCz[0],this.userInfo.workerName,this.yihuCode[this.yihuCode.length-1].workerNumber);
           if (flag) {
-            this.printProof(this.lajiCode[0].barCode,this.keshiCode[0].depName,this.lajiCode[0].wasteName,
-              this.lanyaCz[0],this.userInfo.workerName,this.yihuCode[this.yihuCode.length-1].workerName);
+            this.printProof(this.lajiCode[0].barCode,this.keshiCode[0].depName,this.lajiCode[0].id,
+              this.lanyaCz[0],this.userInfo.workerName,this.yihuCode[this.yihuCode.length-1].workerNumber);
           }
         } else if (this.lajiCode.length > 1) {
           // 记录打印次数
@@ -1138,7 +1138,7 @@ export default {
           for (var i = 0, len = this.lajiCode.length; i<len; i++) {
             if (i == Object.values(map).length) {return};
             this.printProof(this.lajiCode[i].barCode,this.keshiCode[0].depName,Object.keys(map)[i],
-            Object.values(map)[i],this.userInfo.workerName,this.yihuCode[this.yihuCode.length-1].workerName);
+            Object.values(map)[i],this.userInfo.workerName,this.yihuCode[this.yihuCode.length-1].workerNumber);
             // 打印两联
             if (timeNum < 2) { 
               if (i == Object.values(map).length-1) {
@@ -1358,32 +1358,32 @@ export default {
     },
 
     // 全选操作
-    toggleCheckedAll(){
-       if(this.checkedAll){
+    toggleCheckedAll () {
+      if (this.checkedAll) {
           this.barMessageList.forEach((item)=>{
             item.check = false  
           })
           this.checkedAll = false
-       }else{
-          this.barMessageList.forEach((item)=>{
-            item.check = true  
-          })
-          this.checkedAll = true
+      } else {
+        this.barMessageList.forEach((item)=>{
+          item.check = true  
+        })
+        this.checkedAll = true
       }
     },
 
     // 单选操作
-     oneChecked(cart){
-       if(!cart){
+     oneChecked (cart) {
+      if (!cart) {
         this.checkedAll = false
-       }
-       let isExitCheckedNo = this.barMessageList.every(item=>{
-          return item.check == true     
-       });
-       if(isExitCheckedNo){
-          this.checkedAll = true    
-       }else{
-          this.checkedAll = false
+      }
+      let isExitCheckedNo = this.barMessageList.every(item=>{
+        return item.check == true     
+      });
+      if (isExitCheckedNo) {
+        this.checkedAll = true    
+      } else {
+        this.checkedAll = false
       }
     },
 
@@ -1499,6 +1499,7 @@ export default {
             text-indent: 2px;
             border: none;
             height: 58px;
+            line-height: 58px;
             font-size: 18px
           }
         }
@@ -1583,34 +1584,5 @@ export default {
           }
         }
       }
-      // .bills-data {
-      //   position:fixed;
-      //   bottom:100px;
-      //   left:0;
-      //   width:100%;
-      //   height:50vh;
-      //   padding:10px 4px 10px 10px;
-      //   overflow: auto;
-      //   background: #fff;
-      //   .div-wrapper {
-      //     height:230px;
-      //     width:100%;
-      //     border-bottom:1px dashed #333;
-      //     background:transparent;
-      //     margin-bottom:40px;
-      //     p {
-      //       font-size:18px;
-      //       width:100%;
-      //       min-height:24px;
-      //       word-wrap: break-word
-      //     }
-      //     p:first-child {
-      //       text-align:center;
-      //       margin-bottom:20px;
-      //       font-size:22px;
-      //       font-weight:bolder
-      //     }
-      //   }
-      // }
   }
 </style>

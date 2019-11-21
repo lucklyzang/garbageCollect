@@ -153,6 +153,26 @@
           </div>
         </div>
       </section>
+       <!--收集医废批次号选择弹框 -->
+      <div class="batchNumberDialog">
+        <van-dialog
+          v-model="chooseBatchNumberShow"
+          title="医废批次号选择"
+          :show-cancel-button="false"
+          :close-on-popstate="true"
+          :close-on-click-overlay="true"
+          @confirm="chooseBatchNumberSure"
+        >
+          <div>
+            <VanFieldSelectPicker
+              label="批次号"
+              placeholder="请选择"
+              v-model="currentBatchNumber"
+              :columns="batchNumberoption"
+            />
+          </div>
+        </van-dialog>
+      </div>
   </div>
 </template>
 
@@ -161,8 +181,9 @@ import HeaderTop from '../components/HeaderTop'
 import FooterBottom from '../components/FooterBottom'
 import { mapGetters, mapMutations } from 'vuex'
 import Loading from '../components/Loading'
+import VanFieldSelectPicker from '../components/VanFieldSelectPicker'
 import {queryPrintInfo, queryOffice, queryCollectPerson, postReplenishPrintData} from '../api/rubbishCollect.js'
-import { formatTime, setStore, IsPC, removeStore } from '@/common/js/utils'
+import { formatTime, setStore, IsPC, removeStore, judgeKeyEquail } from '@/common/js/utils'
 import {getDictionaryData} from '@/api/login.js'
 import Vue from 'vue'
 import Print from '@/plugs/print'
@@ -171,7 +192,8 @@ export default {
    components:{
     HeaderTop,
     FooterBottom,
-    Loading
+    Loading,
+    VanFieldSelectPicker
   },
   data () {
     return {
@@ -188,6 +210,9 @@ export default {
       pcCreatimeList: [],
       showLoadingHint: false,
       checkedAll: false,
+      chooseBatchNumberShow: false,
+      batchNumberoption: [],
+      currentBatchNumber: '',
       minDateStart: new Date(2018, 0, 1),
       minDateEnd: new Date(2018, 0, 1),
       currentDateStart: new Date(),
@@ -557,6 +582,23 @@ export default {
       this.printData = this.rawInfoList.filter((item) => {
         return item.check == true
       });
+
+      // 判断所选择的医废批次号是否相同
+      if (!(judgeKeyEquail(this.printData,'batchNumber'))) {
+          this.$dialog.alert({
+          message: '当前所选医废含有不同的批次号,请根据批次号重新选择医废',
+          closeOnPopstate: true
+        }).then(() => {
+          // 弹出批次号选择框
+          this.chooseBatchNumberShow = true;
+          this.batchNumberoption = [];
+          for (let item of this.printData) {
+            this.batchNumberoption.push(item['batchNumber'])
+          }
+        });
+        return
+      };
+
       for (let item of this.printData) {
         this.lajiBarCode.push(item.collectNumber),
         this.keshiCode.push(item.depName),
@@ -566,12 +608,13 @@ export default {
         this.collectWorkerName.push(item.workerName);
         this.pcCreatimeList.push(item.createTime)
       };
+
       // num,dep,category,weight,collector,handover
       // this.lajiCode[0].wasteName,
       // 编号, 科室, 垃圾类型，垃圾重量，收集人，交接人
       if (this.lajiBarCode.length == 0) {
         this.$dialog.alert({
-          message: '当前没有要打印的凭条',
+          message: '请选择要打印的医废',
           closeOnPopstate: true
         }).then(() => {
         });
@@ -579,6 +622,7 @@ export default {
       };
       let map = {};
       this.pcMapList = [];
+
       // 合并重复的垃圾类型及其重量
       this.lajiCodeName.forEach((value, index) => {
         Object.prototype.hasOwnProperty.call(map, value) || (map[value] = 0);
@@ -620,6 +664,26 @@ export default {
       }
       // 提交打印数据到服务端
       this.postPrintData()
+    },
+
+    // 医废批次号选择确定
+    chooseBatchNumberSure () {
+      if (!this.currentBatchNumber) {
+        this.$dialog.alert({
+          message: '批次号不能为空',
+          closeOnPopstate: true
+        }).then(() => {
+          this.chooseBatchNumberShow = true
+        })
+        return
+      };
+      this.rawInfoList = this.rawInfoList.filter((item,index) => {
+        return item.batchNumber == this.currentBatchNumber
+      });
+      this.checkedAll = false;
+      this.rawInfoList.forEach((item)=>{
+        item.check = false  
+      })
     }
   }
 }

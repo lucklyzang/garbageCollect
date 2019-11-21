@@ -139,3 +139,26 @@ export const judgeDataType = (data) => {
   }
   return flag
 }
+
+/** 
+ * 判断数组对象中每项某个key对应value是否相同
+*/
+
+export const judgeKeyEquail = (data,key) => {
+  var flag = true;
+  if (!(Object.prototype.toString.call(data) === '[object Array]')) {
+    return
+  };
+  if (data.length > 0) {
+    for (var i=1, len = data.length; i< len; i++) {
+      var assignItem = data[0][key];
+      if (data[i][key] !== assignItem) {
+        flag = false;
+        break
+      }
+    }
+  } else {
+    flag = true
+  }
+  return flag
+}

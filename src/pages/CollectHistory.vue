@@ -47,7 +47,7 @@
                 <div class="list-strip">
                   <p>医院: {{item.proName}}</p>
                   <p class="list-sign">收集人: {{item.inWorkerName}}</p>
-                  <p class="list-sign">收集时间: {{item.inTime}}</p>
+                  <p class="list-sign">创建时间: {{item.inTime}}</p>
                 </div>
               </div>
             </div>
