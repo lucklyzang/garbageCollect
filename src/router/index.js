@@ -14,6 +14,7 @@ const MedicalInStorageIncrease = () => import('../pages/MedicalInStorageIncrease
 const AbnormalWarning = () => import('../pages/AbnormalWarning')
 const CollectHistory = () => import('../pages/CollectHistory')
 const MyInfo = () => import('../pages/MyInfo')
+const TestPage = () => import('../pages/TestPage')
 const CommonSweepCode = () => import('../pages/CommonSweepCode')
 const HandleIdea = () => import('../pages/HandleIdea')
 const WarningCheck = () => import('../pages/WarningCheck')
@@ -102,6 +103,11 @@ let baseRoute  = [
     path: '/myInfo',
     name: 'myInfo',
     component: MyInfo,
+  },
+  {
+    path: '/testPage',
+    name: 'testPage',
+    component: TestPage,
   },
   {
     path: '/warningCheck',

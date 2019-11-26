@@ -228,7 +228,7 @@ export default {
       manualWeight: '',
       leftDownShow: false,
       liIndex: null,
-      leftDropdownDataList: ['刷新','我的'],
+      leftDropdownDataList: ['刷新','我的','测试'],
       progressTitleList: ['扫描科室','扫描医废','医废称重','扫描医护'],
       currentPercentage: '0',
       temporaryActive: -1,
@@ -528,7 +528,7 @@ export default {
           this.initSweepCodeInfo();
           this.clearPartStorage()
         }
-      } else {
+      }  else if (this.liIndex == 0) {
         // 清除扫码字典数据
         removeStore('hospitalData');
         removeStore('careData');
@@ -557,6 +557,10 @@ export default {
             setStore('wasteTypeData', res.data.data['wasteType'])
           }
         })
+      } else if (this.liIndex == 2) {
+        this.$router.push({path: 'testPage'});
+        this.changeTitleTxt({tit:'测试页'});
+        setStore('currentTitle','测试页')
       }
     },
 

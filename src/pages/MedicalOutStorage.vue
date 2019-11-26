@@ -80,7 +80,7 @@ export default {
     return {
       leftDownShow: false,
       liIndex: null,
-      leftDropdownDataList: ['刷新','我的'],
+      leftDropdownDataList: ['刷新','我的', '测试'],
       endTimePop: false,
       startTimePop: false,
       currentDateStart: new Date(),
@@ -161,7 +161,7 @@ export default {
         this.$router.push({path: 'myInfo'});
         this.changeTitleTxt({tit:'我的'});
         setStore('currentTitle','我的')
-      } else {
+      } else if (this.liIndex == 0) {
         // 清除扫码字典数据
         removeStore('hospitalData');
         removeStore('careData');
@@ -190,6 +190,10 @@ export default {
             setStore('wasteTypeData', res.data.data['wasteType'])
           }
         })
+      } else if (this.liIndex == 2) {
+        this.$router.push({path: 'testPage'});
+        this.changeTitleTxt({tit:'测试页'});
+        setStore('currentTitle','测试页')
       }
     },
 

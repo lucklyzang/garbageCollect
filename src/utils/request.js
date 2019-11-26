@@ -42,7 +42,7 @@ service.interceptors.response.use(
       return Promise.reject(err);
     };
     // 设置重置次数，默认为0
-     config.__retryCount = config.__retryCount || 0;
+    config.__retryCount = config.__retryCount || 0;
     // 判断是否超过了重试次数
      if(config.__retryCount > config.retry) {
       return Promise.reject(err);
