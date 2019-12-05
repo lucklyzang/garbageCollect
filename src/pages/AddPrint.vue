@@ -540,7 +540,7 @@ export default {
         "remark": checkData //打印医废条码数组
       };
       postReplenishPrintData(printData).then((res) => {
-         if (res && res.data.code == 200) {
+        if (res && res.data.code == 200) {
           this.$dialog.alert({
             message: `${res.data.msg}`,
             closeOnPopstate: true
@@ -551,7 +551,7 @@ export default {
             message: `${res.data.msg}`,
             closeOnPopstate: true
           }).then(() => {
-          });
+          })
          }
       })
       .catch((err) => {

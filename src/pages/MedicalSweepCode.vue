@@ -534,7 +534,7 @@ export default {
         removeStore('careData');
         removeStore('departmentData');
         removeStore('pointData');
-        removeStore('wasteTypeData');
+        removeStore('wasteTypeData')
         // 请求科室字典数据
         getDictionaryData(this.userInfo.proId).then((res) => {
           if (res && res.data.code == 200) {
