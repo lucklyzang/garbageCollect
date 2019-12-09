@@ -282,7 +282,7 @@ export default {
                 document.getElementById("content-middle-monthData")
               ),'一月医废类型分布情况',this.monthData);
 
-               // 一年的数据
+              // 一年的数据
               res.data.data.yearList.forEach((item,index) => {
                 this.yearData.push({
                   value: item,

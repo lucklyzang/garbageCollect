@@ -166,7 +166,11 @@ export default {
       },
       // 创建批次号
       createBatchNumber (state,payLoad) {
-        state.batchNumber = payLoad
+        if (!payLoad) {
+          state.batchNumber = ''
+        } else {
+          state.batchNumber = payLoad
+        }
       },
       //当前科室数据提交并打印后清空store
       clearTrashStore (state) {

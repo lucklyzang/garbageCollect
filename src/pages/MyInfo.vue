@@ -14,7 +14,7 @@
         <div>车辆编号: {{this.getCarNum ? this.getCarNum: '无'}}</div>
         <div>身份类别: {{this.getCardType}}</div>
         <div>可收集垃圾类别: {{this.getRubbishType ? judgeRubbishType(this.getRubbishType) : '无'}}</div>
-        <div>性别: {{this.getGender == 0 ? '男' : '女'}}</div>
+        <div>性别: {{judeSex()}}</div>
         <div>生日: {{this.getBirthday ? this.getBirthday: '无'}}</div>
       </div>
     </div>
@@ -105,6 +105,19 @@ export default {
       this.$router.push({name:'home'});
       this.changeTitleTxt({tit:'医废监测'});
       setStore('currentTitle','医废监测');
+    },
+
+    // 判断性别
+    judeSex () {
+      let peoplesex;
+      if (this.getGender == 0) {
+        peoplesex = '未指定'
+      } else if (this.getGender == 1) {
+        peoplesex = '男'
+      } else {
+        peoplesex = '女'
+      };
+      return peoplesex
     },
 
     // 判断身份类别
@@ -203,6 +216,8 @@ export default {
       removeStore('departmentData');
       removeStore('pointData');
       removeStore('wasteTypeData');
+      setStore('currentBatchNumber','');
+      setStore('currentTitle','')
     }
   }
 }

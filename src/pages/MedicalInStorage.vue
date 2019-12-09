@@ -230,12 +230,10 @@ export default {
         let codeJson = {};
         let codeData = code.split('|');
         if (codeData.length == 3) {
-          if (codeData[2] == "") {
-            codeJson['number'] = codeData[0];
-            codeJson['type'] = codeData[1];
-            code = codeJson
-          }
-        }
+          codeJson['number'] = codeData[0];
+          codeJson['type'] = codeData[1];
+          code = codeJson
+        };
         this.processMethods(code)
       }
     },
@@ -250,11 +248,9 @@ export default {
         let codeJson = {};
         let codeData = code.split('|');
         if (codeData.length == 3) {
-          if (codeData[2] == "") {
-            codeJson['number'] = codeData[0];
-            codeJson['type'] = codeData[1];
-            code = codeJson
-          }
+          codeJson['number'] = codeData[0];
+          codeJson['type'] = codeData[1];
+          code = codeJson
         }
       };
       this.barCodeScannerShow = false;
@@ -356,7 +352,7 @@ export default {
     queryAllBatch () {
       this.classList = [];
       this.showLoadingHint = true;
-      queryBatch({batchNumber:this.batchNumber ? this.batchNumber == this.userInfo.batchNumber ? this.batchNumber : this.batchNumber : this.userInfo.batchNumber ,workerId:this.userInfo.id, state: 0}).then((res)=>{
+      queryBatch({batchNumber:this.batchNumber ? this.batchNumber : this.userInfo.batchNumber ,workerId:this.userInfo.id, state: 0}).then((res)=>{
         if (res && res.data.code == 200) {
           if (res.data.data.length > 0) {
             let dataList = res.data.data;

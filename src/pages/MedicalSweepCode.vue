@@ -1247,6 +1247,7 @@ export default {
                     this.storageLanyaCz(this.extraLyczMsg);
                     this.changeExtraLyczMsg(null);
                     this.$router.push({path:'judgeCurrentDepantment'});
+                    this.$socket.emit('weight', 'stop');
                     // h5存储每步的收集信息和流程
                     setStore('currentCollectMsg',{currentMsg:this.garColMsg});
                     setStore('currentStep',3);
@@ -1393,7 +1394,7 @@ export default {
 
     // 根据给出的医废编码，来删除存储中存在的医废编码
     // arrOne: 医废信息,arrTwo: 医废重量,clearArr: 要删除的医废编码
-     resetBarArray (arrOne,arrTwo,clearArr) {
+    resetBarArray (arrOne,arrTwo,clearArr) {
 			for (var i = 0; i < clearArr.length; i++) {
 				for (var j = 0; j < arrOne.length; j++) {
 					if (arrOne[j]['barCode'] == clearArr[i]) {

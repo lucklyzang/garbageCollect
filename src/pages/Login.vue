@@ -232,6 +232,11 @@ export default {
       logIn(loginMessage).then((res)=>{
         if (res) {
           if (res.data.code == 200) {
+            if (res.data.data.batchNumber) {
+              setStore('currentBatchNumber',res.data.data.batchNumber)
+            } else {
+              setStore('currentBatchNumber','')
+            };
             if (this.showAccountLogin) {
               setStore('loginSweepCode',false);
               if (getStore('loginSweepCode') == 'false') {
@@ -256,7 +261,8 @@ export default {
                 // 存入暂存点数据
                 setStore('pointData', res.data.data['points'])
                 // 存入医废类型数据
-                setStore('wasteTypeData', res.data.data['wasteType'])
+                setStore('wasteTypeData', res.data.data['wasteType']);
+                location.reload()
               }
             });
             // 登录用户名密码及用户信息存入Locastorage
