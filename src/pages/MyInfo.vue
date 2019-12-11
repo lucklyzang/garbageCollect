@@ -147,7 +147,7 @@ export default {
       }
     },
 
-    // 判断身份类别
+    // 判断可收集垃圾类型
     judgeRubbishType (type) {
       switch (type) {
         case 1 :
@@ -205,7 +205,7 @@ export default {
       removeStore('userPassword');
       removeStore('userInfo');
       removeStore('isLogin');
-      // 清除其它用户h5存储的流程信息
+      // 清除当前用户h5存储的医废收集流程信息
       removeStore('currentCollectMsg');
       removeStore('currentStep');
       removeStore('weightMethods');
@@ -216,6 +216,7 @@ export default {
       removeStore('departmentData');
       removeStore('pointData');
       removeStore('wasteTypeData');
+      // 清除存储的收集批次号和顶部导航栏文字说明
       setStore('currentBatchNumber','');
       setStore('currentTitle','')
     }

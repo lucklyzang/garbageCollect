@@ -97,13 +97,22 @@ export default {
   },
 
   mounted () {
-  },
-  beforeRouteLeave (to,from,next) {
-    if (IsPC()) {
-      this.sendDisconnect();
-      next()
+    // 控制设备物理返回按键
+   if (!IsPC()) {
+      let that = this;
+      pushHistory()
+      that.gotoURL(() => { 
+        pushHistory()
+        this.$router.push({name:'home'});
+        this.changeTitleTxt({tit:'医废监测'});
+        setStore('currentTitle','医废监测');
+        if (IsPC()) {
+          this.sendDisconnect();
+        }
+      })
     }
   },
+ 
   sockets: {
     connect () {
       console.log('建立链接');
@@ -138,7 +147,10 @@ export default {
     backTo () {
       this.$router.push({name:'home'});
       this.changeTitleTxt({tit:'医废监测'});
-      setStore('currentTitle','医废监测')
+      setStore('currentTitle','医废监测');
+      if (IsPC()) {
+        this.sendDisconnect();
+      }
     },
     // 获取重量
     getWeight () {

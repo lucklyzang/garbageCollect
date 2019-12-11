@@ -8,9 +8,9 @@
       <li v-for="(item, index) in leftDropdownDataList" :class="{liStyle:liIndex == index}" @click="leftLiCLick(index)">{{item}}</li>
     </ul>
     <div class="content">
-      <!-- <div class="content-header">
+      <div class="content-header" v-if="!juddgeIspc()">
         <img :src="bannerUrl" alt="">
-      </div> -->
+      </div>
       <div class="content-middle content-middle-home">
         <div class="content-list" v-for="item in itemList" @click="routerSkip(item.name, item.itemText)">
           <p class="title-img">
@@ -133,6 +133,11 @@
         'changeCurrentActive',
         'clearTrashStore'
       ]),
+
+      juddgeIspc () {
+        return IsPC()
+      },
+
       // 返回上一页
       backTo () {
         this.$router.replace({name: 'home'});
@@ -185,7 +190,7 @@
           }
         })
       } else if (this.liIndex == 2) {
-        this.$router.push({path: 'testPage'});
+        this.$router.push({name: 'testPage'});
         this.changeTitleTxt({tit:'测试页'});
         setStore('currentTitle','测试页')
       }
@@ -332,6 +337,13 @@
     .content-middle {
       margin: 0 auto;
       margin-top: 30px;
+    }
+    .content-header {
+      height: 150px;
+      img {
+        width: 100%;
+        height: 100%
+      }
     }
   }   
   .left-dropDown {
