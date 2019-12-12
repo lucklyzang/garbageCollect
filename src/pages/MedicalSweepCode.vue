@@ -1194,7 +1194,7 @@ export default {
         this.choosePrintType = true;
         return
       };
-      if (!IsPC()) {
+      if (IsPC()) {
         if (this.pcPrintShowCollect) {
           this.trashCollect();
           this.pcPrintShowCollect = true;

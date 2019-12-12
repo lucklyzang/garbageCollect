@@ -806,7 +806,7 @@ export default {
           let flagOther = true;
           this.printProof(this.lajiBarCode[0],this.keshiCode[0],this.lajiCodeName[0],
             this.lanyaCz[0],this.collectWorkerName[0],this.yihuCode[0])
-          if (flag) {
+          if (flagOther) {
           this.printProof(this.lajiBarCode[0],this.keshiCode[0],this.lajiCodeName[0],
             this.lanyaCz[0],this.collectWorkerName[0],this.yihuCode[0])
           }
@@ -817,10 +817,9 @@ export default {
           // 记录打印次数
           let timeNum = 1;
           // 循环调用打印接口
-          for (var i = 0, len = this.lajiBarCode.length; i<len; i++) {
-            if (i == Object.values(map).length) {return};
-            this.printProof(this.lajiBarCode[i],this.keshiCode[i],Object.keys(map)[i],
-            Object.values(map)[i],this.collectWorkerName[j],this.yihuCode[i]);
+          for (var i = 0, len = Object.values(map).length; i<len; i++) {
+            this.printProof(this.lajiBarCode[0],this.keshiCode[i],Object.keys(map)[i],
+            Object.values(map)[i],this.collectWorkerName[0],this.yihuCode[0]);
             // 打印两联
             if (timeNum < 2) { 
               if (i == Object.values(map).length-1) {
