@@ -10,6 +10,17 @@
             label="重量(kg)"
             placeholder=""
             autosize
+            disabled
+          />
+        </van-cell-group>
+        <van-cell-group>
+          <van-field
+            v-model="sweepCodeMsg"
+            label="扫码信息"
+            placeholder=""
+            type="textarea"
+            autosize
+            disabled
           />
         </van-cell-group>
       </div>
@@ -19,6 +30,9 @@
           </span>
           <span class="showCollectButton">
             <van-button type="info" @click="print" size="normal">打印</van-button>
+          </span>
+          <span class="showCollectButton">
+            <van-button type="info" @click="sweepCodeBtn" size="normal">扫码</van-button>
           </span>
       </div>
         <!-- 打印内容 -->
@@ -67,6 +81,19 @@
           </div>
         </div>
       </section>
+      <!-- 打印选择弹框 -->
+      <van-dialog
+        v-model="choosePrintType"
+        title="请选择打印类型"
+        show-cancel-button
+        confirmButtonText="常规打印"
+        cancelButtonText="不干胶打印"
+        :close-on-click-overlay="true"
+        :close-on-popstate="true"
+        @confirm="conventionPrint"
+        @cancel="gluePrint"
+        >
+      </van-dialog>
   </div>
 </template>
 
@@ -75,13 +102,17 @@ import { mapGetters, mapMutations } from 'vuex'
 import HeaderTop from '../components/HeaderTop'
 import Print from '@/plugs/print'
 import Vue from 'vue'
-import { setStore, IsPC, removeStore} from '@/common/js/utils'
+import { setStore, IsPC, removeStore, scanCode} from '@/common/js/utils'
 Vue.use(Print)
 export default {
   data () {
     return {
       checkWaringMsg: '',
-      pcPrintShow: false
+      pcPrintShow: false,
+      sweepCodeMsg: '',
+      choosePrintType: false,
+      isRegister: false,
+      printCount: 0
     };
   },
 
@@ -105,12 +136,10 @@ export default {
         pushHistory()
         this.$router.push({name:'home'});
         this.changeTitleTxt({tit:'医废监测'});
-        setStore('currentTitle','医废监测');
-        if (IsPC()) {
-          this.sendDisconnect();
-        }
+        setStore('currentTitle','医废监测')
       })
-    }
+    };
+    this.isExecute()
   },
  
   sockets: {
@@ -147,23 +176,78 @@ export default {
     backTo () {
       this.$router.push({name:'home'});
       this.changeTitleTxt({tit:'医废监测'});
-      setStore('currentTitle','医废监测');
-      if (IsPC()) {
-        this.sendDisconnect();
-      }
+      setStore('currentTitle','医废监测')
     },
     // 获取重量
     getWeight () {
       if (IsPC()) {
-        this.againConnect()
+        this.$socket.emit('weight', 'getweight')
       }
     },
-    // 打印凭条
-    print () {
+    // 扫码
+    sweepCodeBtn () {
+    },
+    // 是否执行扫码枪的绑定方法
+    isExecute () {
       if (IsPC()) {
+        this.sweepCodeMsg = '';
+        scanCode(this.barcodeScanner)
+      }
+    },
+    // 扫码枪信息回调
+    barcodeScanner (code) {
+      this.sweepCodeMsg = code
+    },
+    // 常规打印
+    conventionPrint () {
+      if (IsPC()) {
+        this.isRegister = true;
         this.pcPrintShow = true;
         this.$print(this.$refs.printCode);
         this.pcPrintShow = false
+      }
+    },
+    // 不干胶打印
+    gluePrint () {
+      this.isRegister = false;
+      this.pcPrintShow = false;
+      this.$socket.emit('print', {times: 2, data: 
+        [
+          [
+            '科室:手术一科',
+            '医废编号:1232243545454554',
+            '垃圾类型:病理性',
+            '垃圾重量:3.8kg',
+            '收集人:张三',
+            '交接人:李四',
+            '时间:2019-12-39 :19:25:49'
+          ]
+        ]
+      });
+      this.printCount = 0
+    },
+    // 打印凭条
+    print () {
+      this.printCount++;
+      if (this.printCount == 1) {
+        if (this.isRegister) {
+          this.choosePrintType = true;
+          return
+        } else {
+          this.choosePrintType = true
+        }
+      } else {
+        if (!this.isRegister) {
+          this.choosePrintType = true
+        }
+      };
+      if (IsPC()) { 
+        if (this.pcPrintShow) {
+          this.pcPrintShow = true;
+          this.$print(this.$refs.printCode);
+          this.pcPrintShow = false;
+          this.printCount = 0;
+        }
       }
     }
   }
@@ -301,7 +385,7 @@ export default {
         width: 100%;
         span {
           display: inline-block;
-          width: 150px;
+          width: 90px;
           /deep/ .van-button--normal {
             padding: 0
           }

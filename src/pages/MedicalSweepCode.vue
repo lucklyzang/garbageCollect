@@ -48,7 +48,7 @@
           <span class="showSureButton" v-show="showSureButton" >
             <van-button type="info" @click="sureCurrentCodeMsg" size="normal">确定</van-button>
           </span>
-          <span class="showPrintBtn"  v-show="showPrintBtn">
+          <span class="showPrintBtn"  v-show="showPrintButton">
             <van-button type="info" @click="finishCollect" size="normal">打印单据</van-button>
           </span>
           <span class="showOtherButton" v-show="showOtherButton">
@@ -96,7 +96,7 @@
           >
         </van-dialog>
         <!-- 打印选择弹框 -->
-         <van-dialog
+        <van-dialog
           v-model="choosePrintType"
           title="请选择打印类型"
           show-cancel-button
@@ -200,54 +200,6 @@
           </div>
         </div>
       </section>
-      <!-- 明细打印内容 -->
-      <section class="bills-data" v-if="pcPrintShowDetail" ref="printCodeDetail"
-        style="position:fixed;
-        top:0;
-        left:0;
-        width:100%;
-        height:85vh;
-        overflow: auto;
-        background: #fff;
-        z-index:1000"
-      >
-        <div>
-          <!-- 第一联 -->
-          <div class="div-wrapper" v-for="(item, index) in lajiCode"
-            style="height:264px;
-            width:100%;
-            border-bottom:1px dashed #333;
-            background:transparent;
-            padding-top:40px;"
-          >
-            <p style="text-align:center;margin-bottom:20px;font-size:18px">医废回收小票</p>
-            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">科室: {{keshiCode[0].depName}}</p>
-            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">医废编号: {{lajiCode[index].barCode}}</p>
-            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">垃圾类型: {{lajiCode[index].id}}</p>
-            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">垃圾重量: {{Number(lanyaCz[index]).toFixed(2)}}kg</p>
-            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">收集人: {{userInfo.workerName}}</p>
-            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">交接人: {{yihuCode[0].workerNumber}}</p>
-            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">时间: {{collectTime}}</p>
-          </div>
-          <!-- 第二联 -->
-          <div class="div-wrapper" v-for="(item, index) in lajiCode"
-            style="height:264px;
-            width:100%;
-            border-bottom:1px dashed #333;
-            background:transparent;
-            padding-top:40px;"
-          >
-            <p style="text-align:center;margin-bottom:20px;font-size:18px">医废回收小票</p>
-            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">科室: {{keshiCode[0].depName}}</p>
-            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">医废编号: {{lajiCode[index].barCode}}</p>
-            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">垃圾类型: {{lajiCode[index].id}}</p>
-            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">垃圾重量: {{Number(lanyaCz[index]).toFixed(2)}}kg</p>
-            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">收集人: {{userInfo.workerName}}</p>
-            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">交接人: {{yihuCode[0].workerNumber}}</p>
-            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">时间: {{collectTime}}</p>
-          </div>
-        </div>
-      </section>
       <!-- 选择称重方式弹框 -->
       <van-dialog
       v-model="chooseWightMethodsShow"
@@ -255,6 +207,7 @@
       show-cancel-button
       :confirmButtonText="weightMethodsText()"
       cancelButtonText="手动输入"
+      cancel-button-color="red"
       :close-on-popstate="true"
       :close-on-click-overlay="true"
       @confirm="chooseWightSure"
@@ -325,7 +278,9 @@ export default {
       isPcCallBack: false,
       barMessageList: [],
       id: '',
-      recordCount: 0
+      recordCount: 0,
+      ifGlue: false,
+      socketData: []
     };
   },
   computed: {
@@ -414,7 +369,7 @@ export default {
             this.$router.push({path: 'home'});  //输入要返回的上一级路由地址
             this.changeTitleTxt({tit: '医废监测'});
             setStore('currentTitle','医废监测');
-            this.initSweepCodeInfo();
+            this.initSweepCodeInfo(); 
             this.clearPartStorage()
           })
           .catch(() => {
@@ -427,9 +382,6 @@ export default {
           this.clearPartStorage()
         }
       })
-    } else {
-      //断开socket连接
-      this.sendDisconnect()
     };
     // 判断流程从哪步开始
     this.judgeFlowPosition();
@@ -461,9 +413,8 @@ export default {
     message (data) {
       if (IsPC()) {
         this.changeExtraLyczMsg('');
-        this.changeExtraLyczMsg(data.replace('kg', ''))
+        this.changeExtraLyczMsg(data.replace('kg', ''));
       }     
-      console.log('秤的物体重量', data.replace('kg', ''));
     }
   },
 
@@ -684,8 +635,6 @@ export default {
         this.temporaryActive = 2;
         this.changeCodeStep(2);
         this.changeIsPlus(true);
-        //链接socket
-        this.againConnect()
       } else if (this.judgeFlowValue == 3) {
         if (!getStore('weightMethods')) {
           if (this.isBlueWeight) {
@@ -819,9 +768,6 @@ export default {
         if (this.isPcCallBack) {
           this.barCodeScannerShow = true
         };
-        if (this.recordCount == 1) {
-          this.againConnect()
-        }
       } else {
         window.android.scanQRcode()
       }
@@ -839,7 +785,7 @@ export default {
         if (codeData.length == 3 && codeData[2] != "" ) {
           codeJson['number'] = codeData[0];
           codeJson['type'] = codeData[1];
-          codeJson['depName'] = codeData[2];
+          codeJson['depName'] = codeData[0];
           code = codeJson
         } else if (codeData.length == 4) {
           codeJson['workerNumber'] = codeData[0];
@@ -864,7 +810,7 @@ export default {
         if (codeData.length == 3 && codeData[2] != "") {
           codeJson['number'] = codeData[0];
           codeJson['type'] = codeData[1];
-          codeJson['depName'] = codeData[2];
+          codeJson['depName'] = codeData[0];
           code = codeJson
         } else if (codeData.length == 4) {
           codeJson['workerNumber'] = codeData[0];
@@ -891,7 +837,6 @@ export default {
               judgeStagingPoint(this.batchNumber,code.number,this.userInfo.id).then((res) => {
                 if (res && res.data.code == 200) {
                   if ( Dictionary(JSON.parse(getStore('pointData')),code['number']) 
-                    && Dictionary(JSON.parse(getStore('departmentData')),code['depName'])
                     && getStore('hospitalData')
                   ) {
                     this.changeCurrentActive(this.codeStep);
@@ -903,7 +848,7 @@ export default {
                     this.changeSureBtn(true);
                     // 替换二维码信息中的对应字符编码为中文
                     code['number'] = Dictionary(JSON.parse(getStore('pointData')),code['number']);
-                    code['depName'] = Dictionary(JSON.parse(getStore('departmentData')),code['depName']);
+                    code['depName'] = Dictionary(JSON.parse(getStore('pointData')),code['depName']);
                     code['proName'] = getStore('hospitalData');
                     this.storageKeshiCode(code);
                     this.changeExtraKeshiMsg(code);
@@ -911,7 +856,7 @@ export default {
                     this.changeAstOfficeShow(true);
                     // h5存储每步的收集信息和流程
                     setStore('currentCollectMsg',{currentMsg:this.garColMsg});
-                    setStore('currentStep',0)
+                    setStore('currentStep',0);
                   } else {
                     this.$dialog.alert({
                       message: '字典中没有匹配的数据或二维码不含有对应的字段',
@@ -983,8 +928,7 @@ export default {
             if (code.workerNumber && code.depName && code.depId && code.id) {
               judgeMedicalPerson(code.workerNumber,this.batchNumber).then((res) => {
                   if (res && res.data.code == 200) {
-                    if ( Dictionary(JSON.parse(getStore('departmentData')),code['depName'])
-                      && Dictionary(JSON.parse(getStore('careData')),code['workerNumber'])
+                    if ( Dictionary(JSON.parse(getStore('careData')),code['workerNumber'])
                       && getStore('hospitalData')
                     ) {
                       this.changeCurrentActive(this.codeStep);
@@ -993,7 +937,7 @@ export default {
                       this.isPcCallBack = false;
                       this.changeIsPlus(true);
                       this.changeAstOfficeShow(false);
-                      code['depName'] = Dictionary(JSON.parse(getStore('departmentData')),code['depName']);
+                      code['depName'] = this.keshiCode[this.keshiCode.length-1].depName;
                       code['workerNumber'] = Dictionary(JSON.parse(getStore('careData')),code['workerNumber']);
                       code['proName'] = getStore('hospitalData');
                       this.storageYihuCode(code);
@@ -1074,8 +1018,7 @@ export default {
                 }
               };
               if (this.barCodeList.indexOf(`${code.barCode}`) == -1) {
-                if ( Dictionary(JSON.parse(getStore('departmentData')),code['depName'])
-                  && Dictionary(JSON.parse(getStore('wasteTypeData')),code['id'])
+                if ( Dictionary(JSON.parse(getStore('wasteTypeData')),code['id'])
                   && getStore('hospitalData')
                 ) {
                   this.changeCurrentActive(this.codeStep);
@@ -1194,19 +1137,13 @@ export default {
         this.choosePrintType = true;
         return
       };
-      if (IsPC()) {
-        if (this.pcPrintShowCollect) {
+      if (IsPC()) { 
+        if (this.pcPrintShowCollect && this.ifGlue) {
           this.trashCollect();
           this.pcPrintShowCollect = true;
           this.pcPrintShowDetail = false;
           this.$print(this.$refs.printCode);
           this.pcPrintShowCollect = false;
-          this.printCount = 0;
-        } else {
-          this.pcPrintShowDetail = true;
-          this.pcPrintShowCollect = false;
-          this.$print(this.$refs.printCodeDetail);
-          this.pcPrintShowDetail = false;
           this.printCount = 0;
         }
       }
@@ -1218,6 +1155,7 @@ export default {
         this.isPdaCollect = true;
         this.printMethods()
       } else {
+        this.ifGlue = true;
         this.trashCollect();
         this.pcPrintShowCollect = true;
         this.pcPrintShowDetail = false;
@@ -1228,8 +1166,10 @@ export default {
 
     // 不干胶打印
     gluePrint () {
+      this.ifGlue = false;
       this.choosePrintType = false;
-      this.chooseGluePrintType = true
+      this.chooseGluePrintType = true;
+      this.changePrintBtn(false);
     },
 
     // 不干胶明细打印
@@ -1238,10 +1178,23 @@ export default {
         this.isPdaCollect = false;
         this.printMethods()
       } else {
-        this.pcPrintShowDetail = true;
-        this.pcPrintShowCollect = false;
-        this.$print(this.$refs.printCodeDetail);
-        this.pcPrintShowDetail = false;
+        this.socketData = [];
+        this.trashCollect();
+        for (let i = 0; i < this.lajiCode.length; i++) {
+          this.socketData.push(
+            [
+              `科室:${this.lajiCode[i].depName}`,
+              `医废编号:${this.lajiCode[i].barCode}`,
+              `垃圾类型:${this.lajiCode[i].id}`,
+              `垃圾重量:${Number(this.lanyaCz[i]).toFixed(2)}kg`,
+              `收集人:${this.userInfo.workerName}`,
+              `交接人:${this.yihuCode[0].workerNumber}`,
+              `时间:${this.collectTime}`
+            ]
+          )
+        };
+        console.log(this.socketData);
+        this.$socket.emit('print', {times: 2, data: this.socketData})
       }
     },
 
@@ -1251,11 +1204,35 @@ export default {
         this.isPdaCollect = true;
         this.printMethods()
       } else {
+        this.socketData = [];
         this.trashCollect();
-        this.pcPrintShowCollect = true;
-        this.pcPrintShowDetail = false;
-        this.$print(this.$refs.printCode);
-        this.pcPrintShowCollect = false
+        if (this.lajiCode.length == 1) {
+          this.socketData.push(
+            [
+              `科室:${this.lajiCode[0].depName}`,
+              `垃圾类型:${this.lajiCode[0].id}`,
+              `垃圾重量:${Number(this.lanyaCz[0]).toFixed(2)}kg`,
+              `收集人:${this.userInfo.workerName}`,
+              `交接人:${this.yihuCode[0].workerNumber}`,
+              `时间:${this.collectTime}`
+            ]
+          )
+        } else {
+          for (let item of this.pcMapList) {
+            this.socketData.push(
+              [ 
+                `科室:${this.lajiCode[0].depName}`,
+                `垃圾类型:${item['type']}`,
+                `垃圾重量:${Number(item['weight']).toFixed(2)}kg`,
+                `收集人:${this.userInfo.workerName}`,
+                `交接人:${this.yihuCode[0].workerNumber}`,
+                `时间:${this.collectTime}`
+              ]
+            )
+          }
+        };
+        console.log('汇总数据',this.socketData);
+        this.$socket.emit('print', {times: 2, data: this.socketData})
       }
     },
 
@@ -1282,7 +1259,7 @@ export default {
       if (this.lajiCode.length == 1) {
         if (this.isPdaCollect) {
           let flag = true;
-          this.printProof(this.lajiCode[0].barCode,this.keshiCode[0].depName,this.lajiCode[0].id,
+          this.printProof(this.lajiCode[0].barCode,this.lajiCode[0].depName,this.lajiCode[0].id,
             this.lanyaCz[0],this.userInfo.workerName,this.yihuCode[this.yihuCode.length-1].workerNumber);
           if (flag) {
             this.printProof(this.lajiCode[0].barCode,this.keshiCode[0].depName,this.lajiCode[0].id,
@@ -1290,10 +1267,10 @@ export default {
           }
         } else {
           let flagOther = true;
-          this.printProof(this.lajiCode[0].barCode,this.keshiCode[0].depName,this.lajiCode[0].id,
+          this.printProof(this.lajiCode[0].barCode,this.lajiCode[0].depName,this.lajiCode[0].id,
             this.lanyaCz[0],this.userInfo.workerName,this.yihuCode[this.yihuCode.length-1].workerNumber);
           if (flagOther) {
-          this.printProof(this.lajiCode[0].barCode,this.keshiCode[0].depName,this.lajiCode[0].id,
+          this.printProof(this.lajiCode[0].barCode,this.lajiCode[0].depName,this.lajiCode[0].id,
             this.lanyaCz[0],this.userInfo.workerName,this.yihuCode[this.yihuCode.length-1].workerNumber);
           }
         }
@@ -1305,7 +1282,7 @@ export default {
           // 循环调用打印接口
           for (var i = 0, len = this.lajiCode.length; i<len; i++) {
             if (i == Object.values(map).length) {return};
-            this.printProof(this.lajiCode[i].barCode,this.keshiCode[0].depName,Object.keys(map)[i],
+            this.printProof(this.lajiCode[i].barCode,this.lajiCode[i].depName,Object.keys(map)[i],
             Object.values(map)[i],this.userInfo.workerName,this.yihuCode[this.yihuCode.length-1].workerNumber);
             // 打印两联
             if (timeNum < 2) { 
@@ -1321,7 +1298,7 @@ export default {
           let timeNumOther = 1;
           // 循环调用打印接口
           for (var j = 0, len = this.lajiCode.length; j<len; j++) {
-            this.printProof(this.lajiCode[j].barCode,this.keshiCode[0].depName,this.lajiCode[j].id,
+            this.printProof(this.lajiCode[j].barCode,this.lajiCode[j].depName,this.lajiCode[j].id,
             this.lanyaCz[j],this.userInfo.workerName,this.yihuCode[this.yihuCode.length-1].workerNumber);
             // 打印两联
             if (timeNumOther < 2) {
@@ -1490,7 +1467,8 @@ export default {
       this.changebluetoothWeighShow(true);
       this.changeIsPlus(true);
       this.changeBagCodeShow(false);
-      this.changeIsStoreWeight(false)
+      this.changeIsStoreWeight(false);
+      this.$socket.emit('weight', 'getweight')
     },
 
     // 蓝牙或usb称重
@@ -1507,7 +1485,8 @@ export default {
           this.changebluetoothWeighShow(true);
           this.changeIsPlus(true);
           this.changeBagCodeShow(false);
-          this.changeIsStoreWeight(false)
+          this.changeIsStoreWeight(false);
+          this.$socket.emit('weight', 'getweight')
         }
       }
       this.changeIsBlueWeight(true)
@@ -1708,14 +1687,14 @@ export default {
         }
         .showBackoutButton {
           button {
-            background: #eaeaea;
-            color: black
+            background: @left-button;
+            color: #fff
           }
         }
         .showPrintBtn {
           button {
-            background: #eaeaea;
-            color: black
+            background: @left-button;
+            color: #fff
           }
         }
         .showOtherButton {

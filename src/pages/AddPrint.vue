@@ -74,7 +74,7 @@
       </p>
     </div>
     <!-- 打印内容 -->
-      <!-- 汇总打印 -->
+        <!-- 汇总打印 -->
       <section class="bills-data" v-if="pcPrintShowCollect" ref="print"
         style="position:fixed;
         top:0;
@@ -154,55 +154,7 @@
           </div>
         </div>
       </section>
-      <!-- 明细打印 -->
-      <section class="bills-data" v-if="pcPrintShowDetail" ref="printCodeDetail"
-        style="position:fixed;
-        top:0;
-        left:0;
-        width:100%;
-        height:85vh;
-        overflow: auto;                
-        background: #fff;
-        z-index:1000"
-      >
-        <div>
-          <!-- 第一联 -->
-          <div class="div-wrapper" v-for="(item, index) in lajiBarCode"
-            style="height:264px;
-            width:100%;
-            border-bottom:1px dashed #333;
-            background:transparent;
-            padding-top:40px;"
-          >
-            <p style="text-align:center;margin-bottom:20px;font-size:18px">医废回收小票</p>
-            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">科室: {{keshiCode[0]}}</p>
-            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">医废编号: {{lajiBarCode[index]}}</p>
-            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">垃圾类型: {{lajiCodeName[index]}}</p>
-            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">垃圾重量: {{lanyaCz[index]}}kg</p>
-            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">收集人: {{collectWorkerName[index]}}</p>
-            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">交接人: {{yihuCode[index]}}</p>
-            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">时间: {{pcCreatimeList[index]}}</p>
-          </div>
-          <!-- 第二联 -->
-          <div class="div-wrapper" v-for="(item, index) in lajiBarCode"
-            style="height:264px;
-            width:100%;
-            border-bottom:1px dashed #333;
-            background:transparent;
-            padding-top:40px;"
-          >
-            <p style="text-align:center;margin-bottom:20px;font-size:18px">医废回收小票</p>
-            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">科室: {{keshiCode[0]}}</p>
-            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">医废编号: {{lajiBarCode[index]}}</p>
-            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">垃圾类型: {{lajiCodeName[index]}}</p>
-            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">垃圾重量: {{lanyaCz[index]}}kg</p>
-            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">收集人: {{collectWorkerName[index]}}</p>
-            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">交接人: {{yihuCode[index]}}</p>
-            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">时间: {{pcCreatimeList[index]}}</p>
-          </div>
-        </div>
-      </section>
-       <!--收集医废批次号选择弹框 -->
+      <!--收集医废批次号选择弹框 -->
       <div class="batchNumberDialog">
         <van-dialog
           v-model="chooseBatchNumberShow"
@@ -285,7 +237,7 @@ export default {
       startTimePop: false,
       printCount: 0,
       pcPrintShowCollect: false,
-      pcPrintShowDetail: false,
+      pcPrintStickyShowCollect: false,
       contentMiddleShow: true,
       pcCreatimeList: [],
       showLoadingHint: false,
@@ -327,7 +279,9 @@ export default {
       lajiCodeName: [],
       lanyaCz: [],
       yihuCode: [],
-      collectWorkerName: []
+      collectWorkerName: [],
+      socketData: [],
+      isRegister: false,
     };
   },
   computed: {
@@ -363,6 +317,26 @@ export default {
     this.querySelectInfo();
     this.initWasteInfo()
   },
+
+  sockets: {
+    connect () {
+      console.log('建立链接');
+      this.id = this.$socket.id;
+      // 监听connect事件
+      // this.$socket.emit('weight', 'getweight')
+    },
+    disconnect () {
+      console.log('断开链接')
+    },
+    reconnect () {
+      console.log('重新链接')
+    },
+    message (data) {
+      if (IsPC()) {
+      }     
+    }
+  },
+
   methods: {
     ...mapMutations([
       'changeTitleTxt',
@@ -709,27 +683,33 @@ export default {
       };
       this.printCount++;
       if (this.printCount == 1) {
-        this.choosePrintType = true;
-        return
+        if (this.isRegister) {
+          this.choosePrintType = true;
+          return
+        } else {
+          this.choosePrintType = true
+        }
+      } else {
+        if (!this.isRegister) {
+          this.choosePrintType = true
+        }
       };
       if (IsPC()) {
+        // 常规汇总打印
         if (this.pcPrintShowCollect) {
-          this.trashCollect();
           this.pcPrintShowCollect = true;
-          this.pcPrintShowDetail = false;
+          this.pcPrintStickyShowCollect = false;
           this.$print(this.$refs.print);
           this.pcPrintShowCollect = false;
           // 提交打印数据到服务端
           this.postPrintData()
-        } else {
-          this.pcPrintShowDetail = true;
-          this.pcPrintShowCollect = false;
-          this.$print(this.$refs.printCodeDetail);
-          this.pcPrintShowDetail = false;
-          // 提交打印数据到服务端
-          this.postPrintData()
         }
       }
+    },
+
+    // 重连socket
+    againConnect () {
+      this.$socket.connect()
     },
 
     // 常规打印
@@ -738,9 +718,10 @@ export default {
         this.isPdaCollect = true;
         this.printMethods()
       } else {
+        this.isRegister = true;
         this.trashCollect();
         this.pcPrintShowCollect = true;
-        this.pcPrintShowDetail = false;
+        this.pcPrintStickyShowCollect = false;
         this.$print(this.$refs.print);
         this.pcPrintShowCollect = false
       }
@@ -748,6 +729,10 @@ export default {
 
     // 不干胶打印
     gluePrint () {
+      if (IsPC()) {
+        this.againConnect();
+      };
+      this.isRegister = false;
       this.choosePrintType = false;
       this.chooseGluePrintType = true
     },
@@ -758,10 +743,23 @@ export default {
         this.isPdaCollect = false;
         this.printMethods()
       } else {
-        this.pcPrintShowDetail = true;
-        this.pcPrintShowCollect = false;
-        this.$print(this.$refs.printCodeDetail);
-        this.pcPrintShowDetail = false
+        this.trashCollect();
+        this.socketData = [];
+        for ( let i = 0;i < this.lajiBarCode.length;i++) {
+          this.socketData.push(
+            [
+              `科室:${this.keshiCode[0]}`,
+              `医废编号:${this.lajiBarCode[i]}`,
+              `垃圾类型:${this.lajiCodeName[i]}`,
+              `垃圾重量:${this.lanyaCz[i].toFixed(2)}kg`,
+              `收集人:${this.collectWorkerName[i]}`,
+              `交接人:${this.yihuCode[i]}`,
+              `时间:${this.pcCreatimeList[i]}`,
+            ]
+          )
+        };
+        console.log(this.socketData);
+        this.$socket.emit('print', {times: 2, data: this.socketData});
       }
     },
 
@@ -772,10 +770,34 @@ export default {
         this.printMethods()
       } else {
         this.trashCollect();
-        this.pcPrintShowCollect = true;
-        this.pcPrintShowDetail = false;
-        this.$print(this.$refs.print);
-        this.pcPrintShowCollect = false;
+        this.socketData = [];
+        if (this.lajiBarCode.length == 1) {
+          this.socketData.push(
+            [
+              `科室:${this.keshiCode[0]}`,
+              `垃圾类型:${this.lajiCodeName[0]}`,
+              `垃圾重量:${this.lanyaCz[0].toFixed(2)}kg`,
+              `收集人:${this.collectWorkerName[0]}`,
+              `交接人:${this.yihuCode[0]}`,
+              `时间:${this.pcCreatimeList[0]}`,
+            ]
+          )
+        } else {
+          for (let item of this.pcMapList) {
+            this.socketData.push(
+              [ 
+                `科室:${this.keshiCode[0]}`,
+                `垃圾类型:${item['type']}`,
+                `垃圾重量:${item['weight'].toFixed(2)}kg`,
+                `收集人:${this.collectWorkerName[0]}`,
+                `交接人:${this.yihuCode[0]}`,
+                `时间:${this.pcCreatimeList[0]}`,
+              ]
+            )
+          }
+        };
+        console.log(this.socketData);
+        this.$socket.emit('print', {times: 2, data: this.socketData});
       }
     },
 
@@ -916,7 +938,7 @@ export default {
             position: absolute;
             top: 80px;
             right: 10px;
-            z-index: 1000;
+            z-index: 1;
             /deep/ .van-icon {
               background: @color-theme;
               border-color: @color-theme

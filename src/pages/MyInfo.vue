@@ -184,7 +184,6 @@ export default {
           if (res.data.code == 200) {
             this.clearPartStorage();
             this.$router.replace({name:'login'})
-          } else {
           }
         })
         .catch((err) => {
@@ -216,9 +215,11 @@ export default {
       removeStore('departmentData');
       removeStore('pointData');
       removeStore('wasteTypeData');
-      // 清除存储的收集批次号和顶部导航栏文字说明
+      // 重置存储的收集批次号和顶部导航栏文字说明
       setStore('currentBatchNumber','');
-      setStore('currentTitle','')
+      setStore('currentTitle','');
+      // 重置存储的请求token信息
+      setStore('questToken', null)
     }
   }
 }

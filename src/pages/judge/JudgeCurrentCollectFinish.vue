@@ -127,7 +127,9 @@ export default {
     showDialog () {
       this.$dialog.confirm({
         message: '此科室收集已完成?',
-        closeOnPopstate: true
+        closeOnPopstate: true,
+        confirmButtonColor: 'orange',
+        cancelButtonColor: 'red'
       })
       .then(() => {
         if (this.lajiCode.length == 0) {

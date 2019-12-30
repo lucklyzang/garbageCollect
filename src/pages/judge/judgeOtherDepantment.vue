@@ -57,7 +57,9 @@ export default {
     showDialog () {
       this.$dialog.confirm({
         message: '是否其它科室收集?',
-        closeOnPopstate: true
+        closeOnPopstate: true,
+        confirmButtonColor: '#0041ff',
+        cancelButtonColor: 'red'
       }).then(() => {
         this.$router.push({path: 'medicalCollect'});
         this.changeTitleTxt({tit: '医废收集'});
@@ -65,7 +67,6 @@ export default {
         this.initState()
       }).catch(() => {
         this.$router.push({path:'home'});
-        this.sendDisconnect();
         this.changeTitleTxt({tit: '医废监测'});
         setStore('currentTitle','医废监测');
         this.initState()

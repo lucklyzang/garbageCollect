@@ -513,7 +513,7 @@ export default {
       }
     }
     .content-middle-top {
-      background: #49e347;
+      background: #6be7d8;
       height: 26px;
       position: relative;
       color: #fff;

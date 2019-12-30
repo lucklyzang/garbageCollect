@@ -40,7 +40,8 @@ store.commit('refreshStoreCollectInfo',JSON.parse(getStore('currentItem')));
 store.commit('refreshStoreCurrentName',JSON.parse(getStore('refreshCurrentItem')));
 // 页面刷新后重新存入收集批次号
 store.commit('createBatchNumber', getStore('currentBatchNumber'));
-
+// 页面刷新重新存入请求token
+store.commit('changeToken', getStore('questToken'));
 if (IsPC()) {
   Vue.use(new VueSocketIO({
      debug: true,

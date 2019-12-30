@@ -1,5 +1,12 @@
 import axios from 'axios'
 import store from '@/store'
+import router from '../router'
+import Vue from 'vue';
+import { Dialog } from 'vant';
+import {  removeStore } from '@/common/js/utils'
+// 全局注册
+Vue.use(Dialog);
+import { setStore } from '@/common/js/utils'
 // http://39.100.111.20:8080/blink 测试地址
 // http://47.108.27.209:8080/blink 正式测试地址
 // http://47.108.81.136:8080/blink 正式地址
@@ -14,9 +21,8 @@ const service = axios.create({
 service.interceptors.request.use(
   config => {
     if (store.getters.token) {
-      config.headers['X-Token'] = 'default'
-    }
-    config.headers['REQUEST_TYPE'] = '1'
+      config.headers['Authorization'] = store.getters.token
+    };
     return config
   },
 
@@ -29,6 +35,29 @@ service.interceptors.request.use(
 // response interceptor
 service.interceptors.response.use(
   response => {
+    // 获取响应头token,并存储到vuex和localStorage中
+    if (response.headers['token']) {
+      store.commit('changeToken', response.headers['token']);
+      setStore('questToken', response.headers['token']);
+    };
+    if (!response.headers.hasOwnProperty('token')) {
+      // Dialog.alert({
+      //   message: 'token已经过期,3秒后将自动跳转到登录页面',
+      //   closeOnPopstate: true
+      // }).then(() => {
+      // });
+      // 登录状态置为false
+      removeStore('isLogin');
+      // 清除当前用户h5存储的医废收集流程信息
+      removeStore('currentCollectMsg');
+      removeStore('currentStep');
+      removeStore('weightMethods');
+      removeStore('continueCurrentCollect');
+      // 跳转到登录页面
+      // setTimeout(() => {
+      //   router.push({path: '/'})
+      // },3000);
+    };
     return response
   },
   (err) => {

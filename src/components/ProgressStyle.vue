@@ -67,6 +67,7 @@ export default {
 
 </script>
 <style lang='less' scoped>
+@import "../common/stylus/modifyUi.less";
   .progress-wrapper {
     position: relative;
     width: 100%;
@@ -101,7 +102,7 @@ export default {
         position: absolute;
         height: 5px;
         border-radius: 1px;
-        background: #97f695;
+        background: @color-theme;
         top: 12px;
         right: 0;
         font-weight: bold
@@ -110,11 +111,11 @@ export default {
     .inner-circle-style {
       border: none !important;
       color: #fff !important;
-      background: #05dc00 !important;
+      background: @color-theme !important;
       border: none
     }
     .inner-line-style {
-      background: #05dc00  !important
+      background: @color-theme !important
     }
   }
   .text-wrapper {

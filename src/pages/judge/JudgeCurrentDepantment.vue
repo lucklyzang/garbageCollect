@@ -55,7 +55,9 @@ export default {
     showDialog () {
       this.$dialog.confirm({
         message: '是否当前科室继续收集?',
-        closeOnPopstate: true
+        closeOnPopstate: true,
+        confirmButtonColor: 'black',
+        cancelButtonColor: 'red'
       }).then(() => {
         this.$router.push({path: 'medicalCollect'});
         this.changeTitleTxt({tit: '医废收集'});
