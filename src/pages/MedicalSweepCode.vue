@@ -1117,7 +1117,6 @@ export default {
     //打印凭单
     finishCollect () {
       // num,dep,category,weight,collector,handover
-      // this.lajiCode[0].wasteName,
       // 编号, 科室, 垃圾类型，垃圾重量，收集人，交接人
       if (this.lajiCode.length == 0) {
         this.$dialog.alert({
