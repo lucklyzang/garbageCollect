@@ -32,7 +32,7 @@
             <van-button type="info" @click="print" size="normal">打印</van-button>
           </span>
           <span class="showCollectButton">
-            <van-button type="info" @click="sweepCodeBtn" size="normal">扫码测试</van-button>
+            <van-button type="info" @click="sweepCodeBtn" size="normal">扫码</van-button>
           </span>
       </div>
         <!-- 打印内容 -->
