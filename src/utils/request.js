@@ -41,11 +41,11 @@ service.interceptors.response.use(
       setStore('questToken', response.headers['token']);
     };
     if (!response.headers.hasOwnProperty('token')) {
-      // Dialog.alert({
-      //   message: 'token已经过期,3秒后将自动跳转到登录页面',
-      //   closeOnPopstate: true
-      // }).then(() => {
-      // });
+      Dialog.alert({
+        message: 'token已经过期,3秒后将自动跳转到登录页面',
+        closeOnPopstate: true
+      }).then(() => {
+      });
       // 登录状态置为false
       removeStore('isLogin');
       // 清除当前用户h5存储的医废收集流程信息
@@ -54,9 +54,9 @@ service.interceptors.response.use(
       removeStore('weightMethods');
       removeStore('continueCurrentCollect');
       // 跳转到登录页面
-      // setTimeout(() => {
-      //   router.push({path: '/'})
-      // },3000);
+      setTimeout(() => {
+        router.push({path: '/'})
+      },3000);
     };
     return response
   },
