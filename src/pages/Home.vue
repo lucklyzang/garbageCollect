@@ -1,5 +1,5 @@
 <template>
-  <div class="word-cup">
+  <div class="content-wrapper">
     <HeaderTop :title="navTopTitle">
       <van-icon name="arrow-left" slot="left" @click="backTo"></van-icon> 
       <van-icon name="manager-o" slot="right" @click="skipMyInfo"></van-icon> 
@@ -7,17 +7,15 @@
     <ul class="left-dropDown" v-show="leftDownShow">
       <li v-for="(item, index) in leftDropdownDataList" :class="{liStyle:liIndex == index}" @click="leftLiCLick(index)">{{item}}</li>
     </ul>
-    <div class="content">
-      <div class="content-header" v-if="!juddgeIspc()">
-        <img :src="bannerUrl" alt="">
-      </div>
-      <div class="content-middle content-middle-home">
-        <div class="content-list" v-for="item in itemList" @click="routerSkip(item.name, item.itemText)">
-          <p class="title-img">
-            <img :src="item.imgUrl" alt="">
-          </p>
-          <p class="title-content">{{item.itemText}}</p>
-        </div>
+    <div class="content-header" v-if="!juddgeIspc()">
+      <img :src="bannerUrl" alt="">
+    </div>
+    <div class="content-middle content-middle-home">
+      <div class="content-list" v-for="item in itemList" @click="routerSkip(item.name, item.itemText)">
+        <p class="title-img">
+          <img :src="item.imgUrl" alt="">
+        </p>
+        <p class="title-content">{{item.itemText}}</p>
       </div>
     </div>
     <!-- <FooterBottom></FooterBottom>-->
@@ -328,15 +326,14 @@
   @import "../common/stylus/variable.less";
   @import "../common/stylus/mixin.less";
   @import "../common/stylus/modifyUi.less";
-  .content {
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    background: #fff;
-    overflow: auto;
+  .content-wrapper {
+    .content-wrapper();
     .content-middle {
+      flex:1;
+      overflow: auto;
       margin: 0 auto;
       margin-top: 10px;
+      padding: 6px
     }
     .content-header {
       height: 150px;
@@ -344,9 +341,9 @@
         width: 100%;
         height: 100%
       }
+    }  
+    .left-dropDown {
+      .rightDropDown
     }
-  }   
-  .left-dropDown {
-    .rightDropDown
   }
 </style>
