@@ -184,6 +184,12 @@ export default {
           if (res.data.code == 200) {
             this.clearPartStorage();
             this.$router.replace({name:'login'})
+          } else {
+            this.$dialog.alert({
+              message: `${res.data.msg}`,
+              closeOnPopstate: true
+            }).then(() => {
+            })
           }
         })
         .catch((err) => {
