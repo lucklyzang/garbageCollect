@@ -8,7 +8,7 @@
       <li v-for="(item, index) in leftDropdownDataList" :class="{liStyle:liIndex == index}" @click="leftLiCLick(index)">{{item}}</li>
     </ul>
     <div class="content">
-      <div class="content-header" v-if="juddgeIspc()">
+      <div class="content-header" v-if="!juddgeIspc()">
         <img :src="bannerUrl" alt="">
       </div>
       <div class="content-middle content-middle-home">
