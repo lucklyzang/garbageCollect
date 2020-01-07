@@ -628,8 +628,13 @@ export default {
       this.collectWorkerName = []
     },
 
-    // 打印方法
-    printProof (num,dep,category,weight,collector,handover) {
+    // 打印方法汇总
+    printInfoNoNum (dep,category,weight,collector,handover) {
+      window.android.printInfoNoNum(dep,category,weight,collector,handover)
+    },
+
+    // 打印方法明细
+    printInfo (num,dep,category,weight,collector,handover) {
       window.android.printInfo(num,dep,category,weight,collector,handover)
     },
 
@@ -817,19 +822,19 @@ export default {
         // 汇总打印
         if (this.isPdaCollect) {
           let flag = true;
-          this.printProof(this.lajiBarCode[0],this.keshiCode[0],this.lajiCodeName[0],
+          this.printInfoNoNum(this.keshiCode[0],this.lajiCodeName[0],
             this.lanyaCz[0],this.collectWorkerName[0],this.yihuCode[0])
           if (flag) {
-          this.printProof(this.lajiBarCode[0],this.keshiCode[0],this.lajiCodeName[0],
+          this.printInfoNoNum(this.keshiCode[0],this.lajiCodeName[0],
             this.lanyaCz[0],this.collectWorkerName[0],this.yihuCode[0])
           }
         } else {
           // 明细打印
           let flagOther = true;
-          this.printProof(this.lajiBarCode[0],this.keshiCode[0],this.lajiCodeName[0],
+          this.printInfo(this.lajiBarCode[0],this.keshiCode[0],this.lajiCodeName[0],
             this.lanyaCz[0],this.collectWorkerName[0],this.yihuCode[0])
           if (flagOther) {
-          this.printProof(this.lajiBarCode[0],this.keshiCode[0],this.lajiCodeName[0],
+          this.printInfo(this.lajiBarCode[0],this.keshiCode[0],this.lajiCodeName[0],
             this.lanyaCz[0],this.collectWorkerName[0],this.yihuCode[0])
           }
         }
@@ -840,7 +845,7 @@ export default {
           let timeNum = 1;
           // 循环调用打印接口
           for (var i = 0, len = Object.values(map).length; i<len; i++) {
-            this.printProof(this.lajiBarCode[0],this.keshiCode[i],Object.keys(map)[i],
+            this.printInfoNoNum(this.keshiCode[i],Object.keys(map)[i],
             Object.values(map)[i],this.collectWorkerName[0],this.yihuCode[0]);
             // 打印两联
             if (timeNum < 2) { 
@@ -856,7 +861,7 @@ export default {
           let timeNumOther = 1;
           // 循环调用打印接口
           for (var j = 0, len = this.lajiBarCode.length; j<len; j++) {
-            this.printProof(this.lajiBarCode[j],this.keshiCode[j],this.lajiCodeName[j],
+            this.printInfo(this.lajiBarCode[j],this.keshiCode[j],this.lajiCodeName[j],
               this.lanyaCz[j],this.collectWorkerName[j],this.yihuCode[j])
             // 打印两联
             if (timeNumOther < 2) {
