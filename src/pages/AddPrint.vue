@@ -629,13 +629,13 @@ export default {
     },
 
     // 打印方法汇总
-    printInfoNoNum (dep,category,weight,collector,handover) {
-      window.android.printInfoNoNum(dep,category,weight,collector,handover)
+    printInfoNoNum (dep,category,weight,collector,handover,time) {
+      window.android.printAllInfoNoNum(dep,category,weight,collector,handover,time)
     },
 
     // 打印方法明细
-    printInfo (num,dep,category,weight,collector,handover) {
-      window.android.printInfo(num,dep,category,weight,collector,handover)
+    printInfo (num,dep,category,weight,collector,handover,time) {
+      window.android.printAllInfo(num,dep,category,weight,collector,handover,time)
     },
 
     // 打印凭条
@@ -664,7 +664,6 @@ export default {
         });
         return
       };
-
       for (let item of this.printData) {
         this.lajiBarCode.push(item.collectNumber),
         this.keshiCode.push(item.depName),
@@ -675,8 +674,6 @@ export default {
         this.pcCreatimeList.push(item.createTime)
       };
 
-      // num,dep,category,weight,collector,handover
-      // this.lajiCode[0].wasteName,
       // 编号, 科室, 垃圾类型，垃圾重量，收集人，交接人
       if (this.lajiBarCode.length == 0) {
         this.$dialog.alert({
@@ -823,19 +820,19 @@ export default {
         if (this.isPdaCollect) {
           let flag = true;
           this.printInfoNoNum(this.keshiCode[0],this.lajiCodeName[0],
-            this.lanyaCz[0],this.collectWorkerName[0],this.yihuCode[0])
+            this.lanyaCz[0],this.collectWorkerName[0],this.yihuCode[0],this.pcCreatimeList[0])
           if (flag) {
           this.printInfoNoNum(this.keshiCode[0],this.lajiCodeName[0],
-            this.lanyaCz[0],this.collectWorkerName[0],this.yihuCode[0])
+            this.lanyaCz[0],this.collectWorkerName[0],this.yihuCode[0],this.pcCreatimeList[0])
           }
         } else {
           // 明细打印
           let flagOther = true;
           this.printInfo(this.lajiBarCode[0],this.keshiCode[0],this.lajiCodeName[0],
-            this.lanyaCz[0],this.collectWorkerName[0],this.yihuCode[0])
+            this.lanyaCz[0],this.collectWorkerName[0],this.yihuCode[0],this.pcCreatimeList[0])
           if (flagOther) {
           this.printInfo(this.lajiBarCode[0],this.keshiCode[0],this.lajiCodeName[0],
-            this.lanyaCz[0],this.collectWorkerName[0],this.yihuCode[0])
+            this.lanyaCz[0],this.collectWorkerName[0],this.yihuCode[0],this.pcCreatimeList[0])
           }
         }
       } else if (this.lajiBarCode.length > 1) {
@@ -846,7 +843,7 @@ export default {
           // 循环调用打印接口
           for (var i = 0, len = Object.values(map).length; i<len; i++) {
             this.printInfoNoNum(this.keshiCode[i],Object.keys(map)[i],
-            Object.values(map)[i],this.collectWorkerName[0],this.yihuCode[0]);
+            Object.values(map)[i],this.collectWorkerName[0],this.yihuCode[0],this.pcCreatimeList[0]);
             // 打印两联
             if (timeNum < 2) { 
               if (i == Object.values(map).length-1) {
@@ -862,7 +859,7 @@ export default {
           // 循环调用打印接口
           for (var j = 0, len = this.lajiBarCode.length; j<len; j++) {
             this.printInfo(this.lajiBarCode[j],this.keshiCode[j],this.lajiCodeName[j],
-              this.lanyaCz[j],this.collectWorkerName[j],this.yihuCode[j])
+              this.lanyaCz[j],this.collectWorkerName[j],this.yihuCode[j],this.pcCreatimeList[j])
             // 打印两联
             if (timeNumOther < 2) {
               if (j == this.lanyaCz.length-1) { 
