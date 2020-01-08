@@ -109,7 +109,7 @@ export default {
     return {
       checkWaringMsg: '',
       pcPrintShow: false,
-      sweepCodeMsg: '',
+      sweepCodeMsg: null,
       choosePrintType: false,
       isRegister: false,
       printCount: 0
@@ -191,7 +191,7 @@ export default {
     },
     // 摄像头扫码后的回调
     scanQRcodeCallback(code) {
-      this.sweepCodeMsg = code.toString()
+      this.sweepCodeMsg = JSON.stringify(code)
     },
     // 扫码
     sweepCodeBtn () {
