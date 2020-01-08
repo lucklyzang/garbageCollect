@@ -191,7 +191,7 @@ export default {
     },
     // 摄像头扫码后的回调
     scanQRcodeCallback(code) {
-      this.sweepCodeMsg = code
+      this.sweepCodeMsg = JSON.parse(code)
     },
     // 扫码
     sweepCodeBtn () {
