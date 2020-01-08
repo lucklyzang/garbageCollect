@@ -128,8 +128,13 @@ export default {
   },
 
   mounted () {
+    // 二维码回调方法绑定到window下面,提供给外部调用
+    let me = this;
+    window['scanQRcodeCallback'] = (code) => {
+      me.scanQRcodeCallback(code);
+    };
     // 控制设备物理返回按键
-   if (!IsPC()) {
+    if (!IsPC()) {
       let that = this;
       pushHistory()
       that.gotoURL(() => { 
@@ -139,7 +144,7 @@ export default {
         setStore('currentTitle','医废监测')
       })
     };
-    this.isExecute()
+    this.isExecute();
   },
  
   sockets: {
@@ -184,8 +189,15 @@ export default {
         this.$socket.emit('weight', 'getweight')
       }
     },
+    // 摄像头扫码后的回调
+    scanQRcodeCallback(code) {
+      this.sweepCodeMsg = code
+    },
     // 扫码
     sweepCodeBtn () {
+      if (!IsPC()) {
+        window.android.scanQRcode()
+      }
     },
     // 是否执行扫码枪的绑定方法
     isExecute () {

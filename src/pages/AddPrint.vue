@@ -315,7 +315,7 @@ export default {
     this.queryAllBatch(this.userInfo.proId,this.userInfo.id,this.userInfo.depId);
     this.initDate();
     this.querySelectInfo();
-    this.initWasteInfo()
+    this.initWasteInfo();
   },
 
   sockets: {
