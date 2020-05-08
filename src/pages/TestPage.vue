@@ -102,7 +102,7 @@ import { mapGetters, mapMutations } from 'vuex'
 import HeaderTop from '../components/HeaderTop'
 import Print from '@/plugs/print'
 import Vue from 'vue'
-import { setStore, IsPC, removeStore, scanCode} from '@/common/js/utils'
+import { setStore, IsPC, removeStore, scanCode, dealMedicalWaste} from '@/common/js/utils'
 Vue.use(Print)
 export default {
   data () {

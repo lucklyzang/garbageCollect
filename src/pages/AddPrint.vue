@@ -121,7 +121,7 @@
         </div>
         <div v-else>
           <!-- 第一联 -->
-          <div v-for="(item, index) in pcMapList"
+          <div v-for="(item, index) in mergeWasteType"
             style="height:240px;
             width:100%;
             border-bottom:1px dashed #333;
@@ -130,14 +130,14 @@
           >
             <p style="text-align:center;margin-bottom:20px;font-size:18px">医废回收小票</p>
             <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">科室: {{keshiCode[0]}}</p>
-            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">垃圾类型: {{pcMapList[index]['type']}}</p>
-            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">垃圾重量: {{(pcMapList[index]['weight']).toFixed(2)}}kg</p>
+            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">垃圾类型: {{item}}</p>
+            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">垃圾重量: {{(mergeWasteWeight[index]).toFixed(2)}}kg</p>
             <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">收集人: {{collectWorkerName[0]}}</p>
             <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">交接人: {{yihuCode[0]}}</p>
-            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">时间: {{pcCreatimeList[0]}}</p>
+            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">时间: {{mergeWasteCollectTime[index]}}</p>
           </div>
           <!-- 第二联 -->
-          <div v-for="(item, index) in pcMapList"
+          <div v-for="(item, index) in mergeWasteType"
             style="height:240px;
             width:100%;
             border-bottom:1px dashed #333;
@@ -146,11 +146,11 @@
           >
             <p style="text-align:center;margin-bottom:20px;font-size:18px">医废回收小票</p>
             <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">科室: {{keshiCode[0]}}</p>
-            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">垃圾类型: {{pcMapList[index]['type']}}</p>
-            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">垃圾重量: {{(pcMapList[index]['weight']).toFixed(2)}}kg</p>
+            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">垃圾类型: {{item}}</p>
+            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">垃圾重量: {{(mergeWasteWeight[index]).toFixed(2)}}kg</p>
             <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">收集人: {{collectWorkerName[0]}}</p>
             <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">交接人: {{yihuCode[0]}}</p>
-            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">时间: {{pcCreatimeList[0]}}</p>
+            <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">时间: {{mergeWasteCollectTime[index]}}</p>
           </div>
         </div>
       </section>
@@ -210,7 +210,7 @@ import { mapGetters, mapMutations } from 'vuex'
 import Loading from '../components/Loading'
 import VanFieldSelectPicker from '../components/VanFieldSelectPicker'
 import {queryPrintInfo, queryOffice, queryCollectPerson, postReplenishPrintData} from '../api/rubbishCollect.js'
-import { formatTime, setStore, IsPC, removeStore, judgeKeyEquail } from '@/common/js/utils'
+import { formatTime, setStore, IsPC, removeStore, judgeKeyEquail, dealMedicalWaste } from '@/common/js/utils'
 import {getDictionaryData} from '@/api/login.js'
 import Vue from 'vue'
 import Print from '@/plugs/print'
@@ -231,7 +231,6 @@ export default {
       chooseGluePrintType: false,
       isPdaCollect: false,
       leftDropdownDataList: ['刷新','我的','测试'],
-      pcMapList: [],
       printData: [],
       endTimePop: false,
       startTimePop: false,
@@ -282,6 +281,9 @@ export default {
       collectWorkerName: [],
       socketData: [],
       isRegister: false,
+      mergeWasteType: [],
+      mergeWasteWeight: [],
+      mergeWasteCollectTime: []
     };
   },
   computed: {
@@ -665,11 +667,11 @@ export default {
         return
       };
       for (let item of this.printData) {
-        this.lajiBarCode.push(item.collectNumber),
-        this.keshiCode.push(item.depName),
-        this.lajiCodeName.push(item.wasteName),
-        this.lanyaCz.push(item.weight),
-        this.yihuCode.push(item.careName),
+        this.lajiBarCode.push(item.collectNumber);
+        this.keshiCode.push(item.depName);
+        this.lajiCodeName.push(item.wasteName);
+        this.lanyaCz.push(item.weight);
+        this.yihuCode.push(item.careName);
         this.collectWorkerName.push(item.workerName);
         this.pcCreatimeList.push(item.createTime)
       };
@@ -717,10 +719,12 @@ export default {
     // 常规打印
     conventionPrint () {
       if (!IsPC()) {
+        this.choosePrintType = false;
         this.isPdaCollect = true;
         this.printMethods()
       } else {
         this.isRegister = true;
+        this.choosePrintType = false;
         this.trashCollect();
         this.pcPrintShowCollect = true;
         this.pcPrintStickyShowCollect = false;
@@ -742,9 +746,11 @@ export default {
     // 不干胶明细打印
     gluePrintDetail () {
       if (!IsPC()) {
+        this.chooseGluePrintType = false;
         this.isPdaCollect = false;
         this.printMethods()
       } else {
+        this.chooseGluePrintType = false;
         this.trashCollect();
         this.socketData = [];
         for ( let i = 0;i < this.lajiBarCode.length;i++) {
@@ -768,9 +774,11 @@ export default {
     // 不干胶汇总打印
     gluePrintCollect () {
       if (!IsPC()) {
+        this.chooseGluePrintType = false;
         this.isPdaCollect = true;
         this.printMethods()
       } else {
+        this.chooseGluePrintType = false;
         this.trashCollect();
         this.socketData = [];
         if (this.lajiBarCode.length == 1) {
@@ -785,36 +793,27 @@ export default {
             ]
           )
         } else {
-          for (let item of this.pcMapList) {
+          for (let i = 0, len = this.mergeWasteType.length; i < len; i++) {
             this.socketData.push(
               [ 
                 `科室:${this.keshiCode[0]}`,
-                `垃圾类型:${item['type']}`,
-                `垃圾重量:${item['weight'].toFixed(2)}kg`,
+                `垃圾类型:${this.mergeWasteType[i]}`,
+                `垃圾重量:${this.mergeWasteWeight[i].toFixed(2)}kg`,
                 `收集人:${this.collectWorkerName[0]}`,
                 `交接人:${this.yihuCode[0]}`,
-                `时间:${this.pcCreatimeList[0]}`,
+                `时间:${this.mergeWasteCollectTime[i]}`,
               ]
             )
           }
         };
-        console.log(this.socketData);
+        console.log('汇总',this.socketData);
         this.$socket.emit('print', {times: 2, data: this.socketData});
       }
     },
 
     //pda打印方法封装 
     printMethods () {
-      let map = {};
-      this.pcMapList = [];
-      // 合并重复的垃圾类型及其重量
-      this.lajiCodeName.forEach((value, index) => {
-        Object.prototype.hasOwnProperty.call(map, value) || (map[value] = 0);
-        map[value] += Number(this.lanyaCz[index]);
-      });
-      for (let item in map ) {
-        this.pcMapList.push({type:item, weight: map[item]})
-      };
+      this.trashCollect();
       if (this.lajiBarCode.length == 1) {
         // 汇总打印
         if (this.isPdaCollect) {
@@ -841,12 +840,12 @@ export default {
           // 记录打印次数
           let timeNum = 1;
           // 循环调用打印接口
-          for (var i = 0, len = Object.values(map).length; i<len; i++) {
-            this.printInfoNoNum(this.keshiCode[i],Object.keys(map)[i],
-            Object.values(map)[i],this.collectWorkerName[0],this.yihuCode[0],this.pcCreatimeList[0]);
+          for (var i = 0, len = this.mergeWasteType.length; i<len; i++) {
+            this.printInfoNoNum(this.keshiCode[i],this.mergeWasteType[i],
+            this.mergeWasteWeight[i],this.collectWorkerName[0],this.yihuCode[0],this.mergeWasteCollectTime[i]);
             // 打印两联
             if (timeNum < 2) { 
-              if (i == Object.values(map).length-1) {
+              if (i == this.mergeWasteType.length-1) {
                 i = -1;
                 timeNum++
               }
@@ -876,16 +875,10 @@ export default {
 
      //医废打印方法汇总
     trashCollect () {
-      let map = {};
-      this.pcMapList = [];
-      // 合并重复的垃圾类型及其重量
-      this.lajiCodeName.forEach((value, index) => {
-        Object.prototype.hasOwnProperty.call(map, value) || (map[value] = 0);
-        map[value] += Number(this.lanyaCz[index]);
-      });
-      for (let item in map ) {
-        this.pcMapList.push({type:item, weight: map[item]})
-      };
+      let mergeData =  dealMedicalWaste(this.lajiCodeName, this.lanyaCz, this.pcCreatimeList);
+      this.mergeWasteType = mergeData[0];
+      this.mergeWasteWeight = mergeData[1];
+      this.mergeWasteCollectTime = mergeData[2]
     },
 
     // 医废批次号选择确定

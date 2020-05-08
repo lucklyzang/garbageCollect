@@ -97,7 +97,8 @@ export default {
       'changeBatchs',
       'initTotalWeight',
       'initBatchs',
-      'changeRouterFlag'
+      'changeRouterFlag',
+      'changeOverDueWay'
     ]),
 
     // 返回上一页
@@ -174,12 +175,14 @@ export default {
       }
     },
 
-    // 退出登录
+    // 退出登录修改测试
     loginOut () {
        this.$dialog.confirm({
         message: '确定注销账号?'
       })
       .then(() => {
+        this.changeOverDueWay(true);
+        setStore('storeOverDueWay',true);
         exitLogIn(this.userInfo.id).then((res) => {
           if (res.data.code == 200) {
             this.clearPartStorage();
@@ -189,10 +192,14 @@ export default {
               message: `${res.data.msg}`,
               closeOnPopstate: true
             }).then(() => {
-            })
+            });
+            this.changeOverDueWay(false);
+            setStore('storeOverDueWay',false);
           }
         })
         .catch((err) => {
+          this.changeOverDueWay(false);
+          setStore('storeOverDueWay',false);
           this.$dialog.alert({
             message: `${err}`,
             closeOnPopstate: true

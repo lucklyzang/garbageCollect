@@ -4,13 +4,16 @@ export default {
     routerFlag: true,
     token: null, //请求token
     // 是否扫码登录
-    loginSweepCode: false
+    loginSweepCode: false,
+    // 过期方式
+    overDueWay: false
   },
   getters:{
     userInfo : state => state.userInfo,
     routerFlag : state => state.routerFlag,
     loginSweepCode : state => state.loginSweepCode,
     token : state => state.token,
+    overDueWay: state => state.overDueWay
   },
   mutations:{
     storeUserInfo (state, playLoad) {
@@ -28,6 +31,10 @@ export default {
         state.token = playLoad
       }
     },
+    // 修改过期方式
+     changeOverDueWay (state, playLoad) {
+      state.overDueWay = playLoad
+    }
   },
   actions:{}
 }

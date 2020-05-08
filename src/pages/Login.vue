@@ -25,7 +25,7 @@
     </div>
     <div class="check-box" ref="checkBox">
       <div class="check-box-content">
-        <p v-for="(item, index) in checkList" @click="checkClick(item,index)" :class="{activeClass:index == currentIndex}">
+        <p v-for="(item, index) in checkList" :key="`${index}-${item}`" @click="checkClick(item,index)" :class="{activeClass:index == currentIndex}">
           {{item}}
         </p>
       </div>
@@ -36,8 +36,6 @@
       title="请用扫码枪扫描对应二维码"
       :close-on-click-overlay="true"
       :close-on-popstate="true"
-      @confirm=""
-      @cancel=""
       >
     </van-dialog>
   </div>
@@ -133,7 +131,8 @@ export default {
       'storeUserInfo',
       'changeTitleTxt',
       'changeRouterFlag',
-      'changeLoginMethod'
+      'changeLoginMethod',
+      'changeOverDueWay'
     ]),
 
     // 登录方式切换点击事件
@@ -232,6 +231,9 @@ export default {
       logIn(loginMessage).then((res)=>{
         if (res) {
           if (res.data.code == 200) {
+            // 重置过期方式
+            this.changeOverDueWay(false);
+            setStore('storeOverDueWay',false);
             if (res.data.data.batchNumber) {
               setStore('currentBatchNumber',res.data.data.batchNumber)
             } else {

@@ -162,3 +162,50 @@ export const judgeKeyEquail = (data,key) => {
   }
   return flag
 }
+
+/** 
+ * 合并医废类型、重量、医废收集时间
+*/
+
+/* 医废类型 [] typeArr*/ 
+/* 医废重量 [] weightArr*/ 
+/* 收集时间 [] timeArr*/
+
+export const dealMedicalWaste = (typeArr, weightArr, timeArr) => {
+  const typeTarget = [];
+  const weightTarget = [];
+  const timeTarget = [];
+  let index = 0;
+  const indexMap = {};
+
+  for (let i = 0, len = typeArr.length; i < len; i += 1) {
+    const type = typeArr[i];
+    let curTypeIndex = -1;
+    if (type in indexMap) {
+      curTypeIndex = indexMap[type]
+    } else {
+      curTypeIndex = indexMap[type] = index++;
+      typeTarget[curTypeIndex] = type;
+      weightTarget[curTypeIndex] = 0;
+      timeTarget[curTypeIndex] = null
+    };
+    weightTarget[curTypeIndex] = weightTarget[curTypeIndex] + weightArr[i];
+    timeTarget[curTypeIndex] = timeArr[i]
+  };
+  return [typeTarget, weightTarget, timeTarget]
+}
+
+/** 
+ * 合并医废类型、重量
+*/
+/* 医废类型 [] wasteType*/ 
+/* 医废重量 [] wasteWeight*/
+export const dealMedicalWast = (wasteType,wasteWeight) => {
+  let map = {};
+  wasteType.forEach((value, index) => {
+    Object.prototype.hasOwnProperty.call(map, value) || (map[value] = 0);
+    map[value] += Number(wasteWeight[index]);
+  });
+  return map
+}
+

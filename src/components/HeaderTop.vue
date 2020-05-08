@@ -14,11 +14,11 @@ import Loading from '../components/Loading'
 import {queryWarning, warningDispose} from '../api/rubbishCollect.js'
 import { formatTime, setStore, IsPC} from '@/common/js/utils'
 import navBanner from '@/common/images/nav-banner.png'
-  export default {
-    props:{
-      title:String
-    }
+export default {
+  props:{
+    title:String
   }
+}
 </script>
 
 <style lang='less' scoped>
@@ -33,9 +33,10 @@ import navBanner from '@/common/images/nav-banner.png'
     line-height: @header-title-height;
     .header_title {
       position: absolute;
-      top: .8rem;
+      height: @header-title-height;
+      line-height: @header-title-height;
       left: 50%;
-      transform: translate(-50%, -50%);
+      transform: translateX(-50%);
       width: 50%;
       color: #fff;
       text-align: center;

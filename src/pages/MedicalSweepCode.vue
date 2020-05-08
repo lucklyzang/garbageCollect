@@ -6,7 +6,7 @@
         <van-icon name="manager-o" slot="right" @click="skipMyInfo"></van-icon> 
       </HeaderTop>
       <ul class="left-dropDown" v-show="leftDownShow">
-        <li v-for="(item, index) in leftDropdownDataList" :class="{liStyle:liIndex == index}" @click="leftLiCLick(index)">{{item}}</li>
+        <li v-for="(item, index) in leftDropdownDataList" :key="`${item}-${index}`" :class="{liStyle:liIndex == index}" @click="leftLiCLick(index)">{{item}}</li>
       </ul>
       <div class="content">
         <div class="content-header">
@@ -70,7 +70,7 @@
             <van-checkbox v-model="checkedAll" @click="toggleCheckedAll">全选</van-checkbox>
           </div>
           <div class="content-middle-list">
-            <div class="content-middle-list-item" v-for="(item, index) in barMessageList">
+            <div class="content-middle-list-item" v-for="(item, index) in barMessageList" :key="`${item}-${index}`">
               <div class="change-btn-position">
                 <van-checkbox v-model="item.check"  @change="oneChecked(item.check)"></van-checkbox>
               </div>
@@ -91,8 +91,6 @@
           title="请用扫码枪扫描对应二维码"
           :close-on-click-overlay="true"
           :close-on-popstate="true"
-          @confirm=""
-          @cancel=""
           >
         </van-dialog>
         <!-- 打印选择弹框 -->
@@ -135,6 +133,7 @@
         <div v-if="lajiCode.length == 1">
           <!-- 第一联 -->
           <div class="div-wrapper" v-for="(item, index) in lajiCode"
+            :key="`${item}-${index}`"
             style="height:240px;
             width:100%;
             border-bottom:1px dashed #333;
@@ -151,6 +150,7 @@
           </div>
           <!-- 第二联 -->
           <div class="div-wrapper" v-for="(item, index) in lajiCode"
+            :key="`${item}-${index}`"
             style="height:240px;
             width:100%;
             border-bottom:1px dashed #333;
@@ -169,6 +169,7 @@
         <div v-else>
           <!-- 第一联 -->
           <div class="div-wrapper" v-for="(item, index) in pcMapList"
+            :key="`${item}-${index}`"
             style="height:240px;
             width:100%;
             border-bottom:1px dashed #333;
@@ -184,7 +185,8 @@
             <p style="padding-left:5px;font-size:14px;width:100%;min-height:24px;word-wrap: break-word">时间: {{collectTime}}</p>
           </div>
           <!-- 第二联 -->
-          <div class="div-wrapper" v-for="(item, index) in pcMapList"  
+          <div class="div-wrapper" v-for="(item, index) in pcMapList"
+            :key="`${item}-${index}`" 
             style="height:240px;
             width:100%;
             border-bottom:1px dashed #333;

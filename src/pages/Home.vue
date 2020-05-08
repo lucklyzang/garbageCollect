@@ -5,13 +5,13 @@
       <van-icon name="manager-o" slot="right" @click="skipMyInfo"></van-icon> 
     </HeaderTop>
     <ul class="left-dropDown" v-show="leftDownShow">
-      <li v-for="(item, index) in leftDropdownDataList" :class="{liStyle:liIndex == index}" @click="leftLiCLick(index)">{{item}}</li>
+      <li v-for="(item, index) in leftDropdownDataList" :class="{liStyle:liIndex == index}" :key="`${item}-${index}`" @click="leftLiCLick(index)">{{item}}</li>
     </ul>
     <div class="content-header" v-if="!juddgeIspc()">
       <img :src="bannerUrl" alt="">
     </div>
     <div class="content-middle content-middle-home">
-      <div class="content-list" v-for="item in itemList" @click="routerSkip(item.name, item.itemText)">
+      <div class="content-list" v-for="(item,index) in itemList" @click="routerSkip(item.name, item.itemText)" :key="`${item}-${index}`">
         <p class="title-img">
           <img :src="item.imgUrl" alt="">
         </p>
@@ -194,7 +194,7 @@
       }
     },
 
-    // 跳转到我的页面
+    // 跳转到我的页面测试修改
     skipMyInfo () {
       this.leftDownShow = !this.leftDownShow;
     },
