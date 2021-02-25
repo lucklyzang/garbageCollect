@@ -5,7 +5,7 @@
       <van-icon name="manager-o" slot="right" @click="skipMyInfo"></van-icon> 
     </HeaderTop>
     <ul class="left-dropDown" v-show="leftDownShow">
-      <li v-for="(item, index) in leftDropdownDataList" :class="{liStyle:liIndex == index}" @click="leftLiCLick(index)">{{item}}</li>
+      <li v-for="(item, index) in leftDropdownDataList" :key="index" :class="{liStyle:liIndex == index}" @click="leftLiCLick(index)">{{item}}</li>
     </ul>
     <loading :isShow="showLoadingHint"></loading>
     <div class="content-middle-top">
@@ -45,7 +45,7 @@
     </div>
     <div class="content-middle">
       <div class="content-middle-list content-middle-list-print">
-        <div class="content-middle-list-item" v-for="item in rawInfoList">
+        <div class="content-middle-list-item" v-for="item in rawInfoList" :key="item">
           <div class="change-btn-position">
             <van-checkbox v-model="item.check"  @change="oneChecked(item.check)"></van-checkbox>
           </div>
@@ -88,6 +88,7 @@
         <div v-if="lajiBarCode.length == 1">
           <!-- 第一联 -->
           <div v-for="(item, index) in lajiBarCode"
+          :key="index"
             style="height:240px;
             width:100%;
             border-bottom:1px dashed #333;
@@ -104,6 +105,7 @@
           </div>
           <!-- 第二联 -->
           <div v-for="(item, index) in lajiBarCode"
+            :key="index"
             style="height:240px;
             width:100%;
             border-bottom:1px dashed #333;
@@ -122,6 +124,7 @@
         <div v-else>
           <!-- 第一联 -->
           <div v-for="(item, index) in mergeWasteType"
+            :key="index"
             style="height:240px;
             width:100%;
             border-bottom:1px dashed #333;
@@ -138,6 +141,7 @@
           </div>
           <!-- 第二联 -->
           <div v-for="(item, index) in mergeWasteType"
+            :key="index"
             style="height:240px;
             width:100%;
             border-bottom:1px dashed #333;

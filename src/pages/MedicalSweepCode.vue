@@ -104,6 +104,7 @@
           :close-on-popstate="true"
           @confirm="conventionPrint"
           @cancel="gluePrint"
+          @close="closePrintType"
           >
         </van-dialog>
         <!-- 打印选择不干胶弹框 -->
@@ -117,6 +118,7 @@
           :close-on-popstate="true"
           @confirm="gluePrintDetail"
           @cancel="gluePrintCollect"
+          @close="closeGluePrintType"
           >
         </van-dialog>
       <!-- 汇总打印内容 -->
@@ -256,6 +258,7 @@ export default {
     return {
       manualWeight: '',
       leftDownShow: false,
+      isClickRuleBtn: false,
       liIndex: null,
       leftDropdownDataList: ['刷新','我的','测试'],
       progressTitleList: ['扫描科室','扫描医废','医废称重','扫描医护'],
@@ -1151,13 +1154,15 @@ export default {
           this.pcPrintShowDetail = false;
           this.$print(this.$refs.printCode);
           this.pcPrintShowCollect = false;
-          this.printCount = 0;
+          this.isClickRuleBtn = false;
+          this.printCount = 0
         }
       }
     },
 
     // 常规打印
     conventionPrint () {
+      this.isClickRuleBtn = true;
       if (!IsPC()) {
         this.isPdaCollect = true;
         this.printMethods()
@@ -1169,6 +1174,18 @@ export default {
         this.$print(this.$refs.printCode);
         this.pcPrintShowCollect = false
       }
+    },
+
+    // 选择打印类型关闭弹窗事件
+    closePrintType () {
+      if (!this.isClickRuleBtn) {
+        this.printCount = 0
+      }
+    },
+
+    // 选择不干胶打印类型关闭弹窗事件
+    closeGluePrintType () {
+      this.printCount = 0
     },
 
     // 不干胶打印

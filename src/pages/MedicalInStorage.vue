@@ -263,7 +263,7 @@ export default {
     processMethods (code) {
        if (code && Object.keys(code).length > 0) {
         if (code.type && code.number) {
-          judgeSummaryPoint(this.batchNumber,code.number,this.userInfo.id).then((res) => {
+          judgeSummaryPoint(this.batchNumberLocal,code.number,this.userInfo.id).then((res) => {
             if (res && res.data.code == 200) {
               if ( getStore('hospitalData')
                 && Dictionary(JSON.parse(getStore('pointData')),code['number'])
