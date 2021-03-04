@@ -42,10 +42,10 @@ service.interceptors.response.use(
         if (!response.headers.hasOwnProperty('token')) {
             if (!store.getters.overDueWay) {
                 Dialog.alert({
-                        message: 'token已经过期,3秒后将自动跳转到登录页面',
-                        closeOnPopstate: true
-                    }).then(() => {})
-                    // 登录状态置为false
+                    message: 'token已经过期,3秒后将自动跳转到登录页面',
+                    closeOnPopstate: true
+                }).then(() => {});
+                // 登录状态置为false
                 removeStore('isLogin');
                 // 清除当前用户h5存储的医废收集流程信息
                 removeStore('currentCollectMsg');
