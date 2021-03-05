@@ -261,7 +261,7 @@ export default {
 
     // 扫码逻辑公共方法
     processMethods (code) {
-       if (code && Object.keys(code).length > 0) {
+      if (code && Object.keys(code).length > 0) {
         if (code.type && code.number) {
           judgeSummaryPoint(this.batchNumberLocal,code.number,this.userInfo.id).then((res) => {
             if (res && res.data.code == 200) {
