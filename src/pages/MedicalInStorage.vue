@@ -48,8 +48,8 @@
       title="请用扫码枪扫描对应二维码"
       :close-on-click-overlay="true"
       :close-on-popstate="true"
-      @confirm=""
-      @cancel=""
+      @confirm="barCodeScannerShowSure"
+      @cancel="barCodeScannerShowCancel"
       >
     </van-dialog>
     
@@ -61,7 +61,7 @@
         :show-cancel-button="false"
         :close-on-popstate="true"
         :close-on-click-overlay="true"
-        @confirm=""
+        @confirm="pointSure"
       >
         <div class="stage-point">
           <div>
@@ -146,6 +146,21 @@ export default {
     ...mapMutations([
       'changeTitleTxt', 
     ]),
+
+    // pc端扫码枪弹框确认事件
+    barCodeScannerShowSure () {
+      this.barCodeScannerShow = false
+    },
+
+    // pc端扫码枪弹框取消事件
+    barCodeScannerShowCancel () {
+      this.barCodeScannerShow = false
+    },
+
+    // 暂存点弹框确认事件
+    pointSure () {
+      this.stagePointShow = false
+    },
     
     // 扫描二维码方法
     sweepStage () {

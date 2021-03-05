@@ -5,7 +5,7 @@
       <van-icon name="manager-o" slot="right" @click="skipMyInfo"></van-icon> 
     </HeaderTop>
     <ul class="left-dropDown" v-show="leftDownShow">
-      <li v-for="(item, index) in leftDropdownDataList" :class="{liStyle:liIndex == index}" @click="leftLiCLick(index)">{{item}}</li>
+      <li v-for="(item, index) in leftDropdownDataList"  :key="index" :class="{liStyle:liIndex == index}" @click="leftLiCLick(index)">{{item}}</li>
     </ul>
     <div class="content-middle">
      <loading :isShow="showLoadingHint"></loading>

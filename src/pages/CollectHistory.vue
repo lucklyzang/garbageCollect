@@ -5,7 +5,7 @@
       <van-icon name="manager-o" slot="right" @click="skipMyInfo"></van-icon>
     </HeaderTop>
     <ul class="left-dropDown" v-show="leftDownShow">
-      <li v-for="(item, index) in leftDropdownDataList" :class="{liStyle:liIndex == index}" @click="leftLiCLick(index)">{{item}}</li>
+      <li v-for="(item, index) in leftDropdownDataList" :key="index" :class="{liStyle:liIndex == index}" @click="leftLiCLick(index)">{{item}}</li>
     </ul>
     <loading :isShow="showLoadingHint"></loading>
     <div class="content-middle-top">
@@ -38,7 +38,7 @@
             <span class="right-sign sign-not-in" v-show="currentIndex == 0">{{signNotIn == '' ? 0 : signNotIn}}</span>
           </div>
           <div class="content-middle-list content-middle-list-warning">
-            <div class="content-middle-list-item not-inStorage" v-for="item in notInStorageList" @click="skipDetail(item)">
+            <div class="content-middle-list-item not-inStorage" v-for="(item,index) in notInStorageList" :key="index" @click="skipDetail(item)">
               <div class="list-item">
                 <p class="list-item-left">批次: {{item.batchNumber}}</p>
                 <p class="list-item-right">
@@ -59,7 +59,7 @@
             <span class="right-sign sign-in" v-show="currentIndex == 1">{{signIn == '' ? 0 : signIn}}</span>
           </div>
           <div class="content-middle-list content-middle-list-warning">
-            <div class="content-middle-list-item inStorage" v-for="item in inStorageList" @click="skipDetail(item)">
+            <div class="content-middle-list-item inStorage" v-for="(item,index) in inStorageList" :key="index" @click="skipDetail(item)">
               <div class="list-item">
                 <p class="list-item-left">批次: {{item.batchNumber}}</p>
                 <p class="list-item-right">
@@ -80,7 +80,7 @@
             <span class="right-sign sign-out" v-show="currentIndex == 2">{{signOut == '' ? 0 : signOut}}</span>
           </div>
            <div class="content-middle-list content-middle-list-warning">
-            <div class="content-middle-list-item out-storage" v-for="item in outStorageList" @click="skipDetail(item)">
+            <div class="content-middle-list-item out-storage" v-for="(item,index) in outStorageList" :key="index" @click="skipDetail(item)">
               <div class="list-item">
                 <p class="list-item-left">批次: {{item.batchNumber}}</p>
                 <p class="list-item-right">
@@ -106,7 +106,7 @@
             <span class="right-sign sign-finish" v-show="currentIndex == 3">{{signFinish == '' ? 0 : signFinish}}</span>
           </div>
           <div class="content-middle-list content-middle-list-warning">
-            <div class="content-middle-list-item in-finished" v-for="item in finishList" @click="skipDetail(item)">
+            <div class="content-middle-list-item in-finished" v-for="(item,index) in finishList"  :key="index" @click="skipDetail(item)">
               <div class="list-item">
                 <p class="list-item-left">批次: {{item.batchNumber}}</p>
                 <p class="list-item-right">

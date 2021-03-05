@@ -5,7 +5,7 @@
       <van-icon name="manager-o" slot="right" @click="skipMyInfo"></van-icon> 
     </HeaderTop>
     <ul class="left-dropDown" v-show="leftDownShow">
-      <li v-for="(item, index) in leftDropdownDataList" :class="{liStyle:liIndex == index}" @click="leftLiCLick(index)">{{item}}</li>
+      <li v-for="(item, index) in leftDropdownDataList" :key="index" :class="{liStyle:liIndex == index}" @click="leftLiCLick(index)">{{item}}</li>
     </ul>
     <loading :isShow="showLoadingHint"></loading>
     <div class="content-middle-top">
@@ -39,7 +39,7 @@
             <span class="right-sign sign-not-check" v-show="currentIndex == 0">{{signNotCheck == '' ? 0 : signNotCheck}}</span>
           </div>
           <div class="content-middle-list">
-            <div class="content-middle-list-item content-middle-list-warning" v-for="item in notCheckList" @click="addRecordCheck(item)">
+            <div class="content-middle-list-item content-middle-list-warning" v-for="(item,index) in notCheckList" :key="index" @click="addRecordCheck(item)">
               <div class="list-item">
                 <p class="list-item-left">
                   补录批次: {{item. batchNumber}}
@@ -66,7 +66,7 @@
             <span class="right-sign sign-checked" v-show="currentIndex == 1">{{signChecked == '' ? 0 : signChecked}}</span>
           </div>
           <div class="content-middle-list content-middle-list-warning">
-            <div class="content-middle-list-item checked" v-for="item in checkedList">
+            <div class="content-middle-list-item checked" v-for="(item,index) in checkedList" :key="index">
               <div class="list-item">
                 <p class="list-item-left">
                   补录批次: {{item. batchNumber}}

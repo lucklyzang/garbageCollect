@@ -5,7 +5,7 @@
       <van-icon name="manager-o" slot="right" @click="skipMyInfo"></van-icon> 
     </HeaderTop>
     <ul class="left-dropDown" v-show="leftDownShow">
-      <li v-for="(item, index) in leftDropdownDataList" :class="{liStyle:liIndex == index}" @click="leftLiCLick(index)">{{item}}</li>
+      <li v-for="(item, index) in leftDropdownDataList" :key="index" :class="{liStyle:liIndex == index}" @click="leftLiCLick(index)">{{item}}</li>
     </ul>
     <loading :isShow="showLoadingHint"></loading>
     <div class="content-middle-top">
@@ -36,7 +36,7 @@
             <span class="right-sign sign-all" v-show="currentIndex == 0">{{signAll == '' ? 0 : signAll}}</span>
           </div>
           <div class="content-middle-list content-middle-list-warning">
-            <div class="content-middle-list-item all-type" v-for="item in overtimeList">
+            <div class="content-middle-list-item all-type" v-for="(item,index) in overtimeList" :key="index">
               <div class="list-item">
                 <p class="list-item-left">
                   预警类型: {{item.warnType}}
@@ -62,7 +62,7 @@
             <span class="right-sign sign-deal" v-show="currentIndex == 1">{{signDeal =='' ? 0 : signDeal}}</span>
           </div>
           <div class="content-middle-list content-middle-list-warning">
-            <div class="content-middle-list-item await-conduct" v-for="item in notExamineList" @click="skipHandlePage(item)">
+            <div class="content-middle-list-item await-conduct" v-for="(item,index) in notExamineList" :key="index" @click="skipHandlePage(item)">
               <div class="list-item">
                 <p class="list-item-left">
                   预警类型: {{item.warnType}}
@@ -88,7 +88,7 @@
             <span class="right-sign sign-check" v-show="currentIndex == 2">{{signCheck == '' ? 0 : signCheck}}</span>
           </div>
           <div class="content-middle-list content-middle-list-warning">
-            <div class="content-middle-list-item await-check" v-for="item in finishList">
+            <div class="content-middle-list-item await-check" v-for="(item,index) in finishList" :key="index">
               <div class="list-item">
                 <p class="list-item-left">
                   预警类型: {{item.warnType}}
@@ -117,7 +117,7 @@
             <span class="right-sign sign-finish" v-show="currentIndex == 3">{{signFinish == '' ? 0 : signFinish}}</span>
           </div>
           <div class="content-middle-list content-middle-list-warning">
-            <div class="content-middle-list-item finished" v-for="item in unFinishList">
+            <div class="content-middle-list-item finished" v-for="(item,index) in unFinishList" :key="index">
               <div class="list-item">
                 <p class="list-item-left">
                   预警类型: {{item.warnType}}
