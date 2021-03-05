@@ -585,11 +585,11 @@ export default {
           }
         }
       }
-      .stage-point-wrapper {
-        /deep/ .van-dialog {
-          .van-dialog__content {
-          }
-        }
-      }
+      // .stage-point-wrapper {
+      //   /deep/ .van-dialog {
+      //     .van-dialog__content {
+      //     }
+      //   }
+      // }
   }
 </style>

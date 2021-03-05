@@ -538,9 +538,9 @@ export default {
         border-radius: 8px;
         box-shadow: 0 2.5px 12px 4px #d1d1d1;
         .bottom-border-1px(#d3d3d3);
-        &:last-child {
-          // margin-bottom: 0
-        }
+        // &:last-child {
+        //   margin-bottom: 0
+        // }
           .list-item {
           position: relative;
           height: 100%;

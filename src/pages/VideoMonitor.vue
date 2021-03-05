@@ -126,7 +126,7 @@ export default {
     .left-dropDown {
       .rightDropDown
     }
-    .content-middle {
-    }
+    // .content-middle {
+    // }
   }
 </style>

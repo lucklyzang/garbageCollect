@@ -1720,10 +1720,10 @@ export default {
             color: #fff
           }
         }
-        .showOtherButton {
-          button {
-          }
-        }
+        // .showOtherButton {
+        //   button {
+        //   }
+        // }
       }
     }
     // 撤销医废弹框样式
