@@ -10,7 +10,7 @@ import { setStore } from '@/common/js/utils'
 // http://blink.blinktech.cn/blink 测试地址
 // http://blinktech.cn/blink 正式地址
 const service = axios.create({
-    baseURL: ' http://blink.blinktech.cn/blink', //接口基础地址
+    baseURL: 'http://blink.blinktech.cn/blink', //接口基础地址
     retry: 4, // 网络请求异常后，重试次数
     retryDelay: 1000, // 每次重试间隔时间
     shouldRetry: (err) => true // 重试条件

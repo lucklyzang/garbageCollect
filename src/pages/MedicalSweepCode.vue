@@ -1099,13 +1099,14 @@ export default {
 
     // 连接蓝牙秤
     weightRubbish () {
-      window.android.getWeight()
+      window.android.getWeight('getWeightCallback')
     },
 
     // 获取完重量后断开蓝牙秤
     breakScales () {
       window.android.disconnectScales()
     },
+    
 
     // 连接蓝牙秤后的回调
     getWeightCallback(str) {
